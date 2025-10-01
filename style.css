@@ -1,0 +1,471 @@
+/* ===================================================
+// ARQUIVO: style_chat.css (FINAL - Design Amarelo + ESTILO DO CHAT)
+// =================================================== */
+
+/* --- Variáveis de Cor (Paleta Amarela) --- */
+:root {
+    --color-primary: #FFC107; /* Amarelo Vibrante */
+    --color-primary-dark: #E0A800; /* Amarelo Escuro */
+    --color-secondary: #343A40; /* Cinza Escuro para Texto */
+    --color-background: #F8F9FA; /* Fundo Suave */
+    --color-card: #FFFFFF;
+    --color-success: #28A745;
+    --color-danger: #DC3545;
+    --color-light-yellow: #FFFBEA; /* Amarelo muito claro para blocos */
+}
+
+/* --- Estilos Gerais e Tipografia --- */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--color-background);
+    color: var(--color-secondary);
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* --- ESTILOS DAS NOVAS TELAS (Boas-Vindas e Explicação) --- */
+.full-screen-message {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100%;
+    background-color: var(--color-background);
+    text-align: center;
+}
+
+.message-card {
+    background-color: var(--color-card);
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    max-width: 500px;
+    width: 90%;
+}
+
+/* MASCOTE DA TELA INICIAL: MAIOR e SEM MOLDURA */
+.mascote-welcome {
+    width: 220px; /* Aumentado */
+    height: 220px; /* Aumentado */
+    border-radius: 0; /* REMOVIDA A BORDA ARREDONDADA */
+    object-fit: contain;
+    margin-bottom: 25px;
+    border: none; /* REMOVIDA A MOLDURA QUADRADA */
+    background-color: transparent; /* Garante que o fundo não atrapalhe o PNG */
+}
+
+.message-card h2 {
+    color: var(--color-primary-dark);
+    font-size: 2.5em;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+/* --- Layout Principal (Header e Main) --- */
+header {
+    background-color: var(--color-primary);
+    color: var(--color-secondary);
+    padding: 30px 0;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2.8em;
+    font-weight: 900;
+}
+
+header p {
+    margin: 5px 0 0;
+    font-size: 1.2em;
+}
+
+main {
+    /* Mantém o grid original para desktop: 350px para controles, 1fr para roadmap */
+    display: grid;
+    grid-template-columns: 350px 1fr; 
+    gap: 40px;
+    padding: 40px 0;
+}
+
+/* --- Controles e Mascote (Tela Principal) --- */
+.controles {
+    background-color: var(--color-card);
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    height: fit-content; 
+    min-width: unset; 
+}
+
+.mascote-area {
+    text-align: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #eee;
+}
+
+/* MASCOTE DA TELA DE ROADMAP: Mantido no tamanho original */
+.mascote {
+    width: 150px; /* Tamanho original */
+    height: 150px; /* Tamanho original */
+    border-radius: 8px; 
+    object-fit: contain;
+    margin-bottom: 15px;
+    border: none;
+    background-color: transparent; 
+}
+
+.controles h2 {
+    color: var(--color-secondary);
+    font-size: 1.6em;
+    margin-top: 0;
+}
+
+.controles label {
+    display: block;
+    margin-top: 20px;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: var(--color-secondary);
+    font-size: 0.95em;
+}
+
+.controles input[type="text"],
+.controles select,
+.controles textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+    resize: vertical;
+    font-size: 1em;
+}
+
+.controles textarea {
+    min-height: 100px;
+}
+
+/* --- Botões --- */
+.btn-primary {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    margin-top: 30px;
+    background-color: var(--color-primary);
+    color: var(--color-secondary);
+    border: none;
+    border-radius: 6px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+.btn-primary:hover {
+    background-color: var(--color-primary-dark);
+    transform: translateY(-1px);
+}
+
+/* Estilo para o novo botão de chat (usado via JS) */
+.btn-chat-duvidas {
+    width: auto; 
+    margin-bottom: 20px; 
+    padding: 10px 15px;
+    
+    /* Repete o estilo do btn-primary */
+    display: inline-block;
+    background-color: var(--color-primary);
+    color: var(--color-secondary);
+    border: none;
+    border-radius: 6px;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+.btn-chat-duvidas:hover {
+    background-color: var(--color-primary-dark);
+    transform: translateY(-1px);
+}
+
+.btn-secondary {
+    /* Ajuste de tamanho para Voltar/Fechar */
+    padding: 14px 20px; 
+    font-size: 1.1em; 
+
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    font-weight: 500;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+/* --- Área do Roadmap --- */
+#roadmap-container {
+    background-color: var(--color-card);
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+#roadmap-container h2 {
+    color: var(--color-primary);
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+    margin-top: 0;
+    font-size: 1.8em;
+}
+
+.roadmap-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding-top: 10px;
+}
+
+/* Bloco das Etapas (3 por linha no desktop) */
+.bloco {
+    flex: 1 1 calc(33.333% - 20px); 
+    min-width: 250px;
+    padding: 25px;
+    background-color: var(--color-light-yellow); 
+    border: 1px solid var(--color-primary-dark);
+    border-radius: 8px;
+    text-align: center;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.bloco:hover {
+    background-color: var(--color-primary);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+}
+
+.placeholder-text {
+    color: #999;
+    text-align: center;
+    width: 100%;
+    padding: 50px;
+    font-style: italic;
+}
+
+/* --- Modal (Pop-up) --- */
+.modal {
+    display: none; 
+    position: fixed; 
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    overflow: auto; 
+    background-color: rgba(0,0,0,0.5); 
+}
+
+.modal-content {
+    background-color: var(--color-card);
+    margin: 4% auto; 
+    padding: 35px;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+    width: 90%;
+    max-width: 850px;
+}
+
+.modal-content h2 {
+    border-bottom: 3px solid var(--color-primary);
+    padding-bottom: 10px;
+    margin-top: 0;
+    color: var(--color-secondary);
+}
+
+#modal-conteudo h3 {
+    color: var(--color-secondary);
+    margin-top: 30px;
+    border-left: 5px solid var(--color-primary);
+    padding-left: 12px;
+}
+
+.topico-bloco {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+    align-items: stretch;
+}
+
+.material-btn {
+    flex: 3;
+    padding: 12px 20px;
+    background-color: #F0F0F0;
+    border: 1px solid #ddd;
+    color: var(--color-secondary);
+    cursor: pointer;
+    text-align: left;
+    font-weight: 500;
+    transition: background-color 0.1s;
+    box-shadow: none; 
+}
+
+.material-btn:hover {
+    background-color: #E0E0E0;
+}
+
+.btn-simulado {
+    flex: 1;
+    background-color: var(--color-primary);
+    color: var(--color-secondary);
+    border: none;
+    padding: 12px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    font-weight: bold;
+    min-width: 150px;
+}
+
+.btn-simulado:hover {
+    background-color: var(--color-primary-dark);
+}
+
+.modal-actions {
+    text-align: right;
+    margin-top: 30px;
+}
+
+/* --- Estilos do Simulado (CORRIGIDO) --- */
+.simulado-area ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+}
+
+.simulado-area li.alternativa {
+    padding: 12px;
+    margin-bottom: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    transition: background-color 0.3s;
+    cursor: pointer;
+    
+    /* Não destaca NADA até o clique */
+    background-color: var(--color-card) !important; 
+    color: var(--color-secondary) !important;
+}
+
+/* Estilo para a alternativa incorreta (aplicado APÓS o clique pelo JS) */
+.simulado-area li.incorreta {
+    background-color: #FFF3F3 !important; /* Vermelho muito claro */
+    color: var(--color-danger) !important;
+    border-color: #F5C6CB !important;
+}
+
+.simulado-bloco {
+    margin-bottom: 25px;
+    padding: 20px 0;
+}
+
+.simulado-area hr {
+    margin-top: 25px;
+    margin-bottom: 25px;
+    border-top: 1px solid #eee;
+}
+
+.simulado-area button.btnVerResposta {
+    padding: 10px 20px;
+    background-color: var(--color-secondary);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 15px;
+    font-weight: 600;
+    transition: background-color 0.2s;
+}
+
+.simulado-area button.btnVerResposta:hover {
+    background-color: #212529;
+}
+
+
+/* --- Media Queries (RESPONSIVIDADE COMPLETA) --- */
+@media (max-width: 992px) {
+    main {
+        grid-template-columns: 1fr; 
+        gap: 20px;
+        padding: 20px 0;
+    }
+
+    .controles {
+        width: 100%;
+        min-width: unset; 
+    }
+
+    .roadmap-grid {
+        gap: 15px;
+    }
+
+    .bloco {
+        flex: 1 1 calc(50% - 15px); 
+        min-width: unset;
+    }
+
+    .modal-content {
+        margin: 8% auto;
+    }
+}
+
+@media (max-width: 600px) {
+    header h1 {
+        font-size: 2em;
+    }
+    
+    .mascote-welcome {
+        width: 180px; /* Ajuste para telas pequenas */
+        height: 180px;
+    }
+
+    .message-card h2 {
+        font-size: 2em;
+    }
+
+    .bloco {
+        flex: 1 1 100%; 
+    }
+
+    .modal-content {
+        width: 95%;
+        margin: 10% auto;
+        padding: 20px; 
+    }
+    
+    .topico-bloco {
+        flex-direction: column; 
+        gap: 10px;
+    }
+
+    .material-btn, .btn-simulado {
+        width: 100%;
+        min-width: unset;
+        text-align: center;
+    }
+}
