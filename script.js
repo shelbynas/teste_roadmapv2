@@ -1,10 +1,10 @@
 // ===================================================
-// ARQUIVO: script_chat.js (FINAL - Versão Chat de Dúvidas)
+// ARQUIVO: script.js (Lógica da Trilha + BOTÃO DE CHAT)
 // ===================================================
 
-const API_KEY = "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"; // ⬅️ SUA CHAVE DA GROQ
+const API_KEY = "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"; // ⬅️ SUBSTITUA PELA SUA CHAVE DA GROQ
 const GROQ_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions";
-const MODEL_NAME = "llama-3.1-8b-instant"; // MODELO CORRETO E ATIVO
+const MODEL_NAME = "llama-3.1-8b-instant"; 
 
 let modalState = {}; 
 
@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Esconde todas as telas e mostra a primeira
     document.getElementById("explanation-screen").style.display = 'none';
     document.getElementById("main-app").style.display = 'none';
-    document.getElementById("welcome-screen").style.display = 'flex'; // Garante que a primeira tela esteja visível
+    document.getElementById("welcome-screen").style.display = 'flex'; 
 
     // Adiciona listeners para os botões de transição
     document.getElementById("btnWelcomeContinue").addEventListener("click", showExplanationScreen);
@@ -37,7 +37,7 @@ function showMainApp() {
 
 // --- LÓGICA DA TRILHA DE ESTUDOS ---
 
-// --- 1. FUNÇÃO PRINCIPAL: GERAR TRILHA (8 ETAPAS E URLS OBRIGATÓRIAS) ---
+// --- 1. FUNÇÃO PRINCIPAL: GERAR TRILHA ---
 async function gerarTrilha() { 
   const tema = document.getElementById("tema").value;
   const nivel = document.getElementById("nivel").value;
@@ -52,7 +52,6 @@ async function gerarTrilha() {
   }
   
   try {
-    // PROMPTS: 8 ETAPAS MÍNIMAS e URLS OBRIGATÓRIAS
     const systemPrompt = `Você é um especialista em educação técnica. Crie um roadmap detalhado com **no mínimo 8 (oito) etapas obrigatórias**. Cada tópico deve ser ultra específico e **DEVE incluir uma URL de documentação oficial ou tutorial renomado** no campo 'material'. Sua única resposta deve ser APENAS JSON válido, sem texto introdutório ou blocos de código markdown. O JSON deve seguir este formato: {"etapas": [{"titulo": "Etapa 1: Nome da etapa", "topicos": [{"tópico": "Nome do tópico", "material": "URL de uma fonte externa"}], "atividade": "Descrição da atividade prática"}]}.`;
     
     const userPrompt = `Crie uma trilha de estudos detalhada e abrangente para o tema "${tema}" no nível "${nivel}"${objetivo ? ` com objetivo "${objetivo}"` : ""}. Inclua fontes externas de estudo no campo 'material' para todos os tópicos.`;
@@ -129,10 +128,9 @@ async function gerarTrilha() {
   }
 }
 
-// --- NOVO: FUNÇÃO PARA SIMULAR O CHAT DE DÚVIDAS ---
+// --- FUNÇÃO PARA SIMULAR O CHAT DE DÚVIDAS ---
 function abrirChatDuvidas() {
     alert("🦆 Olá! Eu sou o Pato IA da Quackademy. Por enquanto, imagine que esta janela é um chat! Você pode me perguntar sobre qualquer tópico da sua trilha. Em breve, esta função estará totalmente integrada!");
-    // FUTURO: Aqui você integraria uma nova API de chat (como a Gemini ou outra instância da Groq).
 }
 
 // --- 2. FUNÇÃO: ABRIR MODAL DA ETAPA ---
@@ -165,14 +163,13 @@ function abrirModalMateriais(etapa) {
   `;
 }
 
-// --- 3. FUNÇÃO: GERAR SIMULADO (5 PERGUNTAS MÍNIMAS) ---
+// --- 3. FUNÇÃO: GERAR SIMULADO ---
 async function gerarSimulado(topico) {
     const modalConteudo = document.getElementById("modal-conteudo");
 
     modalConteudo.innerHTML = `<p>Carregando simulado sobre: <strong>${topico}</strong>...</p>`;
 
     try {
-        // PROMPT: 5 QUESTÕES MÍNIMAS
         const systemPromptSimulado = `Você é um gerador de questões de múltipla escolha. Sua única resposta deve ser APENAS JSON válido, sem texto introdutório. O JSON deve ser um objeto contendo um array de **5 perguntas**. O formato deve ser: {"simulados": [{"pergunta": "...", "alternativas": ["A) ...", "B) ...", "C) ...", "D) ...", "E) ..."], "resposta_correta": "Letra da alternativa correta (ex: C)"}, {"pergunta": "...", ...}]}.`;
         
         const userPromptSimulado = `Crie 5 questões de múltipla escolha sobre o tópico "${topico}" no nível ${document.getElementById("nivel").value}. Cada questão deve ter 5 alternativas.`;
@@ -281,13 +278,12 @@ function mostrarResposta(button) {
 }
 
 
-// --- 5. FUNÇÃO: GERAR CONTEÚDO MATERIAL (EXIBE FONTE) ---
+// --- 5. FUNÇÃO: GERAR CONTEÚDO MATERIAL ---
 async function gerarConteudoMaterial(topico, material) {
   const modalConteudo = document.getElementById("modal-conteudo");
   modalConteudo.innerHTML = `<p>Carregando conteúdo sobre: <strong>${topico}</strong>...</p>`;
 
   try {
-    // PROMPT: Instrução para usar o link e gerar a explicação.
     const userPromptMaterial = material 
       ? `Explique de forma didática e detalhada o tópico "${topico}" consultando o conteúdo do link: ${material}. A sua resposta deve ser APENAS a explicação, sem mencionar a fonte. Se o link for inacessível ou inválido, gere a explicação baseada em seu conhecimento.`
       : `Explique de forma didática e detalhada o tópico "${topico}".`;
