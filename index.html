@@ -797,8 +797,8 @@
             "roadmap-view": document.getElementById("roadmap-view"),
             "etapa-view": document.getElementById("etapa-view"),
             "material-view": document.getElementById("material-view"),
-            "flashcard-view": document.getElementById("flashcard-view"), // NOVO
-            "simulado-etapa-view": document.getElementById("simulado-etapa-view"), // NOVO
+            "flashcard-view": document.getElementById("flashcard-view"), 
+            "simulado-etapa-view": document.getElementById("simulado-etapa-view"), 
             "chat-view": document.getElementById("chat-view")
         };
         
@@ -847,7 +847,7 @@
                 `;
             }).join("");
 
-            // NOVO BOTÃO DE SIMULADO DA ETAPA
+            // BOTÃO DE SIMULADO DA ETAPA
             const simularTudoBtn = `<button class="btn-primary btn-simulado-etapa" onclick="showSimuladoEtapaView()">🎯 Gerar Simulado Completo da Etapa (${etapa.topicos.length} Tópicos)</button>`;
 
             document.getElementById("etapa-conteudo").innerHTML = `
@@ -877,7 +877,7 @@
             }
         }
 
-        // --- FUNÇÕES DE CONTEÚDO ---
+        // --- FUNÇÕES DE CONTEÚDO (Roadmap, Material) ---
 
         async function gerarRoadmap() {
             const tema = document.getElementById("tema").value;
@@ -993,7 +993,7 @@
             }
         }
         
-        // --- FUNÇÃO NOVO: FLASHCARDS POR TÓPICO ---
+        // --- FUNÇÕES: FLASHCARDS POR TÓPICO ---
 
         let currentFlashcards = [];
         let currentFlashcardIndex = 0;
@@ -1051,17 +1051,23 @@
             const card = currentFlashcards[currentFlashcardIndex];
             const total = currentFlashcards.length;
 
+            // ⚠️ CORREÇÃO APLICADA AQUI: Adiciona uma verificação para garantir que a resposta não é nula
+            // Se card.resposta for undefined/null, usa uma string vazia ('') para evitar o erro .replace
+            const respostaFormatada = (card.resposta || '')
+                .replace(/\*\*(.*?)\*\*/g, "<b>$1</b>")
+                .replace(/\n/g, "<br>");
+
             flashcardDisplay.innerHTML = `
                 <p>Card ${currentFlashcardIndex + 1} de ${total}</p>
                 <div class="flashcard" id="current-flashcard" onclick="toggleFlip()">
                     <div class="flashcard-inner">
                         <div class="flashcard-face flashcard-front">
                             <p style="font-weight: bold;">PERGUNTA:</p>
-                            <p>${card.pergunta}</p>
+                            <p>${card.pergunta || 'Erro ao carregar pergunta.'}</p>
                         </div>
                         <div class="flashcard-face flashcard-back">
                             <p style="font-weight: bold;">RESPOSTA:</p>
-                            <p>${card.resposta.replace(/\*\*(.*?)\*\*/g, "<b>$1</b>").replace(/\n/g, "<br>")}</p>
+                            <p>${respostaFormatada}</p>
                         </div>
                     </div>
                 </div>
@@ -1079,6 +1085,8 @@
         function prevFlashcard() {
             if (currentFlashcardIndex > 0) {
                 currentFlashcardIndex--;
+                // Remove a classe 'flipped' antes de renderizar o novo card para que ele comece virado para frente
+                document.getElementById('current-flashcard').classList.remove('flipped'); 
                 renderFlashcard();
             }
         }
@@ -1086,11 +1094,13 @@
         function nextFlashcard() {
             if (currentFlashcardIndex < currentFlashcards.length - 1) {
                 currentFlashcardIndex++;
+                // Remove a classe 'flipped' antes de renderizar o novo card para que ele comece virado para frente
+                document.getElementById('current-flashcard').classList.remove('flipped'); 
                 renderFlashcard();
             }
         }
 
-        // --- FUNÇÃO NOVO: SIMULADO POR ETAPA ---
+        // --- FUNÇÕES: SIMULADO POR ETAPA ---
 
         let currentSimuladoEtapa = [];
         let userAnswers = {};
