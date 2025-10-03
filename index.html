@@ -83,7 +83,7 @@
             padding: 30px 0;
             text-align: center;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            position: relative; /* Necessário para posicionar o botão flutuante */
+            position: relative; 
         }
         
         header h1 {
@@ -105,7 +105,7 @@
         #main-content-area {
             display: flex;
             justify-content: center;
-            width: 100%; /* Garante que as views de conteúdo ocupem 100% da área */
+            width: 100%; 
         }
         
         /* --- Controles (Formulário) --- */
@@ -114,8 +114,8 @@
             padding: 20px; 
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-            width: 100%; /* Ocupa a largura total no mobile */
-            max-width: 500px; /* Limita a largura em telas maiores */
+            width: 100%; 
+            max-width: 500px; 
             height: fit-content; 
         }
 
@@ -692,8 +692,9 @@
         // JAVASCRIPT INTEGRADO (script.js)
         // ===================================================
 
-        // ATENÇÃO: COLOQUE SUA CHAVE DA GROQ AQUI
-        const API_KEY = ""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"; // ⚠️ SUBSTITUA PELA SUA CHAVE REAL ⚠️
+        // ⚠️ CENTRALIZAÇÃO DA CHAVE API ⚠️
+        const API_KEY = "SUA_CHAVE_AQUI"; // ⬅️ COLOQUE SUA CHAVE AQUI APENAS UMA VEZ!
+        
         const GROQ_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions";
         const MODEL_NAME = "llama-3.1-8b-instant"; 
 
@@ -701,29 +702,24 @@
         let patolindoState = {
             questionsLeft: 5,
             history: [],
-            lastView: "roadmap-view" // Guarda a view para onde voltar após sair do chat
+            lastView: "roadmap-view" 
         };
 
         // --- CONTROLE DE FLUXO DA INTERFACE ---
 
         document.addEventListener("DOMContentLoaded", () => {
-            // Garante que a primeira tela esteja visível e as demais escondidas
             document.getElementById("explanation-screen").style.display = 'none';
             document.getElementById("main-app").style.display = 'none';
             document.getElementById("welcome-screen").style.display = 'flex'; 
 
-            // Listeners para os botões de transição entre as telas fixas
             document.getElementById("btnWelcomeContinue").addEventListener("click", showExplanationScreen);
             document.getElementById("btnExplanationContinue").addEventListener("click", showMainApp);
             
-            // Listener do botão principal
             document.getElementById("btnGerar").addEventListener("click", gerarRoadmap);
             
-            // Listeners dos botões de voltar (dentro das telas de conteúdo)
             document.getElementById("btnMaterialVoltar").addEventListener("click", () => showEtapaView(modalState.currentEtapa));
             document.getElementById("btnSimuladoVoltar").addEventListener("click", () => showEtapaView(modalState.currentEtapa));
             
-            // --- Listeners do Chatbot ---
             document.getElementById("chat-button").addEventListener("click", () => showChatView(patolindoState.lastView));
             document.getElementById("chat-exit-button").addEventListener("click", () => showLastView());
             document.getElementById("chat-send-button").addEventListener("click", handleChatSend);
@@ -731,7 +727,6 @@
                 if (e.key === 'Enter') handleChatSend();
             });
             document.getElementById("chat-input").addEventListener("input", updateSendButtonState);
-            // --- FIM Listeners do Chatbot ---
         });
 
         // Funções de transição de telas iniciais
@@ -743,12 +738,11 @@
         function showMainApp() {
             document.getElementById("explanation-screen").style.display = 'none';
             document.getElementById("main-app").style.display = 'block';
-            showFormView(); // Começa mostrando o formulário
+            showFormView(); 
         }
 
         // --- LÓGICA DE NAVEGAÇÃO SPA ---
 
-        // Mapeamento das views para fácil referência
         const viewMap = {
             "form-view": document.getElementById("form-view"),
             "roadmap-view": document.getElementById("roadmap-view"),
@@ -758,35 +752,32 @@
             "chat-view": document.getElementById("chat-view")
         };
         
-        // Esconde todas as áreas de conteúdo
         function hideAllViews() {
             for (const key in viewMap) {
                 viewMap[key].style.display = 'none';
             }
         }
 
-        // Exibe a tela do Formulário
         function showFormView() {
             hideAllViews();
             window.scrollTo(0, 0); 
-            document.getElementById("chat-button").style.display = 'none'; // Esconde o botão do chat no form
-            viewMap["form-view"].style.display = 'flex'; // Usar flex para centralizar
+            document.getElementById("chat-button").style.display = 'none'; 
+            viewMap["form-view"].style.display = 'flex'; 
         }
         
-        // Exibe a tela principal do Roadmap
         function showRoadmapView() {
             hideAllViews();
             window.scrollTo(0, 0); 
-            document.getElementById("chat-button").style.display = 'block'; // Mostra o botão do chat
+            // O botão do chat só aparece se houver etapas geradas
+            if (modalState.etapas) document.getElementById("chat-button").style.display = 'block'; 
             patolindoState.lastView = "roadmap-view";
             viewMap["roadmap-view"].style.display = 'block';
         }
 
-        // Exibe a tela de Tópicos e Atividade
         function showEtapaView(etapa) {
             hideAllViews();
             window.scrollTo(0, 0); 
-            document.getElementById("chat-button").style.display = 'block'; // Mostra o botão do chat
+            document.getElementById("chat-button").style.display = 'block'; 
             patolindoState.lastView = "etapa-view";
             viewMap["etapa-view"].style.display = 'block';
             
@@ -815,49 +806,49 @@
             `;
         }
 
-        // Exibe a tela do Chatbot (Tela Cheia)
         function showChatView() {
             hideAllViews();
             window.scrollTo(0, 0); 
-            document.getElementById("chat-button").style.display = 'none'; // Esconde o botão flutuante
+            document.getElementById("chat-button").style.display = 'none'; 
             viewMap["chat-view"].style.display = 'block';
             resetPatolindoSession();
         }
 
-        // Volta para a última tela visitada antes do chat
         function showLastView() {
-            // Determina qual função chamar com base na última view salva
             if (patolindoState.lastView === "roadmap-view") {
                 showRoadmapView();
             } else if (patolindoState.lastView === "etapa-view") {
                 showEtapaView(modalState.currentEtapa);
             } else {
-                showRoadmapView(); // Fallback
+                showRoadmapView(); 
             }
         }
 
         // --- FUNÇÕES DE CONTEÚDO (Roadmap, Material, Simulado) ---
 
+        async function checkApiKey(targetDiv) {
+            if (!API_KEY || API_KEY === "Sgsk_ycKkB85OoNwFFCVcMiujWGdyb3FYzOmuXdQ21pklJ7IHhDPytpA9") {
+                 document.getElementById(targetDiv).innerHTML = "⚠️ **ERRO DE CONFIGURAÇÃO:** Por favor, insira sua chave da API da Groq no script.";
+                 return false;
+            }
+            return true;
+        }
+
         async function gerarRoadmap() {
-            // ... (Lógica de gerarRoadmap) ...
             const tema = document.getElementById("tema").value;
             const nivel = document.getElementById("nivel").value;
             const objetivo = document.getElementById("objetivo").value;
             const roadmapDiv = document.getElementById("roadmap");
             
-            if (!API_KEY || API_KEY === "SUA_CHAVE_AQUI") {
-                 roadmapDiv.innerHTML = "⚠️ **ERRO DE CONFIGURAÇÃO:** Por favor, insira sua chave da API da Groq no script.";
-                 showRoadmapView();
-                 return;
-            }
-
             roadmapDiv.innerHTML = "✨ Gerando roadmap...";
-            showRoadmapView(); // Troca para a tela de roadmap
+            showRoadmapView(); 
 
             if (!tema) {
                 roadmapDiv.innerHTML = "⚠️ Por favor, preencha o campo Tema.";
                 return;
             }
+
+            if (!await checkApiKey("roadmap")) return;
             
             try {
                 const systemPrompt = `Você é um especialista em educação técnica. Crie um roadmap detalhado com **no mínimo 8 (oito) etapas obrigatórias**. Cada tópico deve ser ultra específico e **DEVE incluir uma URL de documentação oficial ou tutorial renomado** no campo 'material'. Sua única resposta deve ser APENAS JSON válido, sem texto introdutório ou blocos de código markdown. O JSON deve seguir este formato: {"etapas": [{"titulo": "Etapa 1: Nome da etapa", "topicos": [{"tópico": "Nome do tópico", "material": "URL de uma fonte externa"}], "atividade": "Descrição da atividade prática"}]}.`;
@@ -910,16 +901,15 @@
                     roadmapDiv.appendChild(blocoDiv);
                 });
                 
-                document.getElementById("chat-button").style.display = 'block'; // SUCESSO: Mostra o botão do chat!
+                document.getElementById("chat-button").style.display = 'block'; 
 
             } catch (err) {
                 console.error("Erro:", err);
                 roadmapDiv.innerHTML = `⚠️ Erro ao gerar roadmap. Causa: ${err.message}.`;
-                document.getElementById("chat-button").style.display = 'none'; // ESCONDE o botão do chat em caso de erro
+                document.getElementById("chat-button").style.display = 'none'; 
             }
         }
 
-        // Função: Exibir Material (não alterada)
         async function showMaterialView(topico, material) {
             hideAllViews();
             window.scrollTo(0, 0); 
@@ -929,10 +919,7 @@
             const materialConteudo = document.getElementById("material-conteudo");
             materialConteudo.innerHTML = `<p>Carregando conteúdo sobre: <strong>${topico}</strong>...</p>`;
             
-            if (!API_KEY || API_KEY === "SUA_CHAVE_AQUI") {
-                 materialConteudo.innerHTML = "⚠️ **ERRO DE CONFIGURAÇÃO:** Por favor, insira sua chave da API da Groq no script.";
-                 return;
-            }
+            if (!await checkApiKey("material-conteudo")) return;
 
             try {
                 const userPromptMaterial = `Explique de forma didática e detalhada o tópico "${topico}".`;
@@ -963,7 +950,6 @@
             }
         }
 
-        // Função: Exibir Simulado (não alterada)
         async function showSimuladoView(topico) {
             hideAllViews();
             window.scrollTo(0, 0); 
@@ -973,10 +959,7 @@
             const simuladoConteudo = document.getElementById("simulado-conteudo");
             simuladoConteudo.innerHTML = `<p>Carregando simulado sobre: <strong>${topico}</strong>...</p>`;
 
-            if (!API_KEY || API_KEY === "SUA_CHAVE_AQUI") {
-                 simuladoConteudo.innerHTML = "⚠️ **ERRO DE CONFIGURAÇÃO:** Por favor, insira sua chave da API da Groq no script.";
-                 return;
-            }
+            if (!await checkApiKey("simulado-conteudo")) return;
 
             try {
                 const systemPromptSimulado = `Você é um gerador de questões de múltipla escolha. Sua única resposta deve ser APENAS JSON válido, sem texto introdutório. O JSON deve ser um objeto contendo um array de **5 perguntas**. O formato deve ser: {"simulados": [{"pergunta": "...", "alternativas": ["A) ...", "B) ...", "C) ...", "D) ...", "E) ..."], "resposta_correta": "Letra da alternativa correta (ex: C)"}, {"pergunta": "...", ...}]}.`;
@@ -1020,7 +1003,6 @@
             }
         }
 
-        // Função: Mostrar Resposta do Simulado (não alterada)
         function mostrarResposta(button) {
             const simuladoBloco = button.closest('.simulado-bloco');
             if (!simuladoBloco) return;
@@ -1066,7 +1048,6 @@
 
         function resetPatolindoSession() {
             patolindoState.questionsLeft = 5;
-            // Cria um histórico limpo com a instrução do Patolindo
             patolindoState.history = [{
                 role: "system",
                 content: "Você é o Patolindo, um assistente de estudos prestativo e didático. Sua função é responder a no máximo 5 perguntas do usuário sobre a trilha de estudos que ele está seguindo. Seja conciso e focado no tema. Você deve usar a informação da trilha gerada como contexto."
@@ -1074,7 +1055,7 @@
 
             const chatMessages = document.getElementById("chat-messages");
             chatMessages.innerHTML = `<p class="bot-message"><span class="bot-bubble">Olá! Sou o Patolindo. Você tem **${patolindoState.questionsLeft} perguntas** para tirar dúvidas sobre a sua trilha atual.</span></p>`;
-            chatMessages.scrollTop = chatMessages.scrollHeight; // Rola para o final
+            chatMessages.scrollTop = chatMessages.scrollHeight; 
             updateSendButtonState();
         }
 
@@ -1083,17 +1064,16 @@
             const question = input.value.trim();
             
             if (!question || patolindoState.questionsLeft <= 0) return;
-            if (!API_KEY || API_KEY === "SUA_CHAVE_AQUI") {
-                 appendMessage("⚠️ **ERRO DE CONFIGURAÇÃO:** Por favor, insira sua chave da API da Groq no script.", 'bot');
-                 return;
-            }
+            
+            // Verifica a chave da API (o conteúdo é 'chat-messages' se for erro)
+            if (!await checkApiKey("chat-messages")) return;
 
             // 1. Exibe a pergunta do usuário
             appendMessage(question, 'user');
-            input.value = ''; // Limpa o input
+            input.value = ''; 
             
             const sendButton = document.getElementById("chat-send-button");
-            sendButton.disabled = true; // Desabilita enquanto espera a resposta
+            sendButton.disabled = true; 
             
             try {
                 // Adiciona a pergunta do usuário ao histórico
@@ -1102,7 +1082,7 @@
                 // Prepara o contexto da trilha
                 const roadmapContext = modalState.etapas ? JSON.stringify(modalState.etapas) : "Nenhuma trilha de estudos foi gerada ainda.";
                 
-                // Cria a mensagem do sistema, incluindo o contexto da trilha (substituindo o primeiro item do histórico)
+                // Cria a mensagem do sistema, incluindo o contexto da trilha
                 const systemContext = {
                     role: "system",
                     content: patolindoState.history[0].content + 
@@ -1148,13 +1128,11 @@
                 messageElement.innerHTML = `<span class="user-bubble">${text}</span>`;
             } else {
                 messageElement.className = 'bot-message';
-                // Substitui Markdown simples por HTML para o bot
                 const htmlText = text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\n/g, "<br>");
                 messageElement.innerHTML = `<span class="bot-bubble">${htmlText}</span>`;
             }
             
             chatMessages.appendChild(messageElement);
-            // Rola para o final
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
