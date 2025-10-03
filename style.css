@@ -1,20 +1,18 @@
 /* ===================================================
-// ARQUIVO: style.css (Novo Design Mobile-First, Mais Limpo)
+// ARQUIVO: style.css (Revisado para Alinhamento e Flow)
 // =================================================== */
 
 /* --- Variáveis de Cor --- */
 :root {
-    --color-primary: #FFC107; /* Amarelo Vibrante */
-    --color-primary-dark: #E0A800; /* Amarelo Escuro */
-    --color-secondary: #343A40; /* Cinza Escuro para Texto */
-    --color-background: #F8F9FA; /* Fundo Suave */
+    --color-primary: #FFC107; 
+    --color-primary-dark: #E0A800;
+    --color-secondary: #343A40;
+    --color-background: #F8F9FA;
     --color-card: #FFFFFF;
-    --color-success: #28A745;
-    --color-danger: #DC3545;
-    --color-light-yellow: #FFFBEA; /* Amarelo muito claro para blocos */
+    --color-light-yellow: #FFFBEA;
 }
 
-/* --- Estilos Gerais e Tipografia (Mobile-First) --- */
+/* --- Estilos Gerais --- */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: var(--color-background);
@@ -22,50 +20,47 @@ body {
     margin: 0;
     padding: 0;
     line-height: 1.6;
-    overflow-x: hidden; /* Previne scroll horizontal no mobile */
+    overflow-x: hidden; 
 }
 
 .container {
-    width: 95%; /* Usando mais tela no mobile */
+    width: 95%; 
     max-width: 1200px;
     margin: 0 auto;
 }
 
-/* Transições para Suavidade */
-.btn-primary, .bloco, .controles-wrapper {
-    transition: all 0.3s ease-in-out;
-}
-
-/* --- TELAS DE FLUXO INICIAL (Boas-Vindas) --- */
+/* --- CORREÇÃO DE FLUXO INICIAL --- */
 .screen-flow {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh; /* Usa min-height para garantir centralização */
     width: 100%;
-    position: fixed; /* Fixa as telas */
+    position: fixed; 
     top: 0;
     left: 0;
     background-color: var(--color-background);
-    transition: transform 0.5s ease-in-out;
+    transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out; /* Adicionado opacity */
     z-index: 100;
 }
 
 .hidden-screen {
-    /* Faz a tela "deslizar" para fora da visão (ou ser coberta) */
+    /* Move para fora da tela e torna invisível */
     transform: translateX(100%);
-    display: block; /* Mantido block/flex para evitar problemas de layout */
+    opacity: 0; 
     pointer-events: none;
+    /* IMPORTANTE: Desativado o display:none para permitir a transição suave */
 }
 
 .active-screen {
     transform: translateX(0);
+    opacity: 1;
     pointer-events: auto;
 }
 
 .message-card {
     background-color: var(--color-card);
-    padding: 30px; /* Reduzido o padding */
+    padding: 30px;
     border-radius: 12px;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
     max-width: 450px;
@@ -73,16 +68,12 @@ body {
     text-align: center;
 }
 
-.mascote-welcome {
-    width: 180px; /* Menor e mais rápido de carregar */
-    height: 180px;
-    object-fit: contain;
-    margin-bottom: 20px;
-}
-
-/* --- LAYOUT PRINCIPAL (Main-App) --- */
+/* --- LAYOUT PRINCIPAL (main-app) --- */
 #main-app {
     padding-top: 0;
+    /* Garante que o main-app não seja fixed e respeite o fluxo normal da página */
+    position: relative; 
+    min-height: 100vh;
 }
 
 header {
@@ -93,18 +84,7 @@ header {
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-header h1 {
-    margin: 0;
-    font-size: 2em;
-    font-weight: 800;
-}
-
-header p {
-    font-size: 1em;
-    margin: 0;
-}
-
-/* --- CONTROLES / FORMULÁRIO (O NOVO COMPONENTE) --- */
+/* --- CONTROLES / FORMULÁRIO --- */
 .controles-wrapper {
     background-color: var(--color-card);
     padding: 20px;
@@ -114,21 +94,37 @@ header p {
 }
 
 .controles-wrapper.retraido {
-    padding: 10px 20px; /* Quando retraído, minimiza */
+    padding: 10px 20px;
     cursor: pointer;
 }
 
+/* Apenas a área do mascote é exibida quando retraído */
 .controles-wrapper.retraido .form-content,
 .controles-wrapper.retraido .mascote-area h2 {
-    display: none;
+    max-height: 0;
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
+    opacity: 0;
+    transition: max-height 0.3s, opacity 0.3s, padding 0.3s, margin 0.3s;
+}
+
+.mascote-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
 }
 
 .controles-wrapper.retraido .mascote-area {
-    display: flex;
-    align-items: center;
+    flex-direction: row;
     justify-content: center;
-    padding-bottom: 0;
     border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
 }
 
 .controles-wrapper.retraido .mascote {
@@ -137,52 +133,11 @@ header p {
     margin: 0 10px 0 0;
 }
 
-.mascote-area {
-    text-align: center;
-    margin-bottom: 20px;
-    padding-bottom: 15px;
-    border-bottom: 1px solid #eee;
-}
-
-.mascote {
-    width: 80px; /* Menor para economizar espaço no mobile */
-    height: 80px;
-    object-fit: contain;
-    margin-bottom: 10px;
-    border: none;
-    background-color: transparent;
-}
-
-/* Estilos dos inputs e labels (Otimizado para toque) */
-.form-content label {
-    display: block;
-    margin-top: 15px;
-    margin-bottom: 5px;
-    font-weight: bold;
-    font-size: 0.95em;
-}
-
-.form-content input[type="text"],
-.form-content select,
-.form-content textarea {
-    width: 100%;
-    padding: 14px; /* Aumentado para melhor toque */
-    border: 1px solid #ccc;
-    border-radius: 8px; /* Mais arredondado */
-    box-sizing: border-box;
-    resize: vertical;
-    font-size: 1em;
-}
-
-.form-content textarea {
-    min-height: 80px;
-}
-
 /* --- Botões --- */
 .btn-primary {
     display: block;
     width: 100%;
-    padding: 16px; /* Mais alto para facilitar o toque */
+    padding: 16px; 
     margin-top: 25px;
     background-color: var(--color-primary);
     color: var(--color-secondary);
@@ -191,98 +146,56 @@ header p {
     font-size: 1.1em;
     font-weight: bold;
     cursor: pointer;
-    touch-action: manipulation;
-}
-
-.btn-primary:active {
-    transform: scale(0.98);
 }
 
 .btn-secondary {
+    display: block; /* Garante que o botão de toggle ocupe a largura total */
+    width: 100%;
     padding: 12px 20px;
+    margin: 0 auto;
     background-color: #6c757d;
     color: white;
     border: none;
     border-radius: 6px;
     cursor: pointer;
     font-weight: 500;
-    transition: background-color 0.2s;
 }
 
-/* Botão para Retrair/Expandir formulário */
 .toggle-form-btn {
-    display: block !important;
-    width: 95%;
+    width: 95%; /* Alinhado com o container */
     max-width: 1200px;
-    margin: -10px auto 20px auto; /* Cola logo abaixo do wrapper */
+    margin: 0 auto 20px auto; 
     text-align: center;
-    background-color: var(--color-secondary);
 }
 
-/* --- Área do Roadmap --- */
-#roadmap-container {
-    background-color: var(--color-card);
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-}
 
-#roadmap-container h2 {
-    color: var(--color-primary);
-    border-bottom: 2px solid #eee;
-    padding-bottom: 10px;
-    margin-top: 0;
-    font-size: 1.6em;
-}
-
-.roadmap-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); /* Mais blocos por linha */
-    gap: 15px;
-    padding-top: 10px;
-}
-
-/* Bloco das Etapas (Maiores no mobile) */
-.bloco {
-    padding: 20px;
-    background-color: var(--color-light-yellow);
-    border: 1px solid var(--color-primary-dark);
-    border-radius: 8px;
-    text-align: center;
-    font-weight: bold;
-    cursor: pointer;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-}
-
-.bloco:hover {
-    background-color: var(--color-primary);
-    transform: translateY(-2px);
-}
-
-/* --- Modal (Pop-up) --- */
-.modal-content {
-    margin: 8% auto;
-    width: 95%;
-    padding: 20px;
-}
-
-.topico-bloco {
-    display: flex;
-    flex-direction: column; 
-    gap: 10px;
-    margin-bottom: 15px;
-}
-
-.material-btn, .btn-simulado {
+/* --- Modal (Melhor alinhamento) --- */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 2000; /* Mais alto para cobrir tudo */
+    left: 0;
+    top: 0;
     width: 100%;
-    text-align: center;
-    padding: 14px; /* Mais alto */
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.6); /* Fundo mais escuro */
+}
+
+.modal-content {
+    background-color: var(--color-card);
+    margin: 8% auto;
+    padding: 25px; /* Padding ajustado */
+    border-radius: 10px;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.5);
+    width: 95%;
+    max-width: 850px;
 }
 
 /* --- Media Queries (Desktop) --- */
 @media (min-width: 993px) {
     main {
-        display: flex; /* Volta ao layout mais tradicional */
+        display: flex;
         gap: 40px;
         padding: 40px 0;
     }
@@ -291,41 +204,36 @@ header p {
         min-width: 350px;
         width: 350px;
         flex-shrink: 0;
-    }
-
-    .roadmap-grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
-    
-    .toggle-form-btn {
-        display: none !important;
+        /* Desktop: Sempre expandido e sem borda arredondada na parte de baixo */
+        border-radius: 12px; 
+        padding: 30px;
     }
 
     .controles-wrapper.retraido {
-        /* No desktop, o formulário nunca estará retraído dessa forma */
+        /* Garante que o desktop não tenha a view retraída */
         all: unset;
         background-color: var(--color-card);
         padding: 30px;
         border-radius: 12px;
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
     }
-
+    
     .controles-wrapper.retraido .form-content,
     .controles-wrapper.retraido .mascote-area h2 {
+        /* Restaura os elementos do desktop */
+        max-height: none;
+        overflow: visible;
+        padding: revert;
+        margin: revert;
+        opacity: 1;
         display: block;
     }
-    
-    .topico-bloco {
-        flex-direction: row;
+
+    .controles-wrapper.retraido .mascote-area {
+        flex-direction: column;
     }
-    
-    .material-btn {
-        flex: 3;
-        text-align: left;
-    }
-    
-    .btn-simulado {
-        flex: 1;
-        min-width: 150px;
+
+    .toggle-form-btn {
+        display: none !important;
     }
 }
