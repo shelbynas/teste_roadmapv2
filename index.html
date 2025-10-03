@@ -205,13 +205,29 @@
         .btn-secondary:hover {
             background-color: #5a6268;
         }
+
+        .btn-success {
+            padding: 12px 18px; 
+            font-size: 1em; 
+            background-color: var(--color-success);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            font-weight: 500;
+        }
+        
+        .btn-success:hover {
+            background-color: #1e7e34;
+        }
         
         /* --- ESTILOS DAS TELAS DE CONTEÚDO (Roadmap, Etapa, Material, Simulado) --- */
         .content-view {
             width: 100%;
         }
 
-        #roadmap-container, #etapa-container, #material-container, #simulado-container, #chat-container {
+        #roadmap-container, #etapa-container, #material-container, #flashcard-container, #simulado-etapa-container, #chat-container {
             background-color: var(--color-card);
             padding: 20px; 
             border-radius: 12px;
@@ -219,7 +235,7 @@
             width: 100%;
         }
 
-        #roadmap-container h2, #etapa-container h2, #material-container h2, #simulado-container h2 {
+        #roadmap-container h2, #etapa-container h2, #material-container h2, #flashcard-container h2, #simulado-etapa-container h2 {
             color: var(--color-primary);
             border-bottom: 2px solid #eee;
             padding-bottom: 10px;
@@ -305,11 +321,12 @@
         .material-btn:hover {
             background-color: #E0E0E0;
         }
-        
-        .btn-simulado {
+
+        /* Novo Botão para Flashcards */
+        .btn-flashcard {
             flex: 1;
-            background-color: var(--color-primary);
-            color: var(--color-secondary);
+            background-color: #007bff; /* Azul */
+            color: white;
             border: none;
             padding: 10px 15px;
             border-radius: 6px;
@@ -320,8 +337,21 @@
             font-size: 0.9em;
         }
         
-        .btn-simulado:hover {
-            background-color: var(--color-primary-dark);
+        .btn-flashcard:hover {
+            background-color: #0056b3;
+        }
+
+        /* Botão de Simulado da Etapa */
+        .btn-simulado-etapa {
+            width: 100%;
+            margin-top: 20px;
+            background-color: var(--color-secondary);
+            color: white;
+            padding: 15px;
+            font-size: 1.1em;
+        }
+        .btn-simulado-etapa:hover {
+            background-color: #212529;
         }
         
         .modal-actions {
@@ -332,11 +362,79 @@
             width: 100%;
         }
         
-        /* --- Estilos da Tela Simulado --- */
+        /* --- Estilos da Tela Flashcard --- */
+        #flashcard-display {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .flashcard {
+            width: 100%;
+            max-width: 400px;
+            height: 250px;
+            perspective: 1000px;
+            margin-bottom: 20px;
+        }
+
+        .flashcard-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        .flashcard.flipped .flashcard-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flashcard-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+            font-size: 1.1em;
+            font-weight: 500;
+        }
+
+        .flashcard-front {
+            background-color: var(--color-primary);
+            color: var(--color-secondary);
+            border: 2px solid var(--color-primary-dark);
+        }
+
+        .flashcard-back {
+            background-color: #F0F0F0;
+            color: var(--color-secondary);
+            border: 2px solid #ddd;
+            transform: rotateY(180deg);
+            text-align: left;
+        }
+
+        .flashcard-navigation {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 400px;
+        }
+        
+        /* --- Estilos da Tela Simulado (Etapa) --- */
         .simulado-area ul {
             list-style: none;
             padding: 0;
-            margin-top: 20px;
+            margin-top: 15px;
         }
         
         .simulado-area li.alternativa {
@@ -345,17 +443,32 @@
             border: 1px solid #ced4da;
             border-radius: 6px;
             transition: background-color 0.3s;
-            cursor: default; 
-            background-color: var(--color-card) !important; 
-            color: var(--color-secondary) !important;
+            cursor: pointer; 
+            background-color: var(--color-card); 
+            color: var(--color-secondary);
         }
         
+        .simulado-area li.alternativa:hover {
+             background-color: #f8f9fa;
+        }
+        
+        .simulado-area li.selected {
+            background-color: var(--color-primary) !important; 
+            border-color: var(--color-primary-dark) !important;
+        }
+
         .simulado-area li.incorreta {
             background-color: #FFF3F3 !important; 
             color: var(--color-danger) !important;
             border-color: #F5C6CB !important;
         }
         
+        .simulado-area li.correta-destacada {
+            background-color: #d4edda !important; 
+            color: #155724 !important;
+            border-color: #c3e6cb !important;
+        }
+
         .simulado-bloco {
             margin-bottom: 25px;
             padding: 20px 0;
@@ -366,26 +479,20 @@
             margin-bottom: 25px;
             border-top: 1px solid #eee;
         }
-        
-        .simulado-area button.btnVerResposta {
-            padding: 10px 20px;
-            background-color: var(--color-secondary);
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-top: 15px;
-            font-weight: 600;
-            transition: background-color 0.2s;
-            width: 100%;
+
+        #simulado-resultado {
+            padding: 20px;
+            background-color: var(--color-light-yellow);
+            border-radius: 8px;
+            margin-top: 20px;
+            text-align: center;
+            border: 2px solid var(--color-primary);
+            font-size: 1.1em;
+            font-weight: bold;
         }
         
-        .simulado-area button.btnVerResposta:hover {
-            background-color: #212529;
-        }
-
-        /* --- Estilos do Chatbot Patolindo (como botão flutuante no header) --- */
-
+        /* --- Estilos do Chatbot Patolindo --- */
+        
         #chat-button {
             position: fixed;
             bottom: 30px;
@@ -402,23 +509,17 @@
             cursor: pointer;
             transition: background-color 0.2s;
             z-index: 1000;
-            display: none; /* ESCONDIDO POR PADRÃO, APARECE SÓ APÓS GERAR ROADMAP */
+            display: none; 
         }
 
         #chat-button:hover {
             background-color: var(--color-primary);
         }
 
-        /* --- Estilos da Tela de Chat (ChatView) --- */
-        #chat-view {
-            width: 100%;
-            height: 100%;
-        }
-
         #chat-container {
             display: flex;
             flex-direction: column;
-            height: calc(100vh - 120px); /* Ocupa a altura da tela menos o header e o padding do main */
+            height: calc(100vh - 120px); 
             min-height: 450px;
             background-color: var(--color-card);
             border-radius: 10px;
@@ -436,85 +537,6 @@
             justify-content: space-between;
             align-items: center;
             font-size: 1.2em;
-        }
-
-        #chat-header-view span {
-            font-weight: normal;
-            font-size: 0.7em;
-            background-color: var(--color-primary-dark);
-            padding: 2px 8px;
-            border-radius: 4px;
-            color: white;
-            margin-left: 10px;
-        }
-
-        #chat-messages {
-            flex-grow: 1;
-            padding: 15px;
-            overflow-y: auto;
-            background-color: #F8F9FA;
-            border-bottom: 1px solid #ddd;
-            display: flex;
-            flex-direction: column;
-        }
-
-        #chat-input-area {
-            display: flex;
-            padding: 15px 20px;
-            border-top: 1px solid #eee;
-        }
-
-        #chat-input {
-            flex-grow: 1;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            margin-right: 10px;
-        }
-
-        #chat-send-button {
-            background-color: var(--color-secondary);
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.2s;
-            font-weight: bold;
-        }
-
-        #chat-send-button:disabled {
-            background-color: #aaa;
-            cursor: not-allowed;
-        }
-
-        /* Estilos de mensagens */
-        .user-message {
-            text-align: right;
-            margin-bottom: 10px;
-        }
-        .bot-message {
-            text-align: left;
-            margin-bottom: 10px;
-        }
-
-        .user-bubble {
-            display: inline-block;
-            background-color: #DCF8C6; /* Verde Claro */
-            padding: 8px 12px;
-            border-radius: 15px 15px 0 15px;
-            max-width: 80%;
-            word-wrap: break-word;
-        }
-
-        .bot-bubble {
-            display: inline-block;
-            background-color: var(--color-card);
-            border: 1px solid #eee;
-            padding: 8px 12px;
-            border-radius: 15px 15px 15px 0;
-            max-width: 80%;
-            word-wrap: break-word;
         }
         
         /* ---------------------------------------------------
@@ -539,6 +561,14 @@
             }
             .modal-actions button {
                 width: auto; 
+            }
+            
+            /* Ajuste dos botões de tópico */
+            .material-btn, .btn-flashcard {
+                flex: 1 1 50%; 
+            }
+            .topico-bloco {
+                justify-content: space-between;
             }
         }
         
@@ -575,9 +605,9 @@
                 
                 <h3>⚙️ Como Funciona Nossa Trilha</h3>
                 <ul>
-                    <li><strong>Trilhas Guiadas:</strong> Você informa o tema e o nível, e nossa IA gera uma <strong>Trilha de Estudos de 8 Etapas</strong> personalizadas.</li>
-                    <li><strong>Material Confiável:</strong> Cada tópico vem com um link obrigatório de documentação oficial ou fonte renomada.</li>
-                    <li><strong>Teste Seu Conhecimento:</strong> Criamos <strong>Simulados de 5 Questões</strong> para forçar você a *aplicar* e *entender* o conceito, garantindo que você nunca caia no ciclo de apenas pegar a resposta.</li>
+                    <li><strong>Trilhas Guiadas:</strong> Você informa o tema e o nível, e nossa IA gera um plano de <strong>8 Etapas</strong> personalizadas.</li>
+                    <li><strong>Flashcards:</strong> Use **flashcards por tópico** para memorizar conceitos chave rapidamente.</li>
+                    <li><strong>Simulado de Etapa:</strong> Faça um **simulado completo por etapa** (20+ questões) para testar sua aplicação do conteúdo.</li>
                 </ul>
             </div>
             <button id="btnExplanationContinue" class="btn-primary">Começar Minha Trilha 🚀</button>
@@ -651,12 +681,26 @@
                     </div>
                 </div>
 
-                <div id="simulado-view" class="content-view" style="display: none;">
-                    <div id="simulado-container">
-                        <h2 id="simulado-titulo"></h2>
-                        <div id="simulado-conteudo"></div>
+                <div id="flashcard-view" class="content-view" style="display: none;">
+                    <div id="flashcard-container">
+                        <h2 id="flashcard-titulo"></h2>
+                        <div id="flashcard-display">
+                            </div>
                         <div class="modal-actions">
-                            <button id="btnSimuladoVoltar" class="btn-secondary">⬅ Voltar à Etapa</button>
+                            <button id="btnFlashcardVoltar" class="btn-secondary">⬅ Voltar à Etapa</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="simulado-etapa-view" class="content-view" style="display: none;">
+                    <div id="simulado-etapa-container">
+                        <h2 id="simulado-etapa-titulo"></h2>
+                        <div id="simulado-etapa-conteudo">
+                            </div>
+                        <div id="simulado-etapa-botoes" class="modal-actions">
+                            </div>
+                        <div class="modal-actions">
+                            <button id="btnSimuladoEtapaVoltar" class="btn-secondary">⬅ Voltar à Etapa</button>
                         </div>
                     </div>
                 </div>
@@ -705,27 +749,24 @@
             lastView: "roadmap-view" 
         };
         
-        // Armazena o tema principal para uso no Patolindo
         let currentTheme = ""; 
 
         // --- CONTROLE DE FLUXO DA INTERFACE ---
 
         document.addEventListener("DOMContentLoaded", () => {
-            // Garante que a primeira tela esteja visível e as demais escondidas
             document.getElementById("explanation-screen").style.display = 'none';
             document.getElementById("main-app").style.display = 'none';
             document.getElementById("welcome-screen").style.display = 'flex'; 
 
-            // Listeners para os botões de transição entre as telas fixas
             document.getElementById("btnWelcomeContinue").addEventListener("click", showExplanationScreen);
             document.getElementById("btnExplanationContinue").addEventListener("click", showMainApp);
             
-            // Listener do botão principal
             document.getElementById("btnGerar").addEventListener("click", gerarRoadmap);
             
             // Listeners dos botões de voltar (dentro das telas de conteúdo)
             document.getElementById("btnMaterialVoltar").addEventListener("click", () => showEtapaView(modalState.currentEtapa));
-            document.getElementById("btnSimuladoVoltar").addEventListener("click", () => showEtapaView(modalState.currentEtapa));
+            document.getElementById("btnFlashcardVoltar").addEventListener("click", () => showEtapaView(modalState.currentEtapa));
+            document.getElementById("btnSimuladoEtapaVoltar").addEventListener("click", () => showEtapaView(modalState.currentEtapa));
             
             // --- Listeners do Chatbot ---
             document.getElementById("chat-button").addEventListener("click", () => showChatView(patolindoState.lastView));
@@ -756,7 +797,8 @@
             "roadmap-view": document.getElementById("roadmap-view"),
             "etapa-view": document.getElementById("etapa-view"),
             "material-view": document.getElementById("material-view"),
-            "simulado-view": document.getElementById("simulado-view"),
+            "flashcard-view": document.getElementById("flashcard-view"), // NOVO
+            "simulado-etapa-view": document.getElementById("simulado-etapa-view"), // NOVO
             "chat-view": document.getElementById("chat-view")
         };
         
@@ -776,7 +818,6 @@
         function showRoadmapView() {
             hideAllViews();
             window.scrollTo(0, 0); 
-            // O botão do chat só aparece se houver etapas geradas
             if (modalState.etapas) document.getElementById("chat-button").style.display = 'block'; 
             patolindoState.lastView = "roadmap-view";
             viewMap["roadmap-view"].style.display = 'block';
@@ -801,16 +842,20 @@
                         <button class="material-btn" onclick="showMaterialView('${topicoEscapado}', '${materialLink}')">
                             📚 ${t.tópico}
                         </button>
-                        <button class="btn-simulado" onclick="showSimuladoView('${topicoEscapado}')">🧠 Gerar Simulado</button>
+                        <button class="btn-flashcard" onclick="showFlashcardView('${topicoEscapado}')">🧠 Gerar Flashcards</button>
                     </div>
                 `;
             }).join("");
+
+            // NOVO BOTÃO DE SIMULADO DA ETAPA
+            const simularTudoBtn = `<button class="btn-primary btn-simulado-etapa" onclick="showSimuladoEtapaView()">🎯 Gerar Simulado Completo da Etapa (${etapa.topicos.length} Tópicos)</button>`;
 
             document.getElementById("etapa-conteudo").innerHTML = `
                 <h3>📌 Atividade prática:</h3>
                 <p>${etapa.atividade}</p>
                 <h3>📚 Tópicos de Estudo:</h3>
                 <div class="topicos-container">${conteudo}</div>
+                ${simularTudoBtn}
             `;
         }
 
@@ -832,7 +877,7 @@
             }
         }
 
-        // --- FUNÇÕES DE CONTEÚDO (Roadmap, Material, Simulado) ---
+        // --- FUNÇÕES DE CONTEÚDO ---
 
         async function gerarRoadmap() {
             const tema = document.getElementById("tema").value;
@@ -849,7 +894,6 @@
             }
             
             try {
-                // Atualiza o tema principal
                 currentTheme = tema;
 
                 const systemPrompt = `Você é um especialista em educação técnica. Crie um roadmap detalhado com **no mínimo 8 (oito) etapas obrigatórias**. Cada tópico deve ser ultra específico e **DEVE incluir uma URL de documentação oficial ou tutorial renomado** no campo 'material'. Sua única resposta deve ser APENAS JSON válido, sem texto introdutório ou blocos de código markdown. O JSON deve seguir este formato: {"etapas": [{"titulo": "Etapa 1: Nome da etapa", "topicos": [{"tópico": "Nome do tópico", "material": "URL de uma fonte externa"}], "atividade": "Descrição da atividade prática"}]}.`;
@@ -948,19 +992,128 @@
                 materialConteudo.innerHTML = `<p>⚠️ Erro ao gerar conteúdo. Causa: ${err.message}.</p>`;
             }
         }
+        
+        // --- FUNÇÃO NOVO: FLASHCARDS POR TÓPICO ---
 
-        async function showSimuladoView(topico) {
+        let currentFlashcards = [];
+        let currentFlashcardIndex = 0;
+
+        async function showFlashcardView(topico) {
             hideAllViews();
             window.scrollTo(0, 0); 
-            viewMap["simulado-view"].style.display = 'block';
+            viewMap["flashcard-view"].style.display = 'block';
             
-            document.getElementById("simulado-titulo").innerText = `Simulado: ${topico}`;
-            const simuladoConteudo = document.getElementById("simulado-conteudo");
-            simuladoConteudo.innerHTML = `<p>Carregando simulado sobre: <strong>${topico}</strong>...</p>`;
+            document.getElementById("flashcard-titulo").innerText = `Flashcards: ${topico}`;
+            const flashcardDisplay = document.getElementById("flashcard-display");
+            flashcardDisplay.innerHTML = `<p>Carregando flashcards sobre: <strong>${topico}</strong>...</p>`;
 
             try {
-                const systemPromptSimulado = `Você é um gerador de questões de múltipla escolha. Sua única resposta deve ser APENAS JSON válido, sem texto introdutório. O JSON deve ser um objeto contendo um array de **5 perguntas**. O formato deve ser: {"simulados": [{"pergunta": "...", "alternativas": ["A) ...", "B) ...", "C) ...", "D) ...", "E) ..."], "resposta_correta": "Letra da alternativa correta (ex: C)"}, {"pergunta": "...", ...}]}.`;
-                const userPromptSimulado = `Crie 5 questões de múltipla escolha sobre o tópico "${topico}" no nível ${document.getElementById("nivel").value}. Cada questão deve ter 5 alternativas.`;
+                const systemPromptFlashcard = `Você é um gerador de flashcards. Sua única resposta deve ser APENAS JSON válido, sem texto introdutório. O JSON deve ser um array de **5 objetos**, onde cada objeto tem uma "pergunta" (frente do card) e uma "resposta" (verso do card). O formato deve ser: [{"pergunta": "...", "resposta": "..."}, {"pergunta": "...", ...}].`;
+                const userPromptFlashcard = `Crie 5 flashcards de pergunta e resposta sobre o tópico "${topico}" no nível ${document.getElementById("nivel").value}.`;
+
+                const response = await fetch(GROQ_ENDPOINT, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json", "Authorization": `Bearer ${API_KEY}` },
+                    body: JSON.stringify({ model: MODEL_NAME, messages: [{ role: "system", content: systemPromptFlashcard }, { role: "user", content: userPromptFlashcard }], response_format: { type: "json_object" }, temperature: 0.6 })
+                });
+
+                if (!response.ok) { throw new Error(`Erro API: ${response.status}`); }
+                const data = await response.json();
+                let texto = data?.choices?.[0]?.message?.content || "Erro ao gerar flashcards.";
+
+                let parsedData;
+                try {
+                    parsedData = JSON.parse(texto.trim());
+                } catch (e) {
+                    let jsonMatch = texto.replace(/[\u0000-\u001F\u007F-\u009F]/g, "").trim().match(/\[[\s\S]*\]/);
+                    if (!jsonMatch) throw new Error("Não foi possível extrair JSON dos flashcards.");
+                    parsedData = JSON.parse(jsonMatch[0]);
+                }
+                
+                currentFlashcards = Array.isArray(parsedData) ? parsedData : parsedData.flashcards || [parsedData];
+                currentFlashcardIndex = 0;
+                renderFlashcard();
+
+            } catch (err) {
+                console.error("Erro no Flashcard:", err);
+                flashcardDisplay.innerHTML = `<p>⚠️ Erro ao gerar flashcards. Causa: ${err.message}.</p>`;
+            }
+        }
+        
+        function renderFlashcard() {
+            const flashcardDisplay = document.getElementById("flashcard-display");
+            
+            if (currentFlashcards.length === 0) {
+                flashcardDisplay.innerHTML = "<p>Nenhum flashcard gerado.</p>";
+                return;
+            }
+
+            const card = currentFlashcards[currentFlashcardIndex];
+            const total = currentFlashcards.length;
+
+            flashcardDisplay.innerHTML = `
+                <p>Card ${currentFlashcardIndex + 1} de ${total}</p>
+                <div class="flashcard" id="current-flashcard" onclick="toggleFlip()">
+                    <div class="flashcard-inner">
+                        <div class="flashcard-face flashcard-front">
+                            <p style="font-weight: bold;">PERGUNTA:</p>
+                            <p>${card.pergunta}</p>
+                        </div>
+                        <div class="flashcard-face flashcard-back">
+                            <p style="font-weight: bold;">RESPOSTA:</p>
+                            <p>${card.resposta.replace(/\*\*(.*?)\*\*/g, "<b>$1</b>").replace(/\n/g, "<br>")}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flashcard-navigation">
+                    <button class="btn-secondary" onclick="prevFlashcard()" ${currentFlashcardIndex === 0 ? 'disabled' : ''}>Anterior</button>
+                    <button class="btn-success" onclick="nextFlashcard()" ${currentFlashcardIndex === total - 1 ? 'disabled' : ''}>Próximo</button>
+                </div>
+            `;
+        }
+
+        function toggleFlip() {
+            document.getElementById('current-flashcard').classList.toggle('flipped');
+        }
+
+        function prevFlashcard() {
+            if (currentFlashcardIndex > 0) {
+                currentFlashcardIndex--;
+                renderFlashcard();
+            }
+        }
+
+        function nextFlashcard() {
+            if (currentFlashcardIndex < currentFlashcards.length - 1) {
+                currentFlashcardIndex++;
+                renderFlashcard();
+            }
+        }
+
+        // --- FUNÇÃO NOVO: SIMULADO POR ETAPA ---
+
+        let currentSimuladoEtapa = [];
+        let userAnswers = {};
+
+        async function showSimuladoEtapaView() {
+            hideAllViews();
+            window.scrollTo(0, 0); 
+            viewMap["simulado-etapa-view"].style.display = 'block';
+
+            const etapa = modalState.currentEtapa;
+            document.getElementById("simulado-etapa-titulo").innerText = `Simulado Completo: ${etapa.titulo}`;
+            const simuladoConteudo = document.getElementById("simulado-etapa-conteudo");
+            const simuladoBotoes = document.getElementById("simulado-etapa-botoes");
+
+            simuladoConteudo.innerHTML = `<p>Carregando simulado de 20+ questões sobre a etapa: <strong>${etapa.titulo}</strong>...</p>`;
+            simuladoBotoes.innerHTML = '';
+            currentSimuladoEtapa = [];
+            userAnswers = {};
+
+            try {
+                const systemPromptSimulado = `Você é um gerador de questões de múltipla escolha. Crie um simulado de no mínimo 20 (vinte) questões sobre todos os tópicos fornecidos. Sua única resposta deve ser APENAS JSON válido, sem texto introdutório. O JSON deve ser um objeto contendo um array de "simulados" seguindo o formato: {"simulados": [{"pergunta": "...", "alternativas": ["A) ...", "B) ...", "C) ...", "D) ...", "E) ..."], "resposta_correta": "Letra da alternativa correta (ex: C)"}, ...]}.`;
+                const topicosEtapa = etapa.topicos.map(t => t.tópico).join(", ");
+                const userPromptSimulado = `Crie no mínimo 20 questões de múltipla escolha sobre os seguintes tópicos da etapa: ${topicosEtapa} no nível ${document.getElementById("nivel").value}. Cada questão deve ter 5 alternativas.`;
 
                 const response = await fetch(GROQ_ENDPOINT, {
                     method: "POST",
@@ -981,48 +1134,116 @@
                     parsedData = JSON.parse(jsonMatch[0]);
                 }
                 
-                const simulados = parsedData.simulados || [parsedData]; 
-                
-                const simuladosHtml = simulados.map((simulado, index) => {
-                    const alternativasHtml = simulado.alternativas.map((alt) => {
-                        const letra = alt.charAt(0);
-                        return `<li class="alternativa" data-correta="${letra === simulado.resposta_correta.charAt(0)}" onclick="return false;"> ${alt}</li>`;
-                    }).join("");
-
-                    return `<div class="simulado-bloco"><h4>Questão ${index + 1}:</h4><p><strong>${simulado.pergunta}</strong></p><ul>${alternativasHtml}</ul><button class="btnVerResposta" onclick="mostrarResposta(this)">Ver Resposta</button><p class="feedback" style="font-weight: bold; margin-top: 10px;"></p></div><hr>`;
-                }).join("");
-
-                simuladoConteudo.innerHTML = `<div class="simulado-area">${simuladosHtml}</div>`;
+                currentSimuladoEtapa = parsedData.simulados || [parsedData];
+                renderSimuladoEtapa();
 
             } catch (err) {
-                console.error("Erro no Simulado:", err);
-                simuladoConteudo.innerHTML = `<p>⚠️ Erro ao gerar simulado. Causa: ${err.message}.</p>`;
+                console.error("Erro no Simulado Etapa:", err);
+                simuladoConteudo.innerHTML = `<p>⚠️ Erro ao gerar simulado da etapa. Causa: ${err.message}.</p>`;
             }
         }
 
-        function mostrarResposta(button) {
-            const simuladoBloco = button.closest('.simulado-bloco');
-            if (!simuladoBloco) return;
+        function renderSimuladoEtapa() {
+            const simuladoConteudo = document.getElementById("simulado-etapa-conteudo");
+            const simuladoBotoes = document.getElementById("simulado-etapa-botoes");
 
-            const alternativas = simuladoBloco.querySelectorAll('.alternativa');
-            const feedback = simuladoBloco.querySelector('.feedback');
+            if (currentSimuladoEtapa.length === 0) {
+                 simuladoConteudo.innerHTML = "<p>Nenhuma questão gerada.</p>";
+                 return;
+            }
 
-            alternativas.forEach(li => {
-                if (li.dataset.correta === 'true') {
-                    li.style.backgroundColor = '#d4edda'; 
-                    li.style.color = '#155724';
-                } else {
-                    li.classList.add('incorreta'); 
-                }
-                li.style.cursor = 'default';
-                li.onclick = null; 
-            });
+            const simuladosHtml = currentSimuladoEtapa.map((simulado, index) => {
+                const alternativasHtml = simulado.alternativas.map((alt, altIndex) => {
+                    const letra = alt.charAt(0);
+                    const isSelected = userAnswers[index] === letra;
+                    return `<li class="alternativa ${isSelected ? 'selected' : ''}" 
+                                data-question-index="${index}" 
+                                data-answer="${letra}" 
+                                onclick="selectAlternative(this)">
+                                ${alt}
+                            </li>`;
+                }).join("");
+
+                return `<div class="simulado-bloco" data-index="${index}">
+                            <h4>Questão ${index + 1}:</h4>
+                            <p><strong>${simulado.pergunta}</strong></p>
+                            <ul>${alternativasHtml}</ul>
+                        </div><hr>`;
+            }).join("");
+
+            simuladoConteudo.innerHTML = `<div class="simulado-area">${simuladosHtml}</div><div id="simulado-resultado" style="display:none;"></div>`;
             
-            button.style.display = 'none';
-            if (feedback) {
-                feedback.innerText = 'A resposta correta está destacada.';
-            }
+            // Botão de corrigir só aparece se o simulado existir
+            simuladoBotoes.innerHTML = `<button class="btn-primary" onclick="corrigirSimuladoEtapa()">Corrigir e Ver Resultado</button>`;
         }
+        
+        function selectAlternative(liElement) {
+            const questionIndex = liElement.getAttribute('data-question-index');
+            const answer = liElement.getAttribute('data-answer');
+            const ul = liElement.closest('ul');
+            
+            // Remove seleção de todas as alternativas
+            ul.querySelectorAll('.alternativa').forEach(li => li.classList.remove('selected'));
+            
+            // Adiciona seleção à alternativa clicada
+            liElement.classList.add('selected');
+            
+            // Armazena a resposta do usuário
+            userAnswers[questionIndex] = answer;
+        }
+
+        function corrigirSimuladoEtapa() {
+            let acertos = 0;
+            const totalQuestoes = currentSimuladoEtapa.length;
+
+            currentSimuladoEtapa.forEach((simulado, index) => {
+                const bloco = document.querySelector(`.simulado-bloco[data-index="${index}"]`);
+                if (!bloco) return;
+                
+                const alternativas = bloco.querySelectorAll('.alternativa');
+                const respostaCorreta = simulado.resposta_correta.charAt(0);
+                const respostaUsuario = userAnswers[index];
+                
+                // Desabilita cliques após a correção
+                alternativas.forEach(li => li.onclick = null);
+
+                alternativas.forEach(li => {
+                    const letra = li.getAttribute('data-answer');
+                    li.classList.remove('selected'); // Remove a seleção temporária
+
+                    if (letra === respostaCorreta) {
+                        li.classList.add('correta-destacada'); // Marca a correta
+                    } 
+                    
+                    if (letra === respostaUsuario && letra !== respostaCorreta) {
+                        li.classList.add('incorreta'); // Marca a incorreta do usuário
+                    }
+                });
+
+                if (respostaUsuario === respostaCorreta) {
+                    acertos++;
+                }
+            });
+
+            const porcentagem = (acertos / totalQuestoes) * 100;
+            const resultadoDiv = document.getElementById('simulado-resultado');
+            
+            resultadoDiv.innerHTML = `
+                <h3>Resultado Final</h3>
+                <p>Total de Questões: <strong>${totalQuestoes}</strong></p>
+                <p>Acertos: <strong style="color: var(--color-success);">${acertos}</strong></p>
+                <p>Erros: <strong style="color: var(--color-danger);">${totalQuestoes - acertos}</strong></p>
+                <p>Taxa de Acerto: <strong style="font-size: 1.5em; color: ${porcentagem >= 70 ? 'var(--color-success)' : 'var(--color-danger)'}">${porcentagem.toFixed(2)}%</strong></p>
+            `;
+            resultadoDiv.style.display = 'block';
+            
+            // Remove o botão de corrigir
+            document.getElementById("simulado-etapa-botoes").innerHTML = '';
+            
+            // Rola para o resultado
+            resultadoDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+
 
         // --- LÓGICA DO CHATBOT PATOLINDO (COM RESTRIÇÃO DE TEMA) ---
 
@@ -1046,7 +1267,6 @@
         function resetPatolindoSession() {
             patolindoState.questionsLeft = 5;
             
-            // NOVO PROMPT DO SISTEMA COM RESTRIÇÃO
             const themeRestriction = currentTheme ? `O ÚNICO TEMA permitida para conversação é: "${currentTheme}". Você deve RECUSAR educadamente perguntas fora deste assunto.` : "Nenhuma trilha de estudos foi gerada. Você deve recusar perguntas até que uma trilha seja gerada.";
 
             patolindoState.history = [{
@@ -1066,7 +1286,6 @@
             
             if (!question || patolindoState.questionsLeft <= 0) return;
             
-            // 1. Exibe a pergunta do usuário
             appendMessage(question, 'user');
             input.value = ''; 
             
@@ -1074,20 +1293,16 @@
             sendButton.disabled = true; 
             
             try {
-                // Adiciona a pergunta do usuário ao histórico
                 patolindoState.history.push({ role: "user", content: question });
 
-                // Prepara o contexto da trilha
                 const roadmapContext = modalState.etapas ? JSON.stringify(modalState.etapas) : "Nenhuma trilha de estudos foi gerada ainda.";
                 
-                // Cria a mensagem do sistema, incluindo o contexto da trilha
                 const systemContext = {
                     role: "system",
                     content: patolindoState.history[0].content + 
                              ` O contexto da trilha de estudos atual do usuário é: ${roadmapContext}. Você deve ser rigoroso em se manter APENAS no tema da trilha.`
                 };
                 
-                // Envia o contexto do sistema + histórico da conversa (excluindo a instrução inicial)
                 const messagesToSend = [systemContext].concat(patolindoState.history.slice(1)); 
 
                 const response = await fetch(GROQ_ENDPOINT, {
@@ -1101,18 +1316,14 @@
                 const data = await response.json();
                 const answer = data?.choices?.[0]?.message?.content || "Desculpe, não consegui processar a sua pergunta no momento.";
 
-                // 3. Exibe a resposta do bot
                 appendMessage(answer, 'bot');
                 
-                // 4. Atualiza o estado APENAS se não for uma recusa explícita
-                // Tentativa de checar se a resposta é uma recusa para não gastar o contador
                 const isRefusal = answer.toLowerCase().includes("não consigo responder") || answer.toLowerCase().includes("fora do tema");
 
                 if (!isRefusal) {
                     patolindoState.history.push({ role: "assistant", content: answer });
                     patolindoState.questionsLeft--;
                 } else {
-                    // Adiciona a recusa ao histórico mas mantém a contagem
                      patolindoState.history.push({ role: "assistant", content: answer });
                 }
                 
