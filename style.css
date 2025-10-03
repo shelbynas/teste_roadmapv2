@@ -1,5 +1,5 @@
 /* ===================================================
-// ARQUIVO: style.css (Duolingo-Intuitivo com Paleta Amarela)
+// ARQUIVO: style.css (Layout Mobile-First de Coluna Única)
 // =================================================== */
 
 /* --- Variáveis de Cor Quackademy --- */
@@ -49,10 +49,10 @@ body {
     background-color: var(--color-card);
     border-radius: var(--border-radius-high);
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    border-bottom: 4px solid #E5E5E5; /* Efeito 3D sutil para táteis */
+    border-bottom: 4px solid #E5E5E5; 
 }
 
-/* --- TELAS DE FLUXO INICIAL (Fluxo corrigido) --- */
+/* --- TELAS DE FLUXO INICIAL --- */
 .screen-flow {
     display: flex;
     justify-content: center;
@@ -128,19 +128,22 @@ header p {
 
 main {
     padding: 20px 0;
+    /* REMOVIDO: display: flex; e gap: 40px; daqui para forçar layout de coluna única */
 }
 
-/* --- CONTROLES / FORMULÁRIO (Intuitivo) --- */
+/* --- CONTROLES / FORMULÁRIO (Retrátil) --- */
 .controles-wrapper {
     padding: 25px;
     margin-bottom: 20px;
-    border-radius: 0 0 var(--border-radius-high) var(--border-radius-high);
+    border-radius: var(--border-radius-high); /* Arredondado em tudo, mesmo no mobile */
 }
 
 .controles-wrapper.retraido {
     padding: 15px 25px; 
     cursor: pointer;
 }
+
+/* ... (Estilos de Mascote, Input e Botões permanecem os mesmos) ... */
 
 .controles-wrapper.retraido .form-content,
 .controles-wrapper.retraido .mascote-area h2 {
@@ -182,7 +185,6 @@ main {
     margin: 0 10px 0 0;
 }
 
-/* --- Inputs e Labels (Táteis) --- */
 .form-content label {
     display: block;
     margin-top: 20px;
@@ -195,7 +197,7 @@ main {
 .form-content select,
 .form-content textarea {
     width: 100%;
-    padding: 18px 15px; /* MAIOR ÁREA DE TOQUE */
+    padding: 18px 15px; 
     border: 2px solid #E5E5E5;
     border-radius: var(--border-radius-low);
     box-sizing: border-box;
@@ -204,7 +206,6 @@ main {
     font-weight: 500;
 }
 
-/* --- BOTÕES (Foco no Amarelo e Ação) --- */
 .btn-primary {
     display: block;
     width: 100%;
@@ -213,7 +214,7 @@ main {
     background-color: var(--color-primary);
     color: var(--color-text);
     border: none;
-    border-bottom: 4px solid var(--color-primary-dark); /* Sombra 3D */
+    border-bottom: 4px solid var(--color-primary-dark); 
     border-radius: var(--border-radius-high);
     font-size: 1.2em;
     font-weight: 800;
@@ -260,7 +261,7 @@ main {
     margin: 0 auto 20px auto; 
 }
 
-/* --- Área do Roadmap (Módulos de Lição) --- */
+/* --- Área do Roadmap --- */
 #roadmap-container {
     padding: 30px 25px;
 }
@@ -280,12 +281,11 @@ main {
     padding-top: 10px;
 }
 
-/* Bloco das Etapas (Foco, Arredondado) */
 .bloco {
     padding: 20px;
     background-color: var(--color-primary);
     color: var(--color-text);
-    border-radius: 50%; /* Circular */
+    border-radius: 50%; 
     text-align: center;
     font-weight: 800;
     font-size: 1.1em;
@@ -356,23 +356,23 @@ main {
 /* --- Media Queries (Desktop) --- */
 @media (min-width: 993px) {
     main {
-        display: flex;
-        gap: 40px;
+        /* Garante layout de coluna única mesmo no desktop */
+        display: block; 
         padding: 40px 0;
     }
     
     .controles-wrapper {
-        min-width: 350px;
-        width: 350px;
-        flex-shrink: 0;
-        border-radius: var(--border-radius-high);
+        width: 100%;
+        max-width: 1000px;
         padding: 30px;
+        margin-bottom: 40px;
     }
 
     .roadmap-grid {
         grid-template-columns: repeat(4, 1fr);
     }
     
+    /* Layout do Modal é o único que pode ser flex */
     .topico-bloco {
         flex-direction: row;
     }
