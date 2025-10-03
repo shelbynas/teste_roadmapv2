@@ -13,50 +13,50 @@
         <div class="message-card">
             <img src="mascote_inicial.png" alt="Mascote Quackademy, o Pato" class="mascote-welcome">
             
-            <h2>🦆 Bem-vindo ao Quackademy! </h2>
-            <p>Pare de se afogar em tutoriais soltos. Nós transformamos o caos do aprendizado online em uma <strong>trilha de estudos estruturada e à prova de procrastinação</strong>.</p>
-            <button id="btnWelcomeContinue" class="btn-primary">Descubra como</button>
+            <h2 class="title-quack">🦆 Olá! Bem-vindo ao Quackademy. </h2>
+            <p>Seu caos de estudos acabou. Transformamos o aprendizado online em uma **trilha estruturada e guiada**.</p>
+            <button id="btnWelcomeContinue" class="btn-primary">Iniciar Jornada</button>
         </div>
     </section>
 
     <section id="explanation-screen" class="screen-flow hidden-screen">
         <div class="message-card">
-            <h2>Sua Jornada de Aprendizado Personalizada</h2>
+            <h2 class="title-quack">Como Funciona a Trilha?</h2>
             <div class="explanation-content">
-                <h3>🧠 O Nosso Propósito</h3>
-                <p>A <strong>Quackademy</strong> usa a IA para criar um plano de estudos único, focado em **atividades práticas** e no **entendimento real**.</p>
+                <h3>🧠 Seu Método de Sucesso</h3>
+                <p>Nossa IA gera seu plano com foco em **aplicação prática** e entendimento profundo.</p>
                 
-                <h3>⚙️ Como Funciona Nossa Trilha</h3>
-                <ul>
-                    <li><strong>8 Etapas Guiadas:</strong> Plano de estudos personalizado.</li>
-                    <li><strong>Material Confiável:</strong> Link obrigatório para fontes oficiais.</li>
-                    <li><strong>Teste de Conhecimento:</strong> Simulados para forçar o *entendimento* do conceito.</li>
+                <h3>✅ Trilha de Alto Nível</h3>
+                <ul class="list-quack">
+                    <li>**8 Etapas:** Módulos de estudo personalizados.</li>
+                    <li>**Fontes Confiáveis:** Links para documentação e tutoriais oficiais.</li>
+                    <li>**Teste de Foco:** Simulados rápidos para fixar o conteúdo.</li>
                 </ul>
             </div>
-            <button id="btnExplanationContinue" class="btn-primary">Começar Minha Trilha 🚀</button>
+            <button id="btnExplanationContinue" class="btn-primary">Estou Pronto! 🚀</button>
         </div>
     </section>
     
     <div id="main-app" class="hidden-screen">
         <header>
             <div class="container">
-                <h1>Quackademy</h1>
-                <p>Guia de aprendizado estruturado.</p>
+                <h1 class="logo-text">Quackademy</h1>
+                <p>Defina seu objetivo e comece a lição.</p>
             </div>
         </header>
 
         <main class="container">
-            <div id="controles-wrapper" class="controles-wrapper">
+            <div id="controles-wrapper" class="controles-wrapper card-quack">
                 <div class="mascote-area">
                     <img src="mascote.png" alt="Mascote Quackademy" class="mascote">
-                    <h2>Defina seu Desafio</h2>
+                    <h2 class="title-quack">Defina seu Desafio</h2>
                 </div>
                 
                 <div id="form-content" class="form-content">
-                    <label for="tema">Tema ou Tecnologia:</label>
-                    <input type="text" id="tema" placeholder="Ex: Python, Cloud Computing, etc." required>
+                    <label for="tema">Tema/Tecnologia:</label>
+                    <input type="text" id="tema" placeholder="Ex: Python, Figma, Cloud..." required>
                     
-                    <label for="nivel">Nível de Dificuldade:</label>
+                    <label for="nivel">Nível:</label>
                     <select id="nivel">
                         <option value="Iniciante">Iniciante</option>
                         <option value="Intermediário">Intermediário</option>
@@ -64,9 +64,9 @@
                     </select>
                     
                     <label for="objetivo">Objetivo Específico (Opcional):</label>
-                    <textarea id="objetivo" placeholder="Ex: Aprender a criar um backend com Node.js e Express."></textarea>
+                    <textarea id="objetivo" placeholder="Ex: Criar um e-commerce com React e Node."></textarea>
                     
-                    <button id="btnGerar" class="btn-primary">Gerar Trilha 🚀</button>
+                    <button id="btnGerar" class="btn-primary">Gerar Minha Trilha</button>
                 </div>
             </div>
 
@@ -74,18 +74,18 @@
                 ⚙️ Alterar Desafio
             </button>
 
-            <div id="roadmap-container">
-                <h2>Sua Trilha de Estudos</h2>
+            <div id="roadmap-container" class="card-quack">
+                <h2 class="title-quack">Sua Trilha de Módulos</h2>
                 <div id="roadmap" class="roadmap-grid">
-                    <p class="placeholder-text">Preencha o formulário acima e gere sua primeira trilha!</p>
+                    <p class="placeholder-text">Preencha o formulário e veja sua trilha aqui!</p>
                 </div>
             </div>
         </main>
     </div>
 
     <div id="modal" class="modal">
-        <div class="modal-content">
-            <h2 id="modal-titulo"></h2>
+        <div class="modal-content modal-quack">
+            <h2 id="modal-titulo" class="title-quack"></h2>
             <div id="modal-conteudo"></div>
         </div>
     </div>
