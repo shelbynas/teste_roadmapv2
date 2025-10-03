@@ -3,87 +3,332 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quackademy - Trilha de Estudos</title>
-    <link rel="stylesheet" href="/style.css">
-    <link rel="icon" href="favicon.ico"> 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <title>AI Study App - Protótipo Groq</title>
+    <style>
+        :root {
+            --color-primary: #38bdf8; /* Tailwind Sky 400 */
+            --color-secondary: #0f172a; /* Tailwind Slate 900 */
+            --color-background: #f8fafc; /* Tailwind Slate 50 */
+            --color-card: #ffffff;
+            --color-text: #1f2937; /* Tailwind Gray 800 */
+            --color-success: #10b981; /* Tailwind Green 500 */
+            --color-error: #ef4444; /* Tailwind Red 500 */
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.6;
+        }
+        #welcome-screen, #explanation-screen {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+            padding: 20px;
+        }
+        #main-app {
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: var(--color-secondary);
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+        h2 {
+            font-size: 1.5em;
+            color: var(--color-secondary);
+            border-bottom: 2px solid var(--color-primary);
+            padding-bottom: 10px;
+            margin-top: 30px;
+        }
+        .input-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        input[type="text"], select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 1em;
+        }
+        button, .bloco {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin-top: 10px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .btn-primary {
+            background-color: var(--color-primary);
+            color: var(--color-card);
+        }
+        .btn-secondary {
+            background-color: #e5e7eb; /* Tailwind Gray 200 */
+            color: var(--color-text);
+        }
+        button:hover {
+            opacity: 0.9;
+        }
+        /* ROADMAP STYLES */
+        #roadmap {
+            margin-top: 30px;
+        }
+        .bloco {
+            background-color: var(--color-card);
+            border: 1px solid #e5e7eb;
+            color: var(--color-text);
+            text-align: left;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        .bloco:hover {
+            background-color: #f3f4f6;
+        }
+
+        /* MODAL STYLES */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: var(--color-background); /* Fundo claro para mobile */
+            padding-top: 20px;
+        }
+        .modal-content {
+            background-color: var(--color-card);
+            margin: 0 auto;
+            padding: 20px;
+            border-radius: 0;
+            width: 100%;
+            height: 100%;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+        .modal-content h3 {
+            color: var(--color-secondary);
+            margin-top: 20px;
+            font-size: 1.3em;
+        }
+        .modal-actions {
+            margin-top: 20px;
+            padding-bottom: 30px;
+        }
+
+        /* TÓPICOS DENTRO DO MODAL */
+        .topico-bloco {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .material-btn {
+            flex: 2; /* Ocupa mais espaço */
+            padding: 10px;
+            text-align: center;
+            font-weight: 600;
+        }
+        .btn-simulado {
+            flex: 1; /* Ocupa menos espaço */
+            background-color: #f97316; /* Tailwind Orange 500 */
+            color: var(--color-card);
+            padding: 10px;
+        }
+
+        /* SIMULADO STYLES */
+        .simulado-area ul {
+            list-style: none;
+            padding: 0;
+        }
+        .alternativa {
+            padding: 10px;
+            margin-bottom: 8px;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            background-color: #f9fafb;
+            cursor: pointer;
+        }
+        .alternativa[data-correta="true"] {
+            background-color: #d4edda; /* Verde claro */
+            color: #155724;
+            font-weight: bold;
+        }
+        .alternativa.incorreta {
+            background-color: #f8d7da; /* Vermelho claro */
+        }
+        .btnVerResposta {
+            background-color: #3b82f6;
+            color: white;
+            padding: 8px;
+            font-size: 0.9em;
+            width: auto;
+            margin-top: 0;
+            display: inline-block;
+        }
+
+        /* CHAT DRAWER STYLES */
+        #chat-drawer {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            width: 100%;
+            height: 0; /* Começa escondido */
+            background-color: var(--color-card);
+            z-index: 2000;
+            box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
+            transition: height 0.3s ease-in-out;
+            display: flex;
+            flex-direction: column;
+        }
+        #chat-drawer.open {
+            height: 80%; /* Altura para mobile */
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+        }
+        .chat-header {
+            padding: 15px 20px;
+            background-color: var(--color-secondary);
+            color: var(--color-card);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+        }
+        .chat-header button {
+            width: auto;
+            padding: 5px 10px;
+            margin: 0;
+            background-color: transparent;
+            color: var(--color-card);
+            font-size: 1.5em;
+        }
+        .chat-body {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .chat-input-area {
+            padding: 10px 20px;
+            border-top: 1px solid #ccc;
+            display: flex;
+        }
+        #chat-input {
+            flex-grow: 1;
+            margin-right: 10px;
+            border-radius: 20px;
+        }
+        #btnEnviarChat {
+            width: auto;
+            padding: 10px 15px;
+            margin: 0;
+            border-radius: 20px;
+        }
+
+        /* CHAT BUBBLES */
+        .message {
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 15px;
+            max-width: 80%;
+            font-size: 0.9em;
+        }
+        .user-message {
+            background-color: #e0f2fe; /* Light Blue */
+            margin-left: auto;
+            text-align: right;
+        }
+        .ai-message {
+            background-color: #f3f4f6; /* Light Gray */
+            margin-right: auto;
+            text-align: left;
+        }
+
+        /* CHAT BUTTON FLOATER */
+        #btnOpenChat {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--color-success);
+            color: var(--color-card);
+            font-size: 1.5em;
+            line-height: 60px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            z-index: 1500;
+            border: none;
+            display: none; /* Só aparece quando o roadmap for gerado */
+        }
+    </style>
 </head>
 <body>
 
-    <section id="welcome-screen" class="full-screen-message">
-        <div class="message-card">
-            <img src="mascote_inicial.png" alt="Mascote Quackademy, o Pato" class="mascote-welcome">
-            
-            <h2>🦆 Bem-vindo ao Quackademy! </h2>
-            <p>Pare de se afogar em tutoriais soltos. Nós transformamos o caos do aprendizado online em uma <strong>trilha de estudos estruturada e à prova de procrastinação</strong>.</p>
-            <button id="btnWelcomeContinue" class="btn-primary">Descubra como</button>
+    <div id="welcome-screen">
+        <h1>Bem-vindo ao AI Study App!</h1>
+        <p>Acelere seu aprendizado com Roadmaps, Simulados e um Tutor IA dedicado. Clique para começar!</p>
+        <button id="btnWelcomeContinue" class="btn-primary">Continuar</button>
+    </div>
+
+    <div id="explanation-screen">
+        <h1>Como Funciona</h1>
+        <p>1. **Gere o Roadmap:** Defina o tema e nível para criar sua trilha de estudo.</p>
+        <p>2. **Estude e Pratique:** Clique nas etapas para ver o material e gerar simulados.</p>
+        <p>3. **Tire Dúvidas:** Use o chat dedicado para perguntas sobre o tópico que está estudando. Boa jornada!</p>
+        <button id="btnExplanationContinue" class="btn-primary">Entendi, Iniciar App</button>
+    </div>
+
+    <div id="main-app">
+        <h1>🛠️ Gerador de Roadmap</h1>
+
+        <div class="input-group">
+            <label for="tema">Tema de Estudo (Ex: React Hooks, Python Data Science, História Antiga)</label>
+            <input type="text" id="tema" value="Fundamentos de Python para Web">
         </div>
-    </section>
 
-    <section id="explanation-screen" class="full-screen-message" style="display: none;">
-        <div class="message-card">
-            <h2>Sua Jornada de Aprendizado Personalizada</h2>
-            <div style="text-align: left; margin: 20px 0;">
-                
-                <h3>🧠 O Nosso Propósito</h3>
-                <p>
-                    A <strong>Quackademy</strong> foi criada para você que está cansado de apenas copiar e colar. Usamos a IA para criar um plano de estudos único, focado em <strong>atividades práticas</strong> e no <strong>entendimento real</strong>.
-                </p>
-                
-                <h3>⚙️ Como Funciona Nossa Trilha</h3>
-                <ul>
-                    <li><strong>Trilhas Guiadas:</strong> Você informa o tema e o nível, e nossa IA gera uma <strong>Trilha de Estudos de 8 Etapas</strong> personalizadas.</li>
-                    <li><strong>Material Confiável:</strong> Cada tópico vem com um link obrigatório de documentação oficial ou fonte renomada.</li>
-                    <li><strong>Teste Seu Conhecimento:</strong> Criamos <strong>Simulados de 5 Questões</strong> para forçar você a *aplicar* e *entender* o conceito, garantindo que você nunca caia no ciclo de apenas pegar a resposta.</li>
-                </ul>
-            </div>
-            <button id="btnExplanationContinue" class="btn-primary">Começar Minha Trilha 🚀</button>
+        <div class="input-group">
+            <label for="nivel">Nível</label>
+            <select id="nivel">
+                <option value="iniciante">Iniciante</option>
+                <option value="intermediario">Intermediário</option>
+                <option value="avancado">Avançado</option>
+            </select>
         </div>
-    </section>
 
-    <div id="main-app" style="display: none;">
-        <header>
-            <div class="container">
-                <h1>Quackademy Trilha de Estudos</h1>
-                <p>O seu guia para o aprendizado acelerado e estruturado.</p>
-            </div>
-        </header>
-
-        <main class="container">
-            <div class="controles">
-                <div class="mascote-area">
-                    <img src="mascote.png" alt="Mascote Quackademy" class="mascote">
-                    <h2>Defina seu Desafio</h2>
-                </div>
-                
-                <label for="tema">Tema ou Tecnologia:</label>
-                <input type="text" id="tema" placeholder="Ex: Programação Python, Cloud Computing, etc." required>
-                
-                <label for="nivel">Nível de Dificuldade:</label>
-                <select id="nivel">
-                    <option value="Iniciante">Iniciante</option>
-                    <option value="Intermediário">Intermediário</option>
-                    <option value="Avançado">Avançado</option>
-                </select>
-                
-                <label for="objetivo">Objetivo Específico (Opcional):</label>
-                <textarea id="objetivo" placeholder="Ex: Aprender a criar um backend com Node.js e Express."></textarea>
-                
-                <button id="btnGerar" class="btn-primary">Gerar Trilha 🚀</button>
-            </div>
-
-            <div id="roadmap-container">
-                <h2>Sua Trilha de Estudos</h2>
-                <div id="roadmap" class="roadmap-grid">
-                    <p class="placeholder-text">Preencha o formulário ao lado e gere sua primeira trilha!</p>
-                </div>
-            </div>
-        </main>
-
-        <a href="URL_DA_SUA_FERRAMENTA_DE_CHAT" target="_blank" id="chat-button" class="btn-chat" style="display: none;">
-            <i class="fas fa-comments"></i> <span>Dúvidas?</span>
-        </a>
+        <div class="input-group">
+            <label for="objetivo">Objetivo (Opcional)</label>
+            <input type="text" id="objetivo" value="Criar um backend simples com Flask">
         </div>
+
+        <button id="btnGerar" class="btn-primary">✨ Gerar Trilha de Estudos</button>
+
+        <h2>Trilha Gerada</h2>
+        <div id="roadmap">
+            <p>Aguardando a geração do seu roadmap...</p>
+        </div>
+    </div>
 
     <div id="modal" class="modal">
         <div class="modal-content">
@@ -93,6 +338,437 @@
         </div>
     </div>
 
-    <script src="/script.js"></script>
+    <button id="btnOpenChat" title="Chat de Dúvidas"></button>
+
+    <div id="chat-drawer">
+        <div class="chat-header">
+            <span id="chat-topic-title">Tutor IA:</span>
+            <button onclick="closeChatDrawer()">X</button>
+        </div>
+        <div class="chat-body" id="chat-body">
+            <div class="ai-message message">Olá! Eu sou seu tutor IA. Posso te ajudar com dúvidas sobre o tópico que você está estudando. Qual sua dúvida?</div>
+        </div>
+        <div class="chat-input-area">
+            <input type="text" id="chat-input" placeholder="Pergunte aqui...">
+            <button id="btnEnviarChat" class="btn-primary">Enviar</button>
+        </div>
+    </div>
+
+    <script>
+        // ===================================================
+        // VARIÁVEIS DE CONFIGURAÇÃO
+        // ===================================================
+        const API_KEY = "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"; // ⬅️ SUBSTITUA PELA SUA CHAVE
+        const GROQ_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions";
+        const MODEL_NAME = "llama-3.1-8b-instant";
+
+        let modalState = {};
+        let currentTopicContext = "Fundamentos de Estudos"; // Contexto inicial para o chat
+
+        // --- CONTROLE DE FLUXO DA INTERFACE ---
+
+        document.addEventListener("DOMContentLoaded", () => {
+            // Esconde todas as telas e mostra a primeira
+            document.getElementById("explanation-screen").style.display = 'none';
+            document.getElementById("main-app").style.display = 'none';
+            document.getElementById("welcome-screen").style.display = 'flex';
+
+            // Transições de tela
+            document.getElementById("btnWelcomeContinue").addEventListener("click", showExplanationScreen);
+            document.getElementById("btnExplanationContinue").addEventListener("click", showMainApp);
+
+            // Listeners principais
+            document.getElementById("btnGerar").addEventListener("click", gerarRoadmap);
+
+            // Listeners do Chat
+            document.getElementById("btnOpenChat").innerText = '💬'; // Ícone para mobile
+            document.getElementById("btnOpenChat").addEventListener("click", openChatDrawer);
+            document.getElementById("btnEnviarChat").addEventListener("click", handleChatSubmit);
+
+            // Permitir Enter para enviar no chat
+            document.getElementById("chat-input").addEventListener("keypress", (e) => {
+                if (e.key === 'Enter') {
+                    handleChatSubmit();
+                }
+            });
+        });
+
+        function showExplanationScreen() {
+            document.getElementById("welcome-screen").style.display = 'none';
+            document.getElementById("explanation-screen").style.display = 'flex';
+        }
+
+        function showMainApp() {
+            document.getElementById("explanation-screen").style.display = 'none';
+            document.getElementById("main-app").style.display = 'block';
+        }
+
+        // --- LÓGICA DO ROADMAP E SIMULADO (A PARTIR DO CÓDIGO DO USUÁRIO) ---
+
+        // 1. FUNÇÃO PRINCIPAL: GERAR ROADMAP
+        async function gerarRoadmap() {
+            const tema = document.getElementById("tema").value;
+            const nivel = document.getElementById("nivel").value;
+            const objetivo = document.getElementById("objetivo").value;
+            const roadmapDiv = document.getElementById("roadmap");
+            roadmapDiv.innerHTML = "✨ Gerando roadmap...";
+            document.getElementById("btnOpenChat").style.display = 'none'; // Esconde chat até gerar
+
+            if (!tema || API_KEY === "SUA_CHAVE_DA_GROQ_AQUI") {
+                roadmapDiv.innerHTML = "⚠️ Por favor, preencha o Tema e substitua a API_KEY no código.";
+                return;
+            }
+
+            // 💡 ATUALIZA O CONTEXTO PRINCIPAL DA TRILHA
+            currentTopicContext = tema;
+            document.getElementById("chat-topic-title").innerText = `Tutor IA: ${tema}`;
+
+            try {
+                const systemPrompt = `Você é um especialista em educação técnica. Crie um roadmap detalhado com **no mínimo 8 (oito) etapas obrigatórias**. Cada tópico deve ser ultra específico e **DEVE incluir uma URL de documentação oficial ou tutorial renomado** no campo 'material'. Sua única resposta deve ser APENAS JSON válido, sem texto introdutório ou blocos de código markdown. O JSON deve seguir este formato: {"etapas": [{"titulo": "Etapa 1: Nome da etapa", "topicos": [{"tópico": "Nome do tópico", "material": "URL de uma fonte externa"}], "atividade": "Descrição da atividade prática"}]}.`;
+                const userPrompt = `Crie um roadmap de estudos detalhado e abrangente para o tema "${tema}" no nível "${nivel}"${objetivo ? ` com objetivo "${objetivo}"` : ""}. Inclua fontes externas de estudo no campo 'material' para todos os tópicos.`;
+
+                const response = await fetch(GROQ_ENDPOINT, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json", "Authorization": `Bearer ${API_KEY}` },
+                    body: JSON.stringify({
+                        model: MODEL_NAME,
+                        messages: [
+                            { role: "system", content: systemPrompt },
+                            { role: "user", content: userPrompt }
+                        ],
+                        response_format: { type: "json_object" },
+                        temperature: 0.7
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(`Erro API: ${response.status} - ${errorData.error.message}`);
+                }
+
+                const data = await response.json();
+                let texto = data.choices?.[0]?.message?.content || "";
+                let parsed = parseJsonRobustly(texto);
+
+                const etapas = parsed.etapas;
+                modalState.etapas = etapas;
+                roadmapDiv.innerHTML = "";
+
+                etapas.forEach(etapa => {
+                    const blocoDiv = document.createElement("div");
+                    blocoDiv.className = "bloco";
+                    blocoDiv.innerText = etapa.titulo;
+                    blocoDiv.onclick = () => abrirModalMateriais(etapa);
+                    roadmapDiv.appendChild(blocoDiv);
+                });
+                document.getElementById("btnOpenChat").style.display = 'block'; // Mostra chat
+            } catch (err) {
+                console.error("Erro:", err);
+                roadmapDiv.innerHTML = `⚠️ Erro ao gerar roadmap. Causa: ${err.message}.`;
+            }
+        }
+
+        // 2. FUNÇÃO: ABRIR MODAL DA ETAPA
+        function abrirModalMateriais(etapa) {
+            modalState.currentEtapa = etapa;
+            currentTopicContext = etapa.titulo; // 💡 ATUALIZA CONTEXTO PARA O CHAT
+            document.getElementById("chat-topic-title").innerText = `Tutor IA: ${etapa.titulo}`;
+
+            document.getElementById("modal").style.display = "block";
+            document.getElementById("modal-titulo").innerText = etapa.titulo;
+
+            const conteudo = etapa.topicos.map(t => {
+                const topicoEscapado = t.tópico.replace(/'/g,"\\'");
+                const materialLink = t.material ? t.material : "";
+
+                return `
+                    <div class="topico-bloco">
+                        <button class="bloco material-btn" onclick="gerarConteudoMaterial('${topicoEscapado}', '${materialLink}')">${t.tópico}</button>
+                        <button class="btn-simulado" onclick="gerarSimulado('${topicoEscapado}')">🧠 Simulado</button>
+                    </div>
+                `;
+            }).join("");
+
+            document.getElementById("modal-conteudo").innerHTML = `
+                <h3>📌 Atividade prática:</h3>
+                <p>${etapa.atividade}</p>
+                <h3>📚 Tópicos e Simulado:</h3>
+                <div class="topicos-container">${conteudo}</div>
+                <div class="modal-actions">
+                    <button onclick="fecharModal()" class="btn-secondary">❌ Fechar</button>
+                </div>
+            `;
+        }
+
+        // 3. FUNÇÃO: GERAR SIMULADO
+        async function gerarSimulado(topico) {
+            const modalConteudo = document.getElementById("modal-conteudo");
+            modalConteudo.innerHTML = `<p>Carregando simulado sobre: <strong>${topico}</strong>...</p>`;
+            currentTopicContext = topico; // 💡 ATUALIZA CONTEXTO PARA O CHAT
+
+            try {
+                const systemPromptSimulado = `Você é um gerador de questões de múltipla escolha. Sua única resposta deve ser APENAS JSON válido, sem texto introdutório. O JSON deve ser um objeto contendo um array de **5 perguntas**. O formato deve ser: {"simulados": [{"pergunta": "...", "alternativas": ["A) ...", "B) ...", "C) ...", "D) ...", "E) ..."], "resposta_correta": "Letra da alternativa correta (ex: C)"}, {"pergunta": "...", ...}]}.`;
+                const userPromptSimulado = `Crie 5 questões de múltipla escolha sobre o tópico "${topico}" no nível ${document.getElementById("nivel").value}. Cada questão deve ter 5 alternativas.`;
+
+                const response = await fetch(GROQ_ENDPOINT, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json", "Authorization": `Bearer ${API_KEY}` },
+                    body: JSON.stringify({
+                        model: MODEL_NAME,
+                        messages: [
+                            { role: "system", content: systemPromptSimulado },
+                            { role: "user", content: userPromptSimulado }
+                        ],
+                        response_format: { type: "json_object" },
+                        temperature: 0.6
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(`Erro API: ${response.status} - ${errorData.error.message}`);
+                }
+
+                const data = await response.json();
+                let texto = data.choices?.[0]?.message?.content || "Erro ao gerar simulado.";
+                let parsedData = parseJsonRobustly(texto);
+
+                const simulados = parsedData.simulados || [parsedData];
+
+                const simuladosHtml = simulados.map((simulado, index) => {
+                    const alternativasHtml = simulado.alternativas.map((alt) => {
+                        const letra = alt.charAt(0);
+                        return `<li class="alternativa"
+                                        data-correta="${letra === simulado.resposta_correta.charAt(0)}">
+                                        ${alt}
+                                    </li>`;
+                    }).join("");
+
+                    return `
+                        <div class="simulado-bloco">
+                            <h4>Questão ${index + 1}:</h4>
+                            <p><strong>${simulado.pergunta}</strong></p>
+                            <ul>${alternativasHtml}</ul>
+                            <button class="btnVerResposta" onclick="mostrarResposta(this)">Ver Resposta</button>
+                            <p class="feedback" style="font-weight: bold; margin-top: 10px;"></p>
+                        </div>
+                        <hr>
+                    `;
+                }).join("");
+
+                modalConteudo.innerHTML = `
+                    <h3>Simulado: ${topico}</h3>
+                    <div class="simulado-area">
+                        ${simuladosHtml}
+                    </div>
+                    <div class="modal-actions">
+                        <button onclick="abrirModalMateriais(modalState.currentEtapa)" class="btn-secondary">⬅ Voltar</button>
+                    </div>
+                `;
+
+            } catch (err) {
+                // ... (lógica de erro)
+            }
+        }
+
+        // 4. FUNÇÃO: MOSTRAR RESPOSTA DO SIMULADO (inalterada)
+        function mostrarResposta(button) {
+            // ... (lógica do usuário)
+            const simuladoBloco = button.closest('.simulado-bloco');
+            if (!simuladoBloco) return;
+
+            const alternativas = simuladoBloco.querySelectorAll('.alternativa');
+            const feedback = simuladoBloco.querySelector('.feedback');
+
+            alternativas.forEach(li => {
+                if (li.dataset.correta === 'true') {
+                    li.style.backgroundColor = '#d4edda';
+                    li.style.color = '#155724';
+                } else {
+                    li.classList.add('incorreta');
+                }
+                li.style.cursor = 'default';
+            });
+
+            button.style.display = 'none';
+            if (feedback) {
+                feedback.innerText = 'A resposta correta está destacada.';
+            }
+        }
+
+        // 5. FUNÇÃO: GERAR CONTEÚDO MATERIAL (Explicação Detalhada - Alto Custo)
+        async function gerarConteudoMaterial(topico, material) {
+            const modalConteudo = document.getElementById("modal-conteudo");
+            modalConteudo.innerHTML = `<p>Carregando conteúdo sobre: <strong>${topico}</strong>...</p>`;
+            currentTopicContext = topico; // 💡 ATUALIZA CONTEXTO PARA O CHAT
+
+            try {
+                // Não tem max_tokens aqui para permitir a resposta DETALHADA
+                const userPromptMaterial = material
+                    ? `Explique de forma didática e detalhada o tópico "${topico}" consultando o conteúdo do link: ${material}. A sua resposta deve ser APENAS a explicação, sem mencionar a fonte. Se o link for inacessível ou inválido, gere a explicação baseada em seu conhecimento.`
+                    : `Explique de forma didática e detalhada o tópico "${topico}".`;
+
+                const response = await fetch(GROQ_ENDPOINT, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json", "Authorization": `Bearer ${API_KEY}` },
+                    body: JSON.stringify({
+                        model: MODEL_NAME,
+                        messages: [
+                            { role: "user", content: userPromptMaterial }
+                        ],
+                        temperature: 0.8
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(`Erro API: ${response.status} - ${errorData.error.message}`);
+                }
+
+                const data = await response.json();
+                let texto = data.choices?.[0]?.message?.content || "Erro ao gerar conteúdo.";
+
+                // ... (conversão de markdown para HTML)
+                texto = texto.replace(/\*\*(.*?)\*\*/g, "<b>$1</b>");
+                texto = texto.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank">$1</a>');
+
+                // ... (exibição de fonte)
+                let sourceHtml = '';
+                if (material && material !== 'null' && material.startsWith('http')) {
+                    sourceHtml = `
+                        <h3 style="margin-top: 30px; border-left: 5px solid var(--color-primary); padding-left: 12px;">🔗 Fonte Utilizada</h3>
+                        <p><a href="${material}" target="_blank">${material}</a></p>
+                    `;
+                }
+
+                modalConteudo.innerHTML = `
+                    <h3>${topico}</h3>
+                    <div style="max-height:400px; overflow-y:auto; padding-right:10px; white-space: pre-wrap;">
+                        ${texto}
+                    </div>
+                    ${sourceHtml}
+                    <div class="modal-actions">
+                        <button onclick="abrirModalMateriais(modalState.currentEtapa)" class="btn-secondary">⬅ Voltar</button>
+                    </div>
+                `;
+
+            } catch (err) {
+                // ... (lógica de erro)
+            }
+        }
+
+        // 6. FUNÇÃO: FECHAR MODAL (inalterada)
+        function fecharModal() {
+            document.getElementById("modal").style.display = "none";
+        }
+
+        // --- LÓGICA DO CHAT DE DÚVIDAS (NOVA FUNÇÃO - Baixo Custo) ---
+
+        function openChatDrawer() {
+            document.getElementById("chat-drawer").classList.add('open');
+            document.getElementById("chat-input").focus();
+            document.getElementById("btnOpenChat").style.display = 'none';
+            // Garante que o tópico de chat esteja sempre no título
+            document.getElementById("chat-topic-title").innerText = `Tutor IA: ${currentTopicContext}`;
+        }
+
+        function closeChatDrawer() {
+            document.getElementById("chat-drawer").classList.remove('open');
+            // Mostra o botão flutuante apenas se já tiver gerado o roadmap
+            if (document.getElementById("roadmap").innerHTML.includes("bloco")) {
+                document.getElementById("btnOpenChat").style.display = 'block';
+            }
+        }
+
+        async function handleChatSubmit() {
+            const input = document.getElementById("chat-input");
+            const perguntaDoUsuario = input.value.trim();
+            if (!perguntaDoUsuario) return;
+
+            appendMessage(perguntaDoUsuario, 'user');
+            input.value = ''; // Limpa o input
+
+            await chatTiraDuvidas(perguntaDoUsuario);
+        }
+
+        /**
+         * NOVA FUNÇÃO: Chat de Dúvidas (Otimizada para Contexto e Custo)
+         */
+        async function chatTiraDuvidas(perguntaDoUsuario) {
+            const chatBody = document.getElementById("chat-body");
+            const tempMessageId = `temp-${Date.now()}`;
+
+            // Mensagem de "Digitando..."
+            appendMessage("...", 'ai', tempMessageId);
+
+            // 💡 CHAVE DE CUSTO: Limitar o tamanho da resposta (Saída)
+            const MAX_OUTPUT_TOKENS = 250;
+
+            // 💡 CHAVE DE CONTEXTO: Enviar o tópico ativo
+            const systemPromptChat = `Você é um tutor IA focado no tópico: "${currentTopicContext}". Responda à pergunta do usuário de forma clara, didática e direta. Sua resposta deve ter no máximo 200 palavras (garantido por max_tokens). Não inclua nenhuma introdução ou despedida.`;
+
+            try {
+                const response = await fetch(GROQ_ENDPOINT, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json", "Authorization": `Bearer ${API_KEY}` },
+                    body: JSON.stringify({
+                        model: MODEL_NAME,
+                        messages: [
+                            { role: "system", content: systemPromptChat },
+                            { role: "user", content: perguntaDoUsuario }
+                        ],
+                        temperature: 0.5,
+                        max_tokens: MAX_OUTPUT_TOKENS // Otimização de Custo!
+                    })
+                });
+
+                document.getElementById(tempMessageId).remove(); // Remove o "Digitando..."
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(`Erro API: ${response.status} - ${errorData.error.message}`);
+                }
+
+                const data = await response.json();
+                const respostaIA = data.choices?.[0]?.message?.content || "Desculpe, não consegui processar sua dúvida.";
+                appendMessage(respostaIA, 'ai');
+
+            } catch (err) {
+                document.getElementById(tempMessageId)?.remove();
+                console.error("Erro no Chat:", err);
+                appendMessage(`⚠️ Erro ao comunicar com a IA: ${err.message}.`, 'ai');
+            }
+
+            chatBody.scrollTop = chatBody.scrollHeight; // Scroll para o final
+        }
+
+        function appendMessage(text, sender, id = null) {
+            const chatBody = document.getElementById("chat-body");
+            const messageDiv = document.createElement("div");
+            messageDiv.className = `message ${sender}-message`;
+            messageDiv.innerHTML = text.replace(/\n/g, '<br>');
+            if (id) messageDiv.id = id;
+            chatBody.appendChild(messageDiv);
+        }
+
+        // --- UTILITÁRIOS ---
+        // Função robusta para parsear JSON (do código anterior)
+        function parseJsonRobustly(texto) {
+            let textoLimpo = texto.trim().replace(/[\u0000-\u001F\u007F-\u009F]/g, "");
+            let parsed;
+            try {
+                parsed = JSON.parse(textoLimpo);
+            } catch (e) {
+                const jsonMatch = textoLimpo.match(/\{[\s\S]*\}/);
+                if (!jsonMatch) {
+                    throw new Error("Não foi possível extrair JSON da resposta da IA.");
+                }
+                parsed = JSON.parse(jsonMatch[0]);
+            }
+            return parsed;
+        }
+
+    </script>
 </body>
 </html>
+
