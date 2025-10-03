@@ -579,11 +579,8 @@
             document.getElementById("btnGerar").addEventListener("click", gerarRoadmap);
             
             // Listeners dos botões de voltar (dentro das telas de conteúdo)
-            // Usamos a função de voltar na Etapa para reexibir a Etapa correta
             document.getElementById("btnMaterialVoltar").addEventListener("click", () => showEtapaView(modalState.currentEtapa));
             document.getElementById("btnSimuladoVoltar").addEventListener("click", () => showEtapaView(modalState.currentEtapa));
-
-            // Não há mais click fora do modal, pois ele foi removido.
         });
 
         // Funções de transição de telas iniciais
@@ -598,7 +595,7 @@
             showRoadmapScreen(); // Vai direto para a tela do roadmap
         }
 
-        // --- LÓGICA DE NAVEGAÇÃO SPA (NOVA) ---
+        // --- LÓGICA DE NAVEGAÇÃO SPA ---
 
         // Esconde todas as áreas de conteúdo do lado direito da tela
         function hideAllContentViews() {
@@ -611,17 +608,20 @@
         // Exibe a tela principal do Roadmap
         function showRoadmapScreen() {
             hideAllContentViews();
+            // CORREÇÃO CRÍTICA PARA MOBILE
+            window.scrollTo(0, 0);
+            
             document.getElementById("roadmap-screen").style.display = 'block';
-            // Rola para o topo da área do roadmap (melhor UX)
-            document.getElementById("roadmap-container").scrollIntoView({ behavior: 'smooth', block: 'start' }); 
         }
 
-        // Exibe a tela de Tópicos e Atividade (Antigo Conteúdo do Modal)
+        // Exibe a tela de Tópicos e Atividade
         function showEtapaView(etapa) {
             hideAllContentViews();
+            // CORREÇÃO CRÍTICA PARA MOBILE
+            window.scrollTo(0, 0); 
+            
             document.getElementById("etapa-view").style.display = 'block';
-            document.getElementById("etapa-container").scrollIntoView({ behavior: 'smooth', block: 'start' }); 
-
+            
             modalState.currentEtapa = etapa; 
             document.getElementById("etapa-titulo").innerText = etapa.titulo;
             
@@ -663,7 +663,7 @@
             }
             
             try {
-                // PROMPTS: 8 ETAPAS MÍNIMAS e URLS OBRIGATÓRIAS (inalterado)
+                // PROMPTS: 8 ETAPAS MÍNIMAS e URLS OBRIGATÓRIAS
                 const systemPrompt = `Você é um especialista em educação técnica. Crie um roadmap detalhado com **no mínimo 8 (oito) etapas obrigatórias**. Cada tópico deve ser ultra específico e **DEVE incluir uma URL de documentação oficial ou tutorial renomado** no campo 'material'. Sua única resposta deve ser APENAS JSON válido, sem texto introdutório ou blocos de código markdown. O JSON deve seguir este formato: {"etapas": [{"titulo": "Etapa 1: Nome da etapa", "topicos": [{"tópico": "Nome do tópico", "material": "URL de uma fonte externa"}], "atividade": "Descrição da atividade prática"}]}.`;
                 
                 const userPrompt = `Crie um roadmap de estudos detalhado e abrangente para o tema "${tema}" no nível "${nivel}"${objetivo ? ` com objetivo "${objetivo}"` : ""}. Inclua fontes externas de estudo no campo 'material' para todos os tópicos.`;
@@ -734,9 +734,11 @@
         // 2. FUNÇÃO: EXIBIR MATERIAL (showMaterialView)
         async function showMaterialView(topico, material) {
             hideAllContentViews();
-            document.getElementById("material-view").style.display = 'block';
-            document.getElementById("material-container").scrollIntoView({ behavior: 'smooth', block: 'start' });
+            // CORREÇÃO CRÍTICA PARA MOBILE
+            window.scrollTo(0, 0); 
 
+            document.getElementById("material-view").style.display = 'block';
+            
             document.getElementById("material-titulo").innerText = topico;
             const materialConteudo = document.getElementById("material-conteudo");
             materialConteudo.innerHTML = `<p>Carregando conteúdo sobre: <strong>${topico}</strong>...</p>`;
@@ -800,15 +802,17 @@
         // 3. FUNÇÃO: EXIBIR SIMULADO (showSimuladoView)
         async function showSimuladoView(topico) {
             hideAllContentViews();
+            // CORREÇÃO CRÍTICA PARA MOBILE
+            window.scrollTo(0, 0); 
+            
             document.getElementById("simulado-view").style.display = 'block';
-            document.getElementById("simulado-container").scrollIntoView({ behavior: 'smooth', block: 'start' });
-
+            
             document.getElementById("simulado-titulo").innerText = `Simulado: ${topico}`;
             const simuladoConteudo = document.getElementById("simulado-conteudo");
             simuladoConteudo.innerHTML = `<p>Carregando simulado sobre: <strong>${topico}</strong>...</p>`;
 
             try {
-                // PROMPT: 5 QUESTÕES MÍNIMAS (inalterado)
+                // PROMPT: 5 QUESTÕES MÍNIMAS
                 const systemPromptSimulado = `Você é um gerador de questões de múltipla escolha. Sua única resposta deve ser APENAS JSON válido, sem texto introdutório. O JSON deve ser um objeto contendo um array de **5 perguntas**. O formato deve ser: {"simulados": [{"pergunta": "...", "alternativas": ["A) ...", "B) ...", "C) ...", "D) ...", "E) ..."], "resposta_correta": "Letra da alternativa correta (ex: C)"}, {"pergunta": "...", ...}]}.`;
                 
                 const userPromptSimulado = `Crie 5 questões de múltipla escolha sobre o tópico "${topico}" no nível ${document.getElementById("nivel").value}. Cada questão deve ter 5 alternativas.`;
@@ -880,7 +884,7 @@
             }
         }
 
-        // 4. FUNÇÃO: MOSTRAR RESPOSTA DO SIMULADO (inalterado)
+        // 4. FUNÇÃO: MOSTRAR RESPOSTA DO SIMULADO
         function mostrarResposta(button) {
             const simuladoBloco = button.closest('.simulado-bloco');
             if (!simuladoBloco) return;
@@ -904,8 +908,6 @@
                 feedback.innerText = 'A resposta correta está destacada.';
             }
         }
-        
-        // A função fecharModal foi removida, pois não há mais modal.
     </script>
 </body>
 </html>
