@@ -598,7 +598,7 @@
                 <div id="form-view" class="content-view">
                     <div class="controles">
                         <div class="mascote-area">
-                            <img src="mascote.png" alt="Mascote Quackademy" class="mascote">
+                             <img src="mascote.png" alt="Mascote Quackademy" class="mascote">
                             <h2>Defina seu Desafio</h2>
                         </div>
                         
@@ -692,8 +692,8 @@
         // JAVASCRIPT INTEGRADO (script.js)
         // ===================================================
 
-        // ⚠️ CENTRALIZAÇÃO DA CHAVE API ⚠️
-        const API_KEY = "SUA_CHAVE_AQUI"; // ⬅️ COLOQUE SUA CHAVE AQUI APENAS UMA VEZ!
+        // ⚠️ CHAVE API INSERIDA AUTOMATICAMENTE ⚠️
+        const API_KEY = "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"; 
         
         const GROQ_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions";
         const MODEL_NAME = "llama-3.1-8b-instant"; 
@@ -708,18 +708,23 @@
         // --- CONTROLE DE FLUXO DA INTERFACE ---
 
         document.addEventListener("DOMContentLoaded", () => {
+            // Garante que a primeira tela esteja visível e as demais escondidas
             document.getElementById("explanation-screen").style.display = 'none';
             document.getElementById("main-app").style.display = 'none';
             document.getElementById("welcome-screen").style.display = 'flex'; 
 
+            // Listeners para os botões de transição entre as telas fixas
             document.getElementById("btnWelcomeContinue").addEventListener("click", showExplanationScreen);
             document.getElementById("btnExplanationContinue").addEventListener("click", showMainApp);
             
+            // Listener do botão principal
             document.getElementById("btnGerar").addEventListener("click", gerarRoadmap);
             
+            // Listeners dos botões de voltar (dentro das telas de conteúdo)
             document.getElementById("btnMaterialVoltar").addEventListener("click", () => showEtapaView(modalState.currentEtapa));
             document.getElementById("btnSimuladoVoltar").addEventListener("click", () => showEtapaView(modalState.currentEtapa));
             
+            // --- Listeners do Chatbot ---
             document.getElementById("chat-button").addEventListener("click", () => showChatView(patolindoState.lastView));
             document.getElementById("chat-exit-button").addEventListener("click", () => showLastView());
             document.getElementById("chat-send-button").addEventListener("click", handleChatSend);
@@ -827,10 +832,11 @@
         // --- FUNÇÕES DE CONTEÚDO (Roadmap, Material, Simulado) ---
 
         async function checkApiKey(targetDiv) {
-            if (!API_KEY || API_KEY === "Sgsk_ycKkB85OoNwFFCVcMiujWGdyb3FYzOmuXdQ21pklJ7IHhDPytpA9") {
+            if (!API_KEY || API_KEY === "SUA_CHAVE_AQUI") {
                  document.getElementById(targetDiv).innerHTML = "⚠️ **ERRO DE CONFIGURAÇÃO:** Por favor, insira sua chave da API da Groq no script.";
                  return false;
             }
+            // Não precisa mais verificar a chave, ela está hardcoded corretamente
             return true;
         }
 
@@ -848,7 +854,8 @@
                 return;
             }
 
-            if (!await checkApiKey("roadmap")) return;
+            // Não precisa mais do await aqui, pois a chave está inserida.
+            // if (!await checkApiKey("roadmap")) return;
             
             try {
                 const systemPrompt = `Você é um especialista em educação técnica. Crie um roadmap detalhado com **no mínimo 8 (oito) etapas obrigatórias**. Cada tópico deve ser ultra específico e **DEVE incluir uma URL de documentação oficial ou tutorial renomado** no campo 'material'. Sua única resposta deve ser APENAS JSON válido, sem texto introdutório ou blocos de código markdown. O JSON deve seguir este formato: {"etapas": [{"titulo": "Etapa 1: Nome da etapa", "topicos": [{"tópico": "Nome do tópico", "material": "URL de uma fonte externa"}], "atividade": "Descrição da atividade prática"}]}.`;
@@ -873,7 +880,8 @@
 
                 if (!response.ok) {
                     const errorData = await response.json();
-                    throw new Error(`Erro API: ${response.status} - ${errorData.error.message}`);
+                    // Captura e exibe a mensagem de erro da API
+                    throw new Error(`Erro API: ${response.status} - ${errorData.error.message || 'Erro desconhecido.'}`);
                 }
 
                 const data = await response.json();
@@ -882,8 +890,10 @@
                 let textoLimpo = texto.trim();
                 let parsed;
                 try {
+                    // Tenta fazer o parse direto
                     parsed = JSON.parse(textoLimpo);
                 } catch (e) {
+                    // Tenta extrair JSON se houver markdown code block
                     let jsonMatch = textoLimpo.match(/\{[\s\S]*\}/);
                     if (!jsonMatch) throw new Error("Não foi possível extrair JSON da resposta.");
                     parsed = JSON.parse(jsonMatch[0]);
@@ -905,7 +915,8 @@
 
             } catch (err) {
                 console.error("Erro:", err);
-                roadmapDiv.innerHTML = `⚠️ Erro ao gerar roadmap. Causa: ${err.message}.`;
+                // Atualiza a mensagem de erro para ser mais útil ao usuário
+                roadmapDiv.innerHTML = `⚠️ Erro ao gerar roadmap. Verifique sua chave API e tente novamente. Causa: ${err.message}.`;
                 document.getElementById("chat-button").style.display = 'none'; 
             }
         }
@@ -919,7 +930,7 @@
             const materialConteudo = document.getElementById("material-conteudo");
             materialConteudo.innerHTML = `<p>Carregando conteúdo sobre: <strong>${topico}</strong>...</p>`;
             
-            if (!await checkApiKey("material-conteudo")) return;
+            // if (!await checkApiKey("material-conteudo")) return;
 
             try {
                 const userPromptMaterial = `Explique de forma didática e detalhada o tópico "${topico}".`;
@@ -959,7 +970,7 @@
             const simuladoConteudo = document.getElementById("simulado-conteudo");
             simuladoConteudo.innerHTML = `<p>Carregando simulado sobre: <strong>${topico}</strong>...</p>`;
 
-            if (!await checkApiKey("simulado-conteudo")) return;
+            // if (!await checkApiKey("simulado-conteudo")) return;
 
             try {
                 const systemPromptSimulado = `Você é um gerador de questões de múltipla escolha. Sua única resposta deve ser APENAS JSON válido, sem texto introdutório. O JSON deve ser um objeto contendo um array de **5 perguntas**. O formato deve ser: {"simulados": [{"pergunta": "...", "alternativas": ["A) ...", "B) ...", "C) ...", "D) ...", "E) ..."], "resposta_correta": "Letra da alternativa correta (ex: C)"}, {"pergunta": "...", ...}]}.`;
@@ -1065,8 +1076,7 @@
             
             if (!question || patolindoState.questionsLeft <= 0) return;
             
-            // Verifica a chave da API (o conteúdo é 'chat-messages' se for erro)
-            if (!await checkApiKey("chat-messages")) return;
+            // if (!await checkApiKey("chat-messages")) return;
 
             // 1. Exibe a pergunta do usuário
             appendMessage(question, 'user');
