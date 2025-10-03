@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Study App - Protótipo Groq</title>
     <style>
+        /* [CSS INALTERADO] */
         :root {
             --color-primary: #38bdf8; /* Tailwind Sky 400 */
             --color-secondary: #0f172a; /* Tailwind Slate 900 */
@@ -135,7 +136,7 @@
             margin-top: 20px;
             padding-bottom: 30px;
         }
-
+        
         /* TÓPICOS DENTRO DO MODAL */
         .topico-bloco {
             display: flex;
@@ -154,7 +155,7 @@
             color: var(--color-card);
             padding: 10px;
         }
-
+        
         /* SIMULADO STYLES */
         .simulado-area ul {
             list-style: none;
@@ -356,36 +357,66 @@
 
     <script>
         // ===================================================
-        // VARIÁVEIS DE CONFIGURAÇÃO
+        // VARIÁVEIS DE CONFIGURAÇÃO (AGORA ÚNICA)
         // ===================================================
-        const API_KEY = "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"; // ⬅️ SUBSTITUA PELA SUA CHAVE
+        const API_KEY = "SUA_CHAVE_DA_GROQ_AQUI"; // ⬅️ SUBSTITUA AQUI APENAS
         const GROQ_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions";
         const MODEL_NAME = "llama-3.1-8b-instant";
-
+        
         let modalState = {};
         let currentTopicContext = "Fundamentos de Estudos"; // Contexto inicial para o chat
+
+        // ===================================================
+        // NOVA FUNÇÃO CENTRALIZADA DE CHAMADA DA API GROQ
+        // ===================================================
+        async function callGroqApi(messages, config = {}) {
+            if (API_KEY === "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") {
+                throw new Error("API_KEY não configurada. Por favor, substitua 'SUA_CHAVE_DA_GROQ_AQUI'.");
+            }
+            
+            const body = {
+                model: MODEL_NAME,
+                messages: messages,
+                temperature: config.temperature !== undefined ? config.temperature : 0.7,
+                ...config // Inclui response_format e max_tokens se existirem
+            };
+
+            const response = await fetch(GROQ_ENDPOINT, {
+                method: "POST",
+                headers: { 
+                    "Content-Type": "application/json", 
+                    "Authorization": `Bearer ${API_KEY}` // A CHAVE É USADA APENAS AQUI!
+                },
+                body: JSON.stringify(body)
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(`Erro API: ${response.status} - ${errorData.error.message}`);
+            }
+
+            const data = await response.json();
+            return data.choices?.[0]?.message?.content || "";
+        }
+
 
         // --- CONTROLE DE FLUXO DA INTERFACE ---
 
         document.addEventListener("DOMContentLoaded", () => {
-            // Esconde todas as telas e mostra a primeira
+            // [CÓDIGO INALTERADO]
             document.getElementById("explanation-screen").style.display = 'none';
             document.getElementById("main-app").style.display = 'none';
             document.getElementById("welcome-screen").style.display = 'flex';
 
-            // Transições de tela
             document.getElementById("btnWelcomeContinue").addEventListener("click", showExplanationScreen);
             document.getElementById("btnExplanationContinue").addEventListener("click", showMainApp);
-
-            // Listeners principais
+            
             document.getElementById("btnGerar").addEventListener("click", gerarRoadmap);
-
-            // Listeners do Chat
-            document.getElementById("btnOpenChat").innerText = '💬'; // Ícone para mobile
+            
+            document.getElementById("btnOpenChat").innerText = '💬';
             document.getElementById("btnOpenChat").addEventListener("click", openChatDrawer);
             document.getElementById("btnEnviarChat").addEventListener("click", handleChatSubmit);
 
-            // Permitir Enter para enviar no chat
             document.getElementById("chat-input").addEventListener("keypress", (e) => {
                 if (e.key === 'Enter') {
                     handleChatSubmit();
@@ -394,16 +425,18 @@
         });
 
         function showExplanationScreen() {
+            // [CÓDIGO INALTERADO]
             document.getElementById("welcome-screen").style.display = 'none';
             document.getElementById("explanation-screen").style.display = 'flex';
         }
 
         function showMainApp() {
+            // [CÓDIGO INALTERADO]
             document.getElementById("explanation-screen").style.display = 'none';
             document.getElementById("main-app").style.display = 'block';
         }
 
-        // --- LÓGICA DO ROADMAP E SIMULADO (A PARTIR DO CÓDIGO DO USUÁRIO) ---
+        // --- LÓGICA DO ROADMAP E SIMULADO ---
 
         // 1. FUNÇÃO PRINCIPAL: GERAR ROADMAP
         async function gerarRoadmap() {
@@ -412,46 +445,32 @@
             const objetivo = document.getElementById("objetivo").value;
             const roadmapDiv = document.getElementById("roadmap");
             roadmapDiv.innerHTML = "✨ Gerando roadmap...";
-            document.getElementById("btnOpenChat").style.display = 'none'; // Esconde chat até gerar
+            document.getElementById("btnOpenChat").style.display = 'none';
 
-            if (!tema || API_KEY === "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") {
-                roadmapDiv.innerHTML = "⚠️ Por favor, preencha o Tema e substitua a API_KEY no código.";
+            if (!tema) {
+                roadmapDiv.innerHTML = "⚠️ Por favor, preencha o campo Tema.";
                 return;
             }
-
-            // 💡 ATUALIZA O CONTEXTO PRINCIPAL DA TRILHA
-            currentTopicContext = tema;
+            
+            currentTopicContext = tema; 
             document.getElementById("chat-topic-title").innerText = `Tutor IA: ${tema}`;
 
             try {
                 const systemPrompt = `Você é um especialista em educação técnica. Crie um roadmap detalhado com **no mínimo 8 (oito) etapas obrigatórias**. Cada tópico deve ser ultra específico e **DEVE incluir uma URL de documentação oficial ou tutorial renomado** no campo 'material'. Sua única resposta deve ser APENAS JSON válido, sem texto introdutório ou blocos de código markdown. O JSON deve seguir este formato: {"etapas": [{"titulo": "Etapa 1: Nome da etapa", "topicos": [{"tópico": "Nome do tópico", "material": "URL de uma fonte externa"}], "atividade": "Descrição da atividade prática"}]}.`;
                 const userPrompt = `Crie um roadmap de estudos detalhado e abrangente para o tema "${tema}" no nível "${nivel}"${objetivo ? ` com objetivo "${objetivo}"` : ""}. Inclua fontes externas de estudo no campo 'material' para todos os tópicos.`;
 
-                const response = await fetch(GROQ_ENDPOINT, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json", "Authorization": `Bearer ${API_KEY}` },
-                    body: JSON.stringify({
-                        model: MODEL_NAME,
-                        messages: [
-                            { role: "system", content: systemPrompt },
-                            { role: "user", content: userPrompt }
-                        ],
-                        response_format: { type: "json_object" },
-                        temperature: 0.7
-                    })
-                });
+                const messages = [
+                    { role: "system", content: systemPrompt },
+                    { role: "user", content: userPrompt }
+                ];
+                
+                // ⬅️ CHAMADA CENTRALIZADA
+                const texto = await callGroqApi(messages, { response_format: { type: "json_object" } });
 
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(`Erro API: ${response.status} - ${errorData.error.message}`);
-                }
-
-                const data = await response.json();
-                let texto = data.choices?.[0]?.message?.content || "";
                 let parsed = parseJsonRobustly(texto);
-
+                
                 const etapas = parsed.etapas;
-                modalState.etapas = etapas;
+                modalState.etapas = etapas; 
                 roadmapDiv.innerHTML = "";
 
                 etapas.forEach(etapa => {
@@ -461,24 +480,25 @@
                     blocoDiv.onclick = () => abrirModalMateriais(etapa);
                     roadmapDiv.appendChild(blocoDiv);
                 });
-                document.getElementById("btnOpenChat").style.display = 'block'; // Mostra chat
+                document.getElementById("btnOpenChat").style.display = 'block';
             } catch (err) {
                 console.error("Erro:", err);
                 roadmapDiv.innerHTML = `⚠️ Erro ao gerar roadmap. Causa: ${err.message}.`;
             }
         }
 
-        // 2. FUNÇÃO: ABRIR MODAL DA ETAPA
+        // 2. FUNÇÃO: ABRIR MODAL DA ETAPA (inalterada)
         function abrirModalMateriais(etapa) {
-            modalState.currentEtapa = etapa;
-            currentTopicContext = etapa.titulo; // 💡 ATUALIZA CONTEXTO PARA O CHAT
+            // [CÓDIGO INALTERADO]
+            modalState.currentEtapa = etapa; 
+            currentTopicContext = etapa.titulo;
             document.getElementById("chat-topic-title").innerText = `Tutor IA: ${etapa.titulo}`;
 
             document.getElementById("modal").style.display = "block";
             document.getElementById("modal-titulo").innerText = etapa.titulo;
 
             const conteudo = etapa.topicos.map(t => {
-                const topicoEscapado = t.tópico.replace(/'/g,"\\'");
+                const topicoEscapado = t.tópico.replace(/'/g,"\\'"); 
                 const materialLink = t.material ? t.material : "";
 
                 return `
@@ -504,41 +524,28 @@
         async function gerarSimulado(topico) {
             const modalConteudo = document.getElementById("modal-conteudo");
             modalConteudo.innerHTML = `<p>Carregando simulado sobre: <strong>${topico}</strong>...</p>`;
-            currentTopicContext = topico; // 💡 ATUALIZA CONTEXTO PARA O CHAT
+            currentTopicContext = topico;
 
             try {
                 const systemPromptSimulado = `Você é um gerador de questões de múltipla escolha. Sua única resposta deve ser APENAS JSON válido, sem texto introdutório. O JSON deve ser um objeto contendo um array de **5 perguntas**. O formato deve ser: {"simulados": [{"pergunta": "...", "alternativas": ["A) ...", "B) ...", "C) ...", "D) ...", "E) ..."], "resposta_correta": "Letra da alternativa correta (ex: C)"}, {"pergunta": "...", ...}]}.`;
                 const userPromptSimulado = `Crie 5 questões de múltipla escolha sobre o tópico "${topico}" no nível ${document.getElementById("nivel").value}. Cada questão deve ter 5 alternativas.`;
 
-                const response = await fetch(GROQ_ENDPOINT, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json", "Authorization": `Bearer ${API_KEY}` },
-                    body: JSON.stringify({
-                        model: MODEL_NAME,
-                        messages: [
-                            { role: "system", content: systemPromptSimulado },
-                            { role: "user", content: userPromptSimulado }
-                        ],
-                        response_format: { type: "json_object" },
-                        temperature: 0.6
-                    })
-                });
+                const messages = [
+                    { role: "system", content: systemPromptSimulado },
+                    { role: "user", content: userPromptSimulado }
+                ];
 
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(`Erro API: ${response.status} - ${errorData.error.message}`);
-                }
+                // ⬅️ CHAMADA CENTRALIZADA
+                const texto = await callGroqApi(messages, { response_format: { type: "json_object" }, temperature: 0.6 });
 
-                const data = await response.json();
-                let texto = data.choices?.[0]?.message?.content || "Erro ao gerar simulado.";
                 let parsedData = parseJsonRobustly(texto);
-
-                const simulados = parsedData.simulados || [parsedData];
-
+                
+                const simulados = parsedData.simulados || [parsedData]; 
+                
                 const simuladosHtml = simulados.map((simulado, index) => {
                     const alternativasHtml = simulado.alternativas.map((alt) => {
                         const letra = alt.charAt(0);
-                        return `<li class="alternativa"
+                        return `<li class="alternativa" 
                                         data-correta="${letra === simulado.resposta_correta.charAt(0)}">
                                         ${alt}
                                     </li>`;
@@ -567,13 +574,19 @@
                 `;
 
             } catch (err) {
-                // ... (lógica de erro)
+                console.error("Erro no Simulado:", err);
+                modalConteudo.innerHTML = `
+                    <p>⚠️ Erro ao gerar simulado. Causa: ${err.message}.</p>
+                    <div class="modal-actions">
+                        <button onclick="abrirModalMateriais(modalState.currentEtapa)" class="btn-secondary">⬅ Voltar</button>
+                    </div>
+                `;
             }
         }
-
+        
         // 4. FUNÇÃO: MOSTRAR RESPOSTA DO SIMULADO (inalterada)
         function mostrarResposta(button) {
-            // ... (lógica do usuário)
+            // [CÓDIGO INALTERADO]
             const simuladoBloco = button.closest('.simulado-bloco');
             if (!simuladoBloco) return;
 
@@ -582,57 +595,38 @@
 
             alternativas.forEach(li => {
                 if (li.dataset.correta === 'true') {
-                    li.style.backgroundColor = '#d4edda';
+                    li.style.backgroundColor = '#d4edda'; 
                     li.style.color = '#155724';
                 } else {
-                    li.classList.add('incorreta');
+                    li.classList.add('incorreta'); 
                 }
                 li.style.cursor = 'default';
             });
-
+            
             button.style.display = 'none';
             if (feedback) {
                 feedback.innerText = 'A resposta correta está destacada.';
             }
         }
 
-        // 5. FUNÇÃO: GERAR CONTEÚDO MATERIAL (Explicação Detalhada - Alto Custo)
+        // 5. FUNÇÃO: GERAR CONTEÚDO MATERIAL (Explicação Detalhada)
         async function gerarConteudoMaterial(topico, material) {
             const modalConteudo = document.getElementById("modal-conteudo");
             modalConteudo.innerHTML = `<p>Carregando conteúdo sobre: <strong>${topico}</strong>...</p>`;
-            currentTopicContext = topico; // 💡 ATUALIZA CONTEXTO PARA O CHAT
+            currentTopicContext = topico;
 
             try {
-                // Não tem max_tokens aqui para permitir a resposta DETALHADA
                 const userPromptMaterial = material
                     ? `Explique de forma didática e detalhada o tópico "${topico}" consultando o conteúdo do link: ${material}. A sua resposta deve ser APENAS a explicação, sem mencionar a fonte. Se o link for inacessível ou inválido, gere a explicação baseada em seu conhecimento.`
                     : `Explique de forma didática e detalhada o tópico "${topico}".`;
 
-                const response = await fetch(GROQ_ENDPOINT, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json", "Authorization": `Bearer ${API_KEY}` },
-                    body: JSON.stringify({
-                        model: MODEL_NAME,
-                        messages: [
-                            { role: "user", content: userPromptMaterial }
-                        ],
-                        temperature: 0.8
-                    })
-                });
+                const messages = [
+                    { role: "user", content: userPromptMaterial }
+                ];
+                
+                // ⬅️ CHAMADA CENTRALIZADA
+                const texto = await callGroqApi(messages, { temperature: 0.8 });
 
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(`Erro API: ${response.status} - ${errorData.error.message}`);
-                }
-
-                const data = await response.json();
-                let texto = data.choices?.[0]?.message?.content || "Erro ao gerar conteúdo.";
-
-                // ... (conversão de markdown para HTML)
-                texto = texto.replace(/\*\*(.*?)\*\*/g, "<b>$1</b>");
-                texto = texto.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank">$1</a>');
-
-                // ... (exibição de fonte)
                 let sourceHtml = '';
                 if (material && material !== 'null' && material.startsWith('http')) {
                     sourceHtml = `
@@ -640,13 +634,17 @@
                         <p><a href="${material}" target="_blank">${material}</a></p>
                     `;
                 }
+                
+                let textoFormatado = texto.replace(/\*\*(.*?)\*\*/g, "<b>$1</b>");
+                textoFormatado = textoFormatado.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank">$1</a>');
+
 
                 modalConteudo.innerHTML = `
                     <h3>${topico}</h3>
                     <div style="max-height:400px; overflow-y:auto; padding-right:10px; white-space: pre-wrap;">
-                        ${texto}
+                        ${textoFormatado}
                     </div>
-                    ${sourceHtml}
+                    ${sourceHtml} 
                     <div class="modal-actions">
                         <button onclick="abrirModalMateriais(modalState.currentEtapa)" class="btn-secondary">⬅ Voltar</button>
                     </div>
@@ -654,40 +652,49 @@
 
             } catch (err) {
                 // ... (lógica de erro)
+                console.error("Erro:", err);
+                modalConteudo.innerHTML = `
+                    <p>⚠️ Erro ao gerar conteúdo. Causa: ${err.message}.</p>
+                    <div class="modal-actions">
+                        <button onclick="abrirModalMateriais(modalState.currentEtapa)" class="btn-secondary">⬅ Voltar</button>
+                    </div>
+                `;
             }
         }
 
         // 6. FUNÇÃO: FECHAR MODAL (inalterada)
         function fecharModal() {
+            // [CÓDIGO INALTERADO]
             document.getElementById("modal").style.display = "none";
         }
 
-        // --- LÓGICA DO CHAT DE DÚVIDAS (NOVA FUNÇÃO - Baixo Custo) ---
+        // --- LÓGICA DO CHAT DE DÚVIDAS (Baixo Custo) ---
 
         function openChatDrawer() {
+            // [CÓDIGO INALTERADO]
             document.getElementById("chat-drawer").classList.add('open');
             document.getElementById("chat-input").focus();
             document.getElementById("btnOpenChat").style.display = 'none';
-            // Garante que o tópico de chat esteja sempre no título
             document.getElementById("chat-topic-title").innerText = `Tutor IA: ${currentTopicContext}`;
         }
 
         function closeChatDrawer() {
+            // [CÓDIGO INALTERADO]
             document.getElementById("chat-drawer").classList.remove('open');
-            // Mostra o botão flutuante apenas se já tiver gerado o roadmap
             if (document.getElementById("roadmap").innerHTML.includes("bloco")) {
                 document.getElementById("btnOpenChat").style.display = 'block';
             }
         }
 
         async function handleChatSubmit() {
+            // [CÓDIGO INALTERADO]
             const input = document.getElementById("chat-input");
             const perguntaDoUsuario = input.value.trim();
             if (!perguntaDoUsuario) return;
-
+            
             appendMessage(perguntaDoUsuario, 'user');
-            input.value = ''; // Limpa o input
-
+            input.value = '';
+            
             await chatTiraDuvidas(perguntaDoUsuario);
         }
 
@@ -697,40 +704,24 @@
         async function chatTiraDuvidas(perguntaDoUsuario) {
             const chatBody = document.getElementById("chat-body");
             const tempMessageId = `temp-${Date.now()}`;
-
-            // Mensagem de "Digitando..."
+            
             appendMessage("...", 'ai', tempMessageId);
-
-            // 💡 CHAVE DE CUSTO: Limitar o tamanho da resposta (Saída)
-            const MAX_OUTPUT_TOKENS = 250;
-
-            // 💡 CHAVE DE CONTEXTO: Enviar o tópico ativo
+            
+            const MAX_OUTPUT_TOKENS = 250; 
+            
             const systemPromptChat = `Você é um tutor IA focado no tópico: "${currentTopicContext}". Responda à pergunta do usuário de forma clara, didática e direta. Sua resposta deve ter no máximo 200 palavras (garantido por max_tokens). Não inclua nenhuma introdução ou despedida.`;
-
+            
             try {
-                const response = await fetch(GROQ_ENDPOINT, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json", "Authorization": `Bearer ${API_KEY}` },
-                    body: JSON.stringify({
-                        model: MODEL_NAME,
-                        messages: [
-                            { role: "system", content: systemPromptChat },
-                            { role: "user", content: perguntaDoUsuario }
-                        ],
-                        temperature: 0.5,
-                        max_tokens: MAX_OUTPUT_TOKENS // Otimização de Custo!
-                    })
-                });
+                const messages = [
+                    { role: "system", content: systemPromptChat },
+                    { role: "user", content: perguntaDoUsuario }
+                ];
+                
+                // ⬅️ CHAMADA CENTRALIZADA
+                const respostaIA = await callGroqApi(messages, { temperature: 0.5, max_tokens: MAX_OUTPUT_TOKENS });
 
-                document.getElementById(tempMessageId).remove(); // Remove o "Digitando..."
+                document.getElementById(tempMessageId).remove();
 
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(`Erro API: ${response.status} - ${errorData.error.message}`);
-                }
-
-                const data = await response.json();
-                const respostaIA = data.choices?.[0]?.message?.content || "Desculpe, não consegui processar sua dúvida.";
                 appendMessage(respostaIA, 'ai');
 
             } catch (err) {
@@ -738,11 +729,12 @@
                 console.error("Erro no Chat:", err);
                 appendMessage(`⚠️ Erro ao comunicar com a IA: ${err.message}.`, 'ai');
             }
-
-            chatBody.scrollTop = chatBody.scrollHeight; // Scroll para o final
+            
+            chatBody.scrollTop = chatBody.scrollHeight;
         }
 
         function appendMessage(text, sender, id = null) {
+            // [CÓDIGO INALTERADO]
             const chatBody = document.getElementById("chat-body");
             const messageDiv = document.createElement("div");
             messageDiv.className = `message ${sender}-message`;
@@ -750,10 +742,10 @@
             if (id) messageDiv.id = id;
             chatBody.appendChild(messageDiv);
         }
-
+        
         // --- UTILITÁRIOS ---
-        // Função robusta para parsear JSON (do código anterior)
         function parseJsonRobustly(texto) {
+            // [CÓDIGO INALTERADO]
             let textoLimpo = texto.trim().replace(/[\u0000-\u001F\u007F-\u009F]/g, "");
             let parsed;
             try {
