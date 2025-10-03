@@ -515,11 +515,91 @@
         #chat-button:hover {
             background-color: var(--color-primary);
         }
+        
+        #chat-messages {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background-color: #f7f7f7;
+            border-radius: 0 0 10px 10px;
+        }
+
+        .user-message, .bot-message {
+            display: flex;
+            margin: 0;
+        }
+        
+        .user-message {
+            justify-content: flex-end;
+        }
+
+        .bot-message {
+            justify-content: flex-start;
+        }
+
+        .user-bubble {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 15px 15px 0 15px;
+            max-width: 80%;
+            font-size: 0.95em;
+        }
+
+        .bot-bubble {
+            background-color: white;
+            color: var(--color-secondary);
+            padding: 10px 15px;
+            border-radius: 15px 15px 15px 0;
+            max-width: 80%;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            font-size: 0.95em;
+        }
+        
+        #chat-input-area {
+            display: flex;
+            padding: 15px 20px;
+            border-top: 1px solid #eee;
+            gap: 10px;
+        }
+
+        #chat-input {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            font-size: 1em;
+        }
+
+        #chat-send-button {
+            background-color: var(--color-primary);
+            color: var(--color-secondary);
+            border: none;
+            padding: 10px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+
+        #chat-send-button:hover:not(:disabled) {
+            background-color: var(--color-primary-dark);
+        }
+
+        #chat-send-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
 
         #chat-container {
             display: flex;
             flex-direction: column;
-            height: calc(100vh - 120px); 
+            /* Altura ajustada para caber bem na tela principal */
+            height: 70vh; 
             min-height: 450px;
             background-color: var(--color-card);
             border-radius: 10px;
@@ -1051,8 +1131,12 @@
             const card = currentFlashcards[currentFlashcardIndex];
             const total = currentFlashcards.length;
 
-            // ⚠️ CORREÇÃO APLICADA AQUI: Adiciona uma verificação para garantir que a resposta não é nula
-            // Se card.resposta for undefined/null, usa uma string vazia ('') para evitar o erro .replace
+            // ⚠️ CORREÇÃO APLICADA AQUI: Garante que a pergunta não é nula/undefined antes de usar .replace()
+            const perguntaFormatada = (card.pergunta || '')
+                .replace(/\*\*(.*?)\*\*/g, "<b>$1</b>")
+                .replace(/\n/g, "<br>");
+
+            // ⚠️ CORREÇÃO ANTERIOR APLICADA AQUI: Garante que a resposta não é nula/undefined antes de usar .replace()
             const respostaFormatada = (card.resposta || '')
                 .replace(/\*\*(.*?)\*\*/g, "<b>$1</b>")
                 .replace(/\n/g, "<br>");
@@ -1063,11 +1147,11 @@
                     <div class="flashcard-inner">
                         <div class="flashcard-face flashcard-front">
                             <p style="font-weight: bold;">PERGUNTA:</p>
-                            <p>${card.pergunta || 'Erro ao carregar pergunta.'}</p>
+                            <p>${perguntaFormatada || 'Erro ao carregar pergunta.'}</p>
                         </div>
                         <div class="flashcard-face flashcard-back">
                             <p style="font-weight: bold;">RESPOSTA:</p>
-                            <p>${respostaFormatada}</p>
+                            <p>${respostaFormatada || 'Erro ao carregar resposta.'}</p>
                         </div>
                     </div>
                 </div>
@@ -1285,7 +1369,7 @@
             }]; 
 
             const chatMessages = document.getElementById("chat-messages");
-            chatMessages.innerHTML = `<p class="bot-message"><span class="bot-bubble">Olá! Sou o Patolindo. Você tem **${patolindoState.questionsLeft} perguntas** para tirar dúvidas sobre a sua trilha atual (${currentTheme || 'NENHUM TEMA'}).</span></p>`;
+            chatMessages.innerHTML = `<p class="bot-message"><span class="bot-bubble">Olá! Sou o Patolindo. Você tem **${patolindoState.questionsLeft} perguntas** para tirar dúvidas sobre a sua trilha atual (**${currentTheme || 'NENHUM TEMA'}**).</span></p>`;
             chatMessages.scrollTop = chatMessages.scrollHeight; 
             updateSendButtonState();
         }
@@ -1307,6 +1391,7 @@
 
                 const roadmapContext = modalState.etapas ? JSON.stringify(modalState.etapas) : "Nenhuma trilha de estudos foi gerada ainda.";
                 
+                // Construa a lista de mensagens, garantindo que o System Prompt esteja no início.
                 const systemContext = {
                     role: "system",
                     content: patolindoState.history[0].content + 
@@ -1328,6 +1413,7 @@
 
                 appendMessage(answer, 'bot');
                 
+                // Verifica se a resposta foi uma recusa (para não descontar a pergunta)
                 const isRefusal = answer.toLowerCase().includes("não consigo responder") || answer.toLowerCase().includes("fora do tema");
 
                 if (!isRefusal) {
