@@ -704,6 +704,9 @@
             history: [],
             lastView: "roadmap-view" 
         };
+        
+        // Armazena o tema principal para uso no Patolindo
+        let currentTheme = ""; 
 
         // --- CONTROLE DE FLUXO DA INTERFACE ---
 
@@ -831,15 +834,6 @@
 
         // --- FUNÇÕES DE CONTEÚDO (Roadmap, Material, Simulado) ---
 
-        async function checkApiKey(targetDiv) {
-            if (!API_KEY || API_KEY === "SUA_CHAVE_AQUI") {
-                 document.getElementById(targetDiv).innerHTML = "⚠️ **ERRO DE CONFIGURAÇÃO:** Por favor, insira sua chave da API da Groq no script.";
-                 return false;
-            }
-            // Não precisa mais verificar a chave, ela está hardcoded corretamente
-            return true;
-        }
-
         async function gerarRoadmap() {
             const tema = document.getElementById("tema").value;
             const nivel = document.getElementById("nivel").value;
@@ -853,11 +847,11 @@
                 roadmapDiv.innerHTML = "⚠️ Por favor, preencha o campo Tema.";
                 return;
             }
-
-            // Não precisa mais do await aqui, pois a chave está inserida.
-            // if (!await checkApiKey("roadmap")) return;
             
             try {
+                // Atualiza o tema principal
+                currentTheme = tema;
+
                 const systemPrompt = `Você é um especialista em educação técnica. Crie um roadmap detalhado com **no mínimo 8 (oito) etapas obrigatórias**. Cada tópico deve ser ultra específico e **DEVE incluir uma URL de documentação oficial ou tutorial renomado** no campo 'material'. Sua única resposta deve ser APENAS JSON válido, sem texto introdutório ou blocos de código markdown. O JSON deve seguir este formato: {"etapas": [{"titulo": "Etapa 1: Nome da etapa", "topicos": [{"tópico": "Nome do tópico", "material": "URL de uma fonte externa"}], "atividade": "Descrição da atividade prática"}]}.`;
                 const userPrompt = `Crie um roadmap de estudos detalhado e abrangente para o tema "${tema}" no nível "${nivel}"${objetivo ? ` com objetivo "${objetivo}"` : ""}. Inclua fontes externas de estudo no campo 'material' para todos os tópicos.`;
 
@@ -880,7 +874,6 @@
 
                 if (!response.ok) {
                     const errorData = await response.json();
-                    // Captura e exibe a mensagem de erro da API
                     throw new Error(`Erro API: ${response.status} - ${errorData.error.message || 'Erro desconhecido.'}`);
                 }
 
@@ -890,10 +883,8 @@
                 let textoLimpo = texto.trim();
                 let parsed;
                 try {
-                    // Tenta fazer o parse direto
                     parsed = JSON.parse(textoLimpo);
                 } catch (e) {
-                    // Tenta extrair JSON se houver markdown code block
                     let jsonMatch = textoLimpo.match(/\{[\s\S]*\}/);
                     if (!jsonMatch) throw new Error("Não foi possível extrair JSON da resposta.");
                     parsed = JSON.parse(jsonMatch[0]);
@@ -915,7 +906,6 @@
 
             } catch (err) {
                 console.error("Erro:", err);
-                // Atualiza a mensagem de erro para ser mais útil ao usuário
                 roadmapDiv.innerHTML = `⚠️ Erro ao gerar roadmap. Verifique sua chave API e tente novamente. Causa: ${err.message}.`;
                 document.getElementById("chat-button").style.display = 'none'; 
             }
@@ -930,8 +920,6 @@
             const materialConteudo = document.getElementById("material-conteudo");
             materialConteudo.innerHTML = `<p>Carregando conteúdo sobre: <strong>${topico}</strong>...</p>`;
             
-            // if (!await checkApiKey("material-conteudo")) return;
-
             try {
                 const userPromptMaterial = `Explique de forma didática e detalhada o tópico "${topico}".`;
                 const response = await fetch(GROQ_ENDPOINT, {
@@ -969,8 +957,6 @@
             document.getElementById("simulado-titulo").innerText = `Simulado: ${topico}`;
             const simuladoConteudo = document.getElementById("simulado-conteudo");
             simuladoConteudo.innerHTML = `<p>Carregando simulado sobre: <strong>${topico}</strong>...</p>`;
-
-            // if (!await checkApiKey("simulado-conteudo")) return;
 
             try {
                 const systemPromptSimulado = `Você é um gerador de questões de múltipla escolha. Sua única resposta deve ser APENAS JSON válido, sem texto introdutório. O JSON deve ser um objeto contendo um array de **5 perguntas**. O formato deve ser: {"simulados": [{"pergunta": "...", "alternativas": ["A) ...", "B) ...", "C) ...", "D) ...", "E) ..."], "resposta_correta": "Letra da alternativa correta (ex: C)"}, {"pergunta": "...", ...}]}.`;
@@ -1038,7 +1024,7 @@
             }
         }
 
-        // --- LÓGICA DO CHATBOT PATOLINDO ---
+        // --- LÓGICA DO CHATBOT PATOLINDO (COM RESTRIÇÃO DE TEMA) ---
 
         function updateSendButtonState() {
             const input = document.getElementById("chat-input");
@@ -1059,13 +1045,17 @@
 
         function resetPatolindoSession() {
             patolindoState.questionsLeft = 5;
+            
+            // NOVO PROMPT DO SISTEMA COM RESTRIÇÃO
+            const themeRestriction = currentTheme ? `O ÚNICO TEMA permitida para conversação é: "${currentTheme}". Você deve RECUSAR educadamente perguntas fora deste assunto.` : "Nenhuma trilha de estudos foi gerada. Você deve recusar perguntas até que uma trilha seja gerada.";
+
             patolindoState.history = [{
                 role: "system",
-                content: "Você é o Patolindo, um assistente de estudos prestativo e didático. Sua função é responder a no máximo 5 perguntas do usuário sobre a trilha de estudos que ele está seguindo. Seja conciso e focado no tema. Você deve usar a informação da trilha gerada como contexto."
+                content: `Você é o Patolindo, um assistente de estudos prestativo e didático. Sua função é responder a no máximo 5 perguntas do usuário. Seja conciso e focado. ${themeRestriction}`
             }]; 
 
             const chatMessages = document.getElementById("chat-messages");
-            chatMessages.innerHTML = `<p class="bot-message"><span class="bot-bubble">Olá! Sou o Patolindo. Você tem **${patolindoState.questionsLeft} perguntas** para tirar dúvidas sobre a sua trilha atual.</span></p>`;
+            chatMessages.innerHTML = `<p class="bot-message"><span class="bot-bubble">Olá! Sou o Patolindo. Você tem **${patolindoState.questionsLeft} perguntas** para tirar dúvidas sobre a sua trilha atual (${currentTheme || 'NENHUM TEMA'}).</span></p>`;
             chatMessages.scrollTop = chatMessages.scrollHeight; 
             updateSendButtonState();
         }
@@ -1076,8 +1066,6 @@
             
             if (!question || patolindoState.questionsLeft <= 0) return;
             
-            // if (!await checkApiKey("chat-messages")) return;
-
             // 1. Exibe a pergunta do usuário
             appendMessage(question, 'user');
             input.value = ''; 
@@ -1096,7 +1084,7 @@
                 const systemContext = {
                     role: "system",
                     content: patolindoState.history[0].content + 
-                             ` O contexto da trilha de estudos atual do usuário é: ${roadmapContext}`
+                             ` O contexto da trilha de estudos atual do usuário é: ${roadmapContext}. Você deve ser rigoroso em se manter APENAS no tema da trilha.`
                 };
                 
                 // Envia o contexto do sistema + histórico da conversa (excluindo a instrução inicial)
@@ -1116,9 +1104,17 @@
                 // 3. Exibe a resposta do bot
                 appendMessage(answer, 'bot');
                 
-                // 4. Atualiza o estado
-                patolindoState.history.push({ role: "assistant", content: answer });
-                patolindoState.questionsLeft--;
+                // 4. Atualiza o estado APENAS se não for uma recusa explícita
+                // Tentativa de checar se a resposta é uma recusa para não gastar o contador
+                const isRefusal = answer.toLowerCase().includes("não consigo responder") || answer.toLowerCase().includes("fora do tema");
+
+                if (!isRefusal) {
+                    patolindoState.history.push({ role: "assistant", content: answer });
+                    patolindoState.questionsLeft--;
+                } else {
+                    // Adiciona a recusa ao histórico mas mantém a contagem
+                     patolindoState.history.push({ role: "assistant", content: answer });
+                }
                 
             } catch (err) {
                 console.error("Erro no Patolindo:", err);
