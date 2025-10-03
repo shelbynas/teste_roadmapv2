@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quackademy - Trilha de Estudos</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css"> 
     <link rel="icon" href="favicon.ico">
 </head>
 <body>
 
-    <section id="welcome-screen" class="full-screen-message">
+    <section id="welcome-screen" class="screen-flow active-screen">
         <div class="message-card">
             <img src="mascote_inicial.png" alt="Mascote Quackademy, o Pato" class="mascote-welcome">
             
@@ -19,63 +19,65 @@
         </div>
     </section>
 
-    <section id="explanation-screen" class="full-screen-message" style="display: none;">
+    <section id="explanation-screen" class="screen-flow hidden-screen">
         <div class="message-card">
             <h2>Sua Jornada de Aprendizado Personalizada</h2>
-            <div style="text-align: left; margin: 20px 0;">
-                
+            <div class="explanation-content">
                 <h3>🧠 O Nosso Propósito</h3>
-                <p>
-                    A <strong>Quackademy</strong> foi criada para você que está cansado de apenas copiar e colar. Usamos a IA para criar um plano de estudos único, focado em <strong>atividades práticas</strong> e no <strong>entendimento real</strong>.
-                </p>
+                <p>A <strong>Quackademy</strong> usa a IA para criar um plano de estudos único, focado em **atividades práticas** e no **entendimento real**.</p>
                 
                 <h3>⚙️ Como Funciona Nossa Trilha</h3>
                 <ul>
-                    <li><strong>Trilhas Guiadas:</strong> Você informa o tema e o nível, e nossa IA gera uma <strong>Trilha de Estudos de 8 Etapas</strong> personalizadas.</li>
-                    <li><strong>Material Confiável:</strong> Cada tópico vem com um link obrigatório de documentação oficial ou fonte renomada.</li>
-                    <li><strong>Teste Seu Conhecimento:</strong> Criamos <strong>Simulados de 5 Questões</strong> para forçar você a *aplicar* e *entender* o conceito, garantindo que você nunca caia no ciclo de apenas pegar a resposta.</li>
+                    <li><strong>8 Etapas Guiadas:</strong> Plano de estudos personalizado.</li>
+                    <li><strong>Material Confiável:</strong> Link obrigatório para fontes oficiais.</li>
+                    <li><strong>Teste de Conhecimento:</strong> Simulados para forçar o *entendimento* do conceito.</li>
                 </ul>
             </div>
             <button id="btnExplanationContinue" class="btn-primary">Começar Minha Trilha 🚀</button>
         </div>
     </section>
     
-    <div id="main-app" style="display: none;">
+    <div id="main-app" class="hidden-screen">
         <header>
             <div class="container">
-                <h1>Quackademy Trilha de Estudos</h1>
-                <p>O seu guia para o aprendizado acelerado e estruturado.</p>
+                <h1>Quackademy</h1>
+                <p>Guia de aprendizado estruturado.</p>
             </div>
         </header>
 
         <main class="container">
-            <div class="controles">
+            <div id="controles-wrapper" class="controles-wrapper">
                 <div class="mascote-area">
                     <img src="mascote.png" alt="Mascote Quackademy" class="mascote">
                     <h2>Defina seu Desafio</h2>
                 </div>
                 
-                <label for="tema">Tema ou Tecnologia:</label>
-                <input type="text" id="tema" placeholder="Ex: Programação Python, Cloud Computing, etc." required>
-                
-                <label for="nivel">Nível de Dificuldade:</label>
-                <select id="nivel">
-                    <option value="Iniciante">Iniciante</option>
-                    <option value="Intermediário">Intermediário</option>
-                    <option value="Avançado">Avançado</option>
-                </select>
-                
-                <label for="objetivo">Objetivo Específico (Opcional):</label>
-                <textarea id="objetivo" placeholder="Ex: Aprender a criar um backend com Node.js e Express."></textarea>
-                
-                <button id="btnGerar" class="btn-primary">Gerar Trilha 🚀</button>
+                <div id="form-content" class="form-content">
+                    <label for="tema">Tema ou Tecnologia:</label>
+                    <input type="text" id="tema" placeholder="Ex: Python, Cloud Computing, etc." required>
+                    
+                    <label for="nivel">Nível de Dificuldade:</label>
+                    <select id="nivel">
+                        <option value="Iniciante">Iniciante</option>
+                        <option value="Intermediário">Intermediário</option>
+                        <option value="Avançado">Avançado</option>
+                    </select>
+                    
+                    <label for="objetivo">Objetivo Específico (Opcional):</label>
+                    <textarea id="objetivo" placeholder="Ex: Aprender a criar um backend com Node.js e Express."></textarea>
+                    
+                    <button id="btnGerar" class="btn-primary">Gerar Trilha 🚀</button>
+                </div>
             </div>
 
+            <button id="btnToggleForm" class="btn-secondary toggle-form-btn" style="display: none;">
+                ⚙️ Alterar Desafio
+            </button>
+
             <div id="roadmap-container">
-                <button id="btnGerarMobile" class="btn-primary btn-float" style="display:none;">🔁 Gerar Nova Trilha</button>
                 <h2>Sua Trilha de Estudos</h2>
                 <div id="roadmap" class="roadmap-grid">
-                    <p class="placeholder-text">Preencha o formulário ao lado e gere sua primeira trilha!</p>
+                    <p class="placeholder-text">Preencha o formulário acima e gere sua primeira trilha!</p>
                 </div>
             </div>
         </main>
@@ -84,8 +86,7 @@
     <div id="modal" class="modal">
         <div class="modal-content">
             <h2 id="modal-titulo"></h2>
-            <div id="modal-conteudo">
-                </div>
+            <div id="modal-conteudo"></div>
         </div>
     </div>
 
