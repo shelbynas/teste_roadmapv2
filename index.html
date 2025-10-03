@@ -312,7 +312,7 @@
             align-items: stretch;
         }
         
-        /* O botão material (bloco) agora é apenas um botão cinza */
+        /* O botão material (bloco) agora é um link com estilo de botão */
         .material-btn {
             flex: 1; /* Ocupa a largura total em coluna */
             padding: 10px 15px;
@@ -326,8 +326,11 @@
             box-shadow: none; 
             min-width: unset;
             font-size: 0.9em;
-            /* Corrige o estilo de botão para não parecer um bloco de roadmap */
             border-radius: 6px; 
+            
+            /* Estilo para a tag <a> */
+            text-decoration: none; 
+            display: block;
         }
         
         .material-btn:hover {
@@ -574,9 +577,10 @@
         // JAVASCRIPT INTEGRADO (script.js)
         // ===================================================
 
-        const API_KEY = "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"; // ⬅️ SUA CHAVE DA GROQ
+        // ATENÇÃO: É NECESSÁRIO QUE VOCÊ COLOQUE SUA CHAVE DA GROQ AQUI
+        const API_KEY = "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"; 
         const GROQ_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions";
-        const MODEL_NAME = "llama-3.1-8b-instant"; // MODELO CORRETO E ATIVO
+        const MODEL_NAME = "llama-3.1-8b-instant"; 
 
         let modalState = {}; 
 
@@ -696,11 +700,15 @@
 
             const conteudo = etapa.topicos.map(t => {
                 const topicoEscapado = t.tópico.replace(/'/g,"\\'"); 
-                const materialLink = t.material ? t.material : "";
+                const materialLink = t.material ? t.material : "#"; // Use # se não houver link
 
+                // **MUDANÇA AQUI:** Usando tag <a> com target="_blank" para abrir nova aba
                 return `
                     <div class="topico-bloco">
-                        <button class="material-btn" onclick="gerarConteudoMaterial('${topicoEscapado}', '${materialLink}')">📚 ${t.tópico}</button>
+                        <a class="material-btn" href="${materialLink}" target="_blank" onclick="fecharModal();">
+                            📚 ${t.tópico}
+                            <span style="font-size: 0.8em; opacity: 0.7; display: block;"> (Abrir material em nova aba) </span>
+                        </a>
                         <button class="btn-simulado" onclick="gerarSimulado('${topicoEscapado}')">🧠 Gerar Simulado</button>
                     </div>
                 `;
@@ -717,7 +725,7 @@
             `;
         }
 
-        // --- 3. FUNÇÃO: GERAR SIMULADO (Simula uma Nova Página no Modal) ---
+        // --- 3. FUNÇÃO: GERAR SIMULADO (Mantida no Modal, mas limpa a tela) ---
         async function gerarSimulado(topico) {
             const modalConteudo = document.getElementById("modal-conteudo");
 
@@ -837,77 +845,7 @@
         }
 
 
-        // --- 5. FUNÇÃO: GERAR CONTEÚDO MATERIAL (Simula uma Nova Página no Modal) ---
-        async function gerarConteudoMaterial(topico, material) {
-            const modalConteudo = document.getElementById("modal-conteudo");
-
-            // Define o novo título para simular a navegação
-            document.getElementById("modal-titulo").innerText = topico;
-            modalConteudo.innerHTML = `<p>Carregando conteúdo sobre: <strong>${topico}</strong>...</p>`;
-
-            try {
-                // PROMPT: Instrução para usar o link e gerar a explicação.
-                const userPromptMaterial = material 
-                    ? `Explique de forma didática e detalhada o tópico "${topico}" consultando o conteúdo do link: ${material}. A sua resposta deve ser APENAS a explicação, sem mencionar a fonte. Se o link for inacessível ou inválido, gere a explicação baseada em seu conhecimento.`
-                    : `Explique de forma didática e detalhada o tópico "${topico}".`;
-
-                const response = await fetch(GROQ_ENDPOINT, {
-                    method: "POST",
-                    headers: { 
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${API_KEY}`
-                    },
-                    body: JSON.stringify({ 
-                        model: MODEL_NAME,
-                        messages: [
-                            { role: "user", content: userPromptMaterial }
-                        ],
-                        temperature: 0.8
-                    })
-                });
-
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(`Erro API: ${response.status} - ${errorData.error.message}`);
-                }
-
-                const data = await response.json();
-                let texto = data?.choices?.[0]?.message?.content || "Erro ao gerar conteúdo.";
-
-                // Conversão simples de Markdown para HTML
-                texto = texto.replace(/\*\*(.*?)\*\*/g, "<b>$1</b>");
-                // Garante que links de dentro do conteúdo sejam clicáveis
-                texto = texto.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank">$1</a>');
-
-                // CONDIÇÃO PARA EXIBIR A FONTE
-                let sourceHtml = '';
-                if (material && material !== 'null' && material.startsWith('http')) {
-                    sourceHtml = `
-                        <h3 style="margin-top: 30px; border-left: 5px solid var(--color-primary); padding-left: 12px;">🔗 Fonte Utilizada</h3>
-                        <p><a href="${material}" target="_blank">${material}</a></p>
-                    `;
-                }
-
-                modalConteudo.innerHTML = `
-                    <div style="max-height:450px; overflow-y:auto; padding-right:10px;">
-                        ${texto.split("\n\n").map(p => `<p>${p}</p>`).join("")}
-                    </div>
-                    ${sourceHtml} 
-                    <div class="modal-actions">
-                        <button onclick="abrirModalMateriais(modalState.currentEtapa)" class="btn-secondary">⬅ Voltar à Etapa</button>
-                    </div>
-                `;
-
-            } catch (err) {
-                console.error("Erro:", err);
-                modalConteudo.innerHTML = `
-                    <p>⚠️ Erro ao gerar conteúdo. Causa: ${err.message}.</p>
-                    <div class="modal-actions">
-                        <button onclick="abrirModalMateriais(modalState.currentEtapa)" class="btn-secondary">⬅ Voltar à Etapa</button>
-                    </div>
-                `;
-            }
-        }
+        // **FUNÇÃO REMOVIDA**: A função gerarConteudoMaterial não é mais necessária, pois o link abre diretamente.
 
         // --- 6. FUNÇÃO: FECHAR MODAL ---
         function fecharModal() {
