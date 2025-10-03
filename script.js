@@ -1,5 +1,5 @@
 // ===================================================
-// ARQUIVO: script.js (FINAL - Com Botão de Chat na Geração)
+// ARQUIVO: script.js (Completo e Aprimorado com Transição Mobile)
 // ===================================================
 
 const API_KEY = "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"; // ⬅️ SUA CHAVE DA GROQ
@@ -14,14 +14,15 @@ document.addEventListener("DOMContentLoaded", () => {
     // Esconde todas as telas e mostra a primeira
     document.getElementById("explanation-screen").style.display = 'none';
     document.getElementById("main-app").style.display = 'none';
-    document.getElementById("welcome-screen").style.display = 'flex'; // Garante que a primeira tela esteja visível
+    document.getElementById("welcome-screen").style.display = 'flex'; 
 
     // Adiciona listeners para os botões de transição
     document.getElementById("btnWelcomeContinue").addEventListener("click", showExplanationScreen);
     document.getElementById("btnExplanationContinue").addEventListener("click", showMainApp);
     
-    // Listener do botão principal
+    // Listener do botão principal e do novo botão mobile
     document.getElementById("btnGerar").addEventListener("click", gerarRoadmap);
+    document.getElementById("btnGerarMobile").addEventListener("click", scrollToForm); 
 });
 
 function showExplanationScreen() {
@@ -34,6 +35,26 @@ function showMainApp() {
     document.getElementById("main-app").style.display = 'block';
 }
 
+// *** NOVA FUNÇÃO: Rola para o formulário no mobile ***
+function scrollToForm() {
+    document.getElementById("main-app").scrollIntoView({ behavior: 'smooth' });
+    // Esconde o botão flutuante ao rolar
+    document.getElementById("btnGerarMobile").classList.remove('show');
+}
+
+// *** NOVA FUNÇÃO: Exibe/Esconde o botão flutuante ***
+function toggleMobileButton(show) {
+    const btnMobile = document.getElementById("btnGerarMobile");
+    // 992px é o breakpoint que usamos no CSS para mobile/tablet
+    if (window.innerWidth <= 992) { 
+        if (show) {
+            btnMobile.classList.add('show');
+        } else {
+            btnMobile.classList.remove('show');
+        }
+    }
+}
+
 
 // --- LÓGICA DO ROADMAP (Funções Complexas Inalteradas) ---
 
@@ -44,6 +65,7 @@ async function gerarRoadmap() {
     const objetivo = document.getElementById("objetivo").value;
     const roadmapDiv = document.getElementById("roadmap");
     roadmapDiv.innerHTML = "✨ Gerando roadmap...";
+    toggleMobileButton(false); // Esconde o botão mobile enquanto gera
 
     if (!tema) {
         roadmapDiv.innerHTML = "⚠️ Por favor, preencha o campo Tema.";
@@ -91,8 +113,8 @@ async function gerarRoadmap() {
             const jsonMatch = textoLimpo.match(/\{[\s\S]*\}/);
             
             if (!jsonMatch) {
-                console.error("Texto falhou na extração:", texto);
-                throw new Error("Não foi possível extrair JSON da resposta.");
+                 console.error("Texto falhou na extração:", texto);
+                 throw new Error("Não foi possível extrair JSON da resposta.");
             }
             parsed = JSON.parse(jsonMatch[0]);
         }
@@ -109,16 +131,14 @@ async function gerarRoadmap() {
             roadmapDiv.appendChild(blocoDiv);
         });
 
-        // 🟢 ALTERAÇÃO NECESSÁRIA: EXIBE O BOTÃO DE CHAT
-        // Torna o botão visível APENAS após a trilha ser gerada com sucesso.
-        document.getElementById('chat-button').style.display = 'flex';
+        // *** ADICIONADO: MOSTRA O BOTÃO MOBILE APÓS GERAR ***
+        toggleMobileButton(true);
+
 
     } catch (err) {
         console.error("Erro:", err);
         roadmapDiv.innerHTML = `⚠️ Erro ao gerar roadmap. Causa: ${err.message}.`;
-        
-        // Opcional: Garante que o botão esteja oculto se houver falha
-        document.getElementById('chat-button').style.display = 'none';
+        toggleMobileButton(false); // Garante que não apareça em caso de erro
     }
 }
 
@@ -205,9 +225,9 @@ async function gerarSimulado(topico) {
             const alternativasHtml = simulado.alternativas.map((alt) => {
                 const letra = alt.charAt(0);
                 return `<li class="alternativa" 
-                                data-correta="${letra === simulado.resposta_correta.charAt(0)}">
-                                ${alt}
-                            </li>`;
+                            data-correta="${letra === simulado.resposta_correta.charAt(0)}">
+                            ${alt}
+                        </li>`;
             }).join("");
 
             return `
@@ -237,7 +257,7 @@ async function gerarSimulado(topico) {
         modalConteudo.innerHTML = `
             <p>⚠️ Erro ao gerar simulado. Causa: ${err.message}.</p>
             <div class="modal-actions">
-                <button onclick="abrirModalMateriais(modalState.currentEtapa)" class="btn-secondary">⬅ Voltar</button>
+              <button onclick="abrirModalMateriais(modalState.currentEtapa)" class="btn-secondary">⬅ Voltar</button>
             </div>
         `;
     }
@@ -253,10 +273,10 @@ function mostrarResposta(button) {
 
     alternativas.forEach(li => {
         if (li.dataset.correta === 'true') {
-            li.style.backgroundColor = '#d4edda'; 
+            li.style.backgroundColor = '#d4edda';
             li.style.color = '#155724';
         } else {
-            li.classList.add('incorreta'); 
+            li.classList.add('incorreta');
         }
         li.style.cursor = 'default';
     });
@@ -276,8 +296,8 @@ async function gerarConteudoMaterial(topico, material) {
     try {
         // PROMPT: Instrução para usar o link e gerar a explicação.
         const userPromptMaterial = material 
-            ? `Explique de forma didática e detalhada o tópico "${topico}" consultando o conteúdo do link: ${material}. A sua resposta deve ser APENAS a explicação, sem mencionar a fonte. Se o link for inacessível ou inválido, gere a explicação baseada em seu conhecimento.`
-            : `Explique de forma didática e detalhada o tópico "${topico}".`;
+          ? `Explique de forma didática e detalhada o tópico "${topico}" consultando o conteúdo do link: ${material}. A sua resposta deve ser APENAS a explicação, sem mencionar a fonte. Se o link for inacessível ou inválido, gere a explicação baseada em seu conhecimento.`
+          : `Explique de forma didática e detalhada o tópico "${topico}".`;
 
         const response = await fetch(GROQ_ENDPOINT, {
             method: "POST",
