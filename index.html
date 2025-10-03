@@ -39,7 +39,7 @@
             margin: 0 auto;
         }
         
-        /* --- ESTILOS DAS NOVAS TELAS (Boas-Vindas e Explicação) --- */
+        /* --- ESTILOS DAS TELAS INICIAIS (Boas-Vindas e Explicação) --- */
         .full-screen-message {
             display: flex;
             justify-content: center;
@@ -61,7 +61,7 @@
         
         /* MASCOTE DA TELA INICIAL: MAIOR e SEM MOLDURA */
         .mascote-welcome {
-            width: 200px; /* Levemente reduzido para mobile */
+            width: 200px; 
             height: 200px; 
             border-radius: 0; 
             object-fit: contain;
@@ -72,7 +72,7 @@
         
         .message-card h2 {
             color: var(--color-primary-dark);
-            font-size: 2.2em; /* Ajuste para mobile */
+            font-size: 2.2em; 
             margin-top: 10px;
             margin-bottom: 20px;
         }
@@ -88,27 +88,27 @@
         
         header h1 {
             margin: 0;
-            font-size: 2.5em; /* Ajuste para mobile */
+            font-size: 2.5em; 
             font-weight: 900;
         }
         
         header p {
             margin: 5px 0 0;
-            font-size: 1.1em; /* Ajuste para mobile */
+            font-size: 1.1em; 
         }
         
         main {
-            /* CORREÇÃO CRÍTICA: Mobile-first (Coluna Única) */
+            /* Padrão em coluna única para telas menores */
             display: grid;
-            grid-template-columns: 1fr; /* Padrão em coluna única para telas menores */
-            gap: 30px; /* Reduzido o gap */
-            padding: 20px 0; /* Reduzido o padding */
+            grid-template-columns: 1fr; 
+            gap: 30px; 
+            padding: 20px 0; 
         }
         
-        /* --- Controles e Mascote (Tela Principal) --- */
+        /* --- Controles (Fixo na Esquerda em Desktop) --- */
         .controles {
             background-color: var(--color-card);
-            padding: 20px; /* Reduzido o padding */
+            padding: 20px; 
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
             height: fit-content; 
@@ -117,14 +117,13 @@
         
         .mascote-area {
             text-align: center;
-            margin-bottom: 20px; /* Reduzido o margin */
-            padding-bottom: 15px; /* Reduzido o padding */
+            margin-bottom: 20px; 
+            padding-bottom: 15px; 
             border-bottom: 1px solid #eee;
         }
         
-        /* MASCOTE DA TELA DE ROADMAP: Mantido no tamanho original */
         .mascote {
-            width: 120px; /* Levemente reduzido para mobile */
+            width: 120px; 
             height: 120px; 
             border-radius: 8px; 
             object-fit: contain;
@@ -135,11 +134,10 @@
         
         .controles h2 {
             color: var(--color-secondary);
-            font-size: 1.4em; /* Ajuste para mobile */
+            font-size: 1.4em; 
             margin-top: 0;
         }
         
-        /* ESTILOS DOS CAMPOS DE TEXTO (Ajustados para serem robustos) */
         .controles label {
             display: block;
             margin-top: 20px;
@@ -156,10 +154,9 @@
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 6px;
-            box-sizing: border-box; /* Garante que padding e border não aumentem a largura */
+            box-sizing: border-box; 
             resize: vertical;
             font-size: 0.95em;
-            /* Garante que o fundo seja sempre branco para contraste */
             background-color: white; 
             color: var(--color-secondary);
         }
@@ -172,8 +169,8 @@
         .btn-primary {
             display: block;
             width: 100%;
-            padding: 12px; /* Ligeiramente menor em mobile */
-            margin-top: 25px; /* Ligeiramente menor em mobile */
+            padding: 12px; 
+            margin-top: 25px; 
             background-color: var(--color-primary);
             color: var(--color-secondary);
             border: none;
@@ -190,10 +187,8 @@
         }
         
         .btn-secondary {
-            /* Ajuste de tamanho para Voltar/Fechar */
             padding: 12px 18px; 
             font-size: 1em; 
-        
             background-color: #6c757d;
             color: white;
             border: none;
@@ -207,34 +202,35 @@
             background-color: #5a6268;
         }
         
-        /* --- Área do Roadmap --- */
-        #roadmap-container {
+        /* --- ESTILOS DAS TELAS DE CONTEÚDO (Roadmap, Etapa, Material, Simulado) --- */
+        /* Aplicamos o mesmo estilo de container para todas as telas de conteúdo */
+        #roadmap-container, #etapa-container, #material-container, #simulado-container {
             background-color: var(--color-card);
-            padding: 20px; /* Reduzido o padding */
+            padding: 20px; 
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
         }
-        
-        #roadmap-container h2 {
+
+        #roadmap-container h2, #etapa-container h2, #material-container h2, #simulado-container h2 {
             color: var(--color-primary);
             border-bottom: 2px solid #eee;
             padding-bottom: 10px;
             margin-top: 0;
-            font-size: 1.6em; /* Ajuste para mobile */
+            font-size: 1.6em; 
         }
-        
+
+        /* --- Estilos da Tela Roadmap --- */
         .roadmap-grid {
             display: flex;
             flex-wrap: wrap;
-            gap: 15px; /* Reduzido o gap */
+            gap: 15px; 
             padding-top: 5px;
         }
         
-        /* Bloco das Etapas (Mobile padrão: 100%) */
         .bloco {
-            flex: 1 1 100%; /* Ocupa 100% da largura em telas pequenas */
+            flex: 1 1 100%; 
             min-width: unset;
-            padding: 20px; /* Ajuste de padding */
+            padding: 20px; 
             background-color: var(--color-light-yellow); 
             border: 1px solid var(--color-primary-dark);
             border-radius: 8px;
@@ -260,51 +256,19 @@
             font-style: italic;
         }
         
-        /* --- Modal (Pop-up) --- */
-        .modal {
-            display: none; 
-            position: fixed; 
-            z-index: 1000; 
-            left: 0;
-            top: 0;
-            width: 100%; 
-            height: 100%; 
-            overflow: auto; 
-            background-color: rgba(0,0,0,0.5); 
-        }
-        
-        .modal-content {
-            background-color: var(--color-card);
-            margin: 10% auto; 
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.4);
-            width: 95%; 
-            max-width: 850px;
-        }
-        
-        .modal-content h2 {
-            border-bottom: 3px solid var(--color-primary);
-            padding-bottom: 10px;
-            margin-top: 0;
-            color: var(--color-secondary);
-        }
-        
-        /* Estilos do conteúdo do Modal - Simulado/Material */
-        #modal-conteudo h3 {
+        /* --- Estilos da Tela Etapa / Tópicos --- */
+        #etapa-conteudo h3 {
             color: var(--color-secondary);
             margin-top: 30px;
             border-left: 5px solid var(--color-primary);
             padding-left: 12px;
         }
 
-        /* Container de Tópicos (Apenas na tela inicial do Modal) */
         .topicos-container {
             margin-top: 20px;
         }
         
         .topico-bloco {
-            /* Garante que os botões material e simulado fiquem em coluna em telas muito pequenas */
             display: flex;
             flex-direction: column; 
             gap: 10px;
@@ -312,9 +276,8 @@
             align-items: stretch;
         }
         
-        /* O botão material agora é um botão normal */
         .material-btn {
-            flex: 1; /* Ocupa a largura total em coluna */
+            flex: 1; 
             padding: 10px 15px;
             background-color: #F0F0F0;
             border: 1px solid #ddd;
@@ -327,8 +290,6 @@
             min-width: unset;
             font-size: 0.9em;
             border-radius: 6px; 
-            
-            /* Estilo para a tag <a> */
             text-decoration: none; 
             display: block;
         }
@@ -356,14 +317,14 @@
         }
         
         .modal-actions {
-            text-align: center; /* Centraliza botões de ação do modal */
+            text-align: center; 
             margin-top: 20px;
         }
         .modal-actions button {
             width: 100%;
         }
         
-        /* --- Estilos do Simulado --- */
+        /* --- Estilos da Tela Simulado --- */
         .simulado-area ul {
             list-style: none;
             padding: 0;
@@ -381,9 +342,8 @@
             color: var(--color-secondary) !important;
         }
         
-        /* Estilo para a alternativa incorreta (aplicado APÓS o clique pelo JS) */
         .simulado-area li.incorreta {
-            background-color: #FFF3F3 !important; /* Vermelho muito claro */
+            background-color: #FFF3F3 !important; 
             color: var(--color-danger) !important;
             border-color: #F5C6CB !important;
         }
@@ -433,36 +393,36 @@
             }
         
             .bloco {
-                flex: 1 1 calc(50% - 15px); /* 2 blocos por linha */
+                flex: 1 1 calc(50% - 15px); 
                 font-size: 1em;
             }
         
             .topico-bloco {
                 display: flex;
-                flex-direction: row; /* Volta para linha no tablet */
+                flex-direction: row; 
                 gap: 15px;
             }
         
             .material-btn {
-                text-align: left; /* Alinha texto à esquerda em linha */
+                text-align: left; 
             }
         
             .modal-actions {
                 text-align: right;
             }
             .modal-actions button {
-                width: auto; /* Botões menores no desktop */
+                width: auto; 
             }
 
             .simulado-area button.btnVerResposta {
-                width: auto; /* Botões menores no desktop */
+                width: auto; 
             }
         }
         
         /* Desktop (Telas maiores que 993px) */
         @media (min-width: 993px) {
             main {
-                /* Volta para o layout lateral (formulário 350px, trilha 1fr) */
+                /* Layout lateral: controles (350px) e conteúdo (1fr) */
                 grid-template-columns: 350px 1fr; 
                 gap: 40px;
                 padding: 40px 0;
@@ -480,13 +440,8 @@
             }
             
             .bloco {
-                flex: 1 1 calc(33.333% - 20px); /* 3 blocos por linha */
+                flex: 1 1 calc(33.333% - 20px); 
                 padding: 25px;
-            }
-        
-            .modal-content {
-                margin: 4% auto; 
-                padding: 35px;
             }
         }
     </style>
@@ -555,21 +510,45 @@
                 <button id="btnGerar" class="btn-primary">Gerar Trilha 🚀</button>
             </div>
 
-            <div id="roadmap-container">
-                <h2>Sua Trilha de Estudos</h2>
-                <div id="roadmap" class="roadmap-grid">
-                    <p class="placeholder-text">Preencha o formulário ao lado e gere sua primeira trilha!</p>
+            <div id="roadmap-screen">
+                <div id="roadmap-container">
+                    <h2>Sua Trilha de Estudos</h2>
+                    <div id="roadmap" class="roadmap-grid">
+                        <p class="placeholder-text">Preencha o formulário ao lado e gere sua primeira trilha!</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="etapa-view" style="display: none;">
+                <div id="etapa-container">
+                    <h2 id="etapa-titulo"></h2>
+                    <div id="etapa-conteudo"></div>
+                    <div class="modal-actions">
+                        <button onclick="showRoadmapScreen()" class="btn-secondary">⬅ Voltar à Trilha</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="material-view" style="display: none;">
+                <div id="material-container">
+                    <h2 id="material-titulo"></h2>
+                    <div id="material-conteudo"></div>
+                    <div class="modal-actions">
+                        <button id="btnMaterialVoltar" class="btn-secondary">⬅ Voltar à Etapa</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="simulado-view" style="display: none;">
+                <div id="simulado-container">
+                    <h2 id="simulado-titulo"></h2>
+                    <div id="simulado-conteudo"></div>
+                    <div class="modal-actions">
+                        <button id="btnSimuladoVoltar" class="btn-secondary">⬅ Voltar à Etapa</button>
+                    </div>
                 </div>
             </div>
         </main>
-    </div>
-
-    <div id="modal" class="modal">
-        <div class="modal-content">
-            <h2 id="modal-titulo"></h2>
-            <div id="modal-conteudo">
-                </div>
-        </div>
     </div>
 
     <script>
@@ -587,27 +566,27 @@
         // --- CONTROLE DE FLUXO DA INTERFACE ---
 
         document.addEventListener("DOMContentLoaded", () => {
-            // Esconde todas as telas e mostra a primeira
+            // Garante que a primeira tela esteja visível e as demais escondidas
             document.getElementById("explanation-screen").style.display = 'none';
             document.getElementById("main-app").style.display = 'none';
-            document.getElementById("welcome-screen").style.display = 'flex'; // Garante que a primeira tela esteja visível
+            document.getElementById("welcome-screen").style.display = 'flex'; 
 
-            // Adiciona listeners para os botões de transição
+            // Listeners para os botões de transição entre as telas fixas
             document.getElementById("btnWelcomeContinue").addEventListener("click", showExplanationScreen);
             document.getElementById("btnExplanationContinue").addEventListener("click", showMainApp);
             
             // Listener do botão principal
             document.getElementById("btnGerar").addEventListener("click", gerarRoadmap);
+            
+            // Listeners dos botões de voltar (dentro das telas de conteúdo)
+            // Usamos a função de voltar na Etapa para reexibir a Etapa correta
+            document.getElementById("btnMaterialVoltar").addEventListener("click", () => showEtapaView(modalState.currentEtapa));
+            document.getElementById("btnSimuladoVoltar").addEventListener("click", () => showEtapaView(modalState.currentEtapa));
 
-            // Listener para fechar o modal clicando fora do conteúdo
-            window.onclick = function(event) {
-                const modal = document.getElementById("modal");
-                if (event.target == modal) {
-                    fecharModal();
-                }
-            }
+            // Não há mais click fora do modal, pois ele foi removido.
         });
 
+        // Funções de transição de telas iniciais
         function showExplanationScreen() {
             document.getElementById("welcome-screen").style.display = 'none';
             document.getElementById("explanation-screen").style.display = 'flex';
@@ -616,12 +595,61 @@
         function showMainApp() {
             document.getElementById("explanation-screen").style.display = 'none';
             document.getElementById("main-app").style.display = 'block';
+            showRoadmapScreen(); // Vai direto para a tela do roadmap
         }
 
+        // --- LÓGICA DE NAVEGAÇÃO SPA (NOVA) ---
 
-        // --- LÓGICA DO ROADMAP ---
+        // Esconde todas as áreas de conteúdo do lado direito da tela
+        function hideAllContentViews() {
+            document.getElementById("roadmap-screen").style.display = 'none';
+            document.getElementById("etapa-view").style.display = 'none';
+            document.getElementById("material-view").style.display = 'none';
+            document.getElementById("simulado-view").style.display = 'none';
+        }
+        
+        // Exibe a tela principal do Roadmap
+        function showRoadmapScreen() {
+            hideAllContentViews();
+            document.getElementById("roadmap-screen").style.display = 'block';
+            // Rola para o topo da área do roadmap (melhor UX)
+            document.getElementById("roadmap-container").scrollIntoView({ behavior: 'smooth', block: 'start' }); 
+        }
 
-        // --- 1. FUNÇÃO PRINCIPAL: GERAR ROADMAP (8 ETAPAS E URLS OBRIGATÓRIAS) ---
+        // Exibe a tela de Tópicos e Atividade (Antigo Conteúdo do Modal)
+        function showEtapaView(etapa) {
+            hideAllContentViews();
+            document.getElementById("etapa-view").style.display = 'block';
+            document.getElementById("etapa-container").scrollIntoView({ behavior: 'smooth', block: 'start' }); 
+
+            modalState.currentEtapa = etapa; 
+            document.getElementById("etapa-titulo").innerText = etapa.titulo;
+            
+            const conteudo = etapa.topicos.map(t => {
+                const topicoEscapado = t.tópico.replace(/'/g,"\\'"); 
+                const materialLink = t.material ? t.material.replace(/'/g,"\\'") : "#"; 
+
+                return `
+                    <div class="topico-bloco">
+                        <button class="material-btn" onclick="showMaterialView('${topicoEscapado}', '${materialLink}')">
+                            📚 ${t.tópico}
+                        </button>
+                        <button class="btn-simulado" onclick="showSimuladoView('${topicoEscapado}')">🧠 Gerar Simulado</button>
+                    </div>
+                `;
+            }).join("");
+
+            document.getElementById("etapa-conteudo").innerHTML = `
+                <h3>📌 Atividade prática:</h3>
+                <p>${etapa.atividade}</p>
+                <h3>📚 Tópicos de Estudo:</h3>
+                <div class="topicos-container">${conteudo}</div>
+            `;
+        }
+
+        // --- LÓGICA DO ROADMAP E CONTEÚDO ---
+
+        // 1. FUNÇÃO PRINCIPAL: GERAR ROADMAP
         async function gerarRoadmap() {
             const tema = document.getElementById("tema").value;
             const nivel = document.getElementById("nivel").value;
@@ -635,7 +663,7 @@
             }
             
             try {
-                // PROMPTS: 8 ETAPAS MÍNIMAS e URLS OBRIGATÓRIAS
+                // PROMPTS: 8 ETAPAS MÍNIMAS e URLS OBRIGATÓRIAS (inalterado)
                 const systemPrompt = `Você é um especialista em educação técnica. Crie um roadmap detalhado com **no mínimo 8 (oito) etapas obrigatórias**. Cada tópico deve ser ultra específico e **DEVE incluir uma URL de documentação oficial ou tutorial renomado** no campo 'material'. Sua única resposta deve ser APENAS JSON válido, sem texto introdutório ou blocos de código markdown. O JSON deve seguir este formato: {"etapas": [{"titulo": "Etapa 1: Nome da etapa", "topicos": [{"tópico": "Nome do tópico", "material": "URL de uma fonte externa"}], "atividade": "Descrição da atividade prática"}]}.`;
                 
                 const userPrompt = `Crie um roadmap de estudos detalhado e abrangente para o tema "${tema}" no nível "${nivel}"${objetivo ? ` com objetivo "${objetivo}"` : ""}. Inclua fontes externas de estudo no campo 'material' para todos os tópicos.`;
@@ -689,10 +717,12 @@
                     const blocoDiv = document.createElement("div");
                     blocoDiv.className = "bloco";
                     blocoDiv.innerText = etapa.titulo;
-                    // Etapa abre o modal para mostrar tópicos e atividade
-                    blocoDiv.onclick = () => abrirModalMateriais(etapa);
+                    // ALTERADO: Agora chama a função showEtapaView
+                    blocoDiv.onclick = () => showEtapaView(etapa);
                     roadmapDiv.appendChild(blocoDiv);
                 });
+                
+                showRoadmapScreen(); // Exibe a tela do roadmap após a geração.
 
             } catch (err) {
                 console.error("Erro:", err);
@@ -700,54 +730,18 @@
             }
         }
 
-        // --- 2. FUNÇÃO: ABRIR MODAL DA ETAPA (Tela de Tópicos e Atividade) ---
-        function abrirModalMateriais(etapa) {
-            modalState.currentEtapa = etapa; 
 
-            // LINHA CRÍTICA 1: Garante que o modal apareça
-            document.getElementById("modal").style.display = "block";
-            
-            // LINHA CRÍTICA 2: FORÇA A ROLAGEM PARA O TOPO (Solução Definitiva)
-            window.scrollTo(0, 0); 
+        // 2. FUNÇÃO: EXIBIR MATERIAL (showMaterialView)
+        async function showMaterialView(topico, material) {
+            hideAllContentViews();
+            document.getElementById("material-view").style.display = 'block';
+            document.getElementById("material-container").scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-            document.getElementById("modal-titulo").innerText = etapa.titulo;
-
-            const conteudo = etapa.topicos.map(t => {
-                const topicoEscapado = t.tópico.replace(/'/g,"\\'"); 
-                const materialLink = t.material ? t.material.replace(/'/g,"\\'") : "#"; 
-
-                // Tópico/Material agora chama gerarConteudoMaterial, que abre a sub-tela no modal.
-                return `
-                    <div class="topico-bloco">
-                        <button class="material-btn" onclick="gerarConteudoMaterial('${topicoEscapado}', '${materialLink}')">
-                            📚 ${t.tópico}
-                        </button>
-                        <button class="btn-simulado" onclick="gerarSimulado('${topicoEscapado}')">🧠 Gerar Simulado</button>
-                    </div>
-                `;
-            }).join("");
-
-            document.getElementById("modal-conteudo").innerHTML = `
-                <h3>📌 Atividade prática:</h3>
-                <p>${etapa.atividade}</p>
-                <h3>📚 Tópicos de Estudo:</h3>
-                <div class="topicos-container">${conteudo}</div>
-                <div class="modal-actions">
-                    <button onclick="fecharModal()" class="btn-secondary">❌ Fechar Etapa</button>
-                </div>
-            `;
-        }
-
-        // --- 3. FUNÇÃO: GERAR CONTEÚDO MATERIAL (Abre sub-tela dentro do Modal) ---
-        async function gerarConteudoMaterial(topico, material) {
-            const modalConteudo = document.getElementById("modal-conteudo");
-
-            // Define o novo título para simular a navegação
-            document.getElementById("modal-titulo").innerText = topico;
-            modalConteudo.innerHTML = `<p>Carregando conteúdo sobre: <strong>${topico}</strong>...</p>`;
+            document.getElementById("material-titulo").innerText = topico;
+            const materialConteudo = document.getElementById("material-conteudo");
+            materialConteudo.innerHTML = `<p>Carregando conteúdo sobre: <strong>${topico}</strong>...</p>`;
 
             try {
-                // PROMPT: Instrução para gerar a explicação.
                 const userPromptMaterial = `Explique de forma didática e detalhada o tópico "${topico}".`;
 
                 const response = await fetch(GROQ_ENDPOINT, {
@@ -773,10 +767,8 @@
                 const data = await response.json();
                 let texto = data?.choices?.[0]?.message?.content || "Erro ao gerar conteúdo.";
 
-                // Conversão simples de Markdown para HTML
-                texto = texto.replace(/\*\*(.*?)\*\*/g, "<b>$1</b>");
+                texto = texto.replace(/\*\*(.*?)\*\*/g, "<b>$1</b>").replace(/\n/g, "<br>");
 
-                // CONDIÇÃO PARA EXIBIR A FONTE (COM LINK EM NOVA ABA)
                 let sourceHtml = '';
                 if (material && material !== 'null' && material.startsWith('http')) {
                     sourceHtml = `
@@ -791,38 +783,32 @@
                     sourceHtml = '<p style="margin-top: 20px; color: #999;">Fonte externa não fornecida pela IA.</p>';
                 }
 
-                modalConteudo.innerHTML = `
+                materialConteudo.innerHTML = `
                     <div style="max-height:450px; overflow-y:auto; padding-right:10px;">
-                        ${texto.split("\n\n").map(p => `<p>${p}</p>`).join("")}
+                        ${texto}
                     </div>
                     ${sourceHtml} 
-                    <div class="modal-actions">
-                        <button onclick="abrirModalMateriais(modalState.currentEtapa)" class="btn-secondary">⬅ Voltar à Etapa</button>
-                    </div>
                 `;
 
             } catch (err) {
                 console.error("Erro:", err);
-                modalConteudo.innerHTML = `
-                    <p>⚠️ Erro ao gerar conteúdo. Causa: ${err.message}.</p>
-                    <div class="modal-actions">
-                        <button onclick="abrirModalMateriais(modalState.currentEtapa)" class="btn-secondary">⬅ Voltar à Etapa</button>
-                    </div>
-                `;
+                materialConteudo.innerHTML = `<p>⚠️ Erro ao gerar conteúdo. Causa: ${err.message}.</p>`;
             }
         }
 
 
-        // --- 4. FUNÇÃO: GERAR SIMULADO (Abre sub-tela dentro do Modal) ---
-        async function gerarSimulado(topico) {
-            const modalConteudo = document.getElementById("modal-conteudo");
+        // 3. FUNÇÃO: EXIBIR SIMULADO (showSimuladoView)
+        async function showSimuladoView(topico) {
+            hideAllContentViews();
+            document.getElementById("simulado-view").style.display = 'block';
+            document.getElementById("simulado-container").scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-            // Define o novo título para simular a navegação
-            document.getElementById("modal-titulo").innerText = `Simulado: ${topico}`;
-            modalConteudo.innerHTML = `<p>Carregando simulado sobre: <strong>${topico}</strong>...</p>`;
+            document.getElementById("simulado-titulo").innerText = `Simulado: ${topico}`;
+            const simuladoConteudo = document.getElementById("simulado-conteudo");
+            simuladoConteudo.innerHTML = `<p>Carregando simulado sobre: <strong>${topico}</strong>...</p>`;
 
             try {
-                // PROMPT: 5 QUESTÕES MÍNIMAS
+                // PROMPT: 5 QUESTÕES MÍNIMAS (inalterado)
                 const systemPromptSimulado = `Você é um gerador de questões de múltipla escolha. Sua única resposta deve ser APENAS JSON válido, sem texto introdutório. O JSON deve ser um objeto contendo um array de **5 perguntas**. O formato deve ser: {"simulados": [{"pergunta": "...", "alternativas": ["A) ...", "B) ...", "C) ...", "D) ...", "E) ..."], "resposta_correta": "Letra da alternativa correta (ex: C)"}, {"pergunta": "...", ...}]}.`;
                 
                 const userPromptSimulado = `Crie 5 questões de múltipla escolha sobre o tópico "${topico}" no nível ${document.getElementById("nivel").value}. Cada questão deve ter 5 alternativas.`;
@@ -886,27 +872,15 @@
                     `;
                 }).join("");
 
-                modalConteudo.innerHTML = `
-                    <div class="simulado-area">
-                        ${simuladosHtml}
-                    </div>
-                    <div class="modal-actions">
-                        <button onclick="abrirModalMateriais(modalState.currentEtapa)" class="btn-secondary">⬅ Voltar à Etapa</button>
-                    </div>
-                `;
+                simuladoConteudo.innerHTML = `<div class="simulado-area">${simuladosHtml}</div>`;
 
             } catch (err) {
                 console.error("Erro no Simulado:", err);
-                modalConteudo.innerHTML = `
-                    <p>⚠️ Erro ao gerar simulado. Causa: ${err.message}.</p>
-                    <div class="modal-actions">
-                        <button onclick="abrirModalMateriais(modalState.currentEtapa)" class="btn-secondary">⬅ Voltar à Etapa</button>
-                    </div>
-                `;
+                simuladoConteudo.innerHTML = `<p>⚠️ Erro ao gerar simulado. Causa: ${err.message}.</p>`;
             }
         }
 
-        // --- 5. FUNÇÃO: MOSTRAR RESPOSTA DO SIMULADO ---
+        // 4. FUNÇÃO: MOSTRAR RESPOSTA DO SIMULADO (inalterado)
         function mostrarResposta(button) {
             const simuladoBloco = button.closest('.simulado-bloco');
             if (!simuladoBloco) return;
@@ -921,7 +895,6 @@
                 } else {
                     li.classList.add('incorreta'); 
                 }
-                // Impede qualquer interação futura
                 li.style.cursor = 'default';
                 li.onclick = null; 
             });
@@ -931,12 +904,8 @@
                 feedback.innerText = 'A resposta correta está destacada.';
             }
         }
-
-
-        // --- 6. FUNÇÃO: FECHAR MODAL ---
-        function fecharModal() {
-            document.getElementById("modal").style.display = "none";
-        }
+        
+        // A função fecharModal foi removida, pois não há mais modal.
     </script>
 </body>
 </html>
