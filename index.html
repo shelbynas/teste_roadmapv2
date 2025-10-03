@@ -263,8 +263,8 @@
         /* --- Modal (Pop-up) --- */
         .modal {
             display: none; 
-            position: fixed; 
-            z-index: 1000;
+            position: fixed; /* GARANTE QUE FIQUE ACIMA DE TUDO E FIXO */
+            z-index: 1000; /* GARANTE QUE FIQUE ACIMA DE TUDO */
             left: 0;
             top: 0;
             width: 100%; 
@@ -598,6 +598,14 @@
             
             // Listener do botão principal
             document.getElementById("btnGerar").addEventListener("click", gerarRoadmap);
+
+            // Listener para fechar o modal clicando fora do conteúdo
+            window.onclick = function(event) {
+                const modal = document.getElementById("modal");
+                if (event.target == modal) {
+                    fecharModal();
+                }
+            }
         });
 
         function showExplanationScreen() {
@@ -696,12 +704,14 @@
         function abrirModalMateriais(etapa) {
             modalState.currentEtapa = etapa; 
 
+            // CORREÇÃO AQUI: Garante que o modal esteja visível
             document.getElementById("modal").style.display = "block";
+            
             document.getElementById("modal-titulo").innerText = etapa.titulo;
 
             const conteudo = etapa.topicos.map(t => {
                 const topicoEscapado = t.tópico.replace(/'/g,"\\'"); 
-                const materialLink = t.material ? t.material : "#"; 
+                const materialLink = t.material ? t.material.replace(/'/g,"\\'") : "#"; 
 
                 // Tópico/Material agora chama gerarConteudoMaterial, que abre a sub-tela no modal.
                 return `
