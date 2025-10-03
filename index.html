@@ -2,94 +2,879 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quackademy - Trilha de Estudos</title>
-    <link rel="stylesheet" href="style.css"> 
-    <link rel="icon" href="favicon.ico">
+    <link rel="icon" href="favicon.ico"> 
+
+    <style>
+        /* ===================================================
+        // CSS INTEGRADO (com otimizações de responsividade)
+        // =================================================== */
+        
+        /* --- Variáveis de Cor (Paleta Amarela) --- */
+        :root {
+            --color-primary: #FFC107; /* Amarelo Vibrante */
+            --color-primary-dark: #E0A800; /* Amarelo Escuro */
+            --color-secondary: #343A40; /* Cinza Escuro para Texto */
+            --color-background: #F8F9FA; /* Fundo Suave */
+            --color-card: #FFFFFF;
+            --color-success: #28A745;
+            --color-danger: #DC3545;
+            --color-light-yellow: #FFFBEA; /* Amarelo muito claro para blocos */
+        }
+        
+        /* --- Estilos Gerais e Tipografia --- */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--color-background);
+            color: var(--color-secondary);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        /* --- ESTILOS DAS NOVAS TELAS (Boas-Vindas e Explicação) --- */
+        .full-screen-message {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            width: 100%;
+            background-color: var(--color-background);
+            text-align: center;
+        }
+        
+        .message-card {
+            background-color: var(--color-card);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+            max-width: 500px;
+            width: 90%;
+        }
+        
+        /* MASCOTE DA TELA INICIAL: MAIOR e SEM MOLDURA */
+        .mascote-welcome {
+            width: 200px; /* Levemente reduzido para mobile */
+            height: 200px; 
+            border-radius: 0; 
+            object-fit: contain;
+            margin-bottom: 20px;
+            border: none;
+            background-color: transparent;
+        }
+        
+        .message-card h2 {
+            color: var(--color-primary-dark);
+            font-size: 2.2em; /* Ajuste para mobile */
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+        
+        /* --- Layout Principal (Header e Main) --- */
+        header {
+            background-color: var(--color-primary);
+            color: var(--color-secondary);
+            padding: 30px 0;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        header h1 {
+            margin: 0;
+            font-size: 2.5em; /* Ajuste para mobile */
+            font-weight: 900;
+        }
+        
+        header p {
+            margin: 5px 0 0;
+            font-size: 1.1em; /* Ajuste para mobile */
+        }
+        
+        main {
+            /* CORREÇÃO CRÍTICA: Mobile-first (Coluna Única) */
+            display: grid;
+            grid-template-columns: 1fr; /* Padrão em coluna única para telas menores */
+            gap: 30px; /* Reduzido o gap */
+            padding: 20px 0; /* Reduzido o padding */
+        }
+        
+        /* --- Controles e Mascote (Tela Principal) --- */
+        .controles {
+            background-color: var(--color-card);
+            padding: 20px; /* Reduzido o padding */
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            height: fit-content; 
+            min-width: unset; 
+        }
+        
+        .mascote-area {
+            text-align: center;
+            margin-bottom: 20px; /* Reduzido o margin */
+            padding-bottom: 15px; /* Reduzido o padding */
+            border-bottom: 1px solid #eee;
+        }
+        
+        /* MASCOTE DA TELA DE ROADMAP: Mantido no tamanho original */
+        .mascote {
+            width: 120px; /* Levemente reduzido para mobile */
+            height: 120px; 
+            border-radius: 8px; 
+            object-fit: contain;
+            margin-bottom: 10px;
+            border: none;
+            background-color: transparent; 
+        }
+        
+        .controles h2 {
+            color: var(--color-secondary);
+            font-size: 1.4em; /* Ajuste para mobile */
+            margin-top: 0;
+        }
+        
+        /* Ajuste de padding/margin para inputs em mobile */
+        .controles input[type="text"],
+        .controles select,
+        .controles textarea {
+            padding: 10px;
+            font-size: 0.95em;
+        }
+        
+        /* --- Botões --- */
+        .btn-primary {
+            display: block;
+            width: 100%;
+            padding: 12px; /* Ligeiramente menor em mobile */
+            margin-top: 25px; /* Ligeiramente menor em mobile */
+            background-color: var(--color-primary);
+            color: var(--color-secondary);
+            border: none;
+            border-radius: 6px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--color-primary-dark);
+            transform: translateY(-1px);
+        }
+        
+        .btn-secondary {
+            /* Ajuste de tamanho para Voltar/Fechar */
+            padding: 12px 18px; 
+            font-size: 1em; 
+        
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            font-weight: 500;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+        
+        /* --- Área do Roadmap --- */
+        #roadmap-container {
+            background-color: var(--color-card);
+            padding: 20px; /* Reduzido o padding */
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        #roadmap-container h2 {
+            color: var(--color-primary);
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+            margin-top: 0;
+            font-size: 1.6em; /* Ajuste para mobile */
+        }
+        
+        .roadmap-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px; /* Reduzido o gap */
+            padding-top: 5px;
+        }
+        
+        /* Bloco das Etapas (Mobile padrão: 100%) */
+        .bloco {
+            flex: 1 1 100%; /* Ocupa 100% da largura em telas pequenas */
+            min-width: unset;
+            padding: 20px; /* Ajuste de padding */
+            background-color: var(--color-light-yellow); 
+            border: 1px solid var(--color-primary-dark);
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            font-size: 0.9em;
+        }
+        
+        .bloco:hover {
+            background-color: var(--color-primary);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .placeholder-text {
+            color: #999;
+            text-align: center;
+            width: 100%;
+            padding: 50px;
+            font-style: italic;
+        }
+        
+        /* --- Modal (Pop-up) --- */
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%; 
+            overflow: auto; 
+            background-color: rgba(0,0,0,0.5); 
+        }
+        
+        .modal-content {
+            background-color: var(--color-card);
+            margin: 10% auto; /* Move para o centro superior em mobile */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+            width: 95%; /* Ocupa quase a largura total */
+            max-width: 850px;
+        }
+        
+        .modal-content h2 {
+            border-bottom: 3px solid var(--color-primary);
+            padding-bottom: 10px;
+            margin-top: 0;
+            color: var(--color-secondary);
+        }
+        
+        #modal-conteudo h3 {
+            color: var(--color-secondary);
+            margin-top: 30px;
+            border-left: 5px solid var(--color-primary);
+            padding-left: 12px;
+        }
+        
+        .topico-bloco {
+            /* Garante que os botões material e simulado fiquem em coluna em telas muito pequenas */
+            display: flex;
+            flex-direction: column; 
+            gap: 10px;
+            margin-bottom: 15px;
+            align-items: stretch;
+        }
+        
+        .material-btn {
+            flex: 1; /* Ocupa a largura total em coluna */
+            padding: 10px 15px;
+            background-color: #F0F0F0;
+            border: 1px solid #ddd;
+            color: var(--color-secondary);
+            cursor: pointer;
+            text-align: center; /* Centraliza texto nos botões para melhor visualização em coluna */
+            font-weight: 500;
+            transition: background-color 0.1s;
+            box-shadow: none; 
+            min-width: unset;
+            font-size: 0.9em;
+        }
+        
+        .material-btn:hover {
+            background-color: #E0E0E0;
+        }
+        
+        .btn-simulado {
+            flex: 1;
+            background-color: var(--color-primary);
+            color: var(--color-secondary);
+            border: none;
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            font-weight: bold;
+            min-width: unset;
+            font-size: 0.9em;
+        }
+        
+        .btn-simulado:hover {
+            background-color: var(--color-primary-dark);
+        }
+        
+        .modal-actions {
+            text-align: center; /* Centraliza botões de ação do modal */
+            margin-top: 20px;
+        }
+        .modal-actions button {
+            width: 100%;
+        }
+        
+        /* --- Estilos do Simulado --- */
+        .simulado-area ul {
+            list-style: none;
+            padding: 0;
+            margin-top: 20px;
+        }
+        
+        .simulado-area li.alternativa {
+            padding: 12px;
+            margin-bottom: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            transition: background-color 0.3s;
+            cursor: pointer;
+            background-color: var(--color-card) !important; 
+            color: var(--color-secondary) !important;
+        }
+        
+        /* Estilo para a alternativa incorreta (aplicado APÓS o clique pelo JS) */
+        .simulado-area li.incorreta {
+            background-color: #FFF3F3 !important; /* Vermelho muito claro */
+            color: var(--color-danger) !important;
+            border-color: #F5C6CB !important;
+        }
+        
+        .simulado-bloco {
+            margin-bottom: 25px;
+            padding: 20px 0;
+        }
+        
+        .simulado-area hr {
+            margin-top: 25px;
+            margin-bottom: 25px;
+            border-top: 1px solid #eee;
+        }
+        
+        .simulado-area button.btnVerResposta {
+            padding: 10px 20px;
+            background-color: var(--color-secondary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 15px;
+            font-weight: 600;
+            transition: background-color 0.2s;
+            width: 100%;
+        }
+        
+        .simulado-area button.btnVerResposta:hover {
+            background-color: #212529;
+        }
+        
+        
+        /* ---------------------------------------------------
+        * MEDIA QUERIES OTIMIZADAS
+        * --------------------------------------------------- */
+        
+        /* Tablet (Telas maiores que 600px) */
+        @media (min-width: 601px) {
+            .mascote-welcome {
+                width: 220px; 
+                height: 220px; 
+            }
+        
+            .message-card h2 {
+                font-size: 2.5em; 
+            }
+        
+            .bloco {
+                flex: 1 1 calc(50% - 15px); /* 2 blocos por linha */
+                font-size: 1em;
+            }
+        
+            .topico-bloco {
+                display: flex;
+                flex-direction: row; /* Volta para linha no tablet */
+                gap: 15px;
+            }
+        
+            .material-btn {
+                text-align: left; /* Alinha texto à esquerda em linha */
+            }
+        
+            .modal-actions {
+                text-align: right;
+            }
+            .modal-actions button {
+                width: auto; /* Botões menores no desktop */
+            }
+
+            .simulado-area button.btnVerResposta {
+                width: auto; /* Botões menores no desktop */
+            }
+        }
+        
+        /* Desktop (Telas maiores que 993px) */
+        @media (min-width: 993px) {
+            main {
+                /* Volta para o layout lateral (formulário 350px, trilha 1fr) */
+                grid-template-columns: 350px 1fr; 
+                gap: 40px;
+                padding: 40px 0;
+            }
+            
+            header h1 {
+                font-size: 2.8em;
+            }
+            header p {
+                font-size: 1.2em;
+            }
+        
+            .controles {
+                padding: 30px;
+            }
+            
+            .bloco {
+                flex: 1 1 calc(33.333% - 20px); /* 3 blocos por linha */
+                padding: 25px;
+            }
+        
+            .modal-content {
+                margin: 4% auto; 
+                padding: 35px;
+            }
+        }
+    </style>
 </head>
 <body>
 
-    <section id="welcome-screen" class="screen-flow active-screen">
+    <section id="welcome-screen" class="full-screen-message">
         <div class="message-card">
             <img src="mascote_inicial.png" alt="Mascote Quackademy, o Pato" class="mascote-welcome">
             
-            <h2 class="title-quack">🦆 Olá! Bem-vindo ao Quackademy. </h2>
-            <p>Seu caos de estudos acabou. Transformamos o aprendizado online em uma **trilha estruturada e guiada**.</p>
-            <button id="btnWelcomeContinue" class="btn-primary">Iniciar Jornada</button>
+            <h2>🦆 Bem-vindo ao Quackademy! </h2>
+            <p>Pare de se afogar em tutoriais soltos. Nós transformamos o caos do aprendizado online em uma <strong>trilha de estudos estruturada e à prova de procrastinação</strong>.</p>
+            <button id="btnWelcomeContinue" class="btn-primary">Descubra como</button>
         </div>
     </section>
 
-    <section id="explanation-screen" class="screen-flow hidden-screen">
+    <section id="explanation-screen" class="full-screen-message" style="display: none;">
         <div class="message-card">
-            <h2 class="title-quack">Como Funciona a Trilha?</h2>
-            <div class="explanation-content">
-                <h3>🧠 Seu Método de Sucesso</h3>
-                <p>Nossa IA gera seu plano com foco em **aplicação prática** e entendimento profundo.</p>
+            <h2>Sua Jornada de Aprendizado Personalizada</h2>
+            <div style="text-align: left; margin: 20px 0;">
                 
-                <h3>✅ Trilha de Alto Nível</h3>
-                <ul class="list-quack">
-                    <li>**8 Etapas:** Módulos de estudo personalizados.</li>
-                    <li>**Fontes Confiáveis:** Links para documentação e tutoriais oficiais.</li>
-                    <li>**Teste de Foco:** Simulados rápidos para fixar o conteúdo.</li>
+                <h3>🧠 O Nosso Propósito</h3>
+                <p>
+                    A <strong>Quackademy</strong> foi criada para você que está cansado de apenas copiar e colar. Usamos a IA para criar um plano de estudos único, focado em <strong>atividades práticas</strong> e no <strong>entendimento real</strong>.
+                </p>
+                
+                <h3>⚙️ Como Funciona Nossa Trilha</h3>
+                <ul>
+                    <li><strong>Trilhas Guiadas:</strong> Você informa o tema e o nível, e nossa IA gera uma <strong>Trilha de Estudos de 8 Etapas</strong> personalizadas.</li>
+                    <li><strong>Material Confiável:</strong> Cada tópico vem com um link obrigatório de documentação oficial ou fonte renomada.</li>
+                    <li><strong>Teste Seu Conhecimento:</strong> Criamos <strong>Simulados de 5 Questões</strong> para forçar você a *aplicar* e *entender* o conceito, garantindo que você nunca caia no ciclo de apenas pegar a resposta.</li>
                 </ul>
             </div>
-            <button id="btnExplanationContinue" class="btn-primary">Estou Pronto! 🚀</button>
+            <button id="btnExplanationContinue" class="btn-primary">Começar Minha Trilha 🚀</button>
         </div>
     </section>
-    
-    <div id="main-app" class="hidden-screen">
+
+    <div id="main-app" style="display: none;">
         <header>
             <div class="container">
-                <h1 class="logo-text">Quackademy</h1>
-                <p>Defina seu objetivo e comece a lição.</p>
+                <h1>Quackademy Trilha de Estudos</h1>
+                <p>O seu guia para o aprendizado acelerado e estruturado.</p>
             </div>
         </header>
 
-        <main class="container"> 
-            <div id="controles-wrapper" class="controles-wrapper card-quack">
+        <main class="container">
+            <div class="controles">
                 <div class="mascote-area">
                     <img src="mascote.png" alt="Mascote Quackademy" class="mascote">
-                    <h2 class="title-quack">Defina seu Desafio</h2>
+                    <h2>Defina seu Desafio</h2>
                 </div>
                 
-                <div id="form-content" class="form-content">
-                    <label for="tema">Tema/Tecnologia:</label>
-                    <input type="text" id="tema" placeholder="Ex: Python, Figma, Cloud..." required>
-                    
-                    <label for="nivel">Nível:</label>
-                    <select id="nivel">
-                        <option value="Iniciante">Iniciante</option>
-                        <option value="Intermediário">Intermediário</option>
-                        <option value="Avançado">Avançado</option>
-                    </select>
-                    
-                    <label for="objetivo">Objetivo Específico (Opcional):</label>
-                    <textarea id="objetivo" placeholder="Ex: Criar um e-commerce com React e Node."></textarea>
-                    
-                    <button id="btnGerar" class="btn-primary">Gerar Minha Trilha</button>
-                </div>
+                <label for="tema">Tema ou Tecnologia:</label>
+                <input type="text" id="tema" placeholder="Ex: Programação Python, Cloud Computing, etc." required>
+                
+                <label for="nivel">Nível de Dificuldade:</label>
+                <select id="nivel">
+                    <option value="Iniciante">Iniciante</option>
+                    <option value="Intermediário">Intermediário</option>
+                    <option value="Avançado">Avançado</option>
+                </select>
+                
+                <label for="objetivo">Objetivo Específico (Opcional):</label>
+                <textarea id="objetivo" placeholder="Ex: Aprender a criar um backend com Node.js e Express."></textarea>
+                
+                <button id="btnGerar" class="btn-primary">Gerar Trilha 🚀</button>
             </div>
 
-            <button id="btnToggleForm" class="btn-secondary toggle-form-btn" style="display: none;">
-                ⚙️ Alterar Desafio
-            </button>
-
-            <div id="roadmap-container" class="card-quack">
-                <h2 class="title-quack">Sua Trilha de Módulos</h2>
+            <div id="roadmap-container">
+                <h2>Sua Trilha de Estudos</h2>
                 <div id="roadmap" class="roadmap-grid">
-                    <p class="placeholder-text">Preencha o formulário e veja sua trilha aqui!</p>
+                    <p class="placeholder-text">Preencha o formulário ao lado e gere sua primeira trilha!</p>
                 </div>
             </div>
         </main>
     </div>
 
     <div id="modal" class="modal">
-        <div class="modal-content modal-quack">
-            <h2 id="modal-titulo" class="title-quack"></h2>
-            <div id="modal-conteudo"></div>
+        <div class="modal-content">
+            <h2 id="modal-titulo"></h2>
+            <div id="modal-conteudo">
+                </div>
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        // ===================================================
+        // JAVASCRIPT INTEGRADO (script.js)
+        // ===================================================
+
+        const API_KEY = "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"; // ⬅️ SUA CHAVE DA GROQ
+        const GROQ_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions";
+        const MODEL_NAME = "llama-3.1-8b-instant"; // MODELO CORRETO E ATIVO
+
+        let modalState = {}; 
+
+        // --- CONTROLE DE FLUXO DA INTERFACE ---
+
+        document.addEventListener("DOMContentLoaded", () => {
+            // Esconde todas as telas e mostra a primeira
+            document.getElementById("explanation-screen").style.display = 'none';
+            document.getElementById("main-app").style.display = 'none';
+            document.getElementById("welcome-screen").style.display = 'flex'; // Garante que a primeira tela esteja visível
+
+            // Adiciona listeners para os botões de transição
+            document.getElementById("btnWelcomeContinue").addEventListener("click", showExplanationScreen);
+            document.getElementById("btnExplanationContinue").addEventListener("click", showMainApp);
+            
+            // Listener do botão principal
+            document.getElementById("btnGerar").addEventListener("click", gerarRoadmap);
+        });
+
+        function showExplanationScreen() {
+            document.getElementById("welcome-screen").style.display = 'none';
+            document.getElementById("explanation-screen").style.display = 'flex';
+        }
+
+        function showMainApp() {
+            document.getElementById("explanation-screen").style.display = 'none';
+            document.getElementById("main-app").style.display = 'block';
+        }
+
+
+        // --- LÓGICA DO ROADMAP ---
+
+        // --- 1. FUNÇÃO PRINCIPAL: GERAR ROADMAP (8 ETAPAS E URLS OBRIGATÓRIAS) ---
+        async function gerarRoadmap() {
+            const tema = document.getElementById("tema").value;
+            const nivel = document.getElementById("nivel").value;
+            const objetivo = document.getElementById("objetivo").value;
+            const roadmapDiv = document.getElementById("roadmap");
+            roadmapDiv.innerHTML = "✨ Gerando roadmap...";
+
+            if (!tema) {
+                roadmapDiv.innerHTML = "⚠️ Por favor, preencha o campo Tema.";
+                return;
+            }
+            
+            try {
+                // PROMPTS: 8 ETAPAS MÍNIMAS e URLS OBRIGATÓRIAS
+                const systemPrompt = `Você é um especialista em educação técnica. Crie um roadmap detalhado com **no mínimo 8 (oito) etapas obrigatórias**. Cada tópico deve ser ultra específico e **DEVE incluir uma URL de documentação oficial ou tutorial renomado** no campo 'material'. Sua única resposta deve ser APENAS JSON válido, sem texto introdutório ou blocos de código markdown. O JSON deve seguir este formato: {"etapas": [{"titulo": "Etapa 1: Nome da etapa", "topicos": [{"tópico": "Nome do tópico", "material": "URL de uma fonte externa"}], "atividade": "Descrição da atividade prática"}]}.`;
+                
+                const userPrompt = `Crie um roadmap de estudos detalhado e abrangente para o tema "${tema}" no nível "${nivel}"${objetivo ? ` com objetivo "${objetivo}"` : ""}. Inclua fontes externas de estudo no campo 'material' para todos os tópicos.`;
+
+                const response = await fetch(GROQ_ENDPOINT, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${API_KEY}`
+                    },
+                    body: JSON.stringify({ 
+                        model: MODEL_NAME,
+                        messages: [
+                            { role: "system", content: systemPrompt },
+                            { role: "user", content: userPrompt }
+                        ],
+                        response_format: { type: "json_object" }, 
+                        temperature: 0.7 
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(`Erro API: ${response.status} - ${errorData.error.message}`);
+                }
+
+                const data = await response.json();
+                let texto = data?.choices?.[0]?.message?.content || "";
+
+                let textoLimpo = texto.trim();
+                let parsed;
+                try {
+                    parsed = JSON.parse(textoLimpo);
+                } catch (e) {
+                    console.warn("JSON direto falhou. Tentando extração robusta.");
+                    textoLimpo = textoLimpo.replace(/[\u0000-\u001F\u007F-\u009F]/g, "").trim();
+                    const jsonMatch = textoLimpo.match(/\{[\s\S]*\}/);
+                    
+                    if (!jsonMatch) {
+                        console.error("Texto falhou na extração:", texto);
+                        throw new Error("Não foi possível extrair JSON da resposta.");
+                    }
+                    parsed = JSON.parse(jsonMatch[0]);
+                }
+                
+                const etapas = parsed.etapas;
+                modalState.etapas = etapas; 
+                roadmapDiv.innerHTML = "";
+
+                etapas.forEach(etapa => {
+                    const blocoDiv = document.createElement("div");
+                    blocoDiv.className = "bloco";
+                    blocoDiv.innerText = etapa.titulo;
+                    blocoDiv.onclick = () => abrirModalMateriais(etapa);
+                    roadmapDiv.appendChild(blocoDiv);
+                });
+
+            } catch (err) {
+                console.error("Erro:", err);
+                roadmapDiv.innerHTML = `⚠️ Erro ao gerar roadmap. Causa: ${err.message}.`;
+            }
+        }
+
+        // --- 2. FUNÇÃO: ABRIR MODAL DA ETAPA ---
+        function abrirModalMateriais(etapa) {
+            modalState.currentEtapa = etapa; 
+
+            document.getElementById("modal").style.display = "block";
+            document.getElementById("modal-titulo").innerText = etapa.titulo;
+
+            const conteudo = etapa.topicos.map(t => {
+                const topicoEscapado = t.tópico.replace(/'/g,"\\'"); 
+                const materialLink = t.material ? t.material : "";
+
+                return `
+                    <div class="topico-bloco">
+                        <button class="bloco material-btn" onclick="gerarConteudoMaterial('${topicoEscapado}', '${materialLink}')">${t.tópico}</button>
+                        <button class="btn-simulado" onclick="gerarSimulado('${topicoEscapado}')">🧠 Gerar Simulado</button>
+                    </div>
+                `;
+            }).join("");
+
+            document.getElementById("modal-conteudo").innerHTML = `
+                <h3>📌 Atividade prática:</h3>
+                <p>${etapa.atividade}</p>
+                <h3>📚 Tópicos e Simulado:</h3>
+                <div class="topicos-container">${conteudo}</div>
+                <div class="modal-actions">
+                    <button onclick="fecharModal()" class="btn-secondary">❌ Fechar</button>
+                </div>
+            `;
+        }
+
+        // --- 3. FUNÇÃO: GERAR SIMULADO (5 PERGUNTAS MÍNIMAS) ---
+        async function gerarSimulado(topico) {
+            const modalConteudo = document.getElementById("modal-conteudo");
+
+            modalConteudo.innerHTML = `<p>Carregando simulado sobre: <strong>${topico}</strong>...</p>`;
+
+            try {
+                // PROMPT: 5 QUESTÕES MÍNIMAS
+                const systemPromptSimulado = `Você é um gerador de questões de múltipla escolha. Sua única resposta deve ser APENAS JSON válido, sem texto introdutório. O JSON deve ser um objeto contendo um array de **5 perguntas**. O formato deve ser: {"simulados": [{"pergunta": "...", "alternativas": ["A) ...", "B) ...", "C) ...", "D) ...", "E) ..."], "resposta_correta": "Letra da alternativa correta (ex: C)"}, {"pergunta": "...", ...}]}.`;
+                
+                const userPromptSimulado = `Crie 5 questões de múltipla escolha sobre o tópico "${topico}" no nível ${document.getElementById("nivel").value}. Cada questão deve ter 5 alternativas.`;
+
+                const response = await fetch(GROQ_ENDPOINT, {
+                    method: "POST",
+                    headers: { 
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${API_KEY}`
+                    },
+                    body: JSON.stringify({ 
+                        model: MODEL_NAME,
+                        messages: [
+                            { role: "system", content: systemPromptSimulado },
+                            { role: "user", content: userPromptSimulado }
+                        ],
+                        response_format: { type: "json_object" },
+                        temperature: 0.6 
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(`Erro API: ${response.status} - ${errorData.error.message}`);
+                }
+
+                const data = await response.json();
+                let texto = data?.choices?.[0]?.message?.content || "Erro ao gerar simulado.";
+
+                let parsedData;
+                try {
+                    parsedData = JSON.parse(texto.trim());
+                } catch (e) {
+                    let textoLimpo = texto.replace(/[\u0000-\u001F\u007F-\u009F]/g, "").trim();
+                    const jsonMatch = textoLimpo.match(/\{[\s\S]*\}/);
+                    if (!jsonMatch) throw new Error("Não foi possível extrair JSON do simulado.");
+                    parsedData = JSON.parse(jsonMatch[0]);
+                }
+                
+                const simulados = parsedData.simulados || [parsedData]; 
+                
+                const simuladosHtml = simulados.map((simulado, index) => {
+                    const alternativasHtml = simulado.alternativas.map((alt) => {
+                        const letra = alt.charAt(0);
+                        return `<li class="alternativa" 
+                                    data-correta="${letra === simulado.resposta_correta.charAt(0)}">
+                                    ${alt}
+                                </li>`;
+                    }).join("");
+
+                    return `
+                        <div class="simulado-bloco">
+                            <h4>Questão ${index + 1}:</h4>
+                            <p><strong>${simulado.pergunta}</strong></p>
+                            <ul>${alternativasHtml}</ul>
+                            <button class="btnVerResposta" onclick="mostrarResposta(this)">Ver Resposta</button>
+                            <p class="feedback" style="font-weight: bold; margin-top: 10px;"></p>
+                        </div>
+                        <hr>
+                    `;
+                }).join("");
+
+                modalConteudo.innerHTML = `
+                    <h3>Simulado: ${topico}</h3>
+                    <div class="simulado-area">
+                        ${simuladosHtml}
+                    </div>
+                    <div class="modal-actions">
+                        <button onclick="abrirModalMateriais(modalState.currentEtapa)" class="btn-secondary">⬅ Voltar</button>
+                    </div>
+                `;
+
+            } catch (err) {
+                console.error("Erro no Simulado:", err);
+                modalConteudo.innerHTML = `
+                    <p>⚠️ Erro ao gerar simulado. Causa: ${err.message}.</p>
+                    <div class="modal-actions">
+                        <button onclick="abrirModalMateriais(modalState.currentEtapa)" class="btn-secondary">⬅ Voltar</button>
+                    </div>
+                `;
+            }
+        }
+
+        // --- 4. FUNÇÃO: MOSTRAR RESPOSTA DO SIMULADO ---
+        function mostrarResposta(button) {
+            const simuladoBloco = button.closest('.simulado-bloco');
+            if (!simuladoBloco) return;
+
+            const alternativas = simuladoBloco.querySelectorAll('.alternativa');
+            const feedback = simuladoBloco.querySelector('.feedback');
+
+            alternativas.forEach(li => {
+                if (li.dataset.correta === 'true') {
+                    li.style.backgroundColor = '#d4edda'; 
+                    li.style.color = '#155724';
+                } else {
+                    li.classList.add('incorreta'); 
+                }
+                li.style.cursor = 'default';
+            });
+            
+            button.style.display = 'none';
+            if (feedback) {
+                feedback.innerText = 'A resposta correta está destacada.';
+            }
+        }
+
+
+        // --- 5. FUNÇÃO: GERAR CONTEÚDO MATERIAL (EXIBE FONTE) ---
+        async function gerarConteudoMaterial(topico, material) {
+            const modalConteudo = document.getElementById("modal-conteudo");
+            modalConteudo.innerHTML = `<p>Carregando conteúdo sobre: <strong>${topico}</strong>...</p>`;
+
+            try {
+                // PROMPT: Instrução para usar o link e gerar a explicação.
+                const userPromptMaterial = material 
+                    ? `Explique de forma didática e detalhada o tópico "${topico}" consultando o conteúdo do link: ${material}. A sua resposta deve ser APENAS a explicação, sem mencionar a fonte. Se o link for inacessível ou inválido, gere a explicação baseada em seu conhecimento.`
+                    : `Explique de forma didática e detalhada o tópico "${topico}".`;
+
+                const response = await fetch(GROQ_ENDPOINT, {
+                    method: "POST",
+                    headers: { 
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${API_KEY}`
+                    },
+                    body: JSON.stringify({ 
+                        model: MODEL_NAME,
+                        messages: [
+                            { role: "user", content: userPromptMaterial }
+                        ],
+                        temperature: 0.8
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(`Erro API: ${response.status} - ${errorData.error.message}`);
+                }
+
+                const data = await response.json();
+                let texto = data?.choices?.[0]?.message?.content || "Erro ao gerar conteúdo.";
+
+                // Conversão simples de Markdown para HTML
+                texto = texto.replace(/\*\*(.*?)\*\*/g, "<b>$1</b>");
+                texto = texto.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank">$1</a>');
+
+                // CONDIÇÃO PARA EXIBIR A FONTE
+                let sourceHtml = '';
+                if (material && material !== 'null' && material.startsWith('http')) {
+                    sourceHtml = `
+                        <h3 style="margin-top: 30px; border-left: 5px solid var(--color-primary); padding-left: 12px;">🔗 Fonte Utilizada</h3>
+                        <p><a href="${material}" target="_blank">${material}</a></p>
+                    `;
+                }
+
+                modalConteudo.innerHTML = `
+                    <h3>${topico}</h3>
+                    <div style="max-height:400px; overflow-y:auto; padding-right:10px;">
+                        ${texto.split("\n\n").map(p => `<p>${p}</p>`).join("")}
+                    </div>
+                    ${sourceHtml} 
+                    <div class="modal-actions">
+                        <button onclick="abrirModalMateriais(modalState.currentEtapa)" class="btn-secondary">⬅ Voltar</button>
+                    </div>
+                `;
+
+            } catch (err) {
+                console.error("Erro:", err);
+                modalConteudo.innerHTML = `
+                    <p>⚠️ Erro ao gerar conteúdo. Causa: ${err.message}.</p>
+                    <div class="modal-actions">
+                        <button onclick="abrirModalMateriais(modalState.currentEtapa)" class="btn-secondary">⬅ Voltar</button>
+                    </div>
+                `;
+            }
+        }
+
+        // --- 6. FUNÇÃO: FECHAR MODAL ---
+        function fecharModal() {
+            document.getElementById("modal").style.display = "none";
+        }
+    </script>
 </body>
-</html>
