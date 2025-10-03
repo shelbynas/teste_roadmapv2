@@ -35,16 +35,55 @@ body {
     transition: all 0.2s ease-in-out;
 }
 
-/* --- ESTILOS DAS NOVAS TELAS --- */
-/* (Inalterado, garantindo full-screen) */
+/* --- ESTILOS DAS TELAS INICIAIS --- */
+.full-screen-message {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100%;
+    background-color: var(--color-background);
+    text-align: center;
+}
+
+.message-card {
+    background-color: var(--color-card);
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    max-width: 500px;
+    width: 90%;
+}
+
+.mascote-welcome {
+    width: 220px;
+    height: 220px;
+    object-fit: contain;
+    margin-bottom: 25px;
+    border: none;
+    background-color: transparent;
+}
+
+.message-card h2 {
+    color: var(--color-primary-dark);
+    font-size: 2.5em;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
 
 /* --- Layout Principal (Header e Main) --- */
 header {
     background-color: var(--color-primary);
     color: var(--color-secondary);
-    padding: 25px 0; /* Um pouco menor */
+    padding: 25px 0;
     text-align: center;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2.8em;
+    font-weight: 900;
 }
 
 /* *** MOBILE-FIRST (MAIN LAYOUT) *** */
@@ -59,29 +98,81 @@ main {
 /* --- Controles e Formulário --- */
 .controles {
     background-color: var(--color-card);
-    padding: 20px; /* Reduzido o padding para mobile */
+    padding: 20px; 
     border-radius: 12px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
     height: fit-content; 
     order: -1; /* Força o formulário a vir antes da trilha no mobile */
 }
 
-/* Melhorias de Form Elementos */
+.mascote-area {
+    text-align: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.mascote {
+    width: 150px; 
+    height: 150px; 
+    border-radius: 8px;  
+    object-fit: contain;
+    margin-bottom: 15px;
+    border: none;
+    background-color: transparent; 
+}
+
+.controles h2 {
+    color: var(--color-secondary);
+    font-size: 1.6em;
+    margin-top: 0;
+}
+
 .controles label {
-    margin-top: 15px; /* Ajuste de espaçamento */
+    display: block;
+    margin-top: 15px;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: var(--color-secondary);
     font-size: 1em;
 }
 
 .controles input[type="text"],
 .controles select,
 .controles textarea {
-    padding: 10px; /* Um pouco menor para mobile */
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    box-sizing: border-box;
+    resize: vertical;
+    font-size: 1em;
+}
+
+.controles textarea {
+    min-height: 100px;
 }
 
 /* --- Botões e Efeitos Mobile --- */
 .btn-primary {
-    /* Adiciona efeito de 'pressionar' mais evidente no toque */
-    touch-action: manipulation;
+    display: block;
+    width: 100%;
+    padding: 14px;
+    margin-top: 30px;
+    background-color: var(--color-primary);
+    color: var(--color-secondary);
+    border: none;
+    border-radius: 6px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+    touch-action: manipulation; /* Melhor feedback de toque */
+}
+
+.btn-primary:hover {
+    background-color: var(--color-primary-dark);
+    transform: translateY(-1px);
 }
 
 .btn-primary:active {
@@ -109,39 +200,104 @@ main {
     visibility: visible;
 }
 
-/* --- Área do Roadmap (Ajustes de Grid) --- */
+
+/* --- Área do Roadmap --- */
+#roadmap-container {
+    background-color: var(--color-card);
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+#roadmap-container h2 {
+    color: var(--color-primary);
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+    margin-top: 0;
+    font-size: 1.8em;
+}
+
 .roadmap-grid {
-    display: grid; /* Mudando de flex para grid para controle total */
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* 2 a 3 blocos por linha no mobile/tablet */
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); 
     gap: 15px;
     padding-top: 10px;
 }
 
+/* Bloco das Etapas */
 .bloco {
-    padding: 18px; /* Reduzido um pouco para otimizar espaço */
-    font-size: 0.95em;
+    padding: 18px;
+    background-color: var(--color-light-yellow);
+    border: 1px solid var(--color-primary-dark);
+    border-radius: 8px;
+    text-align: center;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.bloco:hover {
+    background-color: var(--color-primary);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
 }
 
 /* --- Modal (Pop-up) --- */
-.modal-content {
-    margin: 8% auto; /* Move para cima no mobile */
-    width: 95%; /* Prioriza largura total */
-    padding: 20px;
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.5);
 }
 
+.modal-content {
+    background-color: var(--color-card);
+    margin: 8% auto;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+    width: 90%;
+    max-width: 850px;
+}
+
+/* Estilos de botões dentro do modal */
 .topico-bloco {
+    display: flex;
     flex-direction: column; /* Pilha de botões no mobile */
     gap: 10px;
+    margin-bottom: 10px;
+    align-items: stretch;
 }
 
 .material-btn, .btn-simulado {
     width: 100%;
+    min-width: unset;
     text-align: center;
     padding: 10px;
 }
 
+.material-btn {
+    background-color: #F0F0F0;
+    border: 1px solid #ddd;
+    color: var(--color-secondary);
+    font-weight: 500;
+    transition: background-color 0.1s;
+    box-shadow: none;
+}
 
-/* --- Media Queries (Desktop) --- */
+.btn-simulado {
+    background-color: var(--color-primary);
+    color: var(--color-secondary);
+    font-weight: bold;
+}
+
+/* --- Media Queries (Desktop - Mínimo 993px) --- */
 @media (min-width: 993px) {
     main {
         /* Layout de desktop: Duas colunas */
@@ -164,5 +320,26 @@ main {
     
     .btn-float {
         display: none !important; /* Esconde o botão flutuante no desktop */
+    }
+    
+    /* Layout do modal no Desktop */
+    .topico-bloco {
+        flex-direction: row;
+        gap: 15px;
+    }
+    
+    .material-btn {
+        flex: 3;
+        text-align: left;
+    }
+    
+    .btn-simulado {
+        flex: 1;
+        min-width: 150px;
+    }
+    
+    .modal-content {
+        margin: 4% auto; 
+        padding: 35px;
     }
 }
