@@ -1,389 +1,278 @@
 /* ===================================================
-// ARQUIVO: style.css (Layout Mobile-First de Coluna Única)
+// ARQUIVO: style.css (FINAL - Design Amarelo Otimizado para Mobile)
 // =================================================== */
 
-/* --- Variáveis de Cor Quackademy --- */
+/* --- Variáveis de Cor (Paleta Amarela) --- */
 :root {
-    --color-primary: #FFC107;         /* Amarelo Vibrante */
-    --color-primary-dark: #E0A800;    /* Amarelo Escuro (Sombra/Hover) */
-    --color-secondary: #007BFF;       /* Azul para Destaques/Secundário */
-    --color-secondary-dark: #0069D9;
-    --color-text: #343A40;            /* Cinza Escuro para Texto */
-    --color-background: #F8F9FA;      /* Fundo Suave */
-    --color-card: #FFFFFF;
-    --border-radius-high: 12px;       /* Moderadamente Alto */
-    --border-radius-low: 6px;
+    --color-primary: #FFC107; /* Amarelo Vibrante */
+    --color-primary-dark: #E0A800; /* Amarelo Escuro */
+    --color-secondary: #343A40; /* Cinza Escuro para Texto */
+    --color-background: #F8F9FA; /* Fundo Suave */
+    --color-card: #FFFFFF;
+    --color-success: #28A745;
+    --color-danger: #DC3545;
+    --color-light-yellow: #FFFBEA; /* Amarelo muito claro para blocos */
 }
 
-/* --- Estilos Gerais --- */
+/* --- Estilos Gerais e Tipografia --- */
 body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: var(--color-background);
-    color: var(--color-text);
-    margin: 0;
-    padding: 0;
-    line-height: 1.6;
-    overflow-x: hidden; 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--color-background);
+    color: var(--color-secondary);
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
 }
 
 .container {
-    width: 95%; 
-    max-width: 1000px;
-    margin: 0 auto;
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
-/* --- Tipografia Quackademy --- */
-.title-quack {
-    font-weight: 700;
-    color: var(--color-text);
-}
-
-.logo-text {
-    font-size: 2.5em;
-    font-weight: 900;
-    color: var(--color-text);
-}
-
-/* --- Cartões e Bordas (Intuitividade Tátil) --- */
-.card-quack, .message-card, .modal-quack {
-    background-color: var(--color-card);
-    border-radius: var(--border-radius-high);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    border-bottom: 4px solid #E5E5E5; 
-}
-
-/* --- TELAS DE FLUXO INICIAL --- */
-.screen-flow {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    width: 100%;
-    position: fixed; 
-    top: 0;
-    left: 0;
-    background-color: var(--color-background);
-    transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out;
-    z-index: 100;
-}
-
-.hidden-screen {
-    transform: translateX(100%);
-    opacity: 0; 
-    pointer-events: none;
-}
-
-.active-screen {
-    transform: translateX(0);
-    opacity: 1;
-    pointer-events: auto;
+/* --- ESTILOS DAS NOVAS TELAS (Boas-Vindas e Explicação) --- */
+.full-screen-message {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100%;
+    background-color: var(--color-background);
+    text-align: center;
 }
 
 .message-card {
-    padding: 40px 30px;
-    max-width: 450px;
-    width: 90%;
-    text-align: center;
+    background-color: var(--color-card);
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    max-width: 500px;
+    width: 90%;
 }
 
+/* MASCOTE DA TELA INICIAL: MAIOR e SEM MOLDURA */
 .mascote-welcome {
-    width: 150px;
-    height: 150px;
-    margin-bottom: 20px;
+    width: 200px; /* Levemente reduzido para mobile */
+    height: 200px; 
+    border-radius: 0; 
+    object-fit: contain;
+    margin-bottom: 20px;
+    border: none;
+    background-color: transparent;
 }
 
-.list-quack {
-    list-style: none;
-    padding: 0;
-    text-align: left;
-    margin-top: 20px;
+.message-card h2 {
+    color: var(--color-primary-dark);
+    font-size: 2.2em; /* Ajuste para mobile */
+    margin-top: 10px;
+    margin-bottom: 20px;
 }
 
-.list-quack li {
-    padding: 8px 0;
-    border-bottom: 1px dashed #DDD;
-}
-
-
-/* --- LAYOUT PRINCIPAL (main-app) --- */
-#main-app {
-    padding-top: 0;
-    position: relative;
-    min-height: 100vh;
-}
-
+/* --- Layout Principal (Header e Main) --- */
 header {
-    background-color: var(--color-primary);
-    color: var(--color-text);
-    padding: 25px 0 15px 0;
-    text-align: center;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    border-bottom: 3px solid var(--color-primary-dark);
+    background-color: var(--color-primary);
+    color: var(--color-secondary);
+    padding: 30px 0;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+header h1 {
+    margin: 0;
+    font-size: 2.5em; /* Ajuste para mobile */
+    font-weight: 900;
 }
 
 header p {
-    color: var(--color-text);
-    font-size: 1.1em;
+    margin: 5px 0 0;
+    font-size: 1.1em; /* Ajuste para mobile */
 }
 
 main {
-    padding: 20px 0;
-    /* REMOVIDO: display: flex; e gap: 40px; daqui para forçar layout de coluna única */
+    /* CORREÇÃO CRÍTICA: Mobile-first (Coluna Única) */
+    display: grid;
+    grid-template-columns: 1fr; /* Padrão em coluna única para telas menores */
+    gap: 30px; /* Reduzido o gap */
+    padding: 20px 0; /* Reduzido o padding */
 }
 
-/* --- CONTROLES / FORMULÁRIO (Retrátil) --- */
-.controles-wrapper {
-    padding: 25px;
-    margin-bottom: 20px;
-    border-radius: var(--border-radius-high); /* Arredondado em tudo, mesmo no mobile */
-}
-
-.controles-wrapper.retraido {
-    padding: 15px 25px; 
-    cursor: pointer;
-}
-
-/* ... (Estilos de Mascote, Input e Botões permanecem os mesmos) ... */
-
-.controles-wrapper.retraido .form-content,
-.controles-wrapper.retraido .mascote-area h2 {
-    max-height: 0;
-    overflow: hidden;
-    opacity: 0;
-    padding: 0;
-    margin: 0;
-    transition: max-height 0.3s, opacity 0.3s, padding 0.3s, margin 0.3s;
+/* --- Controles e Mascote (Tela Principal) --- */
+.controles {
+    background-color: var(--color-card);
+    padding: 20px; /* Reduzido o padding */
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    height: fit-content; 
+    min-width: unset; 
 }
 
 .mascote-area {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    margin-bottom: 25px;
-    padding-bottom: 15px;
-    border-bottom: 1px solid #eee;
+    text-align: center;
+    margin-bottom: 20px; /* Reduzido o margin */
+    padding-bottom: 15px; /* Reduzido o padding */
+    border-bottom: 1px solid #eee;
 }
 
+/* MASCOTE DA TELA DE ROADMAP: Mantido no tamanho original */
 .mascote {
-    width: 80px;
-    height: 80px;
-    margin-bottom: 10px;
+    width: 120px; /* Levemente reduzido para mobile */
+    height: 120px; 
+    border-radius: 8px; 
+    object-fit: contain;
+    margin-bottom: 10px;
+    border: none;
+    background-color: transparent; 
 }
 
-.controles-wrapper.retraido .mascote-area {
-    flex-direction: row;
-    justify-content: center;
-    border-bottom: none;
-    margin-bottom: 0;
-    padding-bottom: 0;
+.controles h2 {
+    color: var(--color-secondary);
+    font-size: 1.4em; /* Ajuste para mobile */
+    margin-top: 0;
 }
 
-.controles-wrapper.retraido .mascote {
-    width: 40px;
-    height: 40px;
-    margin: 0 10px 0 0;
+/* Ajuste de padding/margin para inputs em mobile */
+.controles input[type="text"],
+.controles select,
+.controles textarea {
+    padding: 10px;
+    font-size: 0.95em;
 }
 
-.form-content label {
-    display: block;
-    margin-top: 20px;
-    margin-bottom: 8px;
-    font-weight: bold;
-    font-size: 1em;
-}
-
-.form-content input[type="text"],
-.form-content select,
-.form-content textarea {
-    width: 100%;
-    padding: 18px 15px; 
-    border: 2px solid #E5E5E5;
-    border-radius: var(--border-radius-low);
-    box-sizing: border-box;
-    resize: vertical;
-    font-size: 1em;
-    font-weight: 500;
-}
-
+/* --- Botões --- */
 .btn-primary {
-    display: block;
-    width: 100%;
-    padding: 18px; 
-    margin-top: 30px;
-    background-color: var(--color-primary);
-    color: var(--color-text);
-    border: none;
-    border-bottom: 4px solid var(--color-primary-dark); 
-    border-radius: var(--border-radius-high);
-    font-size: 1.2em;
-    font-weight: 800;
-    cursor: pointer;
-    text-transform: uppercase;
-    transition: all 0.1s ease;
+    padding: 12px; /* Ligeiramente menor em mobile */
+    margin-top: 25px; /* Ligeiramente menor em mobile */
+    font-size: 1em;
 }
 
-.btn-primary:hover {
-    background-color: var(--color-primary-dark);
-    transform: translateY(2px);
-    border-bottom-width: 2px;
-}
-
-.btn-primary:active {
-    transform: translateY(4px);
-    border-bottom: 0px solid var(--color-primary-dark);
-}
-
-.btn-secondary, .toggle-form-btn {
-    display: block;
-    width: 100%;
-    padding: 12px 20px;
-    margin: 0 auto;
-    background-color: var(--color-secondary);
-    color: var(--color-card);
-    border: none;
-    border-bottom: 3px solid var(--color-secondary-dark);
-    border-radius: var(--border-radius-low);
-    cursor: pointer;
-    font-weight: 700;
-    font-size: 1em;
-    transition: all 0.1s ease;
-}
-
-.btn-secondary:active, .toggle-form-btn:active {
-    transform: translateY(3px);
-    border-bottom: 0px solid var(--color-secondary-dark);
-}
-
-.toggle-form-btn {
-    width: 95%;
-    max-width: 1000px;
-    margin: 0 auto 20px auto; 
+.btn-secondary {
+    padding: 12px 18px; 
+    font-size: 1em; 
 }
 
 /* --- Área do Roadmap --- */
 #roadmap-container {
-    padding: 30px 25px;
+    background-color: var(--color-card);
+    padding: 20px; /* Reduzido o padding */
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
 }
 
 #roadmap-container h2 {
-    color: var(--color-text);
-    margin-bottom: 25px;
-    font-size: 1.8em;
-    border-bottom: 2px solid var(--color-primary);
-    padding-bottom: 10px;
+    font-size: 1.6em; /* Ajuste para mobile */
 }
 
 .roadmap-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); 
-    gap: 20px;
-    padding-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px; /* Reduzido o gap */
+    padding-top: 5px;
 }
 
+/* Bloco das Etapas (Mobile padrão: 100%) */
 .bloco {
-    padding: 20px;
-    background-color: var(--color-primary);
-    color: var(--color-text);
-    border-radius: 50%; 
-    text-align: center;
-    font-weight: 800;
-    font-size: 1.1em;
-    cursor: pointer;
-    aspect-ratio: 1 / 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 4px solid var(--color-primary-dark);
-    box-shadow: 0 4px 0 var(--color-primary-dark);
-    transition: all 0.2s ease;
+    flex: 1 1 100%; /* Ocupa 100% da largura em telas pequenas */
+    min-width: unset;
+    padding: 20px; /* Ajuste de padding */
+    font-size: 0.9em;
 }
 
-.bloco:hover {
-    background-color: var(--color-primary-dark);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 0 var(--color-primary-dark);
-}
-
-/* --- Modal --- */
+/* --- Modal (Pop-up) --- */
 .modal-content {
-    margin: 8% auto;
-    width: 95%;
-    padding: 30px; 
-    border-bottom: 4px solid var(--color-primary-dark);
-}
-
-.modal-content h3 {
-    color: var(--color-text);
-    border-left: 5px solid var(--color-primary);
-    padding-left: 10px;
+    margin: 10% auto; /* Move para o centro superior em mobile */
+    padding: 20px;
+    width: 95%; /* Ocupa quase a largura total */
+    max-width: 850px;
 }
 
 .topico-bloco {
-    display: flex;
-    flex-direction: column; 
-    gap: 12px;
-    margin-bottom: 15px;
+    /* Garante que os botões material e simulado fiquem em coluna em telas muito pequenas */
+    flex-direction: column;
+    gap: 10px;
 }
 
 .material-btn, .btn-simulado {
-    padding: 14px;
-    border-radius: var(--border-radius-low);
-    box-shadow: none;
-    font-weight: 700;
-    border: none;
+    flex: 1; /* Ocupa a largura total */
+    padding: 10px 15px;
+    font-size: 0.9em;
+    text-align: center; /* Centraliza texto nos botões para melhor visualização em coluna */
+    min-width: unset;
 }
 
-.material-btn {
-    background-color: #F0F0F0;
-    color: var(--color-text);
-    border: 1px solid #DDD;
+.modal-actions {
+    text-align: center; /* Centraliza botões de ação do modal */
+    margin-top: 20px;
 }
 
-.btn-simulado {
-    background-color: var(--color-secondary);
-    color: var(--color-card);
-    border-bottom: 3px solid var(--color-secondary-dark);
-    font-size: 1em;
-    transition: all 0.1s ease;
+.modal-actions button {
+    width: 100%;
 }
 
-.btn-simulado:active {
-    transform: translateY(3px);
-    border-bottom: 0;
+
+/* ---------------------------------------------------
+ * MEDIA QUERIES OTIMIZADAS
+ * --------------------------------------------------- */
+
+/* Tablet (Telas maiores que 600px) */
+@media (min-width: 601px) {
+    .mascote-welcome {
+        width: 220px; 
+        height: 220px; 
+    }
+
+    .message-card h2 {
+        font-size: 2.5em; 
+    }
+
+    .bloco {
+        flex: 1 1 calc(50% - 15px); /* 2 blocos por linha */
+        font-size: 1em;
+    }
+
+    .topico-bloco {
+        flex-direction: row; /* Volta para linha no tablet */
+        gap: 15px;
+    }
+
+    .material-btn {
+        text-align: left; /* Alinha texto à esquerda em linha */
+    }
+
+    .modal-actions {
+        text-align: right;
+    }
+    .modal-actions button {
+        width: auto; /* Botões menores no desktop */
+    }
 }
 
-/* --- Media Queries (Desktop) --- */
+/* Desktop (Telas maiores que 992px) */
 @media (min-width: 993px) {
-    main {
-        /* Garante layout de coluna única mesmo no desktop */
-        display: block; 
-        padding: 40px 0;
-    }
-    
-    .controles-wrapper {
-        width: 100%;
-        max-width: 1000px;
-        padding: 30px;
-        margin-bottom: 40px;
-    }
+    main {
+        /* Volta para o layout lateral (formulário 350px, trilha 1fr) */
+        grid-template-columns: 350px 1fr; 
+        gap: 40px;
+        padding: 40px 0;
+    }
+    
+    header h1 {
+        font-size: 2.8em;
+    }
+    header p {
+        font-size: 1.2em;
+    }
 
-    .roadmap-grid {
-        grid-template-columns: repeat(4, 1fr);
-    }
-    
-    /* Layout do Modal é o único que pode ser flex */
-    .topico-bloco {
-        flex-direction: row;
-    }
-    
-    .material-btn {
-        flex: 3;
-        text-align: left;
-    }
-    
-    .btn-simulado {
-        flex: 1;
-        min-width: 150px;
-    }
+    .controles {
+        padding: 30px;
+    }
+    
+    .bloco {
+        flex: 1 1 calc(33.333% - 20px); /* 3 blocos por linha */
+        padding: 25px;
+    }
+
+    .modal-content {
+        margin: 4% auto; 
+        padding: 35px;
+    }
 }
