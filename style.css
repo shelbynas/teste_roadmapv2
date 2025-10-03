@@ -1,56 +1,168 @@
 /* ===================================================
-// NOVO: ESTILOS PARA O BOTÃO FLUTUANTE DE CHAT
-// (Adicione ao final do seu style.css original)
+// ARQUIVO: style.css (Otimizado para Mobile e Intuitividade)
 // =================================================== */
-.btn-chat {
-    position: fixed; 
-    bottom: 25px; 
-    right: 25px; 
-    z-index: 1000; 
-    
-    /* Cores baseadas na sua paleta amarela */
-    background-color: var(--color-primary-dark);
+
+/* --- Variáveis de Cor (Paleta Amarela) --- */
+:root {
+    --color-primary: #FFC107; /* Amarelo Vibrante */
+    --color-primary-dark: #E0A800; /* Amarelo Escuro */
+    --color-secondary: #343A40; /* Cinza Escuro para Texto */
+    --color-background: #F8F9FA; /* Fundo Suave */
+    --color-card: #FFFFFF;
+    --color-success: #28A745;
+    --color-danger: #DC3545;
+    --color-light-yellow: #FFFBEA; /* Amarelo muito claro para blocos */
+}
+
+/* --- Estilos Gerais e Tipografia --- */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--color-background);
     color: var(--color-secondary);
-    
-    padding: 12px 20px;
-    border-radius: 50px;
-    text-decoration: none;
-    font-size: 1.1em;
-    font-weight: bold;
-    
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    transition: all 0.3s ease;
-    
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
 }
 
-.btn-chat:hover {
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Adicionado para transições suaves */
+.btn-primary, .bloco, .btn-float {
+    transition: all 0.2s ease-in-out;
+}
+
+/* --- ESTILOS DAS NOVAS TELAS --- */
+/* (Inalterado, garantindo full-screen) */
+
+/* --- Layout Principal (Header e Main) --- */
+header {
     background-color: var(--color-primary);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-    transform: translateY(-2px);
+    color: var(--color-secondary);
+    padding: 25px 0; /* Um pouco menor */
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-.btn-chat i {
-    font-size: 1.2em;
+/* *** MOBILE-FIRST (MAIN LAYOUT) *** */
+main {
+    /* Padrão para mobile: Uma única coluna */
+    display: grid;
+    grid-template-columns: 1fr; 
+    gap: 20px;
+    padding: 20px 0;
 }
 
-/* Oculta o texto em telas pequenas */
-@media (max-width: 480px) {
-    .btn-chat {
-        padding: 15px;
-        border-radius: 50%;
-        font-size: 0;
-        bottom: 20px;
-        right: 20px;
+/* --- Controles e Formulário --- */
+.controles {
+    background-color: var(--color-card);
+    padding: 20px; /* Reduzido o padding para mobile */
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    height: fit-content; 
+    order: -1; /* Força o formulário a vir antes da trilha no mobile */
+}
+
+/* Melhorias de Form Elementos */
+.controles label {
+    margin-top: 15px; /* Ajuste de espaçamento */
+    font-size: 1em;
+}
+
+.controles input[type="text"],
+.controles select,
+.controles textarea {
+    padding: 10px; /* Um pouco menor para mobile */
+}
+
+/* --- Botões e Efeitos Mobile --- */
+.btn-primary {
+    /* Adiciona efeito de 'pressionar' mais evidente no toque */
+    touch-action: manipulation;
+}
+
+.btn-primary:active {
+    transform: scale(0.98);
+}
+
+/* BOTÃO FLUTUANTE PARA MOBILE */
+.btn-float {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 300px;
+    z-index: 500;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    /* Transição para aparecer/sumir suavemente */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s, visibility 0.3s;
+}
+
+.btn-float.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* --- Área do Roadmap (Ajustes de Grid) --- */
+.roadmap-grid {
+    display: grid; /* Mudando de flex para grid para controle total */
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* 2 a 3 blocos por linha no mobile/tablet */
+    gap: 15px;
+    padding-top: 10px;
+}
+
+.bloco {
+    padding: 18px; /* Reduzido um pouco para otimizar espaço */
+    font-size: 0.95em;
+}
+
+/* --- Modal (Pop-up) --- */
+.modal-content {
+    margin: 8% auto; /* Move para cima no mobile */
+    width: 95%; /* Prioriza largura total */
+    padding: 20px;
+}
+
+.topico-bloco {
+    flex-direction: column; /* Pilha de botões no mobile */
+    gap: 10px;
+}
+
+.material-btn, .btn-simulado {
+    width: 100%;
+    text-align: center;
+    padding: 10px;
+}
+
+
+/* --- Media Queries (Desktop) --- */
+@media (min-width: 993px) {
+    main {
+        /* Layout de desktop: Duas colunas */
+        grid-template-columns: 350px 1fr; 
+        gap: 40px;
+        padding: 40px 0;
     }
     
-    .btn-chat span {
-        display: none;
+    .controles {
+        order: unset; /* Volta à ordem normal */
+        min-width: 350px;
+        padding: 30px;
     }
     
-    .btn-chat i {
-        font-size: 1.5em;
+    .roadmap-grid {
+        /* Três colunas fixas no desktop */
+        grid-template-columns: repeat(3, 1fr); 
+        gap: 20px;
+    }
+    
+    .btn-float {
+        display: none !important; /* Esconde o botão flutuante no desktop */
     }
 }
