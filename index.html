@@ -59,7 +59,6 @@
             width: 90%;
         }
         
-        /* MASCOTE DA TELA INICIAL: MAIOR e SEM MOLDURA */
         .mascote-welcome {
             width: 200px; 
             height: 200px; 
@@ -98,11 +97,13 @@
         }
         
         main {
-            /* Padrão em coluna única para telas menores */
-            display: grid;
-            grid-template-columns: 1fr; 
-            gap: 30px; 
             padding: 20px 0; 
+        }
+
+        /* Contêiner para centralizar o formulário e gerenciar a troca de telas */
+        #main-content-area {
+            display: flex;
+            justify-content: center;
         }
         
         /* --- Controles (Formulário) --- */
@@ -111,10 +112,11 @@
             padding: 20px; 
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            width: 100%; /* Ocupa a largura total no mobile */
+            max-width: 500px; /* Limita a largura em telas maiores */
             height: fit-content; 
-            min-width: unset; 
         }
-        
+
         .mascote-area {
             text-align: center;
             margin-bottom: 20px; 
@@ -203,12 +205,10 @@
         }
         
         /* --- ESTILOS DAS TELAS DE CONTEÚDO (Roadmap, Etapa, Material, Simulado) --- */
-        #content-area {
-            /* Garante que o Roadmap e outras views ocupem 100% da área no mobile */
-            grid-column: 1 / -1; 
+        .content-view {
+            width: 100%;
         }
 
-        /* Aplicamos o mesmo estilo de container para todas as telas de conteúdo */
         #roadmap-container, #etapa-container, #material-container, #simulado-container {
             background-color: var(--color-card);
             padding: 20px; 
@@ -426,29 +426,6 @@
         
         /* Desktop (Telas maiores que 993px) */
         @media (min-width: 993px) {
-            main {
-                /* Layout lateral: controles (350px) e conteúdo (1fr) */
-                grid-template-columns: 350px 1fr; 
-                gap: 40px;
-                padding: 40px 0;
-            }
-            
-            /* Se o form for escondido, a main volta para 1fr */
-            #form-area[style*="display: none"] ~ #content-area {
-                grid-column: 1 / -1; /* Ocupa a largura total */
-            }
-
-            /* Se o form estiver visível, o content-area fica na segunda coluna */
-            #form-area ~ #content-area {
-                grid-column: 2 / 3;
-            }
-
-            /* Corrigindo a posição do content-area quando o form está visível */
-            #form-area {
-                grid-column: 1 / 2;
-            }
-
-
             header h1 {
                 font-size: 2.8em;
             }
@@ -463,6 +440,11 @@
             .bloco {
                 flex: 1 1 calc(33.333% - 20px); 
                 padding: 25px;
+            }
+            
+            /* Centraliza o form em telas grandes, mas deixa as views de conteúdo ocuparem 100% do container */
+            #roadmap-container, #etapa-container, #material-container, #simulado-container {
+                padding: 30px;
             }
         }
     </style>
@@ -509,49 +491,55 @@
         </header>
 
         <main class="container">
-            <div id="form-area" class="controles">
-                <div class="mascote-area">
-                    <img src="mascote.png" alt="Mascote Quackademy" class="mascote">
-                    <h2>Defina seu Desafio</h2>
+            <div id="main-content-area">
+                
+                <div id="form-view" class="content-view">
+                    <div class="controles">
+                        <div class="mascote-area">
+                            <img src="mascote.png" alt="Mascote Quackademy" class="mascote">
+                            <h2>Defina seu Desafio</h2>
+                        </div>
+                        
+                        <label for="tema">Tema ou Tecnologia:</label>
+                        <input type="text" id="tema" placeholder="Ex: Programação Python, Cloud Computing, etc." required>
+                        
+                        <label for="nivel">Nível de Dificuldade:</label>
+                        <select id="nivel">
+                            <option value="Iniciante">Iniciante</option>
+                            <option value="Intermediário">Intermediário</option>
+                            <option value="Avançado">Avançado</option>
+                        </select>
+                        
+                        <label for="objetivo">Objetivo Específico (Opcional):</label>
+                        <textarea id="objetivo" placeholder="Ex: Aprender a criar um backend com Node.js e Express."></textarea>
+                        
+                        <button id="btnGerar" class="btn-primary">Gerar Trilha 🚀</button>
+                    </div>
                 </div>
-                
-                <label for="tema">Tema ou Tecnologia:</label>
-                <input type="text" id="tema" placeholder="Ex: Programação Python, Cloud Computing, etc." required>
-                
-                <label for="nivel">Nível de Dificuldade:</label>
-                <select id="nivel">
-                    <option value="Iniciante">Iniciante</option>
-                    <option value="Intermediário">Intermediário</option>
-                    <option value="Avançado">Avançado</option>
-                </select>
-                
-                <label for="objetivo">Objetivo Específico (Opcional):</label>
-                <textarea id="objetivo" placeholder="Ex: Aprender a criar um backend com Node.js e Express."></textarea>
-                
-                <button id="btnGerar" class="btn-primary">Gerar Trilha 🚀</button>
-            </div>
 
-            <div id="content-area">
-                <div id="roadmap-screen">
+                <div id="roadmap-view" class="content-view" style="display: none;">
                     <div id="roadmap-container">
                         <h2>Sua Trilha de Estudos</h2>
                         <div id="roadmap" class="roadmap-grid">
-                            <p class="placeholder-text">Preencha o formulário ao lado e gere sua primeira trilha!</p>
+                            <p class="placeholder-text">Preencha o formulário e gere sua primeira trilha!</p>
+                        </div>
+                        <div class="modal-actions" style="text-align: right;">
+                             <button onclick="showFormView()" class="btn-secondary" style="width: auto;">⬅ Nova Trilha / Alterar Tema</button>
                         </div>
                     </div>
                 </div>
                 
-                <div id="etapa-view" style="display: none;">
+                <div id="etapa-view" class="content-view" style="display: none;">
                     <div id="etapa-container">
                         <h2 id="etapa-titulo"></h2>
                         <div id="etapa-conteudo"></div>
                         <div class="modal-actions">
-                            <button onclick="showRoadmapScreen()" class="btn-secondary">⬅ Voltar à Trilha</button>
+                            <button onclick="showRoadmapView()" class="btn-secondary">⬅ Voltar à Trilha</button>
                         </div>
                     </div>
                 </div>
 
-                <div id="material-view" style="display: none;">
+                <div id="material-view" class="content-view" style="display: none;">
                     <div id="material-container">
                         <h2 id="material-titulo"></h2>
                         <div id="material-conteudo"></div>
@@ -561,7 +549,7 @@
                     </div>
                 </div>
 
-                <div id="simulado-view" style="display: none;">
+                <div id="simulado-view" class="content-view" style="display: none;">
                     <div id="simulado-container">
                         <h2 id="simulado-titulo"></h2>
                         <div id="simulado-conteudo"></div>
@@ -615,30 +603,39 @@
         function showMainApp() {
             document.getElementById("explanation-screen").style.display = 'none';
             document.getElementById("main-app").style.display = 'block';
-            showRoadmapScreen(); // Vai direto para a tela do roadmap
+            showFormView(); // Começa mostrando o formulário
         }
 
         // --- LÓGICA DE NAVEGAÇÃO SPA ---
 
         // Esconde todas as áreas de conteúdo
-        function hideAllContentViews() {
-            document.getElementById("roadmap-screen").style.display = 'none';
+        function hideAllViews() {
+            document.getElementById("form-view").style.display = 'none';
+            document.getElementById("roadmap-view").style.display = 'none';
             document.getElementById("etapa-view").style.display = 'none';
             document.getElementById("material-view").style.display = 'none';
             document.getElementById("simulado-view").style.display = 'none';
         }
         
-        // Exibe a tela principal do Roadmap
-        function showRoadmapScreen() {
-            hideAllContentViews();
+        // NOVO: Exibe a tela do Formulário
+        function showFormView() {
+            hideAllViews();
             window.scrollTo(0, 0); // Correção mobile
             
-            document.getElementById("roadmap-screen").style.display = 'block';
+            document.getElementById("form-view").style.display = 'flex'; // Usar flex para centralizar
+        }
+        
+        // Exibe a tela principal do Roadmap
+        function showRoadmapView() {
+            hideAllViews();
+            window.scrollTo(0, 0); // Correção mobile
+            
+            document.getElementById("roadmap-view").style.display = 'block';
         }
 
         // Exibe a tela de Tópicos e Atividade
         function showEtapaView(etapa) {
-            hideAllContentViews();
+            hideAllViews();
             window.scrollTo(0, 0); // Correção mobile
             
             document.getElementById("etapa-view").style.display = 'block';
@@ -676,7 +673,11 @@
             const nivel = document.getElementById("nivel").value;
             const objetivo = document.getElementById("objetivo").value;
             const roadmapDiv = document.getElementById("roadmap");
+            
+            // Limpa e informa o carregamento
             roadmapDiv.innerHTML = "✨ Gerando roadmap...";
+            // Troca imediatamente para a tela de roadmap (para dar foco)
+            showRoadmapView();
 
             if (!tema) {
                 roadmapDiv.innerHTML = "⚠️ Por favor, preencha o campo Tema.";
@@ -742,22 +743,20 @@
                     roadmapDiv.appendChild(blocoDiv);
                 });
                 
-                // NOVO: Esconde o formulário ao gerar a trilha
-                document.getElementById("form-area").style.display = 'none';
-                showRoadmapScreen(); // Exibe a tela do roadmap após a geração.
+                // A trilha já está visível, apenas atualizamos o conteúdo.
 
             } catch (err) {
                 console.error("Erro:", err);
                 roadmapDiv.innerHTML = `⚠️ Erro ao gerar roadmap. Causa: ${err.message}.`;
-                // Se houver erro, mantém o formulário visível
-                document.getElementById("form-area").style.display = 'block'; 
+                // Se houver erro, podemos voltar para a tela do formulário:
+                // showFormView(); 
             }
         }
 
 
         // 2. FUNÇÃO: EXIBIR MATERIAL (showMaterialView)
         async function showMaterialView(topico, material) {
-            hideAllContentViews();
+            hideAllViews();
             window.scrollTo(0, 0); // Correção mobile
 
             document.getElementById("material-view").style.display = 'block';
@@ -824,7 +823,7 @@
 
         // 3. FUNÇÃO: EXIBIR SIMULADO (showSimuladoView)
         async function showSimuladoView(topico) {
-            hideAllContentViews();
+            hideAllViews();
             window.scrollTo(0, 0); // Correção mobile
             
             document.getElementById("simulado-view").style.display = 'block';
