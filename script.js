@@ -1,5 +1,6 @@
 
-// ARQUIVO: script.js (CORREÇÃO DE FLUXO DE TELAS)
+// ===================================================
+// ARQUIVO: script.js (Com Correção Crítica da API)
 // ===================================================
 
 // Use a sua chave da Groq aqui
@@ -12,17 +13,15 @@ let modalState = {};
 // --- CONTROLE DE FLUXO DA INTERFACE ---
 
 document.addEventListener("DOMContentLoaded", () => {
-    // 1. Garante que apenas a welcome-screen esteja inicialmente ativa
+    // Garante que apenas a welcome-screen esteja inicialmente ativa
     document.getElementById("explanation-screen").classList.add('hidden-screen');
     document.getElementById("main-app").classList.add('hidden-screen');
     document.getElementById("welcome-screen").classList.remove('hidden-screen');
     document.getElementById("welcome-screen").classList.add('active-screen');
 
-    // Transição entre telas de introdução (Slide)
     document.getElementById("btnWelcomeContinue").addEventListener("click", showExplanationScreen);
     document.getElementById("btnExplanationContinue").addEventListener("click", showMainApp);
     
-    // Listeners do app principal
     document.getElementById("btnGerar").addEventListener("click", gerarRoadmap);
     document.getElementById("btnToggleForm").addEventListener("click", toggleFormulario);
 });
@@ -31,16 +30,13 @@ function transitionScreen(currentId, nextId) {
     const currentScreen = document.getElementById(currentId);
     const nextScreen = document.getElementById(nextId);
     
-    // 1. Move a tela atual para fora
     currentScreen.classList.remove('active-screen');
     currentScreen.classList.add('hidden-screen');
     
-    // 2. Tira a próxima tela do estado 'hidden' e a torna 'active'
     nextScreen.classList.remove('hidden-screen');
-    // Adiciona o active com um pequeno delay, garantindo que o hidden seja aplicado primeiro
     setTimeout(() => {
         nextScreen.classList.add('active-screen'); 
-    }, 10); // Apenas 10ms é suficiente
+    }, 10); 
 }
 
 function showExplanationScreen() {
@@ -48,32 +44,25 @@ function showExplanationScreen() {
 }
 
 function showMainApp() {
-    // 1. Move a tela de explicação para fora
     const explanationScreen = document.getElementById('explanation-screen');
     explanationScreen.classList.remove('active-screen');
     explanationScreen.classList.add('hidden-screen');
     
-    // 2. Remove o main-app do fluxo 'fixed/hidden' para torná-lo um bloco normal
     const mainApp = document.getElementById("main-app");
     mainApp.classList.remove('screen-flow', 'hidden-screen');
-    
-    // 3. Garante que o main-app apareça (opcional, mas bom para garantir)
     mainApp.style.opacity = 1;
     mainApp.style.pointerEvents = 'auto';
 
-    // Estado inicial do formulário no main-app
     const controlesWrapper = document.getElementById("controles-wrapper");
     if (window.innerWidth >= 993) {
         controlesWrapper.classList.remove('retraido');
         document.getElementById("btnToggleForm").style.display = 'none';
     } else {
-        // Começa expandido no mobile, mas com o botão de toggle escondido.
         controlesWrapper.classList.remove('retraido');
         document.getElementById("btnToggleForm").style.display = 'none';
     }
 }
 
-// *** FUNÇÃO: Toggle Formulário (Mobile) ***
 function toggleFormulario() {
     const wrapper = document.getElementById("controles-wrapper");
     const btn = document.getElementById("btnToggleForm");
@@ -82,7 +71,6 @@ function toggleFormulario() {
     
     if (isRetraido) {
         btn.innerHTML = '⚙️ Abrir Formulário de Desafio';
-        // Rola para o topo do wrapper quando retrai no mobile
         if (window.innerWidth < 993) {
             wrapper.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
@@ -92,7 +80,7 @@ function toggleFormulario() {
 }
 
 
-// --- LÓGICA DO ROADMAP (Funcionalidade Inalterada) ---
+// --- LÓGICA DO ROADMAP ---
 
 async function gerarRoadmap() {
     const tema = document.getElementById("tema").value;
@@ -110,8 +98,9 @@ async function gerarRoadmap() {
     }
     
     try {
-        // Sua chave da Groq
-        const systemPrompt = `Você é um especialista em educação técnica. Crie um roadmap detalhado com **no mínimo 8 (oito) etapas obrigatórias**...`; 
+        // CORREÇÃO API: Adicionado a palavra JSON no systemPrompt.
+        const systemPrompt = `Você é um especialista em educação técnica. Crie um roadmap detalhado com **no mínimo 8 (oito) etapas obrigatórias**. Cada tópico deve ser ultra específico e **DEVE incluir uma URL de documentação oficial ou tutorial renomado** no campo 'material'. Sua única resposta deve ser APENAS **JSON** válido, sem texto introdutório ou blocos de código markdown. O JSON deve seguir este formato: {"etapas": [{"titulo": "Etapa 1: Nome da etapa", "topicos": [{"tópico": "Nome do tópico", "material": "URL de uma fonte externa"}], "atividade": "Descrição da atividade prática"}]}.`;
+        
         const userPrompt = `Crie um roadmap de estudos detalhado e abrangente para o tema "${tema}" no nível "${nivel}"${objetivo ? ` com objetivo "${objetivo}"` : ""}. Inclua fontes externas de estudo no campo 'material' para todos os tópicos.`;
 
         const response = await fetch(GROQ_ENDPOINT, {
@@ -133,7 +122,8 @@ async function gerarRoadmap() {
 
         if (!response.ok) {
             const errorData = await response.json();
-            throw new Error(`Erro API: ${response.status} - ${errorData.error.message}`);
+            // Lança o erro original da API para debug
+            throw new Error(`Erro API: ${response.status} - ${errorData.error.message}`); 
         }
 
         const data = await response.json();
@@ -162,13 +152,11 @@ async function gerarRoadmap() {
             roadmapDiv.appendChild(blocoDiv);
         });
 
-        // *** NOVO FLUXO: RETRAIR O FORMULÁRIO APÓS A GERAÇÃO (MOBILE) ***
+        // Retrai o formulário no mobile após a geração
         if (window.innerWidth < 993) {
             controlesWrapper.classList.add('retraido');
             btnToggleForm.style.display = 'block';
             btnToggleForm.innerHTML = '⚙️ Alterar Desafio';
-            
-            // Rola para a trilha gerada
             document.getElementById("roadmap-container").scrollIntoView({ behavior: 'smooth', block: 'start' });
         } else {
              btnToggleForm.style.display = 'none';
@@ -177,45 +165,15 @@ async function gerarRoadmap() {
 
     } catch (err) {
         console.error("Erro:", err);
-        roadmapDiv.innerHTML = `⚠️ Erro ao gerar roadmap. Causa: ${err.message}.`;
+        roadmapDiv.innerHTML = `⚠️ Erro ao gerar roadmap. Causa: ${err.message}. Verifique sua chave API e o prompt.`;
         
-        // Em caso de erro, mantém o formulário expandido
         controlesWrapper.classList.remove('retraido');
         btnToggleForm.style.display = 'none';
     }
 }
 
 
-// --- Funções de Modal, Simulado e Material (Mantidas) ---
-
-function abrirModalMateriais(etapa) {
-    modalState.currentEtapa = etapa; 
-
-    document.getElementById("modal").style.display = "block";
-    document.getElementById("modal-titulo").innerText = etapa.titulo;
-
-    const conteudo = etapa.topicos.map(t => {
-        const topicoEscapado = t.tópico.replace(/'/g,"\\'"); 
-        const materialLink = t.material ? t.material : "";
-
-        return `
-            <div class="topico-bloco">
-                <button class="bloco material-btn" onclick="gerarConteudoMaterial('${topicoEscapado}', '${materialLink}')">${t.tópico}</button>
-                <button class="btn-simulado" onclick="gerarSimulado('${topicoEscapado}')">🧠 Gerar Simulado</button>
-            </div>
-        `;
-    }).join("");
-
-    document.getElementById("modal-conteudo").innerHTML = `
-        <h3>📌 Atividade prática:</h3>
-        <p>${etapa.atividade}</p>
-        <h3>📚 Tópicos e Simulado:</h3>
-        <div class="topicos-container">${conteudo}</div>
-        <div class="modal-actions">
-            <button onclick="fecharModal()" class="btn-secondary">❌ Fechar</button>
-        </div>
-    `;
-}
+// --- Funções de Modal, Simulado e Material ---
 
 async function gerarSimulado(topico) {
     const modalConteudo = document.getElementById("modal-conteudo");
@@ -223,7 +181,8 @@ async function gerarSimulado(topico) {
     modalConteudo.innerHTML = `<p>Carregando simulado sobre: <strong>${topico}</strong>...</p>`;
 
     try {
-        const systemPromptSimulado = `Você é um gerador de questões de múltipla escolha. Sua única resposta deve ser APENAS JSON válido, sem texto introdutório. O JSON deve ser um objeto contendo um array de **5 perguntas**...`;
+        // CORREÇÃO API: Adicionado a palavra JSON no systemPrompt.
+        const systemPromptSimulado = `Você é um gerador de questões de múltipla escolha. Sua única resposta deve ser APENAS **JSON** válido, sem texto introdutório. O JSON deve ser um objeto contendo um array de **5 perguntas**. O formato JSON deve ser: {"simulados": [{"pergunta": "...", "alternativas": ["A) ...", "B) ...", "C) ...", "D) ...", "E) ..."], "resposta_correta": "Letra da alternativa correta (ex: C)"}, {"pergunta": "...", ...}]}.`;
         
         const userPromptSimulado = `Crie 5 questões de múltipla escolha sobre o tópico "${topico}" no nível ${document.getElementById("nivel").value}. Cada questão deve ter 5 alternativas.`;
 
@@ -304,6 +263,37 @@ async function gerarSimulado(topico) {
             </div>
         `;
     }
+}
+
+// ... (abrirModalMateriais, mostrarResposta e gerarConteudoMaterial permanecem os mesmos) ...
+
+function abrirModalMateriais(etapa) {
+    modalState.currentEtapa = etapa; 
+
+    document.getElementById("modal").style.display = "block";
+    document.getElementById("modal-titulo").innerText = etapa.titulo;
+
+    const conteudo = etapa.topicos.map(t => {
+        const topicoEscapado = t.tópico.replace(/'/g,"\\'"); 
+        const materialLink = t.material ? t.material : "";
+
+        return `
+            <div class="topico-bloco">
+                <button class="bloco material-btn" onclick="gerarConteudoMaterial('${topicoEscapado}', '${materialLink}')">${t.tópico}</button>
+                <button class="btn-simulado" onclick="gerarSimulado('${topicoEscapado}')">🧠 Gerar Simulado</button>
+            </div>
+        `;
+    }).join("");
+
+    document.getElementById("modal-conteudo").innerHTML = `
+        <h3>📌 Atividade prática:</h3>
+        <p>${etapa.atividade}</p>
+        <h3>📚 Tópicos e Simulado:</h3>
+        <div class="topicos-container">${conteudo}</div>
+        <div class="modal-actions">
+            <button onclick="fecharModal()" class="btn-secondary">❌ Fechar</button>
+        </div>
+    `;
 }
 
 function mostrarResposta(button) {
