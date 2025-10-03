@@ -263,8 +263,8 @@
         /* --- Modal (Pop-up) --- */
         .modal {
             display: none; 
-            position: fixed; /* GARANTE QUE FIQUE ACIMA DE TUDO E FIXO */
-            z-index: 1000; /* GARANTE QUE FIQUE ACIMA DE TUDO */
+            position: fixed; 
+            z-index: 1000; 
             left: 0;
             top: 0;
             width: 100%; 
@@ -275,11 +275,11 @@
         
         .modal-content {
             background-color: var(--color-card);
-            margin: 10% auto; /* Move para o centro superior em mobile */
+            margin: 10% auto; 
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 5px 20px rgba(0,0,0,0.4);
-            width: 95%; /* Ocupa quase a largura total */
+            width: 95%; 
             max-width: 850px;
         }
         
@@ -704,9 +704,12 @@
         function abrirModalMateriais(etapa) {
             modalState.currentEtapa = etapa; 
 
-            // CORREÇÃO AQUI: Garante que o modal esteja visível
+            // LINHA CRÍTICA 1: Garante que o modal apareça
             document.getElementById("modal").style.display = "block";
             
+            // LINHA CRÍTICA 2: FORÇA A ROLAGEM PARA O TOPO (Solução Definitiva)
+            window.scrollTo(0, 0); 
+
             document.getElementById("modal-titulo").innerText = etapa.titulo;
 
             const conteudo = etapa.topicos.map(t => {
