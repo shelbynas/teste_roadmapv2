@@ -105,7 +105,7 @@
             padding: 20px 0; 
         }
         
-        /* --- Controles (Fixo na Esquerda em Desktop) --- */
+        /* --- Controles (Formulário) --- */
         .controles {
             background-color: var(--color-card);
             padding: 20px; 
@@ -203,6 +203,11 @@
         }
         
         /* --- ESTILOS DAS TELAS DE CONTEÚDO (Roadmap, Etapa, Material, Simulado) --- */
+        #content-area {
+            /* Garante que o Roadmap e outras views ocupem 100% da área no mobile */
+            grid-column: 1 / -1; 
+        }
+
         /* Aplicamos o mesmo estilo de container para todas as telas de conteúdo */
         #roadmap-container, #etapa-container, #material-container, #simulado-container {
             background-color: var(--color-card);
@@ -428,6 +433,22 @@
                 padding: 40px 0;
             }
             
+            /* Se o form for escondido, a main volta para 1fr */
+            #form-area[style*="display: none"] ~ #content-area {
+                grid-column: 1 / -1; /* Ocupa a largura total */
+            }
+
+            /* Se o form estiver visível, o content-area fica na segunda coluna */
+            #form-area ~ #content-area {
+                grid-column: 2 / 3;
+            }
+
+            /* Corrigindo a posição do content-area quando o form está visível */
+            #form-area {
+                grid-column: 1 / 2;
+            }
+
+
             header h1 {
                 font-size: 2.8em;
             }
@@ -488,7 +509,7 @@
         </header>
 
         <main class="container">
-            <div class="controles">
+            <div id="form-area" class="controles">
                 <div class="mascote-area">
                     <img src="mascote.png" alt="Mascote Quackademy" class="mascote">
                     <h2>Defina seu Desafio</h2>
@@ -510,41 +531,43 @@
                 <button id="btnGerar" class="btn-primary">Gerar Trilha 🚀</button>
             </div>
 
-            <div id="roadmap-screen">
-                <div id="roadmap-container">
-                    <h2>Sua Trilha de Estudos</h2>
-                    <div id="roadmap" class="roadmap-grid">
-                        <p class="placeholder-text">Preencha o formulário ao lado e gere sua primeira trilha!</p>
+            <div id="content-area">
+                <div id="roadmap-screen">
+                    <div id="roadmap-container">
+                        <h2>Sua Trilha de Estudos</h2>
+                        <div id="roadmap" class="roadmap-grid">
+                            <p class="placeholder-text">Preencha o formulário ao lado e gere sua primeira trilha!</p>
+                        </div>
                     </div>
                 </div>
-            </div>
-            
-            <div id="etapa-view" style="display: none;">
-                <div id="etapa-container">
-                    <h2 id="etapa-titulo"></h2>
-                    <div id="etapa-conteudo"></div>
-                    <div class="modal-actions">
-                        <button onclick="showRoadmapScreen()" class="btn-secondary">⬅ Voltar à Trilha</button>
+                
+                <div id="etapa-view" style="display: none;">
+                    <div id="etapa-container">
+                        <h2 id="etapa-titulo"></h2>
+                        <div id="etapa-conteudo"></div>
+                        <div class="modal-actions">
+                            <button onclick="showRoadmapScreen()" class="btn-secondary">⬅ Voltar à Trilha</button>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div id="material-view" style="display: none;">
-                <div id="material-container">
-                    <h2 id="material-titulo"></h2>
-                    <div id="material-conteudo"></div>
-                    <div class="modal-actions">
-                        <button id="btnMaterialVoltar" class="btn-secondary">⬅ Voltar à Etapa</button>
+                <div id="material-view" style="display: none;">
+                    <div id="material-container">
+                        <h2 id="material-titulo"></h2>
+                        <div id="material-conteudo"></div>
+                        <div class="modal-actions">
+                            <button id="btnMaterialVoltar" class="btn-secondary">⬅ Voltar à Etapa</button>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div id="simulado-view" style="display: none;">
-                <div id="simulado-container">
-                    <h2 id="simulado-titulo"></h2>
-                    <div id="simulado-conteudo"></div>
-                    <div class="modal-actions">
-                        <button id="btnSimuladoVoltar" class="btn-secondary">⬅ Voltar à Etapa</button>
+                <div id="simulado-view" style="display: none;">
+                    <div id="simulado-container">
+                        <h2 id="simulado-titulo"></h2>
+                        <div id="simulado-conteudo"></div>
+                        <div class="modal-actions">
+                            <button id="btnSimuladoVoltar" class="btn-secondary">⬅ Voltar à Etapa</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -556,7 +579,7 @@
         // JAVASCRIPT INTEGRADO (script.js)
         // ===================================================
 
-        // ATENÇÃO: É NECESSÁRIO QUE VOCÊ COLOQUE SUA CHAVE DA GROQ AQUI
+        // ATENÇÃO: COLOQUE SUA CHAVE DA GROQ AQUI
         const API_KEY = "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"; 
         const GROQ_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions";
         const MODEL_NAME = "llama-3.1-8b-instant"; 
@@ -597,7 +620,7 @@
 
         // --- LÓGICA DE NAVEGAÇÃO SPA ---
 
-        // Esconde todas as áreas de conteúdo do lado direito da tela
+        // Esconde todas as áreas de conteúdo
         function hideAllContentViews() {
             document.getElementById("roadmap-screen").style.display = 'none';
             document.getElementById("etapa-view").style.display = 'none';
@@ -608,8 +631,7 @@
         // Exibe a tela principal do Roadmap
         function showRoadmapScreen() {
             hideAllContentViews();
-            // CORREÇÃO CRÍTICA PARA MOBILE
-            window.scrollTo(0, 0);
+            window.scrollTo(0, 0); // Correção mobile
             
             document.getElementById("roadmap-screen").style.display = 'block';
         }
@@ -617,8 +639,7 @@
         // Exibe a tela de Tópicos e Atividade
         function showEtapaView(etapa) {
             hideAllContentViews();
-            // CORREÇÃO CRÍTICA PARA MOBILE
-            window.scrollTo(0, 0); 
+            window.scrollTo(0, 0); // Correção mobile
             
             document.getElementById("etapa-view").style.display = 'block';
             
@@ -717,16 +738,19 @@
                     const blocoDiv = document.createElement("div");
                     blocoDiv.className = "bloco";
                     blocoDiv.innerText = etapa.titulo;
-                    // ALTERADO: Agora chama a função showEtapaView
                     blocoDiv.onclick = () => showEtapaView(etapa);
                     roadmapDiv.appendChild(blocoDiv);
                 });
                 
+                // NOVO: Esconde o formulário ao gerar a trilha
+                document.getElementById("form-area").style.display = 'none';
                 showRoadmapScreen(); // Exibe a tela do roadmap após a geração.
 
             } catch (err) {
                 console.error("Erro:", err);
                 roadmapDiv.innerHTML = `⚠️ Erro ao gerar roadmap. Causa: ${err.message}.`;
+                // Se houver erro, mantém o formulário visível
+                document.getElementById("form-area").style.display = 'block'; 
             }
         }
 
@@ -734,8 +758,7 @@
         // 2. FUNÇÃO: EXIBIR MATERIAL (showMaterialView)
         async function showMaterialView(topico, material) {
             hideAllContentViews();
-            // CORREÇÃO CRÍTICA PARA MOBILE
-            window.scrollTo(0, 0); 
+            window.scrollTo(0, 0); // Correção mobile
 
             document.getElementById("material-view").style.display = 'block';
             
@@ -802,8 +825,7 @@
         // 3. FUNÇÃO: EXIBIR SIMULADO (showSimuladoView)
         async function showSimuladoView(topico) {
             hideAllContentViews();
-            // CORREÇÃO CRÍTICA PARA MOBILE
-            window.scrollTo(0, 0); 
+            window.scrollTo(0, 0); // Correção mobile
             
             document.getElementById("simulado-view").style.display = 'block';
             
