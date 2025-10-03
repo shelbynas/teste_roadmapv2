@@ -139,12 +139,33 @@
             margin-top: 0;
         }
         
-        /* Ajuste de padding/margin para inputs em mobile */
+        /* ESTILOS DOS CAMPOS DE TEXTO (Ajustados para serem robustos) */
+        .controles label {
+            display: block;
+            margin-top: 20px;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: var(--color-secondary);
+            font-size: 0.95em;
+        }
+        
         .controles input[type="text"],
         .controles select,
         .controles textarea {
+            width: 100%;
             padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box; /* Garante que padding e border não aumentem a largura */
+            resize: vertical;
             font-size: 0.95em;
+            /* Garante que o fundo seja sempre branco para contraste */
+            background-color: white; 
+            color: var(--color-secondary);
+        }
+        
+        .controles textarea {
+            min-height: 100px;
         }
         
         /* --- Botões --- */
@@ -269,11 +290,17 @@
             color: var(--color-secondary);
         }
         
+        /* Estilos do conteúdo do Modal - Simulado/Material */
         #modal-conteudo h3 {
             color: var(--color-secondary);
             margin-top: 30px;
             border-left: 5px solid var(--color-primary);
             padding-left: 12px;
+        }
+
+        /* Container de Tópicos (Apenas na tela inicial do Modal) */
+        .topicos-container {
+            margin-top: 20px;
         }
         
         .topico-bloco {
@@ -285,6 +312,7 @@
             align-items: stretch;
         }
         
+        /* O botão material (bloco) agora é apenas um botão cinza */
         .material-btn {
             flex: 1; /* Ocupa a largura total em coluna */
             padding: 10px 15px;
@@ -292,12 +320,14 @@
             border: 1px solid #ddd;
             color: var(--color-secondary);
             cursor: pointer;
-            text-align: center; /* Centraliza texto nos botões para melhor visualização em coluna */
+            text-align: center; 
             font-weight: 500;
             transition: background-color 0.1s;
             box-shadow: none; 
             min-width: unset;
             font-size: 0.9em;
+            /* Corrige o estilo de botão para não parecer um bloco de roadmap */
+            border-radius: 6px; 
         }
         
         .material-btn:hover {
@@ -343,7 +373,7 @@
             border: 1px solid #ced4da;
             border-radius: 6px;
             transition: background-color 0.3s;
-            cursor: pointer;
+            cursor: default; /* Remove cursor de clique após mostrar resposta */
             background-color: var(--color-card) !important; 
             color: var(--color-secondary) !important;
         }
@@ -657,7 +687,7 @@
             }
         }
 
-        // --- 2. FUNÇÃO: ABRIR MODAL DA ETAPA ---
+        // --- 2. FUNÇÃO: ABRIR MODAL DA ETAPA (Tela de Tópicos e Atividade) ---
         function abrirModalMateriais(etapa) {
             modalState.currentEtapa = etapa; 
 
@@ -670,7 +700,7 @@
 
                 return `
                     <div class="topico-bloco">
-                        <button class="bloco material-btn" onclick="gerarConteudoMaterial('${topicoEscapado}', '${materialLink}')">${t.tópico}</button>
+                        <button class="material-btn" onclick="gerarConteudoMaterial('${topicoEscapado}', '${materialLink}')">📚 ${t.tópico}</button>
                         <button class="btn-simulado" onclick="gerarSimulado('${topicoEscapado}')">🧠 Gerar Simulado</button>
                     </div>
                 `;
@@ -679,18 +709,20 @@
             document.getElementById("modal-conteudo").innerHTML = `
                 <h3>📌 Atividade prática:</h3>
                 <p>${etapa.atividade}</p>
-                <h3>📚 Tópicos e Simulado:</h3>
+                <h3>📚 Tópicos de Estudo:</h3>
                 <div class="topicos-container">${conteudo}</div>
                 <div class="modal-actions">
-                    <button onclick="fecharModal()" class="btn-secondary">❌ Fechar</button>
+                    <button onclick="fecharModal()" class="btn-secondary">❌ Fechar Etapa</button>
                 </div>
             `;
         }
 
-        // --- 3. FUNÇÃO: GERAR SIMULADO (5 PERGUNTAS MÍNIMAS) ---
+        // --- 3. FUNÇÃO: GERAR SIMULADO (Simula uma Nova Página no Modal) ---
         async function gerarSimulado(topico) {
             const modalConteudo = document.getElementById("modal-conteudo");
 
+            // Define o novo título para simular a navegação
+            document.getElementById("modal-titulo").innerText = `Simulado: ${topico}`;
             modalConteudo.innerHTML = `<p>Carregando simulado sobre: <strong>${topico}</strong>...</p>`;
 
             try {
@@ -740,7 +772,8 @@
                     const alternativasHtml = simulado.alternativas.map((alt) => {
                         const letra = alt.charAt(0);
                         return `<li class="alternativa" 
-                                    data-correta="${letra === simulado.resposta_correta.charAt(0)}">
+                                    data-correta="${letra === simulado.resposta_correta.charAt(0)}"
+                                    onclick="return false;"> 
                                     ${alt}
                                 </li>`;
                     }).join("");
@@ -758,12 +791,11 @@
                 }).join("");
 
                 modalConteudo.innerHTML = `
-                    <h3>Simulado: ${topico}</h3>
                     <div class="simulado-area">
                         ${simuladosHtml}
                     </div>
                     <div class="modal-actions">
-                        <button onclick="abrirModalMateriais(modalState.currentEtapa)" class="btn-secondary">⬅ Voltar</button>
+                        <button onclick="abrirModalMateriais(modalState.currentEtapa)" class="btn-secondary">⬅ Voltar à Etapa</button>
                     </div>
                 `;
 
@@ -772,7 +804,7 @@
                 modalConteudo.innerHTML = `
                     <p>⚠️ Erro ao gerar simulado. Causa: ${err.message}.</p>
                     <div class="modal-actions">
-                        <button onclick="abrirModalMateriais(modalState.currentEtapa)" class="btn-secondary">⬅ Voltar</button>
+                        <button onclick="abrirModalMateriais(modalState.currentEtapa)" class="btn-secondary">⬅ Voltar à Etapa</button>
                     </div>
                 `;
             }
@@ -793,7 +825,9 @@
                 } else {
                     li.classList.add('incorreta'); 
                 }
+                // Impede qualquer interação futura
                 li.style.cursor = 'default';
+                li.onclick = null; 
             });
             
             button.style.display = 'none';
@@ -803,9 +837,12 @@
         }
 
 
-        // --- 5. FUNÇÃO: GERAR CONTEÚDO MATERIAL (EXIBE FONTE) ---
+        // --- 5. FUNÇÃO: GERAR CONTEÚDO MATERIAL (Simula uma Nova Página no Modal) ---
         async function gerarConteudoMaterial(topico, material) {
             const modalConteudo = document.getElementById("modal-conteudo");
+
+            // Define o novo título para simular a navegação
+            document.getElementById("modal-titulo").innerText = topico;
             modalConteudo.innerHTML = `<p>Carregando conteúdo sobre: <strong>${topico}</strong>...</p>`;
 
             try {
@@ -839,6 +876,7 @@
 
                 // Conversão simples de Markdown para HTML
                 texto = texto.replace(/\*\*(.*?)\*\*/g, "<b>$1</b>");
+                // Garante que links de dentro do conteúdo sejam clicáveis
                 texto = texto.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank">$1</a>');
 
                 // CONDIÇÃO PARA EXIBIR A FONTE
@@ -851,13 +889,12 @@
                 }
 
                 modalConteudo.innerHTML = `
-                    <h3>${topico}</h3>
-                    <div style="max-height:400px; overflow-y:auto; padding-right:10px;">
+                    <div style="max-height:450px; overflow-y:auto; padding-right:10px;">
                         ${texto.split("\n\n").map(p => `<p>${p}</p>`).join("")}
                     </div>
                     ${sourceHtml} 
                     <div class="modal-actions">
-                        <button onclick="abrirModalMateriais(modalState.currentEtapa)" class="btn-secondary">⬅ Voltar</button>
+                        <button onclick="abrirModalMateriais(modalState.currentEtapa)" class="btn-secondary">⬅ Voltar à Etapa</button>
                     </div>
                 `;
 
@@ -866,7 +903,7 @@
                 modalConteudo.innerHTML = `
                     <p>⚠️ Erro ao gerar conteúdo. Causa: ${err.message}.</p>
                     <div class="modal-actions">
-                        <button onclick="abrirModalMateriais(modalState.currentEtapa)" class="btn-secondary">⬅ Voltar</button>
+                        <button onclick="abrirModalMateriais(modalState.currentEtapa)" class="btn-secondary">⬅ Voltar à Etapa</button>
                     </div>
                 `;
             }
@@ -878,3 +915,4 @@
         }
     </script>
 </body>
+</html>
