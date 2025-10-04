@@ -888,18 +888,24 @@
                 viewMap[key].style.display = 'none';
             }
         }
+        
+        function updateChatButtonVisibility(isVisible) {
+            document.getElementById("chat-button").style.display = isVisible ? 'block' : 'none';
+        }
+
 
         function showFormView() {
             hideAllViews();
             window.scrollTo(0, 0); 
-            document.getElementById("chat-button").style.display = 'none'; 
+            updateChatButtonVisibility(false); 
             viewMap["form-view"].style.display = 'flex'; 
         }
         
         function showRoadmapView() {
             hideAllViews();
             window.scrollTo(0, 0); 
-            if (modalState.etapas) document.getElementById("chat-button").style.display = 'block'; 
+            // Mostra o chat apenas se houver uma trilha carregada
+            updateChatButtonVisibility(modalState.etapas ? true : false);
             patolindoState.lastView = "roadmap-view";
             viewMap["roadmap-view"].style.display = 'block';
         }
@@ -907,7 +913,7 @@
         function showEtapaView(etapa) {
             hideAllViews();
             window.scrollTo(0, 0); 
-            document.getElementById("chat-button").style.display = 'block'; 
+            updateChatButtonVisibility(true); 
             patolindoState.lastView = "etapa-view";
             viewMap["etapa-view"].style.display = 'block';
             
@@ -939,20 +945,57 @@
                 ${simularTudoBtn}
             `;
         }
+        
+        function showMaterialView(topico, material) {
+            hideAllViews();
+            window.scrollTo(0, 0); 
+            updateChatButtonVisibility(true); 
+            patolindoState.lastView = "material-view";
+            viewMap["material-view"].style.display = 'block';
+            
+            // O restante da lógica de geração de material continua na função assíncrona showMaterialView
+            fetchAndRenderMaterial(topico, material);
+        }
+
+        function showFlashcardView(topico) {
+            hideAllViews();
+            window.scrollTo(0, 0); 
+            updateChatButtonVisibility(false); // Esconde o chat no modo Flashcard
+            patolindoState.lastView = "flashcard-view";
+            viewMap["flashcard-view"].style.display = 'block';
+
+            // O restante da lógica de geração de flashcard continua na função assíncrona showFlashcardView
+            fetchAndRenderFlashcards(topico);
+        }
+
+        function showSimuladoEtapaView() {
+            hideAllViews();
+            window.scrollTo(0, 0); 
+            updateChatButtonVisibility(false); // Esconde o chat no modo Simulado
+            patolindoState.lastView = "simulado-etapa-view";
+            viewMap["simulado-etapa-view"].style.display = 'block';
+            
+            // O restante da lógica de geração de simulado continua na função assíncrona showSimuladoEtapaView
+            fetchAndRenderSimuladoEtapa();
+        }
 
         function showChatView() {
             hideAllViews();
             window.scrollTo(0, 0); 
-            document.getElementById("chat-button").style.display = 'none'; 
+            updateChatButtonVisibility(false); 
             viewMap["chat-view"].style.display = 'block';
             resetPatolindoSession();
         }
 
         function showLastView() {
+            // Volta para a view anterior salva
             if (patolindoState.lastView === "roadmap-view") {
                 showRoadmapView();
-            } else if (patolindoState.lastView === "etapa-view") {
+            } else if (patolindoState.lastView === "etapa-view" && modalState.currentEtapa) {
                 showEtapaView(modalState.currentEtapa);
+            } else if (patolindoState.lastView === "material-view" && modalState.currentEtapa) {
+                // Se o usuário estava em material, volta para a etapa
+                 showEtapaView(modalState.currentEtapa);
             } else {
                 showRoadmapView(); 
             }
@@ -971,6 +1014,7 @@
 
             if (!tema) {
                 roadmapDiv.innerHTML = "⚠️ Por favor, preencha o campo Tema.";
+                updateChatButtonVisibility(false);
                 return;
             }
             
@@ -1027,30 +1071,28 @@
                     roadmapDiv.appendChild(blocoDiv);
                 });
                 
-                document.getElementById("chat-button").style.display = 'block'; 
+                updateChatButtonVisibility(true); 
 
             } catch (err) {
                 console.error("Erro:", err);
                 roadmapDiv.innerHTML = `⚠️ Erro ao gerar roadmap. Verifique sua chave API e tente novamente. Causa: ${err.message}.`;
-                document.getElementById("chat-button").style.display = 'none'; 
+                updateChatButtonVisibility(false); 
             }
         }
 
-        async function showMaterialView(topico, material) {
-            hideAllViews();
-            window.scrollTo(0, 0); 
-            viewMap["material-view"].style.display = 'block';
-            
-            document.getElementById("material-titulo").innerText = topico;
+        async function fetchAndRenderMaterial(topico, material) {
             const materialConteudo = document.getElementById("material-conteudo");
             materialConteudo.innerHTML = `<p>Carregando conteúdo sobre: <strong>${topico}</strong>...</p>`;
             
             try {
-                const userPromptMaterial = `Explique de forma didática e detalhada o tópico "${topico}".`;
+                // ATUALIZAÇÃO NO PROMPT: Detalhado, longo e requer múltiplas fontes citadas
+                const systemPromptMaterial = `Você é um professor especialista em ${currentTheme}. Explique de forma didática, **detalhada e longa** o tópico "${topico}". Utilize o conhecimento de **diversas fontes confiáveis** para enriquecer o texto. Seu conteúdo **DEVE terminar com uma seção 'Fontes Utilizadas'** (ou similar) listando as URLs das referências utilizadas na pesquisa e composição do texto, mesmo que sejam apenas exemplos. Use o formato: 'Fontes Utilizadas: [URL1], [URL2], [URLn]'.`;
+                const userPromptMaterial = `Explique o tópico "${topico}" (Nível: ${document.getElementById("nivel").value}).`;
+
                 const response = await fetch(GROQ_ENDPOINT, {
                     method: "POST",
                     headers: { "Content-Type": "application/json", "Authorization": `Bearer ${API_KEY}` },
-                    body: JSON.stringify({ model: MODEL_NAME, messages: [{ role: "user", content: userPromptMaterial }], temperature: 0.8 })
+                    body: JSON.stringify({ model: MODEL_NAME, messages: [{ role: "system", content: systemPromptMaterial }, { role: "user", content: userPromptMaterial }], temperature: 0.8 })
                 });
 
                 if (!response.ok) { throw new Error(`Erro API: ${response.status}`); }
@@ -1059,12 +1101,31 @@
 
                 // CORREÇÃO: Converte **negrito** para <b>negrito</b> e quebra de linha para <br>
                 texto = texto.replace(/\*\*(.*?)\*\*/g, "<b>$1</b>").replace(/\n/g, "<br>");
-
+                
+                // Extrai e formata as fontes citadas no final do texto (ex: Fontes Utilizadas: URL1, URL2)
                 let sourceHtml = '';
+                const sourceMatch = texto.match(/Fontes Utilizadas:(.*)/i);
+                if (sourceMatch && sourceMatch[1]) {
+                    const sources = sourceMatch[1].trim().split(',').map(s => s.trim()).filter(s => s.startsWith('http'));
+                    
+                    if (sources.length > 0) {
+                        sourceHtml = '<h3 style="margin-top: 30px; border-left: 5px solid #28A745; padding-left: 12px; color: #28A745;">🔗 Fontes Utilizadas</h3><ul>';
+                        sources.forEach(url => {
+                            sourceHtml += `<li><a href="${url}" target="_blank" style="color: #007bff; text-decoration: none;">${url}</a></li>`;
+                        });
+                        sourceHtml += '</ul>';
+                    }
+                    // Remove a seção de fontes do corpo principal do texto
+                    texto = texto.substring(0, sourceMatch.index).trim();
+                }
+
+                // Adiciona a fonte obrigatória fornecida no roadmap (se existir e não estiver nas fontes do corpo)
                 if (material && material !== 'null' && material.startsWith('http')) {
-                    sourceHtml = `<h3 style="margin-top: 30px; border-left: 5px solid var(--color-primary); padding-left: 12px;">🔗 Fonte Obrigatória</h3><p><a href="${material}" target="_blank" style="color: var(--color-primary-dark); font-weight: bold;">${material} (Abrirá em nova aba)</a></p>`;
-                } else {
-                    sourceHtml = '<p style="margin-top: 20px; color: #999;">Fonte externa não fornecida pela IA.</p>';
+                    sourceHtml += `<h3 style="margin-top: 30px; border-left: 5px solid var(--color-primary); padding-left: 12px;">📚 Fonte da Trilha</h3><p><a href="${material}" target="_blank" style="color: var(--color-primary-dark); font-weight: bold;">${material} (Abrirá em nova aba)</a></p>`;
+                }
+                
+                if (!sourceHtml) {
+                     sourceHtml = '<p style="margin-top: 20px; color: #999;">Nenhuma fonte de estudo externa foi citada pela IA ou no roadmap.</p>';
                 }
 
                 materialConteudo.innerHTML = `<div style="max-height:450px; overflow-y:auto; padding-right:10px;">${texto}</div>${sourceHtml}`;
@@ -1080,17 +1141,14 @@
         let currentFlashcards = [];
         let currentFlashcardIndex = 0;
 
-        async function showFlashcardView(topico) {
-            hideAllViews();
-            window.scrollTo(0, 0); 
-            viewMap["flashcard-view"].style.display = 'block';
-            
+        async function fetchAndRenderFlashcards(topico) {
             document.getElementById("flashcard-titulo").innerText = `Flashcards: ${topico}`;
             const flashcardDisplay = document.getElementById("flashcard-display");
             flashcardDisplay.innerHTML = `<p>Carregando flashcards sobre: <strong>${topico}</strong>...</p>`;
 
             try {
-                const systemPromptFlashcard = `Você é um gerador de flashcards. Sua única resposta deve ser APENAS JSON válido, sem texto introdutório. O JSON deve ser um array de **5 objetos**, onde cada objeto tem uma "pergunta" (frente do card) e uma "resposta" (verso do card). O formato deve ser: [{"pergunta": "...", "resposta": "..."}, {"pergunta": "...", ...}].`;
+                // ATUALIZAÇÃO NO PROMPT: Requer 5 objetos únicos
+                const systemPromptFlashcard = `Você é um gerador de flashcards. Sua única resposta deve ser APENAS JSON válido, sem texto introdutório. O JSON deve ser um array de **5 objetos**, onde cada objeto tem uma "pergunta" (frente do card) e uma "resposta" (verso do card). As 5 perguntas devem ser **únicas** e cobrir diferentes aspectos do tópico. O formato deve ser: [{"pergunta": "...", "resposta": "..."}, {"pergunta": "...", ...}].`;
                 const userPromptFlashcard = `Crie 5 flashcards de pergunta e resposta sobre o tópico "${topico}" no nível ${document.getElementById("nivel").value}.`;
 
                 const response = await fetch(GROQ_ENDPOINT, {
@@ -1191,11 +1249,7 @@
         let currentSimuladoEtapa = [];
         let userAnswers = {};
 
-        async function showSimuladoEtapaView() {
-            hideAllViews();
-            window.scrollTo(0, 0); 
-            viewMap["simulado-etapa-view"].style.display = 'block';
-
+        async function fetchAndRenderSimuladoEtapa() {
             const etapa = modalState.currentEtapa;
             document.getElementById("simulado-etapa-titulo").innerText = `Simulado Completo: ${etapa.titulo}`;
             const simuladoConteudo = document.getElementById("simulado-etapa-conteudo");
@@ -1207,9 +1261,11 @@
             userAnswers = {};
 
             try {
-                const systemPromptSimulado = `Você é um gerador de questões de múltipla escolha. Crie um simulado de no mínimo 20 (vinte) questões sobre todos os tópicos fornecidos. Sua única resposta deve ser APENAS JSON válido, sem texto introdutório. O JSON deve ser um objeto contendo um array de "simulados" seguindo o formato: {"simulados": [{"pergunta": "...", "alternativas": ["A) ...", "B) ...", "C) ...", "D) ...", "E) ..."], "resposta_correta": "Letra da alternativa correta (ex: C)"}, ...]}.`;
+                // ATUALIZAÇÃO NO PROMPT: Requer diversidade de perguntas, distribuição aleatória das respostas, e estilo de prova/vestibular.
+                const systemPromptSimulado = `Você é um gerador de questões de múltipla escolha no estilo de provas e vestibulares. Crie um simulado de no mínimo 20 (vinte) questões sobre todos os tópicos fornecidos. **Todas as questões devem ser únicas e cobrir diferentes áreas dos tópicos.** Sua única resposta deve ser APENAS JSON válido, sem texto introdutório. O JSON deve ser um objeto contendo um array de "simulados" seguindo o formato: {"simulados": [{"pergunta": "...", "alternativas": ["A) ...", "B) ...", "C) ...", "D) ...", "E) ..."], "resposta_correta": "Letra da alternativa correta (ex: C)"}, ...]}. **IMPORTANTE: Distribua a resposta correta de forma aleatória (A, B, C, D ou E) para evitar ciclos viciosos de repetição de letra.**`;
                 const topicosEtapa = etapa.topicos.map(t => t.tópico).join(", ");
-                const userPromptSimulado = `Crie no mínimo 20 questões de múltipla escolha sobre os seguintes tópicos da etapa: ${topicosEtapa} no nível ${document.getElementById("nivel").value}. Cada questão deve ter 5 alternativas.`;
+                const nivel = document.getElementById("nivel").value;
+                const userPromptSimulado = `Crie no mínimo 20 questões de múltipla escolha sobre os seguintes tópicos da etapa: ${topicosEtapa} no nível ${nivel}. As questões devem ter 5 alternativas e o estilo deve ser complexo e abrangente, como em um vestibular/curso técnico.`;
 
                 const response = await fetch(GROQ_ENDPOINT, {
                     method: "POST",
@@ -1250,7 +1306,8 @@
 
             const simuladosHtml = currentSimuladoEtapa.map((simulado, index) => {
                 const alternativasHtml = simulado.alternativas.map((alt, altIndex) => {
-                    const letra = alt.charAt(0);
+                    // Tenta garantir que o formato seja A), B), C), etc.
+                    const letra = alt.charAt(0).toUpperCase(); 
                     const isSelected = userAnswers[index] === letra;
                     return `<li class="alternativa ${isSelected ? 'selected' : ''}" 
                                 data-question-index="${index}" 
@@ -1297,7 +1354,8 @@
                 if (!bloco) return;
                 
                 const alternativas = bloco.querySelectorAll('.alternativa');
-                const respostaCorreta = simulado.resposta_correta.charAt(0);
+                // Garante que a resposta correta é a letra maiúscula
+                const respostaCorreta = simulado.resposta_correta.charAt(0).toUpperCase(); 
                 const respostaUsuario = userAnswers[index];
                 
                 // Desabilita cliques após a correção
