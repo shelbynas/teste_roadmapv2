@@ -21,6 +21,7 @@
             --color-success: #28A745;
             --color-danger: #DC3545;
             --color-light-yellow: #FFFBEA; /* Amarelo muito claro para blocos */
+            --color-category: #495057; /* Cinza para categorias */
         }
         
         /* --- Estilos Gerais e Tipografia --- */
@@ -300,7 +301,7 @@
             width: 100%;
         }
 
-        #roadmap-container, #etapa-container, #material-container, #flashcard-container, #simulado-etapa-container, #chat-container, #user-trilhas-container {
+        #roadmap-container, #etapa-container, #material-container, #flashcard-container, #simulado-etapa-container, #chat-container, #user-trilhas-container, #predefined-courses-container {
             background-color: var(--color-card);
             padding: 20px; 
             border-radius: 12px;
@@ -308,12 +309,71 @@
             width: 100%;
         }
 
-        #roadmap-container h2, #etapa-container h2, #material-container h2, #flashcard-container h2, #simulado-etapa-container h2, #user-trilhas-container h2 {
+        #roadmap-container h2, #etapa-container h2, #material-container h2, #flashcard-container h2, #simulado-etapa-container h2, #user-trilhas-container h2, #predefined-courses-container h2 {
             color: var(--color-primary);
             border-bottom: 2px solid #eee;
             padding-bottom: 10px;
             margin-top: 0;
             font-size: 1.6em; 
+        }
+
+        /* --- Estilos da Tela Cursos Pré-definidos --- */
+        .course-category {
+            margin-top: 25px;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed #ccc;
+        }
+
+        .course-category h3 {
+            color: var(--color-category);
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .courses-grid {
+            display: grid;
+            gap: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        }
+
+        .course-card {
+            background-color: var(--color-light-yellow);
+            border: 2px solid var(--color-primary);
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .course-card:hover {
+            background-color: var(--color-primary);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .course-card h4 {
+            margin-top: 0;
+            margin-bottom: 5px;
+            color: var(--color-secondary);
+            font-size: 1.1em;
+        }
+
+        .course-card p {
+            margin: 0;
+            font-size: 0.9em;
+            color: var(--color-secondary);
+        }
+
+        .btn-custom-create {
+            background-color: #6c757d;
+            color: white;
+            border: 1px solid #5a6268;
+            margin-top: 30px;
+        }
+        
+        .btn-custom-create:hover {
+            background-color: #5a6268;
         }
 
         /* --- Estilos da Tela Roadmap --- */
@@ -779,6 +839,9 @@
                 flex: 1 1 calc(33.333% - 20px); 
                 padding: 25px;
             }
+            .course-card {
+                padding: 20px;
+            }
         }
     </style>
 </head>
@@ -834,7 +897,7 @@
                     <li><strong>Simulado de Etapa:</strong> Faça um <b>simulado completo por etapa</b> (20+ questões) para testar sua aplicação do conteúdo.</li>
                 </ul>
             </div>
-            <button id="btnExplanationContinue" class="btn-primary">Começar Minha Trilha 🚀</button>
+            <button id="btnExplanationContinue" class="btn-primary">Ver Cursos Rápidos 🚀</button>
         </div>
     </section>
 
@@ -858,16 +921,29 @@
                         <div id="trilhas-list">
                             </div>
                         <div class="modal-actions">
-                            <button onclick="showFormView()" class="btn-success">➕ Criar Nova Trilha</button>
+                            <button onclick="showPreDefinedCoursesView()" class="btn-success">➕ Criar Nova Trilha</button>
                         </div>
                     </div>
                 </div>
+
+                <div id="predefined-courses-view" class="content-view" style="display: none;">
+                    <div id="predefined-courses-container">
+                        <h2>Escolha um Curso Rápido</h2>
+                        <p>Selecione um curso pré-definido abaixo para começar imediatamente ou crie a sua trilha personalizada.</p>
+                        
+                        <div id="predefined-courses-list">
+                            </div>
+
+                        <button onclick="showFormView()" class="btn-primary btn-custom-create">💡 Criar Trilha Personalizada (Usar IA)</button>
+                    </div>
+                </div>
+
 
                 <div id="form-view" class="content-view" style="display: none;">
                     <div class="controles">
                         <div class="mascote-area">
                              <img src="mascote.png" alt="Mascote Quackademy" class="mascote">
-                            <h2>Defina seu Desafio</h2>
+                            <h2>Defina seu Desafio (Via IA)</h2>
                         </div>
                         
                         <label for="tema">Tema ou Tecnologia:</label>
@@ -884,6 +960,10 @@
                         <textarea id="objetivo" placeholder="Ex: Aprender a criar um backend com Node.js e Express."></textarea>
                         
                         <button id="btnGerar" class="btn-primary">Gerar Trilha 🚀</button>
+                        
+                        <div class="modal-actions">
+                            <button onclick="showPreDefinedCoursesView()" class="btn-secondary" style="width: auto;">⬅ Voltar aos Cursos Prontos</button>
+                        </div>
                     </div>
                 </div>
 
@@ -996,6 +1076,79 @@
             lastView: "roadmap-view" 
         };
         
+        // --- DADOS PRÉ-DEFINIDOS (PARA ECONOMIZAR REQUISIÇÕES) ---
+        const preDefinedRoadmaps = [
+            {
+                category: "Programação e Tecnologia",
+                courses: [
+                    {
+                        tema: "Python para Iniciantes", nivel: "Iniciante", objetivo: "Desenvolvimento de scripts básicos e lógica de programação.",
+                        etapas: [
+                            { titulo: "Etapa 1: Fundamentos e Sintaxe", topicos: [{ tópico: "Variáveis e Tipos de Dados", material: "https://docs.python.org/pt-br/3/tutorial/introduction.html" }, { tópico: "Estruturas de Controle (If/Else)", material: "https://docs.python.org/pt-br/3/tutorial/controlflow.html" }, { tópico: "Laços de Repetição (For/While)", material: "https://docs.python.org/pt-br/3/tutorial/controlflow.html" }, { tópico: "Introdução a Funções", material: "https://docs.python.org/pt-br/3/tutorial/controlflow.html" }], atividade: "Criar uma calculadora simples que utilize If/Else e funções." }
+                        ]
+                    },
+                    {
+                        tema: "JavaScript Moderno (ES6+)", nivel: "Intermediário", objetivo: "Desenvolvimento Frontend e manipulação de DOM.",
+                        etapas: [
+                            { titulo: "Etapa 1: Variáveis e Scopes", topicos: [{ tópico: "Var, Let e Const", material: "https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Guide/Grammar_and_types" }, { tópico: "Arrow Functions e Template Literals", material: "https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Functions/Arrow_functions" }, { tópico: "Manipulação de Array (Map, Filter, Reduce)", material: "https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Array" }, { tópico: "Introdução a Promises e Async/Await", material: "https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Guide/Using_promises" }], atividade: "Criar uma lista de tarefas (To-Do List) que manipule o DOM e use funções de array." }
+                        ]
+                    },
+                    {
+                        tema: "Java: POO e Backend", nivel: "Avançado", objetivo: "Entender Programação Orientada a Objetos e estruturas de dados básicas.",
+                        etapas: [
+                            { titulo: "Etapa 1: Conceitos de POO", topicos: [{ tópico: "Classes, Objetos e Encapsulamento", material: "https://docs.oracle.com/javase/tutorial/java/concepts/index.html" }, { tópico: "Herança e Polimorfismo", material: "https://docs.oracle.com/javase/tutorial/java/concepts/index.html" }, { tópico: "Tratamento de Exceções", material: "https://docs.oracle.com/javase/tutorial/essential/exceptions/index.html" }, { tópico: "Estruturas de Dados (ArrayList e HashMap)", material: "https://docs.oracle.com/javase/8/docs/api/java/util/ArrayList.html" }], atividade: "Desenvolver um sistema bancário simples com classes Cliente e Conta, aplicando Herança." }
+                        ]
+                    },
+                ]
+            },
+            {
+                category: "Idiomas e Linguagens",
+                courses: [
+                    {
+                        tema: "Inglês Básico", nivel: "Iniciante", objetivo: "Conversação simples e compreensão de textos básicos.",
+                        etapas: [
+                            { titulo: "Etapa 1: O Verbo 'To Be'", topicos: [{ tópico: "Afirmativa e Negativa", material: "https://www.youtube.com/watch?v=basico_to_be" }, { tópico: "Interrogativa e Short Answers", material: "https://www.duolingo.com/course/en/pt/learn-english" }, { tópico: "Pronomes Pessoais e Possessivos", material: "https://www.bbc.co.uk/learningenglish/" }, { tópico: "Vocabulário de Saudação e Apresentação", material: "https://www.memrise.com/" }], atividade: "Gravar um áudio se apresentando e falando sobre 3 membros da família em inglês." }
+                        ]
+                    },
+                    {
+                        tema: "Espanhol Intermediário", nivel: "Intermediário", objetivo: "Dominar pretéritos e conversação em viagens.",
+                        etapas: [
+                            { titulo: "Etapa 1: Pretéritos do Indicativo", topicos: [{ tópico: "Pretérito Perfeito Simples (Pasado Simple)", material: "https://www.rae.es/" }, { tópico: "Pretérito Imperfeito", material: "https://espanhol.com/gramatica/passado-espanhol" }, { tópico: "Verbos Irregulares Comuns", material: "https://conjuga-me.net/espanhol/verbos/irregulares" }, { tópico: "Vocabulário de Viagem e Turismo", material: "https://cervantes.es/" }], atividade: "Escrever um parágrafo contando suas últimas férias usando os pretéritos estudados." }
+                        ]
+                    }
+                ]
+            },
+            {
+                category: "Matérias Escolares - Ensino Fundamental (Anos Finais)",
+                courses: [
+                    {
+                        tema: "Matemática (6º Ano)", nivel: "Intermediário", objetivo: "Dominar números inteiros, frações e operações básicas.",
+                        etapas: [
+                            { titulo: "Etapa 1: Números Inteiros e Racionais", topicos: [{ tópico: "Conjunto dos Números Inteiros (Z)", material: "https://www.auladegratis.net/matematica/6-ano/numeros-inteiros.html" }, { tópico: "Soma e Subtração de Frações", material: "https://www.somatematica.com.br/fundamental/6ano/fracoes.php" }, { tópico: "Múltiplos e Divisores (MMC e MDC)", material: "https://www.infoescola.com/matematica/mmc-e-mdc/" }, { tópico: "Expressões Numéricas", material: "https://www.toda_materia.com.br/expressoes-numericas" }], atividade: "Resolver uma lista de 10 problemas que envolvam frações em situações do dia a dia." }
+                        ]
+                    },
+                    {
+                        tema: "História (9º Ano)", nivel: "Intermediário", objetivo: "Compreender a 1ª República, a Era Vargas e a Guerra Fria.",
+                        etapas: [
+                            { titulo: "Etapa 1: República Oligárquica e Vargas", topicos: [{ tópico: "Primeira República e Coronelismo", material: "https://brasilescola.uol.com.br/historiab/primeira-republica.htm" }, { tópico: "Revolução de 1930 e Era Vargas", material: "https://www.politize.com.br/era-vargas-resumo/" }, { tópico: "A Grande Depressão de 1929 e o Brasil", material: "https://www.sohistoria.com.br/ef2/crise29/" }, { tópico: "O Estado Novo (1937-1945)", material: "https://www.historiadigital.org/estado-novo/" }], atividade: "Criar uma linha do tempo ilustrada da Era Vargas (1930-1945) com os principais eventos." }
+                        ]
+                    }
+                ]
+            },
+            {
+                category: "Matérias Escolares - Ensino Médio",
+                courses: [
+                    {
+                        tema: "Português (1º Ano EM)", nivel: "Avançado", objetivo: "Dominar a estrutura frasal, concordância e as primeiras escolas literárias.",
+                        etapas: [
+                            { titulo: "Etapa 1: Sintaxe e Concordância", topicos: [{ tópico: "Estrutura da Oração (Sujeito, Predicado)", material: "https://www.normaculta.com.br/estrutura-da-oracao/" }, { tópico: "Concordância Verbal e Nominal", material: "https://www.portuguesonline.com.br/concordancia-verbal-e-nominal/" }, { tópico: "Introdução à Literatura: Quinhentismo e Barroco", material: "https://www.infoescola.com/literatura/quinhentismo/" }, { tópico: "Análise de Figuras de Linguagem", material: "https://www.todamateria.com.br/figuras-de-linguagem/" }], atividade: "Analisar um trecho de um poema Barroco identificando o sujeito, predicado e as figuras de linguagem." }
+                        ]
+                    }
+                ]
+            }
+        ];
+
+
         // --- FUNÇÕES DE PERSISTÊNCIA (ATUALIZADAS) ---
 
         function loadAllUsersData() {
@@ -1060,6 +1213,8 @@
             document.getElementById("welcome-screen").style.display = 'none';
             document.getElementById("explanation-screen").style.display = 'none';
             document.getElementById("main-app").style.display = 'none';
+            document.getElementById("predefined-courses-view").style.display = 'none';
+            
             // Garante que os campos de login estejam limpos
             document.getElementById('username').value = '';
             document.getElementById('password').value = '';
@@ -1083,12 +1238,14 @@
 
             loadAllUsersData(); 
 
-            if (allUsersData[username]) {
+            let userExists = allUsersData[username];
+
+            if (userExists) {
                 // Tenta Logar
-                if (allUsersData[username].password === password) {
+                if (userExists.password === password) {
                     loadUserData(username);
                     authMessage.innerText = `Login bem-sucedido para ${username}!`;
-                    showWelcomeScreen();
+                    showMainApp(true); // Indica que o usuário já existe
                 } else {
                     authMessage.innerText = "Senha incorreta.";
                 }
@@ -1096,7 +1253,7 @@
                 // Tenta Cadastrar (Simulado)
                 loadUserData(username); // Cria o novo usuário
                 authMessage.innerText = `Usuário ${username} criado e logado!`;
-                showWelcomeScreen();
+                showWelcomeScreen(); // Novo usuário vê o fluxo completo
             }
         }
         
@@ -1115,7 +1272,7 @@
             document.getElementById("btnSkipLogin").addEventListener("click", handleSkipLogin);
             
             document.getElementById("btnWelcomeContinue").addEventListener("click", showExplanationScreen);
-            document.getElementById("btnExplanationContinue").addEventListener("click", showMainApp);
+            document.getElementById("btnExplanationContinue").addEventListener("click", showPreDefinedCoursesView); // Nova Transição
             
             document.getElementById("btnGerar").addEventListener("click", gerarRoadmap);
             
@@ -1145,20 +1302,21 @@
             document.getElementById("explanation-screen").style.display = 'flex';
         }
 
-        function showMainApp() {
+        function showMainApp(isExistingUser = false) {
             document.getElementById("explanation-screen").style.display = 'none';
+            document.getElementById("welcome-screen").style.display = 'none';
+            document.getElementById("login-screen").style.display = 'none';
             document.getElementById("main-app").style.display = 'block';
             
-            // Tenta carregar a última trilha ativa ou mostra o formulário/gerenciamento
-            if (currentUser.name === 'Convidado') {
-                 showFormView(); // Convidado vai direto criar uma trilha (não salva)
-            } else if (currentUser.currentTrilhaIndex !== -1 && currentUser.trilhas[currentUser.currentTrilhaIndex]) {
-                 loadRoadmap(currentUser.trilhas[currentUser.currentTrilhaIndex]);
-                 showRoadmapView();
-            } else if (currentUser.trilhas.length > 0) {
+            if (isExistingUser && currentUser.trilhas.length > 0) {
+                 // Usuário recorrente vai para o Gerenciamento
                  showUserTrilhasView();
+            } else if (currentUser.name === 'Convidado') {
+                 // Convidado vai direto para os cursos pré-definidos (ou criar)
+                 showPreDefinedCoursesView();
             } else {
-                 showFormView();
+                 // Usuário novo ou sem trilhas vai para a lista de cursos
+                 showPreDefinedCoursesView();
             }
         }
 
@@ -1166,6 +1324,7 @@
 
         const viewMap = {
             "user-trilhas-view": document.getElementById("user-trilhas-view"),
+            "predefined-courses-view": document.getElementById("predefined-courses-view"), // NOVO
             "form-view": document.getElementById("form-view"),
             "roadmap-view": document.getElementById("roadmap-view"),
             "etapa-view": document.getElementById("etapa-view"),
@@ -1197,8 +1356,7 @@
             updateChatButtonVisibility(false); 
 
             if (currentUser.name === 'Convidado') {
-                // Força o Convidado a criar uma nova, pois não há gerenciamento
-                showFormView();
+                showPreDefinedCoursesView();
                 return;
             }
             
@@ -1212,8 +1370,18 @@
                 return;
             }
 
-            currentUser.trilhas.forEach((trilha, index) => {
-                const isActive = currentUser.currentTrilhaIndex === index;
+            // Garante que a trilha ativa está no topo
+            let trilhasOrdenadas = [...currentUser.trilhas];
+            if (currentUser.currentTrilhaIndex !== -1) {
+                const activeTrilha = trilhasOrdenadas.splice(currentUser.currentTrilhaIndex, 1)[0];
+                trilhasOrdenadas.unshift(activeTrilha); // Coloca a ativa na frente
+            }
+
+            trilhasOrdenadas.forEach((trilha, index) => {
+                // Encontra o índice original para ações
+                const originalIndex = currentUser.trilhas.findIndex(t => t.id === trilha.id); 
+                const isActive = currentUser.currentTrilhaIndex === originalIndex;
+                
                 const card = document.createElement('div');
                 card.className = 'trilha-card';
                 card.style.borderLeft = isActive ? '5px solid var(--color-success)' : '1px solid #ddd';
@@ -1228,17 +1396,59 @@
 
                 const actions = `
                     <div class="trilha-actions">
-                        <button class="btn-success" onclick="loadAndShowRoadmap(${index})" style="${isActive ? 'display: none;' : ''}">Abrir</button>
-                        <button class="btn-danger" onclick="deleteTrilha(${index})">Excluir</button>
+                        <button class="btn-success" onclick="loadAndShowRoadmap(${originalIndex})" style="${isActive ? 'display: none;' : ''}">Abrir</button>
+                        <button class="btn-danger" onclick="deleteTrilha(${originalIndex})">Excluir</button>
                     </div>
                 `;
 
                 card.innerHTML = info + actions;
                 trilhasList.appendChild(card);
             });
+
+            // Se houver uma trilha ativa, carrega ela
+            if (currentUser.currentTrilhaIndex !== -1) {
+                 loadRoadmap(currentUser.trilhas[currentUser.currentTrilhaIndex], true); // Carrega a ativa, mas não mostra o roadmap
+            }
         }
 
+        // --- NOVO: TELA DE CURSOS PRÉ-DEFINIDOS ---
+        function showPreDefinedCoursesView() {
+            hideAllViews();
+            window.scrollTo(0, 0); 
+            updateChatButtonVisibility(false); 
+            viewMap["predefined-courses-view"].style.display = 'block';
 
+            const coursesListDiv = document.getElementById("predefined-courses-list");
+            coursesListDiv.innerHTML = '';
+            
+            preDefinedRoadmaps.forEach(categoryData => {
+                const categoryHtml = document.createElement('div');
+                categoryHtml.className = 'course-category';
+                categoryHtml.innerHTML = `<h3>${categoryData.category}</h3>`;
+                
+                const gridHtml = document.createElement('div');
+                gridHtml.className = 'courses-grid';
+
+                categoryData.courses.forEach(course => {
+                    const card = document.createElement('div');
+                    card.className = 'course-card';
+                    // Prepara o objeto para ser passado na função de carregamento
+                    const courseString = JSON.stringify(course).replace(/'/g, "\\'"); 
+                    card.setAttribute('onclick', `loadPreDefinedRoadmap('${courseString}')`);
+
+                    card.innerHTML = `
+                        <h4>${course.tema}</h4>
+                        <p>Nível: <b>${course.nivel}</b></p>
+                        <p>Objetivo: ${course.objetivo}</p>
+                    `;
+                    gridHtml.appendChild(card);
+                });
+                
+                categoryHtml.appendChild(gridHtml);
+                coursesListDiv.appendChild(categoryHtml);
+            });
+        }
+        
         function showFormView() {
             hideAllViews();
             window.scrollTo(0, 0); 
@@ -1346,7 +1556,7 @@
         // --- FUNÇÕES DE GERENCIAMENTO DE TRILHAS (ATUALIZADAS PARA CONVIDADO) ---
 
         // Carrega os dados da trilha (roadmap) e exibe o RoadmapView
-        function loadRoadmap(trilha) {
+        function loadRoadmap(trilha, skipViewChange = false) {
             if (!trilha || !trilha.etapas) {
                 console.error("Trilha inválida.");
                 return;
@@ -1367,19 +1577,54 @@
                 roadmapDiv.appendChild(blocoDiv);
             });
 
-            // Reativa o chat com o tema correto
-            updateChatButtonVisibility(true); 
+            // Se não for para pular, mostra a view
+            if (!skipViewChange) {
+                showRoadmapView();
+            }
         }
 
         // Define a trilha ativa, carrega e exibe
         function loadAndShowRoadmap(index) {
-            if (currentUser.name === 'Convidado') return; // Convidado não tem trilhas salvas
-
             if (index >= 0 && index < currentUser.trilhas.length) {
                 currentUser.currentTrilhaIndex = index;
                 loadRoadmap(currentUser.trilhas[index]);
-                saveUserTrilhas(); // Salva o índice ativo
-                showRoadmapView();
+                if (currentUser.name !== 'Convidado') {
+                    saveUserTrilhas(); // Salva o índice ativo
+                }
+            }
+        }
+
+        // NOVO: Carrega e salva um roadmap pré-definido
+        function loadPreDefinedRoadmap(courseString) {
+            try {
+                const course = JSON.parse(courseString);
+                
+                const novaTrilha = {
+                    id: Date.now(),
+                    tema: course.tema,
+                    nivel: course.nivel,
+                    objetivo: course.objetivo,
+                    etapas: course.etapas
+                };
+                
+                // Se o usuário não for convidado, a trilha é salva
+                if (currentUser.name !== 'Convidado') {
+                    currentUser.trilhas.push(novaTrilha);
+                    currentUser.currentTrilhaIndex = currentUser.trilhas.length - 1; // Define como a trilha ativa
+                    saveUserTrilhas(); 
+                } else {
+                     // Usuário Convidado: usa uma estrutura temporária
+                    currentUser.trilhas = [novaTrilha];
+                    currentUser.currentTrilhaIndex = 0;
+                }
+                
+                // Carrega a trilha recém-criada
+                loadRoadmap(novaTrilha);
+
+            } catch (e) {
+                alert("Erro ao carregar o curso pré-definido.");
+                console.error("Erro ao parsear curso pré-definido:", e);
+                showPreDefinedCoursesView();
             }
         }
 
@@ -1496,9 +1741,6 @@
                 updateChatButtonVisibility(false); 
             }
         }
-
-        // O restante das funções (fetchAndRenderMaterial, fetchAndRenderFlashcards, etc.) 
-        // permanecem inalteradas, pois dependem apenas da `currentUser.trilhas[currentUser.currentTrilhaIndex]`
 
         async function fetchAndRenderMaterial(topico, material) {
             // Recarrega o tema atual da trilha ativa
