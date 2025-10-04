@@ -685,7 +685,7 @@
                 
                 <h3>⚙️ Como Funciona Nossa Trilha</h3>
                 <ul>
-                    <li><strong>Trilhas Guiadas:</strong> Você informa o tema e o nível, e nossa IA gera um plano de <strong>8 Etapas</strong> personalizadas.</li>
+                    <li><strong>Trilhas Guiadas:</strong> Você informa o tema e o nível, e nossa IA gera um plano de <strong>10+ Etapas</strong> personalizadas.</li>
                     <li><strong>Flashcards:</strong> Use **flashcards por tópico** para memorizar conceitos chave rapidamente.</li>
                     <li><strong>Simulado de Etapa:</strong> Faça um **simulado completo por etapa** (20+ questões) para testar sua aplicação do conteúdo.</li>
                 </ul>
@@ -976,7 +976,8 @@
             try {
                 currentTheme = tema;
 
-                const systemPrompt = `Você é um especialista em educação técnica. Crie um roadmap detalhado com **no mínimo 8 (oito) etapas obrigatórias**. Cada tópico deve ser ultra específico e **DEVE incluir uma URL de documentação oficial ou tutorial renomado** no campo 'material'. Sua única resposta deve ser APENAS JSON válido, sem texto introdutório ou blocos de código markdown. O JSON deve seguir este formato: {"etapas": [{"titulo": "Etapa 1: Nome da etapa", "topicos": [{"tópico": "Nome do tópico", "material": "URL de uma fonte externa"}], "atividade": "Descrição da atividade prática"}]}.`;
+                // 🌟 CORREÇÃO APLICADA AQUI
+                const systemPrompt = `Você é um especialista em educação técnica. Crie um roadmap **detalhado e extenso** com **no mínimo 10 (dez) etapas obrigatórias**. Para cada etapa, liste **no mínimo 4 (quatro) tópicos essenciais** para garantir profundidade no aprendizado. Use mais etapas e tópicos se o tema for complexo. Cada tópico **DEVE incluir uma URL de documentação oficial ou tutorial renomado** no campo 'material'. Sua única resposta deve ser APENAS JSON válido, sem texto introdutório ou blocos de código markdown. O JSON deve seguir este formato: {"etapas": [{"titulo": "Etapa 1: Nome da etapa", "topicos": [{"tópico": "Nome do tópico", "material": "URL de uma fonte externa"}], "atividade": "Descrição da atividade prática"}]}.`;
                 const userPrompt = `Crie um roadmap de estudos detalhado e abrangente para o tema "${tema}" no nível "${nivel}"${objetivo ? ` com objetivo "${objetivo}"` : ""}. Inclua fontes externas de estudo no campo 'material' para todos os tópicos.`;
 
                 const response = await fetch(GROQ_ENDPOINT, {
