@@ -391,7 +391,7 @@
         
         <div id="login-view" class="view">
             <div class="card" style="max-width: 400px; margin: 0 auto;">
-                <img src="pato_logo.png" alt="Quackademy Logo" style="width: 100px; margin-bottom: 20px;">
+                <div style="font-size: 4rem; color: var(--color-primary); margin-bottom: 10px;">🦆</div> 
                 <h2>Acesso à Quackademy</h2>
                 <p style="color: var(--color-light-text); margin-bottom: 20px;">Entre com sua conta ou crie uma nova para salvar suas trilhas!</p>
                 
@@ -524,7 +524,7 @@
 
         <div id="loadingModal" class="modal">
             <div class="modal-content">
-                <img src="pato_animado.gif" alt="Pato Gerando" style="width: 80px; margin-bottom: 15px;">
+                <div style="font-size: 4rem; color: var(--color-primary); margin-bottom: 10px;">🦆</div>
                 <h3>Processando sua trilha...</h3>
                 <p>O Patolindo Bot está buscando os melhores conteúdos. Aguarde um momento.</p>
             </div>
@@ -653,7 +653,6 @@
         function showLoginView() { 
             showView('login-view'); 
             document.getElementById('auth-message').innerText = '';
-            // Não removemos o lastUser aqui para evitar loop
         }
 
         function showWelcomeScreen() {
@@ -694,7 +693,7 @@
             
             loadUserData(username);
             localStorage.setItem("quackademyLastUser", username);
-            showWelcomeScreen(); // Mudado para Welcome, para não pular a introdução
+            showWelcomeScreen();
         }
         
         function handleSkipLogin() {
