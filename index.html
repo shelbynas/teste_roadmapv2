@@ -21,7 +21,6 @@
             --color-success: #28A745;
             --color-danger: #DC3545;
             --color-light-yellow: #FFFBEA; /* Amarelo muito claro para blocos */
-            --color-category: #495057; /* Cinza para categorias */
         }
         
         /* --- Estilos Gerais e Tipografia --- */
@@ -40,7 +39,7 @@
             margin: 0 auto;
         }
         
-        /* --- ESTILOS DAS TELAS INICIAIS (Login, Boas-Vindas e Explicação) --- */
+        /* --- ESTILOS DAS TELAS INICIAIS (Boas-Vindas e Explicação) --- */
         .full-screen-message {
             display: flex;
             justify-content: center;
@@ -76,99 +75,26 @@
             margin-top: 10px;
             margin-bottom: 20px;
         }
-
-        /* --- Estilos do Formulário de Login --- */
-        #login-form {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        #login-form label {
-            text-align: left;
-            font-weight: bold;
-        }
-
-        #login-form input {
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            font-size: 1em;
-            width: 100%;
-            box-sizing: border-box;
-        }
-
-        .login-actions {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-top: 20px;
-        }
-
-        #btnAuthSubmit {
-            background-color: var(--color-primary);
-            color: var(--color-secondary);
-            font-weight: bold;
-        }
-
-        #btnSkipLogin {
-            background-color: #6c757d;
-            color: white;
-            font-weight: bold;
-        }
         
         /* --- Layout Principal (Header e Main) --- */
         header {
             background-color: var(--color-primary);
             color: var(--color-secondary);
-            padding: 20px 0; /* Ajustado para acomodar o botão */
+            padding: 30px 0;
             text-align: center;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             position: relative; 
         }
-
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            width: 90%;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
         
-        .header-info {
-            text-align: left;
-            flex-grow: 1;
-        }
-
         header h1 {
             margin: 0;
-            font-size: 2em; /* Reduzido um pouco */
+            font-size: 2.5em; 
             font-weight: 900;
         }
         
         header p {
             margin: 5px 0 0;
-            font-size: 1em; 
-        }
-
-        /* Botão Minhas Trilhas */
-        #btnMinhasTrilhas {
-            background-color: var(--color-primary-dark);
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 6px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background-color 0.2s;
-            font-size: 0.9em;
-            white-space: nowrap;
-        }
-
-        #btnMinhasTrilhas:hover {
-            background-color: #A08000;
+            font-size: 1.1em; 
         }
         
         main {
@@ -301,7 +227,7 @@
             width: 100%;
         }
 
-        #roadmap-container, #etapa-container, #material-container, #flashcard-container, #simulado-etapa-container, #chat-container, #user-trilhas-container, #predefined-courses-container {
+        #roadmap-container, #etapa-container, #material-container, #flashcard-container, #simulado-etapa-container, #chat-container {
             background-color: var(--color-card);
             padding: 20px; 
             border-radius: 12px;
@@ -309,71 +235,12 @@
             width: 100%;
         }
 
-        #roadmap-container h2, #etapa-container h2, #material-container h2, #flashcard-container h2, #simulado-etapa-container h2, #user-trilhas-container h2, #predefined-courses-container h2 {
+        #roadmap-container h2, #etapa-container h2, #material-container h2, #flashcard-container h2, #simulado-etapa-container h2 {
             color: var(--color-primary);
             border-bottom: 2px solid #eee;
             padding-bottom: 10px;
             margin-top: 0;
             font-size: 1.6em; 
-        }
-
-        /* --- Estilos da Tela Cursos Pré-definidos --- */
-        .course-category {
-            margin-top: 25px;
-            padding-bottom: 10px;
-            border-bottom: 1px dashed #ccc;
-        }
-
-        .course-category h3 {
-            color: var(--color-category);
-            margin-bottom: 15px;
-            font-size: 1.3em;
-        }
-
-        .courses-grid {
-            display: grid;
-            gap: 15px;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        }
-
-        .course-card {
-            background-color: var(--color-light-yellow);
-            border: 2px solid var(--color-primary);
-            border-radius: 8px;
-            padding: 15px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .course-card:hover {
-            background-color: var(--color-primary);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            transform: translateY(-2px);
-        }
-
-        .course-card h4 {
-            margin-top: 0;
-            margin-bottom: 5px;
-            color: var(--color-secondary);
-            font-size: 1.1em;
-        }
-
-        .course-card p {
-            margin: 0;
-            font-size: 0.9em;
-            color: var(--color-secondary);
-        }
-
-        .btn-custom-create {
-            background-color: #6c757d;
-            color: white;
-            border: 1px solid #5a6268;
-            margin-top: 30px;
-        }
-        
-        .btn-custom-create:hover {
-            background-color: #5a6268;
         }
 
         /* --- Estilos da Tela Roadmap --- */
@@ -493,45 +360,6 @@
         }
         .modal-actions button {
             width: 100%;
-        }
-
-        /* --- Estilos da Tela Gerenciamento de Trilhas --- */
-        .trilha-card {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px;
-            margin-bottom: 15px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            background-color: #f9f9f9;
-            transition: background-color 0.2s;
-        }
-
-        .trilha-card:hover {
-            background-color: #f0f0f0;
-        }
-
-        .trilha-info {
-            flex-grow: 1;
-        }
-
-        .trilha-info h4 {
-            margin: 0 0 5px 0;
-            color: var(--color-secondary);
-            font-size: 1.1em;
-        }
-
-        .trilha-info p {
-            margin: 0;
-            font-size: 0.9em;
-            color: #6c757d;
-        }
-
-        .trilha-actions button {
-            margin-left: 10px;
-            padding: 8px 12px;
-            font-size: 0.9em;
         }
         
         /* --- Estilos da Tela Flashcard --- */
@@ -823,14 +651,6 @@
             .topico-bloco {
                 justify-content: space-between;
             }
-
-            .login-actions {
-                flex-direction: row;
-                justify-content: space-between;
-            }
-            .login-actions button {
-                width: calc(50% - 5px);
-            }
         }
         
         /* Desktop (Telas maiores que 993px) */
@@ -839,38 +659,12 @@
                 flex: 1 1 calc(33.333% - 20px); 
                 padding: 25px;
             }
-            .course-card {
-                padding: 20px;
-            }
         }
     </style>
 </head>
 <body>
-    
-    <section id="login-screen" class="full-screen-message" style="display: flex;">
-        <div class="message-card">
-            <img src="mascote_inicial.png" alt="Mascote Quackademy, o Pato" class="mascote-welcome">
-            
-            <h2>👋 Entre ou Crie sua Conta</h2>
-            <p>Faça login para salvar suas trilhas de estudo e gerenciar seu progresso.</p>
 
-            <form id="login-form">
-                <label for="username">Nome de Usuário:</label>
-                <input type="text" id="username" placeholder="Seu nome de usuário" required>
-                
-                <label for="password">Senha (Apenas para Simulação):</label>
-                <input type="password" id="password" placeholder="Sua senha (protótipo)" required>
-
-                <div class="login-actions">
-                    <button type="submit" id="btnAuthSubmit" class="btn-primary">Entrar / Cadastrar</button>
-                    <button type="button" id="btnSkipLogin" class="btn-secondary">Pular Login (Modo Convidado)</button>
-                </div>
-            </form>
-            <p id="auth-message" style="color: var(--color-danger); margin-top: 10px;"></p>
-        </div>
-    </section>
-
-    <section id="welcome-screen" class="full-screen-message" style="display: none;">
+    <section id="welcome-screen" class="full-screen-message">
         <div class="message-card">
             <img src="mascote_inicial.png" alt="Mascote Quackademy, o Pato" class="mascote-welcome">
             
@@ -892,58 +686,31 @@
                 
                 <h3>⚙️ Como Funciona Nossa Trilha</h3>
                 <ul>
-                    <li><strong>Trilhas Guiadas:</strong> Você informa o tema e o nível, e nossa IA gera um plano de 10+ Etapas personalizadas.</li>
-                    <li><strong>Flashcards:</strong> Use <b>flashcards por tópico</b> para memorizar conceitos chave rapidamente.</li>
-                    <li><strong>Simulado de Etapa:</strong> Faça um <b>simulado completo por etapa</b> (20+ questões) para testar sua aplicação do conteúdo.</li>
+                    <li><strong>Trilhas Guiadas:</strong> Você informa o tema e o nível, e nossa IA gera um plano de <strong>10+ Etapas</strong> personalizadas.</li>
+                    <li><strong>Flashcards:</strong> Use **flashcards por tópico** para memorizar conceitos chave rapidamente.</li>
+                    <li><strong>Simulado de Etapa:</strong> Faça um **simulado completo por etapa** (20+ questões) para testar sua aplicação do conteúdo.</li>
                 </ul>
             </div>
-            <button id="btnExplanationContinue" class="btn-primary">Ver Cursos Rápidos 🚀</button>
+            <button id="btnExplanationContinue" class="btn-primary">Começar Minha Trilha 🚀</button>
         </div>
     </section>
 
     <div id="main-app" style="display: none;">
         <header>
-            <div class="header-content">
-                <div class="header-info">
-                    <h1>Quackademy Trilha de Estudos</h1>
-                    <p>Usuário: <span id="userNameDisplay">Carregando...</span></p>
-                </div>
-                <button id="btnMinhasTrilhas" onclick="showUserTrilhasView()">Minhas Trilhas (0)</button>
+            <div class="container">
+                <h1>Quackademy Trilha de Estudos</h1>
+                <p>O seu guia para o aprendizado acelerado e estruturado.</p>
             </div>
         </header>
 
         <main class="container">
             <div id="main-content-area">
                 
-                <div id="user-trilhas-view" class="content-view" style="display: none;">
-                    <div id="user-trilhas-container">
-                        <h2>Gerenciar Trilhas Salvas</h2>
-                        <div id="trilhas-list">
-                            </div>
-                        <div class="modal-actions">
-                            <button onclick="showPreDefinedCoursesView()" class="btn-success">➕ Criar Nova Trilha</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="predefined-courses-view" class="content-view" style="display: none;">
-                    <div id="predefined-courses-container">
-                        <h2>Escolha um Curso Rápido</h2>
-                        <p>Selecione um curso pré-definido abaixo para começar imediatamente ou crie a sua trilha personalizada.</p>
-                        
-                        <div id="predefined-courses-list">
-                            </div>
-
-                        <button onclick="showFormView()" class="btn-primary btn-custom-create">💡 Criar Trilha Personalizada (Usar IA)</button>
-                    </div>
-                </div>
-
-
-                <div id="form-view" class="content-view" style="display: none;">
+                <div id="form-view" class="content-view">
                     <div class="controles">
                         <div class="mascote-area">
                              <img src="mascote.png" alt="Mascote Quackademy" class="mascote">
-                            <h2>Defina seu Desafio (Via IA)</h2>
+                            <h2>Defina seu Desafio</h2>
                         </div>
                         
                         <label for="tema">Tema ou Tecnologia:</label>
@@ -960,21 +727,17 @@
                         <textarea id="objetivo" placeholder="Ex: Aprender a criar um backend com Node.js e Express."></textarea>
                         
                         <button id="btnGerar" class="btn-primary">Gerar Trilha 🚀</button>
-                        
-                        <div class="modal-actions">
-                            <button onclick="showPreDefinedCoursesView()" class="btn-secondary" style="width: auto;">⬅ Voltar aos Cursos Prontos</button>
-                        </div>
                     </div>
                 </div>
 
                 <div id="roadmap-view" class="content-view" style="display: none;">
                     <div id="roadmap-container">
-                        <h2 id="roadmap-title">Sua Trilha de Estudos</h2>
+                        <h2>Sua Trilha de Estudos</h2>
                         <div id="roadmap" class="roadmap-grid">
                             <p class="placeholder-text">Preencha o formulário e gere sua primeira trilha!</p>
                         </div>
                         <div class="modal-actions" style="text-align: right;">
-                             <button onclick="showUserTrilhasView()" class="btn-secondary" style="width: auto;">⬅ Voltar a Minhas Trilhas</button>
+                             <button onclick="showFormView()" class="btn-secondary" style="width: auto;">🚀 Criar Nova Trilha / Alterar Tema</button>
                         </div>
                     </div>
                 </div>
@@ -1054,20 +817,11 @@
         // JAVASCRIPT INTEGRADO (script.js)
         // ===================================================
 
-        // ⚠️ ATENÇÃO: CHAVE DA API ATUALIZADA AQUI
-        const API_KEY = "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"; 
+        // ⚠️ ATENÇÃO: SUBSTITUA ESTA STRING PELA SUA CHAVE REAL DA GROQ
+        const API_KEY = "gsk_ycKkB85OoNwFFCVcMiujWGdyb3FYzOmuXdQ21pklKTL7IHhDPytpA9"; 
         
         const GROQ_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions";
         const MODEL_NAME = "llama-3.1-8b-instant"; 
-
-        // --- SISTEMA DE USUÁRIO SIMPLES (LOCALSTORAGE) ---
-        let currentUser = {
-            name: null, // Será o nome de usuário ou 'Convidado'
-            trilhas: [], // Array de todas as trilhas (roadmaps) salvas
-            currentTrilhaIndex: -1 // Índice da trilha atualmente ativa
-        };
-        // Armazena todos os dados de usuários no localStorage
-        let allUsersData = {}; 
 
         let modalState = {}; 
         let patolindoState = {
@@ -1076,205 +830,17 @@
             lastView: "roadmap-view" 
         };
         
-        // --- DADOS PRÉ-DEFINIDOS (PARA ECONOMIZAR REQUISIÇÕES) ---
-        const preDefinedRoadmaps = [
-            {
-                category: "Programação e Tecnologia",
-                courses: [
-                    {
-                        tema: "Python para Iniciantes", nivel: "Iniciante", objetivo: "Desenvolvimento de scripts básicos e lógica de programação.",
-                        etapas: [
-                            { titulo: "Etapa 1: Fundamentos e Sintaxe", topicos: [{ tópico: "Variáveis e Tipos de Dados", material: "https://docs.python.org/pt-br/3/tutorial/introduction.html" }, { tópico: "Estruturas de Controle (If/Else)", material: "https://docs.python.org/pt-br/3/tutorial/controlflow.html" }, { tópico: "Laços de Repetição (For/While)", material: "https://docs.python.org/pt-br/3/tutorial/controlflow.html" }, { tópico: "Introdução a Funções", material: "https://docs.python.org/pt-br/3/tutorial/controlflow.html" }], atividade: "Criar uma calculadora simples que utilize If/Else e funções." }
-                        ]
-                    },
-                    {
-                        tema: "JavaScript Moderno (ES6+)", nivel: "Intermediário", objetivo: "Desenvolvimento Frontend e manipulação de DOM.",
-                        etapas: [
-                            { titulo: "Etapa 1: Variáveis e Scopes", topicos: [{ tópico: "Var, Let e Const", material: "https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Guide/Grammar_and_types" }, { tópico: "Arrow Functions e Template Literals", material: "https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Functions/Arrow_functions" }, { tópico: "Manipulação de Array (Map, Filter, Reduce)", material: "https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Array" }, { tópico: "Introdução a Promises e Async/Await", material: "https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Guide/Using_promises" }], atividade: "Criar uma lista de tarefas (To-Do List) que manipule o DOM e use funções de array." }
-                        ]
-                    },
-                    {
-                        tema: "Java: POO e Backend", nivel: "Avançado", objetivo: "Entender Programação Orientada a Objetos e estruturas de dados básicas.",
-                        etapas: [
-                            { titulo: "Etapa 1: Conceitos de POO", topicos: [{ tópico: "Classes, Objetos e Encapsulamento", material: "https://docs.oracle.com/javase/tutorial/java/concepts/index.html" }, { tópico: "Herança e Polimorfismo", material: "https://docs.oracle.com/javase/tutorial/java/concepts/index.html" }, { tópico: "Tratamento de Exceções", material: "https://docs.oracle.com/javase/tutorial/essential/exceptions/index.html" }, { tópico: "Estruturas de Dados (ArrayList e HashMap)", material: "https://docs.oracle.com/javase/8/docs/api/java/util/ArrayList.html" }], atividade: "Desenvolver um sistema bancário simples com classes Cliente e Conta, aplicando Herança." }
-                        ]
-                    },
-                ]
-            },
-            {
-                category: "Idiomas e Linguagens",
-                courses: [
-                    {
-                        tema: "Inglês Básico", nivel: "Iniciante", objetivo: "Conversação simples e compreensão de textos básicos.",
-                        etapas: [
-                            { titulo: "Etapa 1: O Verbo 'To Be'", topicos: [{ tópico: "Afirmativa e Negativa", material: "https://www.youtube.com/watch?v=basico_to_be" }, { tópico: "Interrogativa e Short Answers", material: "https://www.duolingo.com/course/en/pt/learn-english" }, { tópico: "Pronomes Pessoais e Possessivos", material: "https://www.bbc.co.uk/learningenglish/" }, { tópico: "Vocabulário de Saudação e Apresentação", material: "https://www.memrise.com/" }], atividade: "Gravar um áudio se apresentando e falando sobre 3 membros da família em inglês." }
-                        ]
-                    },
-                    {
-                        tema: "Espanhol Intermediário", nivel: "Intermediário", objetivo: "Dominar pretéritos e conversação em viagens.",
-                        etapas: [
-                            { titulo: "Etapa 1: Pretéritos do Indicativo", topicos: [{ tópico: "Pretérito Perfeito Simples (Pasado Simple)", material: "https://www.rae.es/" }, { tópico: "Pretérito Imperfeito", material: "https://espanhol.com/gramatica/passado-espanhol" }, { tópico: "Verbos Irregulares Comuns", material: "https://conjuga-me.net/espanhol/verbos/irregulares" }, { tópico: "Vocabulário de Viagem e Turismo", material: "https://cervantes.es/" }], atividade: "Escrever um parágrafo contando suas últimas férias usando os pretéritos estudados." }
-                        ]
-                    }
-                ]
-            },
-            {
-                category: "Matérias Escolares - Ensino Fundamental (Anos Finais)",
-                courses: [
-                    {
-                        tema: "Matemática (6º Ano)", nivel: "Intermediário", objetivo: "Dominar números inteiros, frações e operações básicas.",
-                        etapas: [
-                            { titulo: "Etapa 1: Números Inteiros e Racionais", topicos: [{ tópico: "Conjunto dos Números Inteiros (Z)", material: "https://www.auladegratis.net/matematica/6-ano/numeros-inteiros.html" }, { tópico: "Soma e Subtração de Frações", material: "https://www.somatematica.com.br/fundamental/6ano/fracoes.php" }, { tópico: "Múltiplos e Divisores (MMC e MDC)", material: "https://www.infoescola.com/matematica/mmc-e-mdc/" }, { tópico: "Expressões Numéricas", material: "https://www.toda_materia.com.br/expressoes-numericas" }], atividade: "Resolver uma lista de 10 problemas que envolvam frações em situações do dia a dia." }
-                        ]
-                    },
-                    {
-                        tema: "História (9º Ano)", nivel: "Intermediário", objetivo: "Compreender a 1ª República, a Era Vargas e a Guerra Fria.",
-                        etapas: [
-                            { titulo: "Etapa 1: República Oligárquica e Vargas", topicos: [{ tópico: "Primeira República e Coronelismo", material: "https://brasilescola.uol.com.br/historiab/primeira-republica.htm" }, { tópico: "Revolução de 1930 e Era Vargas", material: "https://www.politize.com.br/era-vargas-resumo/" }, { tópico: "A Grande Depressão de 1929 e o Brasil", material: "https://www.sohistoria.com.br/ef2/crise29/" }, { tópico: "O Estado Novo (1937-1945)", material: "https://www.historiadigital.org/estado-novo/" }], atividade: "Criar uma linha do tempo ilustrada da Era Vargas (1930-1945) com os principais eventos." }
-                        ]
-                    }
-                ]
-            },
-            {
-                category: "Matérias Escolares - Ensino Médio",
-                courses: [
-                    {
-                        tema: "Português (1º Ano EM)", nivel: "Avançado", objetivo: "Dominar a estrutura frasal, concordância e as primeiras escolas literárias.",
-                        etapas: [
-                            { titulo: "Etapa 1: Sintaxe e Concordância", topicos: [{ tópico: "Estrutura da Oração (Sujeito, Predicado)", material: "https://www.normaculta.com.br/estrutura-da-oracao/" }, { tópico: "Concordância Verbal e Nominal", material: "https://www.portuguesonline.com.br/concordancia-verbal-e-nominal/" }, { tópico: "Introdução à Literatura: Quinhentismo e Barroco", material: "https://www.infoescola.com/literatura/quinhentismo/" }, { tópico: "Análise de Figuras de Linguagem", material: "https://www.todamateria.com.br/figuras-de-linguagem/" }], atividade: "Analisar um trecho de um poema Barroco identificando o sujeito, predicado e as figuras de linguagem." }
-                        ]
-                    }
-                ]
-            }
-        ];
+        let currentTheme = ""; 
 
-
-        // --- FUNÇÕES DE PERSISTÊNCIA (ATUALIZADAS) ---
-
-        function loadAllUsersData() {
-            const data = localStorage.getItem('quackademyAllUsers');
-            if (data) {
-                allUsersData = JSON.parse(data);
-            }
-        }
-
-        function saveAllUsersData() {
-            localStorage.setItem('quackademyAllUsers', JSON.stringify(allUsersData));
-        }
-
-        function loadUserData(username) {
-            loadAllUsersData();
-            
-            if (!username || username === 'Convidado') {
-                currentUser.name = 'Convidado';
-                currentUser.trilhas = []; // Convidado não tem trilhas salvas
-                currentUser.currentTrilhaIndex = -1;
-            } else {
-                const userData = allUsersData[username];
-                if (userData) {
-                    currentUser.name = username;
-                    currentUser.trilhas = userData.trilhas || [];
-                    currentUser.currentTrilhaIndex = userData.currentTrilhaIndex || -1;
-                } else {
-                    // Novo usuário
-                    currentUser.name = username;
-                    currentUser.trilhas = [];
-                    currentUser.currentTrilhaIndex = -1;
-                    allUsersData[username] = { trilhas: [], currentTrilhaIndex: -1, password: document.getElementById('password').value }; // Salva a senha (simulada)
-                }
-            }
-            document.getElementById("userNameDisplay").innerText = currentUser.name;
-            saveAllUsersData();
-            updateTrilhasCountDisplay();
-        }
-
-        function saveUserTrilhas() {
-            if (currentUser.name && currentUser.name !== 'Convidado') {
-                allUsersData[currentUser.name] = {
-                    ...allUsersData[currentUser.name],
-                    trilhas: currentUser.trilhas,
-                    currentTrilhaIndex: currentUser.currentTrilhaIndex
-                };
-                saveAllUsersData();
-            }
-            updateTrilhasCountDisplay();
-        }
-
-        function updateTrilhasCountDisplay() {
-            const count = currentUser.trilhas ? currentUser.trilhas.length : 0;
-            document.getElementById("btnMinhasTrilhas").innerText = `Minhas Trilhas (${count})`;
-            document.getElementById("btnMinhasTrilhas").disabled = currentUser.name === 'Convidado';
-        }
-
-        // --- NOVO: CONTROLE DE FLUXO DE AUTENTICAÇÃO ---
-
-        function showLoginView() {
-            document.getElementById("login-screen").style.display = 'flex';
-            document.getElementById("welcome-screen").style.display = 'none';
-            document.getElementById("explanation-screen").style.display = 'none';
-            document.getElementById("main-app").style.display = 'none';
-            document.getElementById("predefined-courses-view").style.display = 'none';
-            
-            // Garante que os campos de login estejam limpos
-            document.getElementById('username').value = '';
-            document.getElementById('password').value = '';
-            document.getElementById('auth-message').innerText = '';
-        }
-
-        function handleAuthSubmit(e) {
-            e.preventDefault();
-            const username = document.getElementById('username').value.trim();
-            const password = document.getElementById('password').value.trim();
-            const authMessage = document.getElementById('auth-message');
-            
-            if (username.toLowerCase() === 'convidado') {
-                authMessage.innerText = "Nome de usuário 'Convidado' é reservado. Escolha outro.";
-                return;
-            }
-            if (username.length < 3 || password.length < 3) {
-                authMessage.innerText = "Nome de usuário e senha devem ter no mínimo 3 caracteres.";
-                return;
-            }
-
-            loadAllUsersData(); 
-
-            let userExists = allUsersData[username];
-
-            if (userExists) {
-                // Tenta Logar
-                if (userExists.password === password) {
-                    loadUserData(username);
-                    authMessage.innerText = `Login bem-sucedido para ${username}!`;
-                    showMainApp(true); // Indica que o usuário já existe
-                } else {
-                    authMessage.innerText = "Senha incorreta.";
-                }
-            } else {
-                // Tenta Cadastrar (Simulado)
-                loadUserData(username); // Cria o novo usuário
-                authMessage.innerText = `Usuário ${username} criado e logado!`;
-                showWelcomeScreen(); // Novo usuário vê o fluxo completo
-            }
-        }
-        
-        function handleSkipLogin() {
-            loadUserData('Convidado');
-            showWelcomeScreen();
-        }
-
-        // --- Listeners de Transição Inicial ---
+        // --- CONTROLE DE FLUXO DA INTERFACE ---
 
         document.addEventListener("DOMContentLoaded", () => {
-            
-            showLoginView(); // Inicia na tela de login
+            document.getElementById("explanation-screen").style.display = 'none';
+            document.getElementById("main-app").style.display = 'none';
+            document.getElementById("welcome-screen").style.display = 'flex'; 
 
-            document.getElementById("login-form").addEventListener("submit", handleAuthSubmit);
-            document.getElementById("btnSkipLogin").addEventListener("click", handleSkipLogin);
-            
             document.getElementById("btnWelcomeContinue").addEventListener("click", showExplanationScreen);
-            
-            // 🐛 CORREÇÃO APLICADA AQUI: Chama showMainApp que decide o próximo passo (Cursos Pré-Definidos)
-            document.getElementById("btnExplanationContinue").addEventListener("click", () => showMainApp(false)); 
+            document.getElementById("btnExplanationContinue").addEventListener("click", showMainApp);
             
             document.getElementById("btnGerar").addEventListener("click", gerarRoadmap);
             
@@ -1294,36 +860,20 @@
         });
 
         // Funções de transição de telas iniciais
-        function showWelcomeScreen() {
-            document.getElementById("login-screen").style.display = 'none';
-            document.getElementById("welcome-screen").style.display = 'flex';
-        }
-
         function showExplanationScreen() {
             document.getElementById("welcome-screen").style.display = 'none';
             document.getElementById("explanation-screen").style.display = 'flex';
         }
 
-        function showMainApp(isExistingUser = false) {
+        function showMainApp() {
             document.getElementById("explanation-screen").style.display = 'none';
-            document.getElementById("welcome-screen").style.display = 'none';
-            document.getElementById("login-screen").style.display = 'none';
             document.getElementById("main-app").style.display = 'block';
-            
-            if (isExistingUser && currentUser.trilhas.length > 0) {
-                 // Usuário recorrente vai para o Gerenciamento
-                 showUserTrilhasView();
-            } else {
-                 // Usuário novo ou sem trilhas vai para a lista de cursos
-                 showPreDefinedCoursesView();
-            }
+            showFormView(); 
         }
 
         // --- LÓGICA DE NAVEGAÇÃO SPA ---
 
         const viewMap = {
-            "user-trilhas-view": document.getElementById("user-trilhas-view"),
-            "predefined-courses-view": document.getElementById("predefined-courses-view"), // NOVO
             "form-view": document.getElementById("form-view"),
             "roadmap-view": document.getElementById("roadmap-view"),
             "etapa-view": document.getElementById("etapa-view"),
@@ -1338,132 +888,18 @@
                 viewMap[key].style.display = 'none';
             }
         }
-        
-        function updateChatButtonVisibility(isVisible) {
-            // Esconde o chat se o usuário for convidado
-            if (currentUser.name === 'Convidado') {
-                document.getElementById("chat-button").style.display = 'none';
-            } else {
-                 document.getElementById("chat-button").style.display = isVisible ? 'block' : 'none';
-            }
-        }
 
-        // --- TELA DE GERENCIAMENTO DE TRILHAS ---
-        function showUserTrilhasView() {
-            hideAllViews();
-            window.scrollTo(0, 0); 
-            updateChatButtonVisibility(false); 
-
-            if (currentUser.name === 'Convidado') {
-                showPreDefinedCoursesView();
-                return;
-            }
-            
-            viewMap["user-trilhas-view"].style.display = 'block';
-
-            const trilhasList = document.getElementById("trilhas-list");
-            trilhasList.innerHTML = '';
-            
-            if (currentUser.trilhas.length === 0) {
-                trilhasList.innerHTML = '<p class="placeholder-text">Nenhuma trilha de estudo salva. Crie uma nova para começar!</p>';
-                return;
-            }
-
-            // Garante que a trilha ativa está no topo
-            let trilhasOrdenadas = [...currentUser.trilhas];
-            if (currentUser.currentTrilhaIndex !== -1) {
-                const activeTrilha = trilhasOrdenadas.splice(currentUser.currentTrilhaIndex, 1)[0];
-                trilhasOrdenadas.unshift(activeTrilha); // Coloca a ativa na frente
-            }
-
-            trilhasOrdenadas.forEach((trilha, index) => {
-                // Encontra o índice original para ações
-                const originalIndex = currentUser.trilhas.findIndex(t => t.id === trilha.id); 
-                const isActive = currentUser.currentTrilhaIndex === originalIndex;
-                
-                const card = document.createElement('div');
-                card.className = 'trilha-card';
-                card.style.borderLeft = isActive ? '5px solid var(--color-success)' : '1px solid #ddd';
-
-                const info = `
-                    <div class="trilha-info">
-                        <h4>${trilha.tema} (${trilha.nivel}) ${isActive ? '<b>(ATIVA)</b>' : ''}</h4>
-                        <p>Objetivo: ${trilha.objetivo || 'Não especificado'}</p>
-                        <p>Etapas: ${trilha.etapas.length}</p>
-                    </div>
-                `;
-
-                const actions = `
-                    <div class="trilha-actions">
-                        <button class="btn-success" onclick="loadAndShowRoadmap(${originalIndex})" style="${isActive ? 'display: none;' : ''}">Abrir</button>
-                        <button class="btn-danger" onclick="deleteTrilha(${originalIndex})">Excluir</button>
-                    </div>
-                `;
-
-                card.innerHTML = info + actions;
-                trilhasList.appendChild(card);
-            });
-
-            // Se houver uma trilha ativa, carrega ela
-            if (currentUser.currentTrilhaIndex !== -1) {
-                 loadRoadmap(currentUser.trilhas[currentUser.currentTrilhaIndex], true); // Carrega a ativa, mas não mostra o roadmap
-            }
-        }
-
-        // --- NOVO: TELA DE CURSOS PRÉ-DEFINIDOS ---
-        function showPreDefinedCoursesView() {
-            // Garante que a aplicação principal está visível antes de exibir a sub-tela
-            document.getElementById("main-app").style.display = 'block'; 
-            
-            hideAllViews();
-            window.scrollTo(0, 0); 
-            updateChatButtonVisibility(false); 
-            viewMap["predefined-courses-view"].style.display = 'block';
-
-            const coursesListDiv = document.getElementById("predefined-courses-list");
-            coursesListDiv.innerHTML = '';
-            
-            preDefinedRoadmaps.forEach(categoryData => {
-                const categoryHtml = document.createElement('div');
-                categoryHtml.className = 'course-category';
-                categoryHtml.innerHTML = `<h3>${categoryData.category}</h3>`;
-                
-                const gridHtml = document.createElement('div');
-                gridHtml.className = 'courses-grid';
-
-                categoryData.courses.forEach(course => {
-                    const card = document.createElement('div');
-                    card.className = 'course-card';
-                    // Prepara o objeto para ser passado na função de carregamento
-                    const courseString = JSON.stringify(course).replace(/'/g, "\\'"); 
-                    card.setAttribute('onclick', `loadPreDefinedRoadmap('${courseString}')`);
-
-                    card.innerHTML = `
-                        <h4>${course.tema}</h4>
-                        <p>Nível: <b>${course.nivel}</b></p>
-                        <p>Objetivo: ${course.objetivo}</p>
-                    `;
-                    gridHtml.appendChild(card);
-                });
-                
-                categoryHtml.appendChild(gridHtml);
-                coursesListDiv.appendChild(categoryHtml);
-            });
-        }
-        
         function showFormView() {
             hideAllViews();
             window.scrollTo(0, 0); 
-            updateChatButtonVisibility(false); 
+            document.getElementById("chat-button").style.display = 'none'; 
             viewMap["form-view"].style.display = 'flex'; 
         }
         
         function showRoadmapView() {
             hideAllViews();
             window.scrollTo(0, 0); 
-            // Mostra o chat apenas se houver uma trilha carregada e não for convidado
-            const currentTrilha = currentUser.trilhas[currentUser.currentTrilhaIndex];
-            updateChatButtonVisibility(currentTrilha && currentUser.name !== 'Convidado' ? true : false);
+            if (modalState.etapas) document.getElementById("chat-button").style.display = 'block'; 
             patolindoState.lastView = "roadmap-view";
             viewMap["roadmap-view"].style.display = 'block';
         }
@@ -1471,7 +907,7 @@
         function showEtapaView(etapa) {
             hideAllViews();
             window.scrollTo(0, 0); 
-            updateChatButtonVisibility(true); 
+            document.getElementById("chat-button").style.display = 'block'; 
             patolindoState.lastView = "etapa-view";
             viewMap["etapa-view"].style.display = 'block';
             
@@ -1503,152 +939,22 @@
                 ${simularTudoBtn}
             `;
         }
-        
-        function showMaterialView(topico, material) {
-            hideAllViews();
-            window.scrollTo(0, 0); 
-            updateChatButtonVisibility(true); 
-            patolindoState.lastView = "material-view";
-            viewMap["material-view"].style.display = 'block';
-            
-            fetchAndRenderMaterial(topico, material);
-        }
-
-        function showFlashcardView(topico) {
-            hideAllViews();
-            window.scrollTo(0, 0); 
-            updateChatButtonVisibility(false); // Esconde o chat no modo Flashcard
-            patolindoState.lastView = "flashcard-view";
-            viewMap["flashcard-view"].style.display = 'block';
-
-            fetchAndRenderFlashcards(topico);
-        }
-
-        function showSimuladoEtapaView() {
-            hideAllViews();
-            window.scrollTo(0, 0); 
-            updateChatButtonVisibility(false); // Esconde o chat no modo Simulado
-            patolindoState.lastView = "simulado-etapa-view";
-            viewMap["simulado-etapa-view"].style.display = 'block';
-            
-            fetchAndRenderSimuladoEtapa();
-        }
 
         function showChatView() {
             hideAllViews();
             window.scrollTo(0, 0); 
-            updateChatButtonVisibility(false); 
+            document.getElementById("chat-button").style.display = 'none'; 
             viewMap["chat-view"].style.display = 'block';
             resetPatolindoSession();
         }
 
         function showLastView() {
-            // Volta para a view anterior salva
             if (patolindoState.lastView === "roadmap-view") {
                 showRoadmapView();
-            } else if (patolindoState.lastView === "etapa-view" && modalState.currentEtapa) {
+            } else if (patolindoState.lastView === "etapa-view") {
                 showEtapaView(modalState.currentEtapa);
-            } else if (patolindoState.lastView === "material-view" && modalState.currentEtapa) {
-                 showEtapaView(modalState.currentEtapa);
             } else {
                 showRoadmapView(); 
-            }
-        }
-
-        // --- FUNÇÕES DE GERENCIAMENTO DE TRILHAS (ATUALIZADAS PARA CONVIDADO) ---
-
-        // Carrega os dados da trilha (roadmap) e exibe o RoadmapView
-        function loadRoadmap(trilha, skipViewChange = false) {
-            if (!trilha || !trilha.etapas) {
-                console.error("Trilha inválida.");
-                return;
-            }
-
-            modalState.etapas = trilha.etapas;
-            currentTheme = trilha.tema;
-            document.getElementById("roadmap-title").innerText = `Sua Trilha: ${trilha.tema} (${trilha.nivel}) - ${currentUser.name}`;
-            
-            const roadmapDiv = document.getElementById("roadmap");
-            roadmapDiv.innerHTML = "";
-
-            trilha.etapas.forEach(etapa => {
-                const blocoDiv = document.createElement("div");
-                blocoDiv.className = "bloco";
-                blocoDiv.innerText = etapa.titulo;
-                blocoDiv.onclick = () => showEtapaView(etapa);
-                roadmapDiv.appendChild(blocoDiv);
-            });
-
-            // Se não for para pular, mostra a view
-            if (!skipViewChange) {
-                showRoadmapView();
-            }
-        }
-
-        // Define a trilha ativa, carrega e exibe
-        function loadAndShowRoadmap(index) {
-            if (index >= 0 && index < currentUser.trilhas.length) {
-                currentUser.currentTrilhaIndex = index;
-                loadRoadmap(currentUser.trilhas[index]);
-                if (currentUser.name !== 'Convidado') {
-                    saveUserTrilhas(); // Salva o índice ativo
-                }
-            }
-        }
-
-        // NOVO: Carrega e salva um roadmap pré-definido
-        function loadPreDefinedRoadmap(courseString) {
-            try {
-                const course = JSON.parse(courseString);
-                
-                const novaTrilha = {
-                    id: Date.now(),
-                    tema: course.tema,
-                    nivel: course.nivel,
-                    objetivo: course.objetivo,
-                    etapas: course.etapas
-                };
-                
-                // Se o usuário não for convidado, a trilha é salva
-                if (currentUser.name !== 'Convidado') {
-                    currentUser.trilhas.push(novaTrilha);
-                    currentUser.currentTrilhaIndex = currentUser.trilhas.length - 1; // Define como a trilha ativa
-                    saveUserTrilhas(); 
-                } else {
-                     // Usuário Convidado: usa uma estrutura temporária
-                    currentUser.trilhas = [novaTrilha];
-                    currentUser.currentTrilhaIndex = 0;
-                }
-                
-                // Carrega a trilha recém-criada
-                loadRoadmap(novaTrilha);
-
-            } catch (e) {
-                alert("Erro ao carregar o curso pré-definido.");
-                console.error("Erro ao parsear curso pré-definido:", e);
-                showPreDefinedCoursesView();
-            }
-        }
-
-        function deleteTrilha(index) {
-             if (currentUser.name === 'Convidado') return;
-
-            if (confirm(`Tem certeza que deseja excluir a trilha "${currentUser.trilhas[index].tema}"?`)) {
-                
-                // Remove a trilha
-                currentUser.trilhas.splice(index, 1);
-                
-                // Se a trilha excluída era a ativa, desativa e carrega a próxima ou o gerenciamento
-                if (currentUser.currentTrilhaIndex === index) {
-                    currentUser.currentTrilhaIndex = -1;
-                    showUserTrilhasView(); // Volta para o gerenciamento
-                } else if (currentUser.currentTrilhaIndex > index) {
-                    // Ajusta o índice ativo se a excluída estava antes dele
-                    currentUser.currentTrilhaIndex--;
-                }
-                
-                saveUserTrilhas();
-                showUserTrilhasView(); // Atualiza a lista
             }
         }
 
@@ -1665,15 +971,12 @@
 
             if (!tema) {
                 roadmapDiv.innerHTML = "⚠️ Por favor, preencha o campo Tema.";
-                updateChatButtonVisibility(false);
                 return;
             }
             
-            // Simulação de delay para a API, pois o processo é lento
-            await new Promise(resolve => setTimeout(resolve, 500)); 
-
             try {
-                
+                currentTheme = tema;
+
                 const systemPrompt = `Você é um especialista em educação técnica. Crie um roadmap **detalhado e extenso** com **no mínimo 10 (dez) etapas obrigatórias**. Para cada etapa, liste **no mínimo 4 (quatro) tópicos essenciais** para garantir profundidade no aprendizado. Use mais etapas e tópicos se o tema for complexo. Cada tópico **DEVE incluir uma URL de documentação oficial ou tutorial renomado** no campo 'material'. Sua única resposta deve ser APENAS JSON válido, sem texto introdutório ou blocos de código markdown. O JSON deve seguir este formato: {"etapas": [{"titulo": "Etapa 1: Nome da etapa", "topicos": [{"tópico": "Nome do tópico", "material": "URL de uma fonte externa"}], "atividade": "Descrição da atividade prática"}]}.`;
                 const userPrompt = `Crie um roadmap de estudos detalhado e abrangente para o tema "${tema}" no nível "${nivel}"${objetivo ? ` com objetivo "${objetivo}"` : ""}. Inclua fontes externas de estudo no campo 'material' para todos os tópicos.`;
 
@@ -1713,56 +1016,41 @@
                 }
                 
                 const etapas = parsed.etapas;
+                modalState.etapas = etapas; 
+                roadmapDiv.innerHTML = "";
+
+                etapas.forEach(etapa => {
+                    const blocoDiv = document.createElement("div");
+                    blocoDiv.className = "bloco";
+                    blocoDiv.innerText = etapa.titulo;
+                    blocoDiv.onclick = () => showEtapaView(etapa);
+                    roadmapDiv.appendChild(blocoDiv);
+                });
                 
-                // Salva ou carrega a nova trilha no contexto do usuário
-                const novaTrilha = {
-                    id: Date.now(),
-                    tema: tema,
-                    nivel: nivel,
-                    objetivo: objetivo,
-                    etapas: etapas
-                };
-                
-                // Se o usuário não for convidado, a trilha é salva
-                if (currentUser.name !== 'Convidado') {
-                    currentUser.trilhas.push(novaTrilha);
-                    currentUser.currentTrilhaIndex = currentUser.trilhas.length - 1; // Define como a trilha ativa
-                    saveUserTrilhas(); 
-                } else {
-                     // Usuário Convidado: usa uma estrutura temporária
-                    currentUser.trilhas = [novaTrilha];
-                    currentUser.currentTrilhaIndex = 0;
-                }
-                
-                // Carrega a trilha recém-criada
-                loadRoadmap(novaTrilha);
+                document.getElementById("chat-button").style.display = 'block'; 
 
             } catch (err) {
                 console.error("Erro:", err);
                 roadmapDiv.innerHTML = `⚠️ Erro ao gerar roadmap. Verifique sua chave API e tente novamente. Causa: ${err.message}.`;
-                updateChatButtonVisibility(false); 
+                document.getElementById("chat-button").style.display = 'none'; 
             }
         }
 
-        async function fetchAndRenderMaterial(topico, material) {
-            // Recarrega o tema atual da trilha ativa
-            const currentTrilha = currentUser.trilhas[currentUser.currentTrilhaIndex];
-            const currentTheme = currentTrilha ? currentTrilha.tema : "educação";
+        async function showMaterialView(topico, material) {
+            hideAllViews();
+            window.scrollTo(0, 0); 
+            viewMap["material-view"].style.display = 'block';
             
+            document.getElementById("material-titulo").innerText = topico;
             const materialConteudo = document.getElementById("material-conteudo");
             materialConteudo.innerHTML = `<p>Carregando conteúdo sobre: <strong>${topico}</strong>...</p>`;
-            document.getElementById("material-titulo").innerText = topico; // Define o título
-
             
             try {
-                // ATUALIZAÇÃO NO PROMPT: Detalhado, longo e requer múltiplas fontes citadas
-                const systemPromptMaterial = `Você é um professor especialista em ${currentTheme}. Explique de forma didática, **detalhada e longa** o tópico "${topico}". Utilize o conhecimento de **diversas fontes confiáveis** para enriquecer o texto. Seu conteúdo **DEVE terminar com uma seção 'Fontes Utilizadas'** (ou similar) listando as URLs das referências utilizadas na pesquisa e composição do texto, mesmo que sejam apenas exemplos. Use o formato: 'Fontes Utilizadas: [URL1], [URL2], [URLn]'.`;
-                const userPromptMaterial = `Explique o tópico "${topico}" (Nível: ${document.getElementById("nivel").value}).`;
-
+                const userPromptMaterial = `Explique de forma didática e detalhada o tópico "${topico}".`;
                 const response = await fetch(GROQ_ENDPOINT, {
                     method: "POST",
                     headers: { "Content-Type": "application/json", "Authorization": `Bearer ${API_KEY}` },
-                    body: JSON.stringify({ model: MODEL_NAME, messages: [{ role: "system", content: systemPromptMaterial }, { role: "user", content: userPromptMaterial }], temperature: 0.8 })
+                    body: JSON.stringify({ model: MODEL_NAME, messages: [{ role: "user", content: userPromptMaterial }], temperature: 0.8 })
                 });
 
                 if (!response.ok) { throw new Error(`Erro API: ${response.status}`); }
@@ -1771,31 +1059,12 @@
 
                 // CORREÇÃO: Converte **negrito** para <b>negrito</b> e quebra de linha para <br>
                 texto = texto.replace(/\*\*(.*?)\*\*/g, "<b>$1</b>").replace(/\n/g, "<br>");
-                
-                // Extrai e formata as fontes citadas no final do texto (ex: Fontes Utilizadas: URL1, URL2)
-                let sourceHtml = '';
-                const sourceMatch = texto.match(/Fontes Utilizadas:(.*)/i);
-                if (sourceMatch && sourceMatch[1]) {
-                    const sources = sourceMatch[1].trim().split(',').map(s => s.trim()).filter(s => s.startsWith('http'));
-                    
-                    if (sources.length > 0) {
-                        sourceHtml = '<h3 style="margin-top: 30px; border-left: 5px solid #28A745; padding-left: 12px; color: #28A745;">🔗 Fontes Utilizadas</h3><ul>';
-                        sources.forEach(url => {
-                            sourceHtml += `<li><a href="${url}" target="_blank" style="color: #007bff; text-decoration: none;">${url}</a></li>`;
-                        });
-                        sourceHtml += '</ul>';
-                    }
-                    // Remove a seção de fontes do corpo principal do texto
-                    texto = texto.substring(0, sourceMatch.index).trim();
-                }
 
-                // Adiciona a fonte obrigatória fornecida no roadmap (se existir e não estiver nas fontes do corpo)
+                let sourceHtml = '';
                 if (material && material !== 'null' && material.startsWith('http')) {
-                    sourceHtml += `<h3 style="margin-top: 30px; border-left: 5px solid var(--color-primary); padding-left: 12px;">📚 Fonte da Trilha</h3><p><a href="${material}" target="_blank" style="color: var(--color-primary-dark); font-weight: bold;">${material} (Abrirá em nova aba)</a></p>`;
-                }
-                
-                if (!sourceHtml) {
-                     sourceHtml = '<p style="margin-top: 20px; color: #999;">Nenhuma fonte de estudo externa foi citada pela IA ou no roadmap.</p>';
+                    sourceHtml = `<h3 style="margin-top: 30px; border-left: 5px solid var(--color-primary); padding-left: 12px;">🔗 Fonte Obrigatória</h3><p><a href="${material}" target="_blank" style="color: var(--color-primary-dark); font-weight: bold;">${material} (Abrirá em nova aba)</a></p>`;
+                } else {
+                    sourceHtml = '<p style="margin-top: 20px; color: #999;">Fonte externa não fornecida pela IA.</p>';
                 }
 
                 materialConteudo.innerHTML = `<div style="max-height:450px; overflow-y:auto; padding-right:10px;">${texto}</div>${sourceHtml}`;
@@ -1811,14 +1080,17 @@
         let currentFlashcards = [];
         let currentFlashcardIndex = 0;
 
-        async function fetchAndRenderFlashcards(topico) {
+        async function showFlashcardView(topico) {
+            hideAllViews();
+            window.scrollTo(0, 0); 
+            viewMap["flashcard-view"].style.display = 'block';
+            
             document.getElementById("flashcard-titulo").innerText = `Flashcards: ${topico}`;
             const flashcardDisplay = document.getElementById("flashcard-display");
             flashcardDisplay.innerHTML = `<p>Carregando flashcards sobre: <strong>${topico}</strong>...</p>`;
 
             try {
-                // ATUALIZAÇÃO NO PROMPT: Requer 5 objetos únicos
-                const systemPromptFlashcard = `Você é um gerador de flashcards. Sua única resposta deve ser APENAS JSON válido, sem texto introdutório. O JSON deve ser um array de **5 objetos**, onde cada objeto tem uma "pergunta" (frente do card) e uma "resposta" (verso do card). As 5 perguntas devem ser **únicas** e cobrir diferentes aspectos do tópico. O formato deve ser: [{"pergunta": "...", "resposta": "..."}, {"pergunta": "...", ...}].`;
+                const systemPromptFlashcard = `Você é um gerador de flashcards. Sua única resposta deve ser APENAS JSON válido, sem texto introdutório. O JSON deve ser um array de **5 objetos**, onde cada objeto tem uma "pergunta" (frente do card) e uma "resposta" (verso do card). O formato deve ser: [{"pergunta": "...", "resposta": "..."}, {"pergunta": "...", ...}].`;
                 const userPromptFlashcard = `Crie 5 flashcards de pergunta e resposta sobre o tópico "${topico}" no nível ${document.getElementById("nivel").value}.`;
 
                 const response = await fetch(GROQ_ENDPOINT, {
@@ -1919,7 +1191,11 @@
         let currentSimuladoEtapa = [];
         let userAnswers = {};
 
-        async function fetchAndRenderSimuladoEtapa() {
+        async function showSimuladoEtapaView() {
+            hideAllViews();
+            window.scrollTo(0, 0); 
+            viewMap["simulado-etapa-view"].style.display = 'block';
+
             const etapa = modalState.currentEtapa;
             document.getElementById("simulado-etapa-titulo").innerText = `Simulado Completo: ${etapa.titulo}`;
             const simuladoConteudo = document.getElementById("simulado-etapa-conteudo");
@@ -1931,11 +1207,9 @@
             userAnswers = {};
 
             try {
-                // ATUALIZAÇÃO NO PROMPT: Requer diversidade de perguntas, distribuição aleatória das respostas, e estilo de prova/vestibular.
-                const systemPromptSimulado = `Você é um gerador de questões de múltipla escolha no estilo de provas e vestibulares. Crie um simulado de no mínimo 20 (vinte) questões sobre todos os tópicos fornecidos. **Todas as questões devem ser únicas e cobrir diferentes áreas dos tópicos.** Sua única resposta deve ser APENAS JSON válido, sem texto introdutório. O JSON deve ser um objeto contendo um array de "simulados" seguindo o formato: {"simulados": [{"pergunta": "...", "alternativas": ["A) ...", "B) ...", "C) ...", "D) ...", "E) ..."], "resposta_correta": "Letra da alternativa correta (ex: C)"}, ...]}. **IMPORTANTE: Distribua a resposta correta de forma aleatória (A, B, C, D ou E) para evitar ciclos viciosos de repetição de letra.**`;
+                const systemPromptSimulado = `Você é um gerador de questões de múltipla escolha. Crie um simulado de no mínimo 20 (vinte) questões sobre todos os tópicos fornecidos. Sua única resposta deve ser APENAS JSON válido, sem texto introdutório. O JSON deve ser um objeto contendo um array de "simulados" seguindo o formato: {"simulados": [{"pergunta": "...", "alternativas": ["A) ...", "B) ...", "C) ...", "D) ...", "E) ..."], "resposta_correta": "Letra da alternativa correta (ex: C)"}, ...]}.`;
                 const topicosEtapa = etapa.topicos.map(t => t.tópico).join(", ");
-                const nivel = document.getElementById("nivel").value;
-                const userPromptSimulado = `Crie no mínimo 20 questões de múltipla escolha sobre os seguintes tópicos da etapa: ${topicosEtapa} no nível ${nivel}. As questões devem ter 5 alternativas e o estilo deve ser complexo e abrangente, como em um vestibular/curso técnico.`;
+                const userPromptSimulado = `Crie no mínimo 20 questões de múltipla escolha sobre os seguintes tópicos da etapa: ${topicosEtapa} no nível ${document.getElementById("nivel").value}. Cada questão deve ter 5 alternativas.`;
 
                 const response = await fetch(GROQ_ENDPOINT, {
                     method: "POST",
@@ -1976,8 +1250,7 @@
 
             const simuladosHtml = currentSimuladoEtapa.map((simulado, index) => {
                 const alternativasHtml = simulado.alternativas.map((alt, altIndex) => {
-                    // Tenta garantir que o formato seja A), B), C), etc.
-                    const letra = alt.charAt(0).toUpperCase(); 
+                    const letra = alt.charAt(0);
                     const isSelected = userAnswers[index] === letra;
                     return `<li class="alternativa ${isSelected ? 'selected' : ''}" 
                                 data-question-index="${index}" 
@@ -2024,8 +1297,7 @@
                 if (!bloco) return;
                 
                 const alternativas = bloco.querySelectorAll('.alternativa');
-                // Garante que a resposta correta é a letra maiúscula
-                const respostaCorreta = simulado.resposta_correta.charAt(0).toUpperCase(); 
+                const respostaCorreta = simulado.resposta_correta.charAt(0);
                 const respostaUsuario = userAnswers[index];
                 
                 // Desabilita cliques após a correção
@@ -2091,10 +1363,7 @@
         function resetPatolindoSession() {
             patolindoState.questionsLeft = 5;
             
-            const currentTrilha = currentUser.trilhas[currentUser.currentTrilhaIndex];
-            const theme = currentTrilha ? currentTrilha.tema : null;
-
-            const themeRestriction = theme ? `O ÚNICO TEMA permitida para conversação é: "${theme}". Você deve RECUSAR educadamente perguntas fora deste assunto.` : "Nenhuma trilha de estudos foi gerada. Você deve recusar perguntas até que uma trilha seja gerada.";
+            const themeRestriction = currentTheme ? `O ÚNICO TEMA permitida para conversação é: "${currentTheme}". Você deve RECUSAR educadamente perguntas fora deste assunto.` : "Nenhuma trilha de estudos foi gerada. Você deve recusar perguntas até que uma trilha seja gerada.";
 
             // ⚠️ ATENÇÃO: INSTRUÇÃO DE TUTORIA E EXCEÇÃO INCLUÍDAS AQUI
             patolindoState.history = [{
@@ -2104,7 +1373,7 @@
 
             const chatMessages = document.getElementById("chat-messages");
             // APLICANDO A FORMATAÇÃO PARA A MENSAGEM INICIAL DE BOAS-VINDAS
-            const welcomeText = `Olá! Sou o Patolindo. Você tem **${patolindoState.questionsLeft} perguntas** para tirar dúvidas sobre a sua trilha atual (**${theme || 'NENHUM TEMA'}**).`;
+            const welcomeText = `Olá! Sou o Patolindo. Você tem **${patolindoState.questionsLeft} perguntas** para tirar dúvidas sobre a sua trilha atual (**${currentTheme || 'NENHUM TEMA'}**).`;
             const welcomeHtml = welcomeText.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\n/g, "<br>");
 
             chatMessages.innerHTML = `<p class="bot-message"><span class="bot-bubble">${welcomeHtml}</span></p>`;
@@ -2127,8 +1396,7 @@
             try {
                 patolindoState.history.push({ role: "user", content: question });
 
-                const currentTrilha = currentUser.trilhas[currentUser.currentTrilhaIndex];
-                const roadmapContext = currentTrilha ? JSON.stringify(currentTrilha.etapas) : "Nenhuma trilha de estudos foi gerada ainda.";
+                const roadmapContext = modalState.etapas ? JSON.stringify(modalState.etapas) : "Nenhuma trilha de estudos foi gerada ainda.";
                 
                 // Construa a lista de mensagens, garantindo que o System Prompt esteja no início.
                 const systemContext = {
