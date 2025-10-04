@@ -595,6 +595,8 @@
                     currentTrilhaIndex: currentUser.currentTrilhaIndex
                 };
                 localStorage.setItem(key, JSON.stringify(dataToSave));
+                // Salva o último usuário logado (para auto-login)
+                localStorage.setItem("quackademyLastUser", currentUser.name); 
             }
             updateTrilhasCountDisplay();
         }
@@ -603,8 +605,6 @@
          * Salva a trilha específica e chama saveUserTrilhas.
          */
         function saveTrilhaToPersistence(trilhaObject, index) {
-            if (currentUser.name === 'Convidado') return;
-            
             if (index !== undefined && index !== -1) {
                 currentUser.trilhas[index] = trilhaObject;
             }
@@ -623,6 +623,7 @@
         function showLoginView() { 
             showView('login-view'); 
             document.getElementById('auth-message').innerText = '';
+            localStorage.removeItem("quackademyLastUser");
         }
 
         function showWelcomeScreen() {
@@ -642,7 +643,7 @@
             showView('main-app-view');
             
             // Se o app for recarregado e tiver uma trilha ativa, vai direto para ela
-            if (isReload && currentUser.currentTrilhaIndex !== -1) {
+            if (isReload && currentUser.currentTrilhaIndex !== -1 && currentUser.trilhas[currentUser.currentTrilhaIndex]) {
                 const trilha = currentUser.trilhas[currentUser.currentTrilhaIndex];
                 loadRoadmap(trilha);
             } else {
@@ -666,6 +667,9 @@
             // Simula login/cadastro baseado no username
             loadUserData(username);
             
+            // Salva o nome do usuário para persistência
+            localStorage.setItem("quackademyLastUser", username);
+            
             authMessage.innerText = `Login bem-sucedido para ${username}!`;
             showMainApp(true);
         }
@@ -680,9 +684,8 @@
         }
 
         function handleLogout() {
-            // Limpa o estado da sessão atual
+            // Limpa o estado da sessão atual e remove o auto-login
             currentUser = { name: null, trilhas: [], currentTrilhaIndex: -1 };
-            // Não limpa o localStorage, mantendo os dados salvos para o próximo login
             showLoginView();
         }
 
@@ -1031,7 +1034,7 @@
             
             // Verifica se há trilha ativa e material gerado para contexto
             const trilha = currentUser.trilhas[currentUser.currentTrilhaIndex];
-            const etapaIndex = trilha ? trilha.etapas.findIndex(e => e.material && e.material.length > 10) : -1;
+            const etapa = trilha ? trilha.etapas.find(e => e.material && e.material.length > 10) : null;
             
             if (currentUser.name === 'Convidado' && patolindoState.questionsLeft <= 0) return;
             
@@ -1053,8 +1056,8 @@
             
             // 2. Cria o prompt de contexto
             let materialContext = "Nenhum contexto de etapa disponível. Responda à pergunta do usuário.";
-            if (etapaIndex !== -1) {
-                materialContext = trilha.etapas[etapaIndex].material.substring(0, 1000); // Limita o contexto
+            if (etapa) {
+                materialContext = etapa.material.substring(0, 1000); // Limita o contexto
             }
 
             const systemPrompt = `Você é o Patolindo Bot, um assistente amigável e focado. Sua função é responder DÚVIDAS sobre a etapa de estudo atual. Responda de forma concisa. O contexto da etapa atual é: "${materialContext}". A pergunta do usuário é: "${userMessage}"`;
