@@ -1057,6 +1057,7 @@
                 const data = await response.json();
                 let texto = data?.choices?.[0]?.message?.content || "Erro ao gerar conteúdo.";
 
+                // ⬇️ CORREÇÃO VERIFICADA: Converte **negrito** para <b>negrito</b> e quebra de linha para <br>
                 texto = texto.replace(/\*\*(.*?)\*\*/g, "<b>$1</b>").replace(/\n/g, "<br>");
 
                 let sourceHtml = '';
@@ -1132,12 +1133,12 @@
             const card = currentFlashcards[currentFlashcardIndex];
             const total = currentFlashcards.length;
 
-            // ⚠️ CORREÇÃO APLICADA AQUI: Garante que a pergunta não é nula/undefined antes de usar .replace()
+            // ⬇️ CORREÇÃO VERIFICADA: Converte **negrito** para <b>negrito</b> e quebra de linha para <br>
             const perguntaFormatada = (card.pergunta || '')
                 .replace(/\*\*(.*?)\*\*/g, "<b>$1</b>")
                 .replace(/\n/g, "<br>");
 
-            // ⚠️ CORREÇÃO ANTERIOR APLICADA AQUI: Garante que a resposta não é nula/undefined antes de usar .replace()
+            // ⬇️ CORREÇÃO VERIFICADA: Converte **negrito** para <b>negrito</b> e quebra de linha para <br>
             const respostaFormatada = (card.resposta || '')
                 .replace(/\*\*(.*?)\*\*/g, "<b>$1</b>")
                 .replace(/\n/g, "<br>");
@@ -1370,7 +1371,11 @@
             }]; 
 
             const chatMessages = document.getElementById("chat-messages");
-            chatMessages.innerHTML = `<p class="bot-message"><span class="bot-bubble">Olá! Sou o Patolindo. Você tem **${patolindoState.questionsLeft} perguntas** para tirar dúvidas sobre a sua trilha atual (**${currentTheme || 'NENHUM TEMA'}**).</span></p>`;
+            // ⬇️ APLICANDO A FORMATAÇÃO PARA A MENSAGEM INICIAL DE BOAS-VINDAS
+            const welcomeText = `Olá! Sou o Patolindo. Você tem **${patolindoState.questionsLeft} perguntas** para tirar dúvidas sobre a sua trilha atual (**${currentTheme || 'NENHUM TEMA'}**).`;
+            const welcomeHtml = welcomeText.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\n/g, "<br>");
+
+            chatMessages.innerHTML = `<p class="bot-message"><span class="bot-bubble">${welcomeHtml}</span></p>`;
             chatMessages.scrollTop = chatMessages.scrollHeight; 
             updateSendButtonState();
         }
@@ -1410,7 +1415,7 @@
                 if (!response.ok) { throw new Error(`Erro API: ${response.status}`); }
 
                 const data = await response.json();
-                const answer = data?.choices?.[0]?.message?.content || "Desculpe, não consegui processar a sua pergunta no momento.";
+                const answer = data?.choices?.[0]?.message?.content || "Desculpe, ocorreu um erro de comunicação e não consegui gerar a resposta.";
 
                 appendMessage(answer, 'bot');
                 
@@ -1442,6 +1447,7 @@
                 messageElement.innerHTML = `<span class="user-bubble">${text}</span>`;
             } else {
                 messageElement.className = 'bot-message';
+                // ⬇️ CORREÇÃO PRINCIPAL APLICADA AQUI: Garante que o negrito **Markdown** é convertido para <b>HTML</b>
                 const htmlText = text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\n/g, "<br>");
                 messageElement.innerHTML = `<span class="bot-bubble">${htmlText}</span>`;
             }
