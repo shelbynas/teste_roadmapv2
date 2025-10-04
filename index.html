@@ -1057,7 +1057,7 @@
                 const data = await response.json();
                 let texto = data?.choices?.[0]?.message?.content || "Erro ao gerar conteúdo.";
 
-                // ⬇️ CORREÇÃO VERIFICADA: Converte **negrito** para <b>negrito</b> e quebra de linha para <br>
+                // CORREÇÃO: Converte **negrito** para <b>negrito</b> e quebra de linha para <br>
                 texto = texto.replace(/\*\*(.*?)\*\*/g, "<b>$1</b>").replace(/\n/g, "<br>");
 
                 let sourceHtml = '';
@@ -1133,12 +1133,12 @@
             const card = currentFlashcards[currentFlashcardIndex];
             const total = currentFlashcards.length;
 
-            // ⬇️ CORREÇÃO VERIFICADA: Converte **negrito** para <b>negrito</b> e quebra de linha para <br>
+            // CORREÇÃO: Converte **negrito** para <b>negrito</b> e quebra de linha para <br>
             const perguntaFormatada = (card.pergunta || '')
                 .replace(/\*\*(.*?)\*\*/g, "<b>$1</b>")
                 .replace(/\n/g, "<br>");
 
-            // ⬇️ CORREÇÃO VERIFICADA: Converte **negrito** para <b>negrito</b> e quebra de linha para <br>
+            // CORREÇÃO: Converte **negrito** para <b>negrito</b> e quebra de linha para <br>
             const respostaFormatada = (card.resposta || '')
                 .replace(/\*\*(.*?)\*\*/g, "<b>$1</b>")
                 .replace(/\n/g, "<br>");
@@ -1341,7 +1341,7 @@
         }
 
 
-        // --- LÓGICA DO CHATBOT PATOLINDO (COM RESTRIÇÃO DE TEMA) ---
+        // --- LÓGICA DO CHATBOT PATOLINDO (COM RESTRIÇÃO DE TEMA E TUTORIA) ---
 
         function updateSendButtonState() {
             const input = document.getElementById("chat-input");
@@ -1365,13 +1365,14 @@
             
             const themeRestriction = currentTheme ? `O ÚNICO TEMA permitida para conversação é: "${currentTheme}". Você deve RECUSAR educadamente perguntas fora deste assunto.` : "Nenhuma trilha de estudos foi gerada. Você deve recusar perguntas até que uma trilha seja gerada.";
 
+            // ⚠️ ATENÇÃO: INSTRUÇÃO DE TUTORIA INCLUÍDA AQUI
             patolindoState.history = [{
                 role: "system",
-                content: `Você é o Patolindo, um assistente de estudos prestativo e didático. Sua função é responder a no máximo 5 perguntas do usuário. Seja conciso e focado. ${themeRestriction}`
+                content: `Você é o Patolindo, um assistente de estudos prestativo e didático. Sua função é responder a no máximo 5 perguntas do usuário. Sua **principal diretriz é guiar o usuário à resposta**, nunca a entregando de forma completa e direta. Transforme a resposta em uma dica ou uma pergunta instigante para fomentar o aprendizado ativo. Seja conciso e focado. ${themeRestriction}`
             }]; 
 
             const chatMessages = document.getElementById("chat-messages");
-            // ⬇️ APLICANDO A FORMATAÇÃO PARA A MENSAGEM INICIAL DE BOAS-VINDAS
+            // APLICANDO A FORMATAÇÃO PARA A MENSAGEM INICIAL DE BOAS-VINDAS
             const welcomeText = `Olá! Sou o Patolindo. Você tem **${patolindoState.questionsLeft} perguntas** para tirar dúvidas sobre a sua trilha atual (**${currentTheme || 'NENHUM TEMA'}**).`;
             const welcomeHtml = welcomeText.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\n/g, "<br>");
 
@@ -1447,7 +1448,7 @@
                 messageElement.innerHTML = `<span class="user-bubble">${text}</span>`;
             } else {
                 messageElement.className = 'bot-message';
-                // ⬇️ CORREÇÃO PRINCIPAL APLICADA AQUI: Garante que o negrito **Markdown** é convertido para <b>HTML</b>
+                // CORREÇÃO: Garante que o negrito **Markdown** é convertido para <b>HTML</b>
                 const htmlText = text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\n/g, "<br>");
                 messageElement.innerHTML = `<span class="bot-bubble">${htmlText}</span>`;
             }
