@@ -1108,4 +1108,44 @@
             // Tenta carregar o último nome de usuário logado
             const lastLoggedInUser = localStorage.getItem("quackademyLastUser");
             
-            if (
+            if (lastLoggedInUser) {
+                // Se houver último usuário, carrega os dados dele
+                loadUserData(lastLoggedInUser);
+                showMainApp(true); 
+            } else {
+                 showLoginView(); 
+            }
+
+            // --- LISTENERS DE EVENTOS ---
+            document.getElementById("login-form").addEventListener("submit", handleAuthSubmit);
+            document.getElementById("btnSkipLogin").addEventListener("click", handleSkipLogin);
+            document.getElementById("btnWelcomeContinue").addEventListener("click", showExplanationScreen);
+            document.getElementById("btnExplanationContinue").addEventListener("click", () => showMainApp(false)); 
+            document.getElementById("btnGerar").addEventListener("click", gerarRoadmap);
+            document.getElementById("btnShowTrilhas").addEventListener("click", showUserTrilhasView);
+            document.getElementById("btnBackToGenerator").addEventListener("click", showGeneratorView);
+            document.getElementById("btnLogout").addEventListener("click", handleLogout);
+            
+            document.getElementById("btnMarkComplete").addEventListener("click", markEtapaComplete);
+            document.getElementById("btnBackToRoadmap").addEventListener("click", () => loadRoadmap(currentUser.trilhas[currentUser.currentTrilhaIndex]));
+            document.getElementById("btnBackToMain").addEventListener("click", showGeneratorView);
+
+            // Chatbot Listeners
+            document.getElementById("btnShowChatbot").addEventListener("click", showChatView);
+            document.getElementById("btnBackToRoadmapFromChat").addEventListener("click", () => loadRoadmap(currentUser.trilhas[currentUser.currentTrilhaIndex]));
+            document.getElementById("btnChatSend").addEventListener("click", handleChatSend);
+            document.getElementById("chat-input").addEventListener("keypress", (e) => {
+                if (e.key === 'Enter') {
+                    handleChatSend();
+                }
+            });
+            
+        });
+
+        // Expondo a função para o HTML (onClick na lista de trilhas)
+        window.loadTrilhaByIdx = loadTrilhaByIdx;
+        window.deleteTrilha = deleteTrilha;
+        
+    </script>
+</body>
+</html>
