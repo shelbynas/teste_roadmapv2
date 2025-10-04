@@ -639,6 +639,7 @@
             .modal-actions {
                 text-align: right;
             }
+            /* Ação: Ajustar botões em modal-actions para caberem lado a lado no EtapaView */
             .modal-actions button {
                 width: auto; 
             }
@@ -745,8 +746,9 @@
                     <div id="etapa-container">
                         <h2 id="etapa-titulo"></h2>
                         <div id="etapa-conteudo"></div>
-                        <div class="modal-actions">
-                            <button onclick="showRoadmapView()" class="btn-secondary">⬅ Voltar à Trilha</button>
+                        <div class="modal-actions" style="display: flex; justify-content: space-between; margin-top: 20px;">
+                            <button onclick="showFormView()" class="btn-primary" style="width: 48%; margin-top: 0;">Criar Nova Trilha 🚀</button>
+                            <button onclick="showRoadmapView()" class="btn-secondary" style="width: 48%; margin-top: 0;">⬅ Voltar à Trilha</button>
                         </div>
                     </div>
                 </div>
@@ -817,7 +819,7 @@
         // ===================================================
 
         // ⚠️ CHAVE API INSERIDA AUTOMATICAMENTE ⚠️
-        const API_KEY = "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"; 
+        const API_KEY = "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"; 
         
         const GROQ_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions";
         const MODEL_NAME = "llama-3.1-8b-instant"; 
@@ -976,7 +978,6 @@
             try {
                 currentTheme = tema;
 
-                // 🌟 CORREÇÃO APLICADA AQUI
                 const systemPrompt = `Você é um especialista em educação técnica. Crie um roadmap **detalhado e extenso** com **no mínimo 10 (dez) etapas obrigatórias**. Para cada etapa, liste **no mínimo 4 (quatro) tópicos essenciais** para garantir profundidade no aprendizado. Use mais etapas e tópicos se o tema for complexo. Cada tópico **DEVE incluir uma URL de documentação oficial ou tutorial renomado** no campo 'material'. Sua única resposta deve ser APENAS JSON válido, sem texto introdutório ou blocos de código markdown. O JSON deve seguir este formato: {"etapas": [{"titulo": "Etapa 1: Nome da etapa", "topicos": [{"tópico": "Nome do tópico", "material": "URL de uma fonte externa"}], "atividade": "Descrição da atividade prática"}]}.`;
                 const userPrompt = `Crie um roadmap de estudos detalhado e abrangente para o tema "${tema}" no nível "${nivel}"${objetivo ? ` com objetivo "${objetivo}"` : ""}. Inclua fontes externas de estudo no campo 'material' para todos os tópicos.`;
 
