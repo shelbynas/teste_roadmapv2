@@ -80,21 +80,53 @@
         header {
             background-color: var(--color-primary);
             color: var(--color-secondary);
-            padding: 30px 0;
+            padding: 20px 0; /* Ajustado para acomodar o botão */
             text-align: center;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             position: relative; 
         }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
         
+        .header-info {
+            text-align: left;
+            flex-grow: 1;
+        }
+
         header h1 {
             margin: 0;
-            font-size: 2.5em; 
+            font-size: 2em; /* Reduzido um pouco */
             font-weight: 900;
         }
         
         header p {
             margin: 5px 0 0;
-            font-size: 1.1em; 
+            font-size: 1em; 
+        }
+
+        /* Botão Minhas Trilhas */
+        #btnMinhasTrilhas {
+            background-color: var(--color-primary-dark);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            font-size: 0.9em;
+            white-space: nowrap;
+        }
+
+        #btnMinhasTrilhas:hover {
+            background-color: #A08000;
         }
         
         main {
@@ -227,7 +259,7 @@
             width: 100%;
         }
 
-        #roadmap-container, #etapa-container, #material-container, #flashcard-container, #simulado-etapa-container, #chat-container {
+        #roadmap-container, #etapa-container, #material-container, #flashcard-container, #simulado-etapa-container, #chat-container, #user-trilhas-container {
             background-color: var(--color-card);
             padding: 20px; 
             border-radius: 12px;
@@ -235,7 +267,7 @@
             width: 100%;
         }
 
-        #roadmap-container h2, #etapa-container h2, #material-container h2, #flashcard-container h2, #simulado-etapa-container h2 {
+        #roadmap-container h2, #etapa-container h2, #material-container h2, #flashcard-container h2, #simulado-etapa-container h2, #user-trilhas-container h2 {
             color: var(--color-primary);
             border-bottom: 2px solid #eee;
             padding-bottom: 10px;
@@ -360,6 +392,45 @@
         }
         .modal-actions button {
             width: 100%;
+        }
+
+        /* --- Estilos da Tela Gerenciamento de Trilhas --- */
+        .trilha-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            transition: background-color 0.2s;
+        }
+
+        .trilha-card:hover {
+            background-color: #f0f0f0;
+        }
+
+        .trilha-info {
+            flex-grow: 1;
+        }
+
+        .trilha-info h4 {
+            margin: 0 0 5px 0;
+            color: var(--color-secondary);
+            font-size: 1.1em;
+        }
+
+        .trilha-info p {
+            margin: 0;
+            font-size: 0.9em;
+            color: #6c757d;
+        }
+
+        .trilha-actions button {
+            margin-left: 10px;
+            padding: 8px 12px;
+            font-size: 0.9em;
         }
         
         /* --- Estilos da Tela Flashcard --- */
@@ -697,15 +768,29 @@
 
     <div id="main-app" style="display: none;">
         <header>
-            <div class="container">
-                <h1>Quackademy Trilha de Estudos</h1>
-                <p>O seu guia para o aprendizado acelerado e estruturado.</p>
+            <div class="header-content">
+                <div class="header-info">
+                    <h1>Quackademy Trilha de Estudos</h1>
+                    <p>Usuário: <span id="userNameDisplay">Carregando...</span></p>
+                </div>
+                <button id="btnMinhasTrilhas" onclick="showUserTrilhasView()">Minhas Trilhas (0)</button>
             </div>
         </header>
 
         <main class="container">
             <div id="main-content-area">
                 
+                <div id="user-trilhas-view" class="content-view" style="display: none;">
+                    <div id="user-trilhas-container">
+                        <h2>Gerenciar Trilhas Salvas</h2>
+                        <div id="trilhas-list">
+                            </div>
+                        <div class="modal-actions">
+                            <button onclick="showFormView()" class="btn-success">➕ Criar Nova Trilha</button>
+                        </div>
+                    </div>
+                </div>
+
                 <div id="form-view" class="content-view">
                     <div class="controles">
                         <div class="mascote-area">
@@ -732,12 +817,12 @@
 
                 <div id="roadmap-view" class="content-view" style="display: none;">
                     <div id="roadmap-container">
-                        <h2>Sua Trilha de Estudos</h2>
+                        <h2 id="roadmap-title">Sua Trilha de Estudos</h2>
                         <div id="roadmap" class="roadmap-grid">
                             <p class="placeholder-text">Preencha o formulário e gere sua primeira trilha!</p>
                         </div>
                         <div class="modal-actions" style="text-align: right;">
-                             <button onclick="showFormView()" class="btn-secondary" style="width: auto;">🚀 Criar Nova Trilha / Alterar Tema</button>
+                             <button onclick="showUserTrilhasView()" class="btn-secondary" style="width: auto;">⬅ Voltar a Minhas Trilhas</button>
                         </div>
                     </div>
                 </div>
@@ -823,6 +908,13 @@
         const GROQ_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions";
         const MODEL_NAME = "llama-3.1-8b-instant"; 
 
+        // --- SISTEMA DE USUÁRIO SIMPLES (LOCALSTORAGE) ---
+        let currentUser = {
+            name: 'Usuário Prototipo', 
+            trilhas: [], 
+            currentTrilhaIndex: -1 // Índice da trilha atualmente ativa
+        };
+
         let modalState = {}; 
         let patolindoState = {
             questionsLeft: 5,
@@ -832,9 +924,34 @@
         
         let currentTheme = ""; 
 
+        // --- FUNÇÕES DE PERSISTÊNCIA ---
+
+        function saveUserData() {
+            localStorage.setItem('quackademyUser', JSON.stringify(currentUser));
+            updateTrilhasCountDisplay();
+        }
+
+        function loadUserData() {
+            const data = localStorage.getItem('quackademyUser');
+            if (data) {
+                const loadedUser = JSON.parse(data);
+                // Mescla os dados para garantir que a estrutura atualizada seja mantida
+                currentUser = { ...currentUser, ...loadedUser }; 
+            }
+            updateTrilhasCountDisplay();
+            document.getElementById("userNameDisplay").innerText = currentUser.name;
+        }
+
+        function updateTrilhasCountDisplay() {
+            const count = currentUser.trilhas ? currentUser.trilhas.length : 0;
+            document.getElementById("btnMinhasTrilhas").innerText = `Minhas Trilhas (${count})`;
+        }
+
         // --- CONTROLE DE FLUXO DA INTERFACE ---
 
         document.addEventListener("DOMContentLoaded", () => {
+            loadUserData(); // Carrega os dados ao iniciar
+
             document.getElementById("explanation-screen").style.display = 'none';
             document.getElementById("main-app").style.display = 'none';
             document.getElementById("welcome-screen").style.display = 'flex'; 
@@ -868,12 +985,22 @@
         function showMainApp() {
             document.getElementById("explanation-screen").style.display = 'none';
             document.getElementById("main-app").style.display = 'block';
-            showFormView(); 
+            
+            // Tenta carregar a última trilha ativa ou mostra o formulário/gerenciamento
+            if (currentUser.currentTrilhaIndex !== -1 && currentUser.trilhas[currentUser.currentTrilhaIndex]) {
+                 loadRoadmap(currentUser.trilhas[currentUser.currentTrilhaIndex]);
+                 showRoadmapView();
+            } else if (currentUser.trilhas.length > 0) {
+                 showUserTrilhasView();
+            } else {
+                 showFormView();
+            }
         }
 
         // --- LÓGICA DE NAVEGAÇÃO SPA ---
 
         const viewMap = {
+            "user-trilhas-view": document.getElementById("user-trilhas-view"),
             "form-view": document.getElementById("form-view"),
             "roadmap-view": document.getElementById("roadmap-view"),
             "etapa-view": document.getElementById("etapa-view"),
@@ -893,6 +1020,47 @@
             document.getElementById("chat-button").style.display = isVisible ? 'block' : 'none';
         }
 
+        // --- NOVO: TELA DE GERENCIAMENTO DE TRILHAS ---
+        function showUserTrilhasView() {
+            hideAllViews();
+            window.scrollTo(0, 0); 
+            updateChatButtonVisibility(false); 
+            viewMap["user-trilhas-view"].style.display = 'block';
+
+            const trilhasList = document.getElementById("trilhas-list");
+            trilhasList.innerHTML = '';
+            
+            if (currentUser.trilhas.length === 0) {
+                trilhasList.innerHTML = '<p class="placeholder-text">Nenhuma trilha de estudo salva. Crie uma nova para começar!</p>';
+                return;
+            }
+
+            currentUser.trilhas.forEach((trilha, index) => {
+                const isActive = currentUser.currentTrilhaIndex === index;
+                const card = document.createElement('div');
+                card.className = 'trilha-card';
+                card.style.borderLeft = isActive ? '5px solid var(--color-success)' : '1px solid #ddd';
+
+                const info = `
+                    <div class="trilha-info">
+                        <h4>${trilha.tema} (${trilha.nivel}) ${isActive ? '<b>(ATIVA)</b>' : ''}</h4>
+                        <p>Objetivo: ${trilha.objetivo || 'Não especificado'}</p>
+                        <p>Etapas: ${trilha.etapas.length}</p>
+                    </div>
+                `;
+
+                const actions = `
+                    <div class="trilha-actions">
+                        <button class="btn-success" onclick="loadAndShowRoadmap(${index})" style="${isActive ? 'display: none;' : ''}">Abrir</button>
+                        <button class="btn-danger" onclick="deleteTrilha(${index})">Excluir</button>
+                    </div>
+                `;
+
+                card.innerHTML = info + actions;
+                trilhasList.appendChild(card);
+            });
+        }
+
 
         function showFormView() {
             hideAllViews();
@@ -905,7 +1073,8 @@
             hideAllViews();
             window.scrollTo(0, 0); 
             // Mostra o chat apenas se houver uma trilha carregada
-            updateChatButtonVisibility(modalState.etapas ? true : false);
+            const currentTrilha = currentUser.trilhas[currentUser.currentTrilhaIndex];
+            updateChatButtonVisibility(currentTrilha ? true : false);
             patolindoState.lastView = "roadmap-view";
             viewMap["roadmap-view"].style.display = 'block';
         }
@@ -953,7 +1122,6 @@
             patolindoState.lastView = "material-view";
             viewMap["material-view"].style.display = 'block';
             
-            // O restante da lógica de geração de material continua na função assíncrona showMaterialView
             fetchAndRenderMaterial(topico, material);
         }
 
@@ -964,7 +1132,6 @@
             patolindoState.lastView = "flashcard-view";
             viewMap["flashcard-view"].style.display = 'block';
 
-            // O restante da lógica de geração de flashcard continua na função assíncrona showFlashcardView
             fetchAndRenderFlashcards(topico);
         }
 
@@ -975,7 +1142,6 @@
             patolindoState.lastView = "simulado-etapa-view";
             viewMap["simulado-etapa-view"].style.display = 'block';
             
-            // O restante da lógica de geração de simulado continua na função assíncrona showSimuladoEtapaView
             fetchAndRenderSimuladoEtapa();
         }
 
@@ -994,10 +1160,67 @@
             } else if (patolindoState.lastView === "etapa-view" && modalState.currentEtapa) {
                 showEtapaView(modalState.currentEtapa);
             } else if (patolindoState.lastView === "material-view" && modalState.currentEtapa) {
-                // Se o usuário estava em material, volta para a etapa
                  showEtapaView(modalState.currentEtapa);
             } else {
                 showRoadmapView(); 
+            }
+        }
+
+        // --- FUNÇÕES DE GERENCIAMENTO DE TRILHAS ---
+
+        // Carrega os dados da trilha (roadmap) e exibe o RoadmapView
+        function loadRoadmap(trilha) {
+            if (!trilha || !trilha.etapas) {
+                console.error("Trilha inválida.");
+                return;
+            }
+
+            modalState.etapas = trilha.etapas;
+            currentTheme = trilha.tema;
+            document.getElementById("roadmap-title").innerText = `Sua Trilha: ${trilha.tema} (${trilha.nivel})`;
+            
+            const roadmapDiv = document.getElementById("roadmap");
+            roadmapDiv.innerHTML = "";
+
+            trilha.etapas.forEach(etapa => {
+                const blocoDiv = document.createElement("div");
+                blocoDiv.className = "bloco";
+                blocoDiv.innerText = etapa.titulo;
+                blocoDiv.onclick = () => showEtapaView(etapa);
+                roadmapDiv.appendChild(blocoDiv);
+            });
+
+            // Reativa o chat com o tema correto
+            updateChatButtonVisibility(true); 
+        }
+
+        // Define a trilha ativa, carrega e exibe
+        function loadAndShowRoadmap(index) {
+            if (index >= 0 && index < currentUser.trilhas.length) {
+                currentUser.currentTrilhaIndex = index;
+                loadRoadmap(currentUser.trilhas[index]);
+                saveUserData(); // Salva o índice ativo
+                showRoadmapView();
+            }
+        }
+
+        function deleteTrilha(index) {
+            if (confirm(`Tem certeza que deseja excluir a trilha "${currentUser.trilhas[index].tema}"?`)) {
+                
+                // Remove a trilha
+                currentUser.trilhas.splice(index, 1);
+                
+                // Se a trilha excluída era a ativa, desativa e carrega a próxima ou o gerenciamento
+                if (currentUser.currentTrilhaIndex === index) {
+                    currentUser.currentTrilhaIndex = -1;
+                    showUserTrilhasView(); // Volta para o gerenciamento
+                } else if (currentUser.currentTrilhaIndex > index) {
+                    // Ajusta o índice ativo se a excluída estava antes dele
+                    currentUser.currentTrilhaIndex--;
+                }
+                
+                saveUserData();
+                showUserTrilhasView(); // Atualiza a lista
             }
         }
 
@@ -1019,8 +1242,7 @@
             }
             
             try {
-                currentTheme = tema;
-
+                
                 const systemPrompt = `Você é um especialista em educação técnica. Crie um roadmap **detalhado e extenso** com **no mínimo 10 (dez) etapas obrigatórias**. Para cada etapa, liste **no mínimo 4 (quatro) tópicos essenciais** para garantir profundidade no aprendizado. Use mais etapas e tópicos se o tema for complexo. Cada tópico **DEVE incluir uma URL de documentação oficial ou tutorial renomado** no campo 'material'. Sua única resposta deve ser APENAS JSON válido, sem texto introdutório ou blocos de código markdown. O JSON deve seguir este formato: {"etapas": [{"titulo": "Etapa 1: Nome da etapa", "topicos": [{"tópico": "Nome do tópico", "material": "URL de uma fonte externa"}], "atividade": "Descrição da atividade prática"}]}.`;
                 const userPrompt = `Crie um roadmap de estudos detalhado e abrangente para o tema "${tema}" no nível "${nivel}"${objetivo ? ` com objetivo "${objetivo}"` : ""}. Inclua fontes externas de estudo no campo 'material' para todos os tópicos.`;
 
@@ -1060,18 +1282,22 @@
                 }
                 
                 const etapas = parsed.etapas;
-                modalState.etapas = etapas; 
-                roadmapDiv.innerHTML = "";
-
-                etapas.forEach(etapa => {
-                    const blocoDiv = document.createElement("div");
-                    blocoDiv.className = "bloco";
-                    blocoDiv.innerText = etapa.titulo;
-                    blocoDiv.onclick = () => showEtapaView(etapa);
-                    roadmapDiv.appendChild(blocoDiv);
-                });
                 
-                updateChatButtonVisibility(true); 
+                // ⚠️ NOVO: Salva a nova trilha no array de trilhas do usuário
+                const novaTrilha = {
+                    id: Date.now(),
+                    tema: tema,
+                    nivel: nivel,
+                    objetivo: objetivo,
+                    etapas: etapas
+                };
+
+                currentUser.trilhas.push(novaTrilha);
+                currentUser.currentTrilhaIndex = currentUser.trilhas.length - 1; // Define como a trilha ativa
+                saveUserData(); 
+                
+                // Carrega a trilha recém-criada
+                loadRoadmap(novaTrilha);
 
             } catch (err) {
                 console.error("Erro:", err);
@@ -1081,8 +1307,14 @@
         }
 
         async function fetchAndRenderMaterial(topico, material) {
+            // Recarrega o tema atual da trilha ativa
+            const currentTrilha = currentUser.trilhas[currentUser.currentTrilhaIndex];
+            const currentTheme = currentTrilha ? currentTrilha.tema : "educação";
+            
             const materialConteudo = document.getElementById("material-conteudo");
             materialConteudo.innerHTML = `<p>Carregando conteúdo sobre: <strong>${topico}</strong>...</p>`;
+            document.getElementById("material-titulo").innerText = topico; // Define o título
+
             
             try {
                 // ATUALIZAÇÃO NO PROMPT: Detalhado, longo e requer múltiplas fontes citadas
@@ -1421,7 +1653,10 @@
         function resetPatolindoSession() {
             patolindoState.questionsLeft = 5;
             
-            const themeRestriction = currentTheme ? `O ÚNICO TEMA permitida para conversação é: "${currentTheme}". Você deve RECUSAR educadamente perguntas fora deste assunto.` : "Nenhuma trilha de estudos foi gerada. Você deve recusar perguntas até que uma trilha seja gerada.";
+            const currentTrilha = currentUser.trilhas[currentUser.currentTrilhaIndex];
+            const theme = currentTrilha ? currentTrilha.tema : null;
+
+            const themeRestriction = theme ? `O ÚNICO TEMA permitida para conversação é: "${theme}". Você deve RECUSAR educadamente perguntas fora deste assunto.` : "Nenhuma trilha de estudos foi gerada. Você deve recusar perguntas até que uma trilha seja gerada.";
 
             // ⚠️ ATENÇÃO: INSTRUÇÃO DE TUTORIA E EXCEÇÃO INCLUÍDAS AQUI
             patolindoState.history = [{
@@ -1431,7 +1666,7 @@
 
             const chatMessages = document.getElementById("chat-messages");
             // APLICANDO A FORMATAÇÃO PARA A MENSAGEM INICIAL DE BOAS-VINDAS
-            const welcomeText = `Olá! Sou o Patolindo. Você tem **${patolindoState.questionsLeft} perguntas** para tirar dúvidas sobre a sua trilha atual (**${currentTheme || 'NENHUM TEMA'}**).`;
+            const welcomeText = `Olá! Sou o Patolindo. Você tem **${patolindoState.questionsLeft} perguntas** para tirar dúvidas sobre a sua trilha atual (**${theme || 'NENHUM TEMA'}**).`;
             const welcomeHtml = welcomeText.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\n/g, "<br>");
 
             chatMessages.innerHTML = `<p class="bot-message"><span class="bot-bubble">${welcomeHtml}</span></p>`;
@@ -1454,7 +1689,8 @@
             try {
                 patolindoState.history.push({ role: "user", content: question });
 
-                const roadmapContext = modalState.etapas ? JSON.stringify(modalState.etapas) : "Nenhuma trilha de estudos foi gerada ainda.";
+                const currentTrilha = currentUser.trilhas[currentUser.currentTrilhaIndex];
+                const roadmapContext = currentTrilha ? JSON.stringify(currentTrilha.etapas) : "Nenhuma trilha de estudos foi gerada ainda.";
                 
                 // Construa a lista de mensagens, garantindo que o System Prompt esteja no início.
                 const systemContext = {
