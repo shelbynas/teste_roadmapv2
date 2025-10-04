@@ -3,1460 +3,1109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quackademy - Trilha de Estudos</title>
-    <link rel="icon" href="favicon.ico"> 
-
+    <title>Quackademy</title>
+    
     <style>
-        /* ===================================================
-        // CSS INTEGRADO (com otimizações de responsividade)
-        // =================================================== */
-        
-        /* --- Variáveis de Cor (Paleta Amarela) --- */
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+
         :root {
-            --color-primary: #FFC107; /* Amarelo Vibrante */
-            --color-primary-dark: #E0A800; /* Amarelo Escuro */
-            --color-secondary: #343A40; /* Cinza Escuro para Texto */
-            --color-background: #F8F9FA; /* Fundo Suave */
+            --color-primary: #FFD700; /* Dourado/Amarelo Pato */
+            --color-secondary: #333333;
+            --color-background: #F4F7F9;
             --color-card: #FFFFFF;
-            --color-success: #28A745;
-            --color-danger: #DC3545;
-            --color-light-yellow: #FFFBEA; /* Amarelo muito claro para blocos */
+            --color-text: #333333;
+            --color-light-text: #6c757d;
+            --color-success: #28a745;
+            --color-danger: #dc3545;
+            --color-shadow: rgba(0, 0, 0, 0.1);
+            --color-chat-bg: #e9ecef;
+            --color-patolindo: #007bff;
+            --color-patolindo-light: #f0f8ff;
         }
-        
-        /* --- Estilos Gerais e Tipografia --- */
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--color-background);
-            color: var(--color-secondary);
+
+        * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            line-height: 1.6;
+            font-family: 'Poppins', sans-serif;
         }
-        
-        .container {
-            width: 90%;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        /* --- ESTILOS DAS TELAS INICIAIS (Boas-Vindas e Explicação) --- */
-        .full-screen-message {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            width: 100%;
+
+        body {
             background-color: var(--color-background);
-            text-align: center;
-        }
-        
-        .message-card {
-            background-color: var(--color-card);
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-            max-width: 500px;
-            width: 90%;
-        }
-        
-        .mascote-welcome {
-            width: 200px; 
-            height: 200px; 
-            border-radius: 0; 
-            object-fit: contain;
-            margin-bottom: 20px;
-            border: none;
-            background-color: transparent;
-        }
-        
-        .message-card h2 {
-            color: var(--color-primary-dark);
-            font-size: 2.2em; 
-            margin-top: 10px;
-            margin-bottom: 20px;
-        }
-        
-        /* --- Layout Principal (Header e Main) --- */
-        header {
-            background-color: var(--color-primary);
-            color: var(--color-secondary);
-            padding: 30px 0;
-            text-align: center;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            position: relative; 
-        }
-        
-        header h1 {
-            margin: 0;
-            font-size: 2.5em; 
-            font-weight: 900;
-        }
-        
-        header p {
-            margin: 5px 0 0;
-            font-size: 1.1em; 
-        }
-        
-        main {
-            padding: 20px 0; 
+            color: var(--color-text);
+            min-height: 100vh;
         }
 
-        /* Contêiner para centralizar o formulário e gerenciar a troca de telas */
-        #main-content-area {
-            display: flex;
-            justify-content: center;
-            width: 100%; 
-        }
-        
-        /* --- Controles (Formulário) --- */
-        .controles {
-            background-color: var(--color-card);
-            padding: 20px; 
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-            width: 100%; 
-            max-width: 500px; 
-            height: fit-content; 
-        }
-
-        .mascote-area {
-            text-align: center;
-            margin-bottom: 20px; 
-            padding-bottom: 15px; 
-            border-bottom: 1px solid #eee;
-        }
-        
-        .mascote {
-            width: 120px; 
-            height: 120px; 
-            border-radius: 8px; 
-            object-fit: contain;
-            margin-bottom: 10px;
-            border: none;
-            background-color: transparent; 
-        }
-        
-        .controles h2 {
-            color: var(--color-secondary);
-            font-size: 1.4em; 
-            margin-top: 0;
-        }
-        
-        .controles label {
-            display: block;
-            margin-top: 20px;
-            margin-bottom: 8px;
-            font-weight: bold;
-            color: var(--color-secondary);
-            font-size: 0.95em;
-        }
-        
-        .controles input[type="text"],
-        .controles select,
-        .controles textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            box-sizing: border-box; 
-            resize: vertical;
-            font-size: 0.95em;
-            background-color: white; 
-            color: var(--color-secondary);
-        }
-        
-        .controles textarea {
-            min-height: 100px;
-        }
-        
-        /* --- Botões --- */
-        .btn-primary {
-            display: block;
-            width: 100%;
-            padding: 12px; 
-            margin-top: 25px; 
-            background-color: var(--color-primary);
-            color: var(--color-secondary);
-            border: none;
-            border-radius: 6px;
-            font-size: 1em;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background-color 0.2s, transform 0.1s;
-        }
-        
-        .btn-primary:hover {
-            background-color: var(--color-primary-dark);
-            transform: translateY(-1px);
-        }
-        
-        .btn-secondary {
-            padding: 12px 18px; 
-            font-size: 1em; 
-            background-color: #6c757d;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.2s;
-            font-weight: 500;
-        }
-        
-        .btn-secondary:hover {
-            background-color: #5a6268;
-        }
-
-        .btn-success {
-            padding: 12px 18px; 
-            font-size: 1em; 
-            background-color: var(--color-success);
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.2s;
-            font-weight: 500;
-        }
-        
-        .btn-success:hover {
-            background-color: #1e7e34;
-        }
-        
-        /* --- ESTILOS DAS TELAS DE CONTEÚDO (Roadmap, Etapa, Material, Simulado) --- */
-        .content-view {
-            width: 100%;
-        }
-
-        #roadmap-container, #etapa-container, #material-container, #flashcard-container, #simulado-etapa-container, #chat-container {
-            background-color: var(--color-card);
-            padding: 20px; 
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-            width: 100%;
-        }
-
-        #roadmap-container h2, #etapa-container h2, #material-container h2, #flashcard-container h2, #simulado-etapa-container h2 {
-            color: var(--color-primary);
-            border-bottom: 2px solid #eee;
-            padding-bottom: 10px;
-            margin-top: 0;
-            font-size: 1.6em; 
-        }
-
-        /* --- Estilos da Tela Roadmap --- */
-        .roadmap-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px; 
-            padding-top: 5px;
-        }
-        
-        .bloco {
-            flex: 1 1 100%; 
-            min-width: unset;
-            padding: 20px; 
-            background-color: var(--color-light-yellow); 
-            border: 1px solid var(--color-primary-dark);
-            border-radius: 8px;
-            text-align: center;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.2s;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-            font-size: 0.9em;
-        }
-        
-        .bloco:hover {
-            background-color: var(--color-primary);
-            transform: translateY(-3px);
-            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
-        }
-        
-        .placeholder-text {
-            color: #999;
-            text-align: center;
-            width: 100%;
-            padding: 50px;
-            font-style: italic;
-        }
-        
-        /* --- Estilos da Tela Etapa / Tópicos --- */
-        #etapa-conteudo h3 {
-            color: var(--color-secondary);
-            margin-top: 30px;
-            border-left: 5px solid var(--color-primary);
-            padding-left: 12px;
-        }
-
-        .topicos-container {
-            margin-top: 20px;
-        }
-        
-        .topico-bloco {
-            display: flex;
-            flex-direction: column; 
-            gap: 10px;
-            margin-bottom: 15px;
-            align-items: stretch;
-        }
-        
-        .material-btn {
-            flex: 1; 
-            padding: 10px 15px;
-            background-color: #F0F0F0;
-            border: 1px solid #ddd;
-            color: var(--color-secondary);
-            cursor: pointer;
-            text-align: left; 
-            font-weight: 500;
-            transition: background-color 0.1s;
-            box-shadow: none; 
-            min-width: unset;
-            font-size: 0.9em;
-            border-radius: 6px; 
-            text-decoration: none; 
-            display: block;
-        }
-        
-        .material-btn:hover {
-            background-color: #E0E0E0;
-        }
-
-        /* Novo Botão para Flashcards */
-        .btn-flashcard {
-            flex: 1;
-            background-color: #007bff; /* Azul */
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: background-color 0.2s;
-            font-weight: bold;
-            min-width: unset;
-            font-size: 0.9em;
-        }
-        
-        .btn-flashcard:hover {
-            background-color: #0056b3;
-        }
-
-        /* Botão de Simulado da Etapa */
-        .btn-simulado-etapa {
-            width: 100%;
-            margin-top: 20px;
-            background-color: var(--color-secondary);
-            color: white;
-            padding: 15px;
-            font-size: 1.1em;
-        }
-        .btn-simulado-etapa:hover {
-            background-color: #212529;
-        }
-        
-        .modal-actions {
-            text-align: center; 
-            margin-top: 20px;
-        }
-        .modal-actions button {
-            width: 100%;
-        }
-        
-        /* --- Estilos da Tela Flashcard --- */
-        #flashcard-display {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-top: 20px;
-        }
-
-        .flashcard {
-            width: 100%;
-            max-width: 400px;
-            height: 250px;
-            perspective: 1000px;
-            margin-bottom: 20px;
-        }
-
-        .flashcard-inner {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            text-align: center;
-            transition: transform 0.6s;
-            transform-style: preserve-3d;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-        }
-
-        .flashcard.flipped .flashcard-inner {
-            transform: rotateY(180deg);
-        }
-
-        .flashcard-face {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            border-radius: 10px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+        #app-container {
+            max-width: 900px;
+            margin: 0 auto;
             padding: 20px;
-            box-sizing: border-box;
-            font-size: 1.1em;
-            font-weight: 500;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
 
-        .flashcard-front {
-            background-color: var(--color-primary);
-            color: var(--color-secondary);
-            border: 2px solid var(--color-primary-dark);
-        }
-
-        .flashcard-back {
-            background-color: #F0F0F0;
-            color: var(--color-secondary);
-            border: 2px solid #ddd;
-            transform: rotateY(180deg);
-            text-align: left;
-        }
-
-        .flashcard-navigation {
+        header {
+            background-color: var(--color-card);
+            padding: 15px 20px;
+            border-radius: 12px;
+            box-shadow: var(--color-shadow) 0px 4px 12px;
             display: flex;
             justify-content: space-between;
-            width: 100%;
-            max-width: 400px;
+            align-items: center;
         }
-        
-        /* --- Estilos da Tela Simulado (Etapa) --- */
-        .simulado-area ul {
-            list-style: none;
-            padding: 0;
-            margin-top: 15px;
-        }
-        
-        .simulado-area li.alternativa {
-            padding: 12px;
-            margin-bottom: 10px;
-            border: 1px solid #ced4da;
-            border-radius: 6px;
-            transition: background-color 0.3s;
-            cursor: pointer; 
-            background-color: var(--color-card); 
+
+        header h1 {
             color: var(--color-secondary);
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
         }
         
-        .simulado-area li.alternativa:hover {
-             background-color: #f8f9fa;
+        header .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
         
-        .simulado-area li.selected {
-            background-color: var(--color-primary) !important; 
-            border-color: var(--color-primary-dark) !important;
-        }
-
-        .simulado-area li.incorreta {
-            background-color: #FFF3F3 !important; 
-            color: var(--color-danger) !important;
-            border-color: #F5C6CB !important;
+        header .user-info span {
+            font-weight: 600;
         }
         
-        .simulado-area li.correta-destacada {
-            background-color: #d4edda !important; 
-            color: #155724 !important;
-            border-color: #c3e6cb !important;
-        }
-
-        .simulado-bloco {
-            margin-bottom: 25px;
-            padding: 20px 0;
-        }
-        
-        .simulado-area hr {
-            margin-top: 25px;
-            margin-bottom: 25px;
-            border-top: 1px solid #eee;
-        }
-
-        #simulado-resultado {
-            padding: 20px;
-            background-color: var(--color-light-yellow);
+        /* Botões */
+        button {
+            padding: 10px 15px;
+            border: none;
             border-radius: 8px;
-            margin-top: 20px;
-            text-align: center;
-            border: 2px solid var(--color-primary);
-            font-size: 1.1em;
-            font-weight: bold;
-        }
-        
-        /* --- Estilos do Chatbot Patolindo --- */
-        
-        #chat-button {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background-color: var(--color-primary-dark);
-            color: var(--color-secondary);
-            font-size: 2em;
-            font-weight: bold;
-            border: 3px solid var(--color-primary);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
             cursor: pointer;
-            transition: background-color 0.2s;
-            z-index: 1000;
-            display: none; 
+            font-weight: 600;
+            transition: background-color 0.2s, transform 0.1s;
         }
 
-        #chat-button:hover {
+        .btn-primary {
             background-color: var(--color-primary);
+            color: var(--color-secondary);
+        }
+
+        .btn-primary:hover {
+            background-color: #ffc700;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background-color: var(--color-secondary);
+            color: var(--color-card);
+        }
+
+        .btn-secondary:hover {
+            background-color: #555555;
+            transform: translateY(-1px);
+        }
+
+        .btn-danger {
+            background-color: var(--color-danger);
+            color: var(--color-card);
         }
         
-        #chat-messages {
-            flex-grow: 1;
-            overflow-y: auto;
-            padding: 20px;
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--color-secondary);
+            color: var(--color-secondary);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--color-secondary);
+            color: var(--color-card);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        /* Cards */
+        .card {
+            background-color: var(--color-card);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: var(--color-shadow) 0px 4px 12px;
+        }
+
+        /* Vistas */
+        .view {
+            display: none;
+        }
+        
+        /* Formulários */
+        form {
             display: flex;
             flex-direction: column;
             gap: 15px;
-            background-color: #f7f7f7;
-            border-radius: 0 0 10px 10px;
         }
 
-        .user-message, .bot-message {
-            display: flex;
+        input[type="text"], 
+        input[type="password"], 
+        textarea, 
+        select {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            width: 100%;
+        }
+
+        /* Roadmap */
+        .roadmap-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .roadmap-header h2 {
+            color: var(--color-patolindo);
+            margin-bottom: 5px;
+        }
+
+        .roadmap-list {
+            list-style: none;
+            padding: 0;
             margin: 0;
-        }
-        
-        .user-message {
-            justify-content: flex-end;
-        }
-
-        .bot-message {
-            justify-content: flex-start;
-        }
-
-        .user-bubble {
-            background-color: #007bff;
-            color: white;
-            padding: 10px 15px;
-            border-radius: 15px 15px 0 15px;
-            max-width: 80%;
-            font-size: 0.95em;
-        }
-
-        .bot-bubble {
-            background-color: white;
-            color: var(--color-secondary);
-            padding: 10px 15px;
-            border-radius: 15px 15px 15px 0;
-            max-width: 80%;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            font-size: 0.95em;
-        }
-        
-        #chat-input-area {
             display: flex;
-            padding: 15px 20px;
-            border-top: 1px solid #eee;
-            gap: 10px;
+            flex-direction: column;
+            gap: 15px;
         }
 
-        #chat-input {
-            flex-grow: 1;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 20px;
-            font-size: 1em;
-        }
-
-        #chat-send-button {
-            background-color: var(--color-primary);
-            color: var(--color-secondary);
-            border: none;
-            padding: 10px 15px;
-            border-radius: 20px;
+        .etapa-item {
+            display: flex;
+            align-items: center;
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 5px solid var(--color-patolindo);
             cursor: pointer;
-            font-weight: bold;
             transition: background-color 0.2s;
         }
 
-        #chat-send-button:hover:not(:disabled) {
-            background-color: var(--color-primary-dark);
+        .etapa-item:hover {
+            background-color: #e9ecef;
         }
 
-        #chat-send-button:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
-        }
-
-
-        #chat-container {
+        .etapa-status {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            margin-right: 15px;
             display: flex;
-            flex-direction: column;
-            /* Altura ajustada para caber bem na tela principal */
-            height: 70vh; 
-            min-height: 450px;
-            background-color: var(--color-card);
-            border-radius: 10px;
-            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
+            justify-content: center;
+            align-items: center;
+            color: var(--color-card);
+            font-size: 0.8rem;
+            font-weight: 700;
         }
 
-        #chat-header-view {
-            background-color: var(--color-primary);
-            color: var(--color-secondary);
-            padding: 15px 20px;
-            border-top-left-radius: 10px;
-            border-top-right-radius: 10px;
-            font-weight: bold;
+        .status-pendente { background-color: #ffc107; }
+        .status-em-progresso { background-color: var(--color-patolindo); }
+        .status-concluido { background-color: var(--color-success); }
+
+        .etapa-info h3 {
+            font-size: 1.1rem;
+            margin-bottom: 3px;
+        }
+        
+        .etapa-info p {
+            font-size: 0.9rem;
+            color: var(--color-light-text);
+        }
+
+        /* Etapa View */
+        #etapa-view h2 {
+            color: var(--color-patolindo);
+            margin-bottom: 10px;
+        }
+
+        #material-content {
+            margin-top: 15px;
+            padding: 15px;
+            border: 1px dashed #ccc;
+            border-radius: 8px;
+            white-space: pre-wrap;
+            background-color: var(--color-patolindo-light);
+        }
+        
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: none; /* Escondido por padrão */
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background-color: var(--color-card);
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 90%;
+            width: 500px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+        
+        /* Estilos de Login/Welcome */
+        #login-view, #welcome-view, #explanation-view {
+            text-align: center;
+            padding-top: 100px;
+        }
+        
+        #login-form {
+            max-width: 350px;
+            margin: 20px auto;
+            background: var(--color-card);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: var(--color-shadow) 0px 4px 12px;
+        }
+
+        /* Lista de Trilhas */
+        .trilha-card {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 1.2em;
+            margin-bottom: 10px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
         }
         
-        /* ---------------------------------------------------
-        * MEDIA QUERIES OTIMIZADAS
-        * --------------------------------------------------- */
-        
-        /* Tablet (Telas maiores que 601px) */
-        @media (min-width: 601px) {
-            .bloco {
-                flex: 1 1 calc(50% - 15px); 
-                font-size: 1em;
-            }
-        
-            .topico-bloco {
-                display: flex;
-                flex-direction: row; 
-                gap: 15px;
-            }
-        
-            .modal-actions {
-                text-align: right;
-            }
-            /* Ação: Ajustar botões em modal-actions para caberem lado a lado no EtapaView */
-            .modal-actions button {
-                width: auto; 
-            }
-            
-            /* Ajuste dos botões de tópico */
-            .material-btn, .btn-flashcard {
-                flex: 1 1 50%; 
-            }
-            .topico-bloco {
-                justify-content: space-between;
-            }
+        .trilha-card-info {
+            cursor: pointer;
+            flex-grow: 1;
+            text-align: left;
         }
         
-        /* Desktop (Telas maiores que 993px) */
-        @media (min-width: 993px) {
-            .bloco {
-                flex: 1 1 calc(33.333% - 20px); 
-                padding: 25px;
-            }
+        .trilha-card-info h4 {
+            color: var(--color-patolindo);
+            margin-bottom: 5px;
+        }
+        
+        .trilha-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        /* Patolindo Chat */
+        #chat-view {
+            display: flex;
+            flex-direction: column;
+            height: 70vh;
+        }
+
+        #chat-history {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 15px;
+            background-color: var(--color-chat-bg);
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .chat-message {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 10px;
+            max-width: 80%;
+        }
+
+        .message-user {
+            background-color: var(--color-primary);
+            margin-left: auto;
+            text-align: right;
+        }
+
+        .message-patolindo {
+            background-color: var(--color-card);
+            margin-right: auto;
+            border: 1px solid #ddd;
+        }
+
+        #chat-input-container {
+            display: flex;
+            gap: 10px;
+        }
+        
+        #chat-input {
+            flex-grow: 1;
+        }
+        
+        .disabled-chat {
+            opacity: 0.5;
+            pointer-events: none;
         }
     </style>
 </head>
 <body>
 
-    <section id="welcome-screen" class="full-screen-message">
-        <div class="message-card">
-            <img src="mascote_inicial.png" alt="Mascote Quackademy, o Pato" class="mascote-welcome">
+    <div id="app-container">
+        
+        <div id="login-view" class="view">
+            <div class="card" style="max-width: 400px; margin: 0 auto;">
+                <img src="pato_logo.png" alt="Quackademy Logo" style="width: 100px; margin-bottom: 20px;">
+                <h2>Acesso à Quackademy</h2>
+                <p style="color: var(--color-light-text); margin-bottom: 20px;">Entre com sua conta ou crie uma nova para salvar suas trilhas!</p>
+                
+                <form id="login-form">
+                    <input type="text" id="username" placeholder="Nome de Usuário" required minlength="3">
+                    <input type="password" id="password" placeholder="Senha" required minlength="3">
+                    <button type="submit" class="btn-primary">Entrar / Cadastrar</button>
+                    <p id="auth-message" style="color: var(--color-danger);"></p>
+                </form>
+                
+                <button type="button" id="btnSkipLogin" class="btn-outline" style="margin-top: 15px;">
+                    Continuar como Convidado
+                </button>
+            </div>
+        </div>
+
+        <div id="welcome-view" class="view card">
+            <h2>Bem-vindo(a), <span id="welcomeUserNameDisplay">Usuário!</span></h2>
+            <p style="margin-top: 15px;">Você acaba de acessar a Quackademy, o seu gerador de trilhas de conhecimento personalizado. Vamos te guiar na criação da sua primeira jornada de aprendizado!</p>
+            <div class="btn-group">
+                <button id="btnWelcomeContinue" class="btn-primary">Continuar</button>
+            </div>
+        </div>
+
+        <div id="explanation-view" class="view card">
+            <h2>Como Funciona?</h2>
+            <p style="margin-top: 15px;">1. **Tema:** Você diz o que quer aprender (Ex: "ReactJS", "Cozinha Italiana").</p>
+            <p>2. **Nível:** Escolhe o seu nível (Iniciante, Intermediário, Avançado).</p>
+            <p>3. **Objetivo:** Define o que quer alcançar (Ex: "Fazer um site completo").</p>
+            <p style="margin-bottom: 20px;">O Patolindo Bot (nosso assistente IA) gera uma trilha de aprendizado com etapas detalhadas, materiais de estudo e dicas.</p>
+            <div class="btn-group">
+                <button id="btnExplanationContinue" class="btn-secondary">Começar</button>
+            </div>
+        </div>
+
+        <div id="main-app-view" class="view">
+            <header>
+                <h1>🦆 Quackademy</h1>
+                <div class="user-info">
+                    <span>Olá, <span id="userNameDisplay"></span></span>
+                    <span id="trilhasCountDisplay">0 Trilhas</span>
+                    <button id="btnShowTrilhas" class="btn-outline">Minhas Trilhas</button>
+                    <button id="btnLogout" class="btn-danger">Sair</button>
+                </div>
+            </header>
+
+            <div id="generator-view" class="card">
+                <h2>Crie sua Jornada</h2>
+                <form id="roadmap-form">
+                    <label for="inputTema">Qual tema você quer dominar?</label>
+                    <input type="text" id="inputTema" placeholder="Ex: Programação Python, Design UI/UX" required>
+
+                    <label for="inputNivel">Seu nível atual:</label>
+                    <select id="inputNivel" required>
+                        <option value="">Selecione...</option>
+                        <option value="Iniciante">Iniciante</option>
+                        <option value="Intermediário">Intermediário</option>
+                        <option value="Avançado">Avançado</option>
+                    </select>
+
+                    <label for="inputObjetivo">Qual o seu objetivo principal?</label>
+                    <textarea id="inputObjetivo" placeholder="Ex: Criar um aplicativo de receitas completo com banco de dados." rows="2" required></textarea>
+
+                    <label for="inputReferencia">Materiais de Referência (Opcional)</label>
+                    <textarea id="inputReferencia" placeholder="Cole links, URLs de documentação ou resumos de PDFs aqui para a IA usar como base." rows="3"></textarea>
+                    
+                    <button type="button" id="btnGerar" class="btn-primary">Gerar Minha Trilha</button>
+                </form>
+                
+                <h3 style="margin-top: 30px; text-align: center;">Ou comece com um de nossos Roadmaps Pré-definidos:</h3>
+                <div id="predefined-courses-list" style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px; justify-content: center;">
+                    </div>
+            </div>
+
+            <div id="user-trilhas-view" class="card view">
+                <h2>Minhas Trilhas Salvas</h2>
+                <div id="trilhas-list">
+                    </div>
+                <button id="btnBackToGenerator" class="btn-secondary">Nova Trilha</button>
+            </div>
+
+            <div id="roadmap-view" class="card view">
+                <div class="roadmap-header">
+                    <h2 id="roadmap-title"></h2>
+                    <p id="roadmap-details"></p>
+                </div>
+                
+                <div id="roadmap-etapas-list" class="roadmap-list">
+                    </div>
+                
+                <div class="btn-group">
+                    <button id="btnBackToMain" class="btn-secondary">Voltar (Gerar)</button>
+                    <button id="btnShowChatbot" class="btn-primary">Fale com Patolindo</button>
+                </div>
+            </div>
+
+            <div id="etapa-view" class="card view">
+                <h2 id="etapa-title"></h2>
+                <p id="etapa-status-detail"></p>
+                
+                <div class="btn-group">
+                    <button id="btnMarkComplete" class="btn-success">Marcar como Concluído</button>
+                    <button id="btnBackToRoadmap" class="btn-outline">Voltar à Trilha</button>
+                </div>
+
+                <h3 style="margin-top: 20px;">Material de Estudo:</h3>
+                <div id="material-content">
+                    <p>Carregando material...</p>
+                </div>
+            </div>
             
-            <h2>🦆 Bem-vindo ao Quackademy! </h2>
-            <p>Pare de se afogar em tutoriais soltos. Nós transformamos o caos do aprendizado online em uma <strong>trilha de estudos estruturada e à prova de procrastinação</strong>.</p>
-            <button id="btnWelcomeContinue" class="btn-primary">Descubra como</button>
+            <div id="chat-view" class="card view">
+                <h2>Patolindo Bot 💬</h2>
+                <p id="chat-status" style="margin-bottom: 10px; font-weight: 600;">Consultas restantes: <span id="questionsLeftDisplay">5</span></p>
+
+                <div id="chat-history">
+                    <div class="chat-message message-patolindo">
+                        Olá! Sou o Patolindo. Posso tirar dúvidas sobre a etapa atual da sua trilha.
+                    </div>
+                </div>
+
+                <div id="chat-input-container">
+                    <input type="text" id="chat-input" placeholder="Pergunte sobre a etapa..." maxlength="200">
+                    <button id="btnChatSend" class="btn-primary">Enviar</button>
+                </div>
+                
+                <button id="btnBackToRoadmapFromChat" class="btn-secondary" style="margin-top: 10px;">Voltar à Trilha</button>
+            </div>
+
         </div>
-    </section>
 
-    <section id="explanation-screen" class="full-screen-message" style="display: none;">
-        <div class="message-card">
-            <h2>Sua Jornada de Aprendizado Personalizada</h2>
-            <div style="text-align: left; margin: 20px 0;">
-                
-                <h3>🧠 O Nosso Propósito</h3>
-                <p>
-                    A <strong>Quackademy</strong> foi criada para você que está cansado de apenas copiar e colar. Usamos a IA para criar um plano de estudos único, focado em <strong>atividades práticas</strong> e no <strong>entendimento real</strong>.
-                </p>
-                
-                <h3>⚙️ Como Funciona Nossa Trilha</h3>
-                <ul>
-                    <li><strong>Trilhas Guiadas:</strong> Você informa o tema e o nível, e nossa IA gera um plano de <strong>10+ Etapas</strong> personalizadas.</li>
-                    <li><strong>Flashcards:</strong> Use **flashcards por tópico** para memorizar conceitos chave rapidamente.</li>
-                    <li><strong>Simulado de Etapa:</strong> Faça um **simulado completo por etapa** (20+ questões) para testar sua aplicação do conteúdo.</li>
-                </ul>
+        <div id="loadingModal" class="modal">
+            <div class="modal-content">
+                <img src="pato_animado.gif" alt="Pato Gerando" style="width: 80px; margin-bottom: 15px;">
+                <h3>Processando sua trilha...</h3>
+                <p>O Patolindo Bot está buscando os melhores conteúdos. Aguarde um momento.</p>
             </div>
-            <button id="btnExplanationContinue" class="btn-primary">Começar Minha Trilha 🚀</button>
         </div>
-    </section>
 
-    <div id="main-app" style="display: none;">
-        <header>
-            <div class="container">
-                <h1>Quackademy Trilha de Estudos</h1>
-                <p>O seu guia para o aprendizado acelerado e estruturado.</p>
-            </div>
-        </header>
-
-        <main class="container">
-            <div id="main-content-area">
-                
-                <div id="form-view" class="content-view">
-                    <div class="controles">
-                        <div class="mascote-area">
-                             <img src="mascote.png" alt="Mascote Quackademy" class="mascote">
-                            <h2>Defina seu Desafio</h2>
-                        </div>
-                        
-                        <label for="tema">Tema ou Tecnologia:</label>
-                        <input type="text" id="tema" placeholder="Ex: Programação Python, Cloud Computing, etc." required>
-                        
-                        <label for="nivel">Nível de Dificuldade:</label>
-                        <select id="nivel">
-                            <option value="Iniciante">Iniciante</option>
-                            <option value="Intermediário">Intermediário</option>
-                            <option value="Avançado">Avançado</option>
-                        </select>
-                        
-                        <label for="objetivo">Objetivo Específico (Opcional):</label>
-                        <textarea id="objetivo" placeholder="Ex: Aprender a criar um backend com Node.js e Express."></textarea>
-                        
-                        <button id="btnGerar" class="btn-primary">Gerar Trilha 🚀</button>
-                    </div>
-                </div>
-
-                <div id="roadmap-view" class="content-view" style="display: none;">
-                    <div id="roadmap-container">
-                        <h2>Sua Trilha de Estudos</h2>
-                        <div id="roadmap" class="roadmap-grid">
-                            <p class="placeholder-text">Preencha o formulário e gere sua primeira trilha!</p>
-                        </div>
-                        <div class="modal-actions" style="text-align: right;">
-                             <button onclick="showFormView()" class="btn-secondary" style="width: auto;">🚀 Criar Nova Trilha / Alterar Tema</button>
-                        </div>
-                    </div>
-                </div>
-                
-                <div id="etapa-view" class="content-view" style="display: none;">
-                    <div id="etapa-container">
-                        <h2 id="etapa-titulo"></h2>
-                        <div id="etapa-conteudo"></div>
-                        <div class="modal-actions"> 
-                            <button onclick="showRoadmapView()" class="btn-secondary">⬅ Voltar à Trilha</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="material-view" class="content-view" style="display: none;">
-                    <div id="material-container">
-                        <h2 id="material-titulo"></h2>
-                        <div id="material-conteudo"></div>
-                        <div class="modal-actions">
-                            <button id="btnMaterialVoltar" class="btn-secondary">⬅ Voltar à Etapa</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="flashcard-view" class="content-view" style="display: none;">
-                    <div id="flashcard-container">
-                        <h2 id="flashcard-titulo"></h2>
-                        <div id="flashcard-display">
-                            </div>
-                        <div class="modal-actions">
-                            <button id="btnFlashcardVoltar" class="btn-secondary">⬅ Voltar à Etapa</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="simulado-etapa-view" class="content-view" style="display: none;">
-                    <div id="simulado-etapa-container">
-                        <h2 id="simulado-etapa-titulo"></h2>
-                        <div id="simulado-etapa-conteudo">
-                            </div>
-                        <div id="simulado-etapa-botoes" class="modal-actions">
-                            </div>
-                        <div class="modal-actions">
-                            <button id="btnSimuladoEtapaVoltar" class="btn-secondary">⬅ Voltar à Etapa</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="chat-view" class="content-view" style="display: none;">
-                    <div id="chat-container">
-                        <div id="chat-header-view">
-                            Patolindo - Seu Assistente de Estudos <span id="chat-counter">(5 Perguntas)</span>
-                        </div>
-                        <div id="chat-messages">
-                            </div>
-                        <div id="chat-input-area">
-                            <input type="text" id="chat-input" placeholder="Sua pergunta..." disabled>
-                            <button id="chat-send-button" disabled>Enviar</button>
-                        </div>
-                        <div class="modal-actions" style="border-top: 1px solid #eee; padding-top: 15px;">
-                            <button id="chat-exit-button" class="btn-secondary">⬅ Sair do Chat</button>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </main>
     </div>
 
-    <button id="chat-button" title="Abrir Chatbot Patolindo">
-        🦆
-    </button>
-
-
     <script>
-        // ===================================================
-        // JAVASCRIPT INTEGRADO (script.js)
-        // ===================================================
+        // ===================================================================
+        // JAVASCRIPT COMPLETO E FUNCIONAL (Utilizando LocalStorage)
+        // ===================================================================
 
-        // ⚠️ ATENÇÃO: SUBSTITUA ESTA STRING PELA SUA CHAVE REAL DA GROQ
-        const API_KEY = "gsk_ycKkB85OoNwFFCVcMiujWGdyb3FYzOmuXdQ21pklKTL7IHhDPytpA9"; 
+        // --- CHAVES DE CONFIGURAÇÃO ---
+        
+        // Chave da API Groq (Mantida a partir do seu código anterior)
+        const API_KEY = "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"; 
         
         const GROQ_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions";
         const MODEL_NAME = "llama-3.1-8b-instant"; 
+        
+        // Chave para o Local Storage (Agora usa o username como chave principal)
+        const LOCAL_STORAGE_PREFIX = "quackademyUser_"; 
 
-        let modalState = {}; 
+
+        // --- SISTEMA DE ESTADO GLOBAL ---
+        let currentUser = {
+            name: null, 
+            trilhas: [], 
+            currentTrilhaIndex: -1 
+        };
+        
         let patolindoState = {
             questionsLeft: 5,
             history: [],
             lastView: "roadmap-view" 
         };
         
-        let currentTheme = ""; 
+        // --- DADOS PRÉ-DEFINIDOS ---
+        const preDefinedRoadmaps = [
+            {
+                tema: "JavaScript Básico",
+                nivel: "Iniciante",
+                objetivo: "Dominar variáveis, loops e funções para criar scripts interativos.",
+                etapas: [
+                    { nome: "Fundamentos de Variáveis e Tipos", status: "pendente", material: "" },
+                    { nome: "Estruturas de Controle (If/Else)", status: "pendente", material: "" },
+                    { nome: "Loops (For e While)", status: "pendente", material: "" },
+                    { nome: "Funções e Escopo", status: "pendente", material: "" },
+                    { nome: "Manipulação Básica do DOM", status: "pendente", material: "" }
+                ]
+            },
+            {
+                tema: "Design UI/UX",
+                nivel: "Iniciante",
+                objetivo: "Compreender princípios de usabilidade e criar wireframes simples.",
+                etapas: [
+                    { nome: "O que é UX e UI?", status: "pendente", material: "" },
+                    { nome: "Princípios de Usabilidade", status: "pendente", material: "" },
+                    { nome: "Criação de Personas", status: "pendente", material: "" },
+                    { nome: "Wireframing e Prototipagem", status: "pendente", material: "" }
+                ]
+            }
+        ];
+        
+        // --- FUNÇÕES DE PERSISTÊNCIA (LOCAL STORAGE) ---
 
-        // --- CONTROLE DE FLUXO DA INTERFACE ---
+        /**
+         * Gera a chave única do LocalStorage para o usuário.
+         */
+        function getLocalStorageKey(username) {
+            return LOCAL_STORAGE_PREFIX + username.toLowerCase().replace(/[^a-z0-9]/g, '');
+        }
 
-        document.addEventListener("DOMContentLoaded", () => {
-            document.getElementById("explanation-screen").style.display = 'none';
-            document.getElementById("main-app").style.display = 'none';
-            document.getElementById("welcome-screen").style.display = 'flex'; 
+        /**
+         * Carrega os dados do usuário do LocalStorage.
+         */
+        function loadUserData(username) {
+            currentUser.name = username;
+            document.getElementById("welcomeUserNameDisplay").innerText = username;
 
-            document.getElementById("btnWelcomeContinue").addEventListener("click", showExplanationScreen);
-            document.getElementById("btnExplanationContinue").addEventListener("click", showMainApp);
+            const key = getLocalStorageKey(username);
             
-            document.getElementById("btnGerar").addEventListener("click", gerarRoadmap);
+            // Tenta carregar dados existentes, senão inicia com trilhas vazias
+            const savedData = JSON.parse(localStorage.getItem(key) || '{"trilhas":[], "currentTrilhaIndex":-1}');
+            currentUser.trilhas = savedData.trilhas;
+            currentUser.currentTrilhaIndex = savedData.currentTrilhaIndex;
+
+            document.getElementById("userNameDisplay").innerText = currentUser.name;
+            updateTrilhasCountDisplay();
+        }
+
+        /**
+         * Salva o estado atual das trilhas do usuário atual no LocalStorage.
+         */
+        function saveUserTrilhas() {
+            if (currentUser.name && currentUser.name !== 'Convidado') {
+                const key = getLocalStorageKey(currentUser.name);
+                const dataToSave = {
+                    trilhas: currentUser.trilhas,
+                    currentTrilhaIndex: currentUser.currentTrilhaIndex
+                };
+                localStorage.setItem(key, JSON.stringify(dataToSave));
+            }
+            updateTrilhasCountDisplay();
+        }
+        
+        /**
+         * Salva a trilha específica e chama saveUserTrilhas.
+         */
+        function saveTrilhaToPersistence(trilhaObject, index) {
+            if (currentUser.name === 'Convidado') return;
             
-            // Listeners dos botões de voltar (dentro das telas de conteúdo)
-            document.getElementById("btnMaterialVoltar").addEventListener("click", () => showEtapaView(modalState.currentEtapa));
-            document.getElementById("btnFlashcardVoltar").addEventListener("click", () => showEtapaView(modalState.currentEtapa));
-            document.getElementById("btnSimuladoEtapaVoltar").addEventListener("click", () => showEtapaView(modalState.currentEtapa));
-            
-            // --- Listeners do Chatbot ---
-            document.getElementById("chat-button").addEventListener("click", () => showChatView(patolindoState.lastView));
-            document.getElementById("chat-exit-button").addEventListener("click", () => showLastView());
-            document.getElementById("chat-send-button").addEventListener("click", handleChatSend);
-            document.getElementById("chat-input").addEventListener("keypress", (e) => {
-                if (e.key === 'Enter') handleChatSend();
+            if (index !== undefined && index !== -1) {
+                currentUser.trilhas[index] = trilhaObject;
+            }
+            saveUserTrilhas();
+        }
+
+        // --- FUNÇÕES DE AUTENTICAÇÃO E NAVEGAÇÃO ---
+        
+        function showView(viewId) {
+            document.querySelectorAll('.view').forEach(view => {
+                view.style.display = 'none';
             });
-            document.getElementById("chat-input").addEventListener("input", updateSendButtonState);
-        });
+            document.getElementById(viewId).style.display = 'block';
+        }
 
-        // Funções de transição de telas iniciais
+        function showLoginView() { 
+            showView('login-view'); 
+            document.getElementById('auth-message').innerText = '';
+        }
+
+        function showWelcomeScreen() {
+            document.getElementById("welcomeUserNameDisplay").innerText = currentUser.name;
+            showView('welcome-view');
+        }
+
         function showExplanationScreen() {
-            document.getElementById("welcome-screen").style.display = 'none';
-            document.getElementById("explanation-screen").style.display = 'flex';
+            showView('explanation-view');
         }
 
-        function showMainApp() {
-            document.getElementById("explanation-screen").style.display = 'none';
-            document.getElementById("main-app").style.display = 'block';
-            showFormView(); 
+        function showGeneratorView() {
+            showView('generator-view');
         }
 
-        // --- LÓGICA DE NAVEGAÇÃO SPA ---
-
-        const viewMap = {
-            "form-view": document.getElementById("form-view"),
-            "roadmap-view": document.getElementById("roadmap-view"),
-            "etapa-view": document.getElementById("etapa-view"),
-            "material-view": document.getElementById("material-view"),
-            "flashcard-view": document.getElementById("flashcard-view"), 
-            "simulado-etapa-view": document.getElementById("simulado-etapa-view"), 
-            "chat-view": document.getElementById("chat-view")
-        };
-        
-        function hideAllViews() {
-            for (const key in viewMap) {
-                viewMap[key].style.display = 'none';
-            }
-        }
-
-        function showFormView() {
-            hideAllViews();
-            window.scrollTo(0, 0); 
-            document.getElementById("chat-button").style.display = 'none'; 
-            viewMap["form-view"].style.display = 'flex'; 
-        }
-        
-        function showRoadmapView() {
-            hideAllViews();
-            window.scrollTo(0, 0); 
-            if (modalState.etapas) document.getElementById("chat-button").style.display = 'block'; 
-            patolindoState.lastView = "roadmap-view";
-            viewMap["roadmap-view"].style.display = 'block';
-        }
-
-        function showEtapaView(etapa) {
-            hideAllViews();
-            window.scrollTo(0, 0); 
-            document.getElementById("chat-button").style.display = 'block'; 
-            patolindoState.lastView = "etapa-view";
-            viewMap["etapa-view"].style.display = 'block';
+        function showMainApp(isReload) {
+            showView('main-app-view');
             
-            modalState.currentEtapa = etapa; 
-            document.getElementById("etapa-titulo").innerText = etapa.titulo;
-            
-            const conteudo = etapa.topicos.map(t => {
-                const topicoEscapado = t.tópico.replace(/'/g,"\\'"); 
-                const materialLink = t.material ? t.material.replace(/'/g,"\\'") : "#"; 
-
-                return `
-                    <div class="topico-bloco">
-                        <button class="material-btn" onclick="showMaterialView('${topicoEscapado}', '${materialLink}')">
-                            📚 ${t.tópico}
-                        </button>
-                        <button class="btn-flashcard" onclick="showFlashcardView('${topicoEscapado}')">🧠 Gerar Flashcards</button>
-                    </div>
-                `;
-            }).join("");
-
-            // BOTÃO DE SIMULADO DA ETAPA
-            const simularTudoBtn = `<button class="btn-primary btn-simulado-etapa" onclick="showSimuladoEtapaView()">🎯 Gerar Simulado Completo da Etapa (${etapa.topicos.length} Tópicos)</button>`;
-
-            document.getElementById("etapa-conteudo").innerHTML = `
-                <h3>📌 Atividade prática:</h3>
-                <p>${etapa.atividade}</p>
-                <h3>📚 Tópicos de Estudo:</h3>
-                <div class="topicos-container">${conteudo}</div>
-                ${simularTudoBtn}
-            `;
-        }
-
-        function showChatView() {
-            hideAllViews();
-            window.scrollTo(0, 0); 
-            document.getElementById("chat-button").style.display = 'none'; 
-            viewMap["chat-view"].style.display = 'block';
-            resetPatolindoSession();
-        }
-
-        function showLastView() {
-            if (patolindoState.lastView === "roadmap-view") {
-                showRoadmapView();
-            } else if (patolindoState.lastView === "etapa-view") {
-                showEtapaView(modalState.currentEtapa);
+            // Se o app for recarregado e tiver uma trilha ativa, vai direto para ela
+            if (isReload && currentUser.currentTrilhaIndex !== -1) {
+                const trilha = currentUser.trilhas[currentUser.currentTrilhaIndex];
+                loadRoadmap(trilha);
             } else {
-                showRoadmapView(); 
+                showGeneratorView();
             }
+            renderPreDefinedCourses();
         }
 
-        // --- FUNÇÕES DE CONTEÚDO (Roadmap, Material) ---
-
-        async function gerarRoadmap() {
-            const tema = document.getElementById("tema").value;
-            const nivel = document.getElementById("nivel").value;
-            const objetivo = document.getElementById("objetivo").value;
-            const roadmapDiv = document.getElementById("roadmap");
+        function handleAuthSubmit(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const authMessage = document.getElementById('auth-message');
+            authMessage.innerText = 'Processando...';
             
-            roadmapDiv.innerHTML = "✨ Gerando roadmap...";
-            showRoadmapView(); 
-
-            if (!tema) {
-                roadmapDiv.innerHTML = "⚠️ Por favor, preencha o campo Tema.";
+            if (username.length < 3 || password.length < 3) {
+                authMessage.innerText = "Nome de usuário e senha devem ter no mínimo 3 caracteres.";
                 return;
             }
             
+            // Simula login/cadastro baseado no username
+            loadUserData(username);
+            
+            authMessage.innerText = `Login bem-sucedido para ${username}!`;
+            showMainApp(true);
+        }
+        
+        function handleSkipLogin() {
+            currentUser.name = 'Convidado';
+            currentUser.trilhas = [];
+            currentUser.currentTrilhaIndex = -1;
+            document.getElementById("userNameDisplay").innerText = currentUser.name;
+            updateTrilhasCountDisplay();
+            showWelcomeScreen();
+        }
+
+        function handleLogout() {
+            // Limpa o estado da sessão atual
+            currentUser = { name: null, trilhas: [], currentTrilhaIndex: -1 };
+            // Não limpa o localStorage, mantendo os dados salvos para o próximo login
+            showLoginView();
+        }
+
+        // --- FUNÇÕES DE ROADMAP E ETAPAS ---
+
+        function updateTrilhasCountDisplay() {
+            const count = currentUser.trilhas.length;
+            document.getElementById("trilhasCountDisplay").innerText = `${count} Trilha${count !== 1 ? 's' : ''}`;
+        }
+        
+        function getStatusClass(status) {
+            switch (status) {
+                case 'concluido': return 'status-concluido';
+                case 'em-progresso': return 'status-em-progresso';
+                default: return 'status-pendente';
+            }
+        }
+
+        function loadRoadmap(trilha) {
+            document.getElementById("roadmap-title").innerText = trilha.tema;
+            document.getElementById("roadmap-details").innerText = `Nível: ${trilha.nivel} | Objetivo: ${trilha.objetivo}`;
+            
+            const list = document.getElementById("roadmap-etapas-list");
+            list.innerHTML = '';
+
+            trilha.etapas.forEach((etapa, index) => {
+                const item = document.createElement('li');
+                item.className = 'etapa-item';
+                item.dataset.index = index;
+                item.onclick = () => showEtapaView(index);
+
+                item.innerHTML = `
+                    <div class="etapa-status ${getStatusClass(etapa.status)}">
+                        ${index + 1}
+                    </div>
+                    <div class="etapa-info">
+                        <h3>${etapa.nome}</h3>
+                        <p>Status: ${etapa.status.toUpperCase().replace('-', ' ')}</p>
+                    </div>
+                `;
+                list.appendChild(item);
+            });
+
+            showView('roadmap-view');
+        }
+
+        function showEtapaView(index) {
+            const trilha = currentUser.trilhas[currentUser.currentTrilhaIndex];
+            const etapa = trilha.etapas[index];
+
+            document.getElementById("etapa-title").innerText = etapa.nome;
+            document.getElementById("etapa-status-detail").innerText = `Status: ${etapa.status.toUpperCase().replace('-', ' ')}`;
+            document.getElementById("btnMarkComplete").dataset.index = index;
+            
+            // Mostra ou esconde o botão de conclusão
+            const btnComplete = document.getElementById("btnMarkComplete");
+            if (etapa.status === 'concluido') {
+                btnComplete.style.display = 'none';
+            } else {
+                btnComplete.style.display = 'block';
+                // Muda para 'em-progresso' se for a primeira vez que entra
+                if (etapa.status === 'pendente') {
+                    etapa.status = 'em-progresso';
+                    saveTrilhaToPersistence(trilha, currentUser.currentTrilhaIndex); 
+                }
+            }
+
+            fetchAndRenderMaterial(trilha, index);
+            showView('etapa-view');
+        }
+
+        function markEtapaComplete(e) {
+            const index = parseInt(e.target.dataset.index);
+            const trilha = currentUser.trilhas[currentUser.currentTrilhaIndex];
+            const etapa = trilha.etapas[index];
+
+            etapa.status = 'concluido';
+            e.target.style.display = 'none';
+            document.getElementById("etapa-status-detail").innerText = 'Status: CONCLUÍDO';
+            
+            // Salva o status atualizado no LocalStorage
+            saveTrilhaToPersistence(trilha, currentUser.currentTrilhaIndex); 
+            
+            // Verifica se a trilha toda foi concluída
+            if (trilha.etapas.every(e => e.status === 'concluido')) {
+                alert(`Parabéns! Você concluiu a trilha "${trilha.tema}"!`);
+            }
+        }
+        
+        // --- FUNÇÕES DE RENDERIZAÇÃO E DELEÇÃO DE TRILHAS ---
+        
+        function renderPreDefinedCourses() {
+            const list = document.getElementById("predefined-courses-list");
+            list.innerHTML = '';
+
+            preDefinedRoadmaps.forEach(trilha => {
+                const btn = document.createElement('button');
+                btn.className = 'btn-outline';
+                btn.innerText = `${trilha.tema} (${trilha.nivel})`;
+                
+                // Salva o JSON completo na string para carregar
+                btn.onclick = () => loadPreDefinedRoadmap(JSON.stringify(trilha)); 
+                list.appendChild(btn);
+            });
+        }
+        
+        function showUserTrilhasView() {
+            const list = document.getElementById("trilhas-list");
+            list.innerHTML = '';
+
+            if (currentUser.trilhas.length === 0) {
+                list.innerHTML = '<p style="text-align: center;">Você ainda não tem trilhas salvas.</p>';
+            } else {
+                currentUser.trilhas.forEach((trilha, index) => {
+                    const card = document.createElement('div');
+                    card.className = 'trilha-card';
+                    
+                    const concluidoCount = trilha.etapas.filter(e => e.status === 'concluido').length;
+                    const totalCount = trilha.etapas.length;
+                    
+                    card.innerHTML = `
+                        <div class="trilha-card-info" onclick="loadTrilhaByIdx(${index})">
+                            <h4>${trilha.tema} (${trilha.nivel})</h4>
+                            <p>Progresso: ${concluidoCount} / ${totalCount} etapas</p>
+                        </div>
+                        <div class="trilha-actions">
+                            <button class="btn-danger" onclick="deleteTrilha(${index})">Excluir</button>
+                        </div>
+                    `;
+                    list.appendChild(card);
+                });
+            }
+            showView('user-trilhas-view');
+        }
+        
+        function loadTrilhaByIdx(index) {
+             currentUser.currentTrilhaIndex = index;
+             const trilha = currentUser.trilhas[index];
+             loadRoadmap(trilha);
+             saveUserTrilhas(); // Atualiza o localStorage com o novo índice ativo
+        }
+
+        function deleteTrilha(index) {
+             if (currentUser.name === 'Convidado') return;
+
+             const trilhaToDelete = currentUser.trilhas[index];
+
+            if (confirm(`Tem certeza que deseja excluir a trilha "${trilhaToDelete.tema}"?`)) {
+                
+                // 1. Remove da memória
+                currentUser.trilhas.splice(index, 1);
+                
+                // 2. Ajusta o índice ativo
+                if (currentUser.currentTrilhaIndex === index) {
+                    currentUser.currentTrilhaIndex = -1;
+                } else if (currentUser.currentTrilhaIndex > index) {
+                    currentUser.currentTrilhaIndex--;
+                }
+                
+                saveUserTrilhas();
+                showUserTrilhasView(); 
+            }
+        }
+
+        // --- FUNÇÕES DE GERAÇÃO E API ---
+
+        async function fetchMaterialFromGroq(tema, etapaNome, historicoChat) {
+             const systemPrompt = `Você é um assistente educacional que gera material de estudo detalhado sobre o tópico solicitado. O material deve ser formatado em Markdown, com subtítulos, tópicos e links para recursos externos (URLs fictícias, mas realistas) no final. O material deve ser informativo e prático. Tópico principal: ${tema}. Etapa atual: ${etapaNome}.`;
+
+            const messages = [
+                { role: "system", content: systemPrompt },
+                ...historicoChat
+            ];
+
             try {
-                currentTheme = tema;
-
-                const systemPrompt = `Você é um especialista em educação técnica. Crie um roadmap **detalhado e extenso** com **no mínimo 10 (dez) etapas obrigatórias**. Para cada etapa, liste **no mínimo 4 (quatro) tópicos essenciais** para garantir profundidade no aprendizado. Use mais etapas e tópicos se o tema for complexo. Cada tópico **DEVE incluir uma URL de documentação oficial ou tutorial renomado** no campo 'material'. Sua única resposta deve ser APENAS JSON válido, sem texto introdutório ou blocos de código markdown. O JSON deve seguir este formato: {"etapas": [{"titulo": "Etapa 1: Nome da etapa", "topicos": [{"tópico": "Nome do tópico", "material": "URL de uma fonte externa"}], "atividade": "Descrição da atividade prática"}]}.`;
-                const userPrompt = `Crie um roadmap de estudos detalhado e abrangente para o tema "${tema}" no nível "${nivel}"${objetivo ? ` com objetivo "${objetivo}"` : ""}. Inclua fontes externas de estudo no campo 'material' para todos os tópicos.`;
-
                 const response = await fetch(GROQ_ENDPOINT, {
-                    method: "POST",
+                    method: 'POST',
                     headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${API_KEY}`
+                        'Authorization': `Bearer ${API_KEY}`,
+                        'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ 
+                    body: JSON.stringify({
                         model: MODEL_NAME,
-                        messages: [
-                            { role: "system", content: systemPrompt },
-                            { role: "user", content: userPrompt }
-                        ],
-                        response_format: { type: "json_object" }, 
-                        temperature: 0.7 
-                    })
+                        messages: messages,
+                        temperature: 0.7,
+                        max_tokens: 1500,
+                    }),
                 });
 
                 if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(`Erro API: ${response.status} - ${errorData.error.message || 'Erro desconhecido.'}`);
+                    throw new Error(`Erro na API Groq: ${response.statusText}`);
                 }
 
                 const data = await response.json();
-                let texto = data?.choices?.[0]?.message?.content || "";
-
-                let textoLimpo = texto.trim();
-                let parsed;
-                try {
-                    parsed = JSON.parse(textoLimpo);
-                } catch (e) {
-                    let jsonMatch = textoLimpo.match(/\{[\s\S]*\}/);
-                    if (!jsonMatch) throw new Error("Não foi possível extrair JSON da resposta.");
-                    parsed = JSON.parse(jsonMatch[0]);
-                }
-                
-                const etapas = parsed.etapas;
-                modalState.etapas = etapas; 
-                roadmapDiv.innerHTML = "";
-
-                etapas.forEach(etapa => {
-                    const blocoDiv = document.createElement("div");
-                    blocoDiv.className = "bloco";
-                    blocoDiv.innerText = etapa.titulo;
-                    blocoDiv.onclick = () => showEtapaView(etapa);
-                    roadmapDiv.appendChild(blocoDiv);
-                });
-                
-                document.getElementById("chat-button").style.display = 'block'; 
-
-            } catch (err) {
-                console.error("Erro:", err);
-                roadmapDiv.innerHTML = `⚠️ Erro ao gerar roadmap. Verifique sua chave API e tente novamente. Causa: ${err.message}.`;
-                document.getElementById("chat-button").style.display = 'none'; 
-            }
-        }
-
-        async function showMaterialView(topico, material) {
-            hideAllViews();
-            window.scrollTo(0, 0); 
-            viewMap["material-view"].style.display = 'block';
-            
-            document.getElementById("material-titulo").innerText = topico;
-            const materialConteudo = document.getElementById("material-conteudo");
-            materialConteudo.innerHTML = `<p>Carregando conteúdo sobre: <strong>${topico}</strong>...</p>`;
-            
-            try {
-                const userPromptMaterial = `Explique de forma didática e detalhada o tópico "${topico}".`;
-                const response = await fetch(GROQ_ENDPOINT, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json", "Authorization": `Bearer ${API_KEY}` },
-                    body: JSON.stringify({ model: MODEL_NAME, messages: [{ role: "user", content: userPromptMaterial }], temperature: 0.8 })
-                });
-
-                if (!response.ok) { throw new Error(`Erro API: ${response.status}`); }
-                const data = await response.json();
-                let texto = data?.choices?.[0]?.message?.content || "Erro ao gerar conteúdo.";
-
-                // CORREÇÃO: Converte **negrito** para <b>negrito</b> e quebra de linha para <br>
-                texto = texto.replace(/\*\*(.*?)\*\*/g, "<b>$1</b>").replace(/\n/g, "<br>");
-
-                let sourceHtml = '';
-                if (material && material !== 'null' && material.startsWith('http')) {
-                    sourceHtml = `<h3 style="margin-top: 30px; border-left: 5px solid var(--color-primary); padding-left: 12px;">🔗 Fonte Obrigatória</h3><p><a href="${material}" target="_blank" style="color: var(--color-primary-dark); font-weight: bold;">${material} (Abrirá em nova aba)</a></p>`;
-                } else {
-                    sourceHtml = '<p style="margin-top: 20px; color: #999;">Fonte externa não fornecida pela IA.</p>';
-                }
-
-                materialConteudo.innerHTML = `<div style="max-height:450px; overflow-y:auto; padding-right:10px;">${texto}</div>${sourceHtml}`;
-
-            } catch (err) {
-                console.error("Erro:", err);
-                materialConteudo.innerHTML = `<p>⚠️ Erro ao gerar conteúdo. Causa: ${err.message}.</p>`;
+                return data.choices[0].message.content;
+            } catch (error) {
+                console.error("Erro ao comunicar com a API Groq:", error);
+                return "Desculpe, houve um erro ao buscar o material. Tente novamente mais tarde.";
             }
         }
         
-        // --- FUNÇÕES: FLASHCARDS POR TÓPICO ---
+        async function fetchAndRenderMaterial(trilha, index) {
+            const etapa = trilha.etapas[index];
+            const contentDiv = document.getElementById("material-content");
+            contentDiv.innerHTML = '<p>Carregando material...</p>';
 
-        let currentFlashcards = [];
-        let currentFlashcardIndex = 0;
-
-        async function showFlashcardView(topico) {
-            hideAllViews();
-            window.scrollTo(0, 0); 
-            viewMap["flashcard-view"].style.display = 'block';
-            
-            document.getElementById("flashcard-titulo").innerText = `Flashcards: ${topico}`;
-            const flashcardDisplay = document.getElementById("flashcard-display");
-            flashcardDisplay.innerHTML = `<p>Carregando flashcards sobre: <strong>${topico}</strong>...</p>`;
-
-            try {
-                const systemPromptFlashcard = `Você é um gerador de flashcards. Sua única resposta deve ser APENAS JSON válido, sem texto introdutório. O JSON deve ser um array de **5 objetos**, onde cada objeto tem uma "pergunta" (frente do card) e uma "resposta" (verso do card). O formato deve ser: [{"pergunta": "...", "resposta": "..."}, {"pergunta": "...", ...}].`;
-                const userPromptFlashcard = `Crie 5 flashcards de pergunta e resposta sobre o tópico "${topico}" no nível ${document.getElementById("nivel").value}.`;
-
-                const response = await fetch(GROQ_ENDPOINT, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json", "Authorization": `Bearer ${API_KEY}` },
-                    body: JSON.stringify({ model: MODEL_NAME, messages: [{ role: "system", content: systemPromptFlashcard }, { role: "user", content: userPromptFlashcard }], response_format: { type: "json_object" }, temperature: 0.6 })
-                });
-
-                if (!response.ok) { throw new Error(`Erro API: ${response.status}`); }
-                const data = await response.json();
-                let texto = data?.choices?.[0]?.message?.content || "Erro ao gerar flashcards.";
-
-                let parsedData;
-                try {
-                    parsedData = JSON.parse(texto.trim());
-                } catch (e) {
-                    let jsonMatch = texto.replace(/[\u0000-\u001F\u007F-\u009F]/g, "").trim().match(/\[[\s\S]*\]/);
-                    if (!jsonMatch) throw new Error("Não foi possível extrair JSON dos flashcards.");
-                    parsedData = JSON.parse(jsonMatch[0]);
-                }
-                
-                currentFlashcards = Array.isArray(parsedData) ? parsedData : parsedData.flashcards || [parsedData];
-                currentFlashcardIndex = 0;
-                renderFlashcard();
-
-            } catch (err) {
-                console.error("Erro no Flashcard:", err);
-                flashcardDisplay.innerHTML = `<p>⚠️ Erro ao gerar flashcards. Causa: ${err.message}.</p>`;
-            }
-        }
-        
-        function renderFlashcard() {
-            const flashcardDisplay = document.getElementById("flashcard-display");
-            
-            if (currentFlashcards.length === 0) {
-                flashcardDisplay.innerHTML = "<p>Nenhum flashcard gerado.</p>";
+            // Se o material já foi gerado, usa a versão salva
+            if (etapa.material && etapa.material.length > 10) {
+                contentDiv.innerText = etapa.material;
                 return;
             }
 
-            const card = currentFlashcards[currentFlashcardIndex];
-            const total = currentFlashcards.length;
-
-            // CORREÇÃO: Converte **negrito** para <b>negrito</b> e quebra de linha para <br>
-            const perguntaFormatada = (card.pergunta || '')
-                .replace(/\*\*(.*?)\*\*/g, "<b>$1</b>")
-                .replace(/\n/g, "<br>");
-
-            // CORREÇÃO: Converte **negrito** para <b>negrito</b> e quebra de linha para <br>
-            const respostaFormatada = (card.resposta || '')
-                .replace(/\*\*(.*?)\*\*/g, "<b>$1</b>")
-                .replace(/\n/g, "<br>");
-
-            flashcardDisplay.innerHTML = `
-                <p>Card ${currentFlashcardIndex + 1} de ${total}</p>
-                <div class="flashcard" id="current-flashcard" onclick="toggleFlip()">
-                    <div class="flashcard-inner">
-                        <div class="flashcard-face flashcard-front">
-                            <p style="font-weight: bold;">PERGUNTA:</p>
-                            <p>${perguntaFormatada || 'Erro ao carregar pergunta.'}</p>
-                        </div>
-                        <div class="flashcard-face flashcard-back">
-                            <p style="font-weight: bold;">RESPOSTA:</p>
-                            <p>${respostaFormatada || 'Erro ao carregar resposta.'}</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="flashcard-navigation">
-                    <button class="btn-secondary" onclick="prevFlashcard()" ${currentFlashcardIndex === 0 ? 'disabled' : ''}>Anterior</button>
-                    <button class="btn-success" onclick="nextFlashcard()" ${currentFlashcardIndex === total - 1 ? 'disabled' : ''}>Próximo</button>
-                </div>
-            `;
+            // Se for novo, gera o material
+            const material = await fetchMaterialFromGroq(trilha.tema, etapa.nome, []);
+            
+            contentDiv.innerText = material;
+            
+            // Salva o material gerado na trilha em memória e no LocalStorage
+            etapa.material = material;
+            saveTrilhaToPersistence(trilha, currentUser.currentTrilhaIndex); 
         }
 
-        function toggleFlip() {
-            document.getElementById('current-flashcard').classList.toggle('flipped');
-        }
-
-        function prevFlashcard() {
-            if (currentFlashcardIndex > 0) {
-                currentFlashcardIndex--;
-                // Remove a classe 'flipped' antes de renderizar o novo card para que ele comece virado para frente
-                document.getElementById('current-flashcard').classList.remove('flipped'); 
-                renderFlashcard();
-            }
-        }
-
-        function nextFlashcard() {
-            if (currentFlashcardIndex < currentFlashcards.length - 1) {
-                currentFlashcardIndex++;
-                // Remove a classe 'flipped' antes de renderizar o novo card para que ele comece virado para frente
-                document.getElementById('current-flashcard').classList.remove('flipped'); 
-                renderFlashcard();
-            }
-        }
-
-        // --- FUNÇÕES: SIMULADO POR ETAPA ---
-
-        let currentSimuladoEtapa = [];
-        let userAnswers = {};
-
-        async function showSimuladoEtapaView() {
-            hideAllViews();
-            window.scrollTo(0, 0); 
-            viewMap["simulado-etapa-view"].style.display = 'block';
-
-            const etapa = modalState.currentEtapa;
-            document.getElementById("simulado-etapa-titulo").innerText = `Simulado Completo: ${etapa.titulo}`;
-            const simuladoConteudo = document.getElementById("simulado-etapa-conteudo");
-            const simuladoBotoes = document.getElementById("simulado-etapa-botoes");
-
-            simuladoConteudo.innerHTML = `<p>Carregando simulado de 20+ questões sobre a etapa: <strong>${etapa.titulo}</strong>...</p>`;
-            simuladoBotoes.innerHTML = '';
-            currentSimuladoEtapa = [];
-            userAnswers = {};
-
+        function loadPreDefinedRoadmap(courseString) {
             try {
-                const systemPromptSimulado = `Você é um gerador de questões de múltipla escolha. Crie um simulado de no mínimo 20 (vinte) questões sobre todos os tópicos fornecidos. Sua única resposta deve ser APENAS JSON válido, sem texto introdutório. O JSON deve ser um objeto contendo um array de "simulados" seguindo o formato: {"simulados": [{"pergunta": "...", "alternativas": ["A) ...", "B) ...", "C) ...", "D) ...", "E) ..."], "resposta_correta": "Letra da alternativa correta (ex: C)"}, ...]}.`;
-                const topicosEtapa = etapa.topicos.map(t => t.tópico).join(", ");
-                const userPromptSimulado = `Crie no mínimo 20 questões de múltipla escolha sobre os seguintes tópicos da etapa: ${topicosEtapa} no nível ${document.getElementById("nivel").value}. Cada questão deve ter 5 alternativas.`;
+                const course = JSON.parse(courseString);
+                
+                const novaTrilha = {
+                    tema: course.tema,
+                    nivel: course.nivel,
+                    objetivo: course.objetivo,
+                    etapas: course.etapas
+                };
+                
+                // Adiciona a trilha na lista e a define como ativa
+                currentUser.trilhas.push(novaTrilha);
+                currentUser.currentTrilhaIndex = currentUser.trilhas.length - 1; 
+                saveUserTrilhas(); // Salva no LocalStorage
+                
+                loadRoadmap(novaTrilha);
+
+            } catch (e) {
+                alert("Erro ao carregar o curso pré-definido.");
+                console.error("Erro ao parsear curso pré-definido:", e);
+                showGeneratorView();
+            }
+        }
+
+        async function gerarRoadmap() {
+            const tema = document.getElementById('inputTema').value.trim();
+            const nivel = document.getElementById('inputNivel').value;
+            const objetivo = document.getElementById('inputObjetivo').value.trim();
+            
+            // Captura o novo campo de referência
+            const materialReferencia = document.getElementById('inputReferencia').value.trim();
+            
+            const loadingModal = document.getElementById('loadingModal');
+            
+            if (!tema || !nivel || !objetivo) {
+                alert("Por favor, preencha o Tema, Nível e Objetivo para gerar o roadmap.");
+                return;
+            }
+            
+            loadingModal.style.display = 'flex';
+            
+            try {
+                // Comando de geração para a API Groq
+                let prompt = `Gere uma trilha de aprendizado detalhada sobre o tema: ${tema}, para o nível: ${nivel}. O objetivo é: ${objetivo}.`;
+                
+                // Adiciona a referência ao prompt, se existir
+                if (materialReferencia) {
+                    prompt += ` Use estes materiais de referência/contexto para guiar a estrutura e o conteúdo sugerido, se aplicável: ${materialReferencia}.`;
+                }
+
+                prompt += ` A resposta deve ser um JSON válido no seguinte formato: { "tema": "${tema}", "nivel": "${nivel}", "objetivo": "${objetivo}", "etapas": [ { "nome": "Nome da Etapa 1", "status": "pendente", "material": "" }, ... ] }`;
+
 
                 const response = await fetch(GROQ_ENDPOINT, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json", "Authorization": `Bearer ${API_KEY}` },
-                    body: JSON.stringify({ model: MODEL_NAME, messages: [{ role: "system", content: systemPromptSimulado }, { role: "user", content: userPromptSimulado }], response_format: { type: "json_object" }, temperature: 0.6 })
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${API_KEY}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        model: MODEL_NAME,
+                        messages: [{ role: "user", content: prompt }],
+                        temperature: 0.8,
+                        max_tokens: 2000,
+                    }),
                 });
 
-                if (!response.ok) { throw new Error(`Erro API: ${response.status}`); }
-                const data = await response.json();
-                let texto = data?.choices?.[0]?.message?.content || "Erro ao gerar simulado.";
-
-                let parsedData;
-                try {
-                    parsedData = JSON.parse(texto.trim());
-                } catch (e) {
-                    let jsonMatch = texto.replace(/[\u0000-\u001F\u007F-\u009F]/g, "").trim().match(/\{[\s\S]*\}/);
-                    if (!jsonMatch) throw new Error("Não foi possível extrair JSON do simulado.");
-                    parsedData = JSON.parse(jsonMatch[0]);
+                if (!response.ok) {
+                    throw new Error(`Erro na API Groq: ${response.statusText}`);
                 }
+
+                const data = await response.json();
+                const jsonText = data.choices[0].message.content.trim();
                 
-                currentSimuladoEtapa = parsedData.simulados || [parsedData];
-                renderSimuladoEtapa();
+                // Tenta extrair e limpar o JSON (remove ```json e ```)
+                const cleanedJsonText = jsonText.substring(jsonText.indexOf('{'), jsonText.lastIndexOf('}') + 1);
+                
+                const novaTrilha = JSON.parse(cleanedJsonText);
+                
+                // Adiciona a trilha na lista e a define como ativa
+                currentUser.trilhas.push(novaTrilha);
+                currentUser.currentTrilhaIndex = currentUser.trilhas.length - 1; 
+                saveUserTrilhas(); // Salva no LocalStorage
+                
+                loadRoadmap(novaTrilha);
+                loadingModal.style.display = 'none';
 
-            } catch (err) {
-                console.error("Erro no Simulado Etapa:", err);
-                simuladoConteudo.innerHTML = `<p>⚠️ Erro ao gerar simulado da etapa. Causa: ${err.message}.</p>`;
+            } catch (error) {
+                console.error("Erro na API ou ao processar JSON:", error);
+                loadingModal.style.display = 'none';
+                alert("Ocorreu um erro ao gerar o roadmap. Tente novamente ou ajuste os detalhes.");
             }
-        }
-
-        function renderSimuladoEtapa() {
-            const simuladoConteudo = document.getElementById("simulado-etapa-conteudo");
-            const simuladoBotoes = document.getElementById("simulado-etapa-botoes");
-
-            if (currentSimuladoEtapa.length === 0) {
-                 simuladoConteudo.innerHTML = "<p>Nenhuma questão gerada.</p>";
-                 return;
-            }
-
-            const simuladosHtml = currentSimuladoEtapa.map((simulado, index) => {
-                const alternativasHtml = simulado.alternativas.map((alt, altIndex) => {
-                    const letra = alt.charAt(0);
-                    const isSelected = userAnswers[index] === letra;
-                    return `<li class="alternativa ${isSelected ? 'selected' : ''}" 
-                                data-question-index="${index}" 
-                                data-answer="${letra}" 
-                                onclick="selectAlternative(this)">
-                                ${alt}
-                            </li>`;
-                }).join("");
-
-                return `<div class="simulado-bloco" data-index="${index}">
-                            <h4>Questão ${index + 1}:</h4>
-                            <p><strong>${simulado.pergunta}</strong></p>
-                            <ul>${alternativasHtml}</ul>
-                        </div><hr>`;
-            }).join("");
-
-            simuladoConteudo.innerHTML = `<div class="simulado-area">${simuladosHtml}</div><div id="simulado-resultado" style="display:none;"></div>`;
-            
-            // Botão de corrigir só aparece se o simulado existir
-            simuladoBotoes.innerHTML = `<button class="btn-primary" onclick="corrigirSimuladoEtapa()">Corrigir e Ver Resultado</button>`;
         }
         
-        function selectAlternative(liElement) {
-            const questionIndex = liElement.getAttribute('data-question-index');
-            const answer = liElement.getAttribute('data-answer');
-            const ul = liElement.closest('ul');
-            
-            // Remove seleção de todas as alternativas
-            ul.querySelectorAll('.alternativa').forEach(li => li.classList.remove('selected'));
-            
-            // Adiciona seleção à alternativa clicada
-            liElement.classList.add('selected');
-            
-            // Armazena a resposta do usuário
-            userAnswers[questionIndex] = answer;
+        // --- FUNÇÕES DE CHATBOT ---
+
+        function showChatView() {
+            showView('chat-view');
+            patolindoState.lastView = 'roadmap-view';
+            updateChatStatus();
         }
-
-        function corrigirSimuladoEtapa() {
-            let acertos = 0;
-            const totalQuestoes = currentSimuladoEtapa.length;
-
-            currentSimuladoEtapa.forEach((simulado, index) => {
-                const bloco = document.querySelector(`.simulado-bloco[data-index="${index}"]`);
-                if (!bloco) return;
-                
-                const alternativas = bloco.querySelectorAll('.alternativa');
-                const respostaCorreta = simulado.resposta_correta.charAt(0);
-                const respostaUsuario = userAnswers[index];
-                
-                // Desabilita cliques após a correção
-                alternativas.forEach(li => li.onclick = null);
-
-                alternativas.forEach(li => {
-                    const letra = li.getAttribute('data-answer');
-                    li.classList.remove('selected'); // Remove a seleção temporária
-
-                    if (letra === respostaCorreta) {
-                        li.classList.add('correta-destacada'); // Marca a correta
-                    } 
-                    
-                    if (letra === respostaUsuario && letra !== respostaCorreta) {
-                        li.classList.add('incorreta'); // Marca a incorreta do usuário
-                    }
-                });
-
-                if (respostaUsuario === respostaCorreta) {
-                    acertos++;
-                }
-            });
-
-            const porcentagem = (acertos / totalQuestoes) * 100;
-            const resultadoDiv = document.getElementById('simulado-resultado');
-            
-            resultadoDiv.innerHTML = `
-                <h3>Resultado Final</h3>
-                <p>Total de Questões: <strong>${totalQuestoes}</strong></p>
-                <p>Acertos: <strong style="color: var(--color-success);">${acertos}</strong></p>
-                <p>Erros: <strong style="color: var(--color-danger);">${totalQuestoes - acertos}</strong></p>
-                <p>Taxa de Acerto: <strong style="font-size: 1.5em; color: ${porcentagem >= 70 ? 'var(--color-success)' : 'var(--color-danger)'}">${porcentagem.toFixed(2)}%</strong></p>
-            `;
-            resultadoDiv.style.display = 'block';
-            
-            // Remove o botão de corrigir
-            document.getElementById("simulado-etapa-botoes").innerHTML = '';
-            
-            // Rola para o resultado
-            resultadoDiv.scrollIntoView({ behavior: 'smooth' });
-        }
-
-
-        // --- LÓGICA DO CHATBOT PATOLINDO (COM RESTRIÇÃO DE TEMA E TUTORIA) ---
-
-        function updateSendButtonState() {
-            const input = document.getElementById("chat-input");
-            const sendButton = document.getElementById("chat-send-button");
-            const headerSpan = document.getElementById("chat-counter");
-            
-            sendButton.disabled = input.value.trim() === '' || patolindoState.questionsLeft <= 0;
-            input.disabled = patolindoState.questionsLeft <= 0;
-            
-            headerSpan.innerText = `(${patolindoState.questionsLeft} Perguntas)`;
-
-            if (patolindoState.questionsLeft <= 0) {
-                input.placeholder = "Sessão encerrada. Reabra para começar de novo.";
+        
+        function updateChatStatus() {
+            document.getElementById('questionsLeftDisplay').innerText = patolindoState.questionsLeft;
+            const inputContainer = document.getElementById('chat-input-container');
+            if (currentUser.name === 'Convidado' && patolindoState.questionsLeft <= 0) {
+                inputContainer.classList.add('disabled-chat');
+                document.getElementById('chat-status').style.color = 'var(--color-danger)';
+                document.getElementById('chat-status').innerText = 'Limite de consultas atingido (Convidado). Clique em Sair e entre novamente para resetar.';
             } else {
-                input.placeholder = "Sua pergunta...";
+                inputContainer.classList.remove('disabled-chat');
+                document.getElementById('chat-status').style.color = 'var(--color-text)';
+                document.getElementById('chat-status').innerText = `Consultas restantes: ${patolindoState.questionsLeft}`;
             }
-        }
-
-        function resetPatolindoSession() {
-            patolindoState.questionsLeft = 5;
-            
-            const themeRestriction = currentTheme ? `O ÚNICO TEMA permitida para conversação é: "${currentTheme}". Você deve RECUSAR educadamente perguntas fora deste assunto.` : "Nenhuma trilha de estudos foi gerada. Você deve recusar perguntas até que uma trilha seja gerada.";
-
-            // ⚠️ ATENÇÃO: INSTRUÇÃO DE TUTORIA E EXCEÇÃO INCLUÍDAS AQUI
-            patolindoState.history = [{
-                role: "system",
-                content: `Você é o Patolindo, um assistente de estudos prestativo e didático. Sua função é responder a no máximo 5 perguntas do usuário. Sua **principal diretriz é guiar o usuário à resposta**, nunca a entregando de forma completa e direta. Transforme a resposta em uma dica ou uma pergunta instigante para fomentar o aprendizado ativo. **Você só deve fornecer a resposta completa e direta se o usuário solicitar explicitamente.** Seja conciso e focado. ${themeRestriction}`
-            }]; 
-
-            const chatMessages = document.getElementById("chat-messages");
-            // APLICANDO A FORMATAÇÃO PARA A MENSAGEM INICIAL DE BOAS-VINDAS
-            const welcomeText = `Olá! Sou o Patolindo. Você tem **${patolindoState.questionsLeft} perguntas** para tirar dúvidas sobre a sua trilha atual (**${currentTheme || 'NENHUM TEMA'}**).`;
-            const welcomeHtml = welcomeText.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\n/g, "<br>");
-
-            chatMessages.innerHTML = `<p class="bot-message"><span class="bot-bubble">${welcomeHtml}</span></p>`;
-            chatMessages.scrollTop = chatMessages.scrollHeight; 
-            updateSendButtonState();
         }
 
         async function handleChatSend() {
-            const input = document.getElementById("chat-input");
-            const question = input.value.trim();
+            const input = document.getElementById('chat-input');
+            const userMessage = input.value.trim();
+            if (!userMessage) return;
+
+            const chatHistory = document.getElementById('chat-history');
             
-            if (!question || patolindoState.questionsLeft <= 0) return;
+            // Verifica se há trilha ativa e material gerado para contexto
+            const trilha = currentUser.trilhas[currentUser.currentTrilhaIndex];
+            const etapaIndex = trilha ? trilha.etapas.findIndex(e => e.material && e.material.length > 10) : -1;
             
-            appendMessage(question, 'user');
-            input.value = ''; 
+            if (currentUser.name === 'Convidado' && patolindoState.questionsLeft <= 0) return;
             
-            const sendButton = document.getElementById("chat-send-button");
-            sendButton.disabled = true; 
+            // Adiciona a mensagem do usuário
+            chatHistory.innerHTML += `<div class="chat-message message-user">${userMessage}</div>`;
+            input.value = '';
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+
+            // Adiciona "Digitando..."
+            const typingMessage = document.createElement('div');
+            typingMessage.className = 'chat-message message-patolindo';
+            typingMessage.innerText = 'Patolindo está digitando...';
+            chatHistory.appendChild(typingMessage);
+            chatHistory.scrollTop = chatHistory.scrollHeight;
             
+            // 1. Constrói o histórico
+            const history = patolindoState.history.map(m => ({ role: m.role, content: m.content }));
+            history.push({ role: "user", content: userMessage });
+            
+            // 2. Cria o prompt de contexto
+            let materialContext = "Nenhum contexto de etapa disponível. Responda à pergunta do usuário.";
+            if (etapaIndex !== -1) {
+                materialContext = trilha.etapas[etapaIndex].material.substring(0, 1000); // Limita o contexto
+            }
+
+            const systemPrompt = `Você é o Patolindo Bot, um assistente amigável e focado. Sua função é responder DÚVIDAS sobre a etapa de estudo atual. Responda de forma concisa. O contexto da etapa atual é: "${materialContext}". A pergunta do usuário é: "${userMessage}"`;
+
             try {
-                patolindoState.history.push({ role: "user", content: question });
-
-                const roadmapContext = modalState.etapas ? JSON.stringify(modalState.etapas) : "Nenhuma trilha de estudos foi gerada ainda.";
-                
-                // Construa a lista de mensagens, garantindo que o System Prompt esteja no início.
-                const systemContext = {
-                    role: "system",
-                    content: patolindoState.history[0].content + 
-                             ` O contexto da trilha de estudos atual do usuário é: ${roadmapContext}. Você deve ser rigoroso em se manter APENAS no tema da trilha.`
-                };
-                
-                const messagesToSend = [systemContext].concat(patolindoState.history.slice(1)); 
-
                 const response = await fetch(GROQ_ENDPOINT, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json", "Authorization": `Bearer ${API_KEY}` },
-                    body: JSON.stringify({ model: MODEL_NAME, messages: messagesToSend, temperature: 0.8 })
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${API_KEY}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        model: MODEL_NAME,
+                        messages: [
+                            { role: "system", content: systemPrompt },
+                            ...history 
+                        ],
+                        temperature: 0.8,
+                        max_tokens: 500,
+                    }),
                 });
 
-                if (!response.ok) { throw new Error(`Erro API: ${response.status}`); }
+                if (!response.ok) throw new Error("Erro na API Groq.");
 
                 const data = await response.json();
-                const answer = data?.choices?.[0]?.message?.content || "Desculpe, ocorreu um erro de comunicação e não consegui gerar a resposta.";
+                const patolindoResponse = data.choices[0].message.content.trim();
 
-                appendMessage(answer, 'bot');
+                // 3. Remove "Digitando..." e Adiciona a resposta
+                typingMessage.remove();
+                chatHistory.innerHTML += `<div class="chat-message message-patolindo">${patolindoResponse}</div>`;
+                chatHistory.scrollTop = chatHistory.scrollHeight;
                 
-                // Verifica se a resposta foi uma recusa (para não descontar a pergunta)
-                const isRefusal = answer.toLowerCase().includes("não consigo responder") || answer.toLowerCase().includes("fora do tema");
-
-                if (!isRefusal) {
-                    patolindoState.history.push({ role: "assistant", content: answer });
+                // 4. Atualiza o estado
+                if (currentUser.name === 'Convidado') {
                     patolindoState.questionsLeft--;
-                } else {
-                     patolindoState.history.push({ role: "assistant", content: answer });
                 }
-                
-            } catch (err) {
-                console.error("Erro no Patolindo:", err);
-                appendMessage("Patolindo: Desculpe, ocorreu um erro de comunicação. Tente novamente.", 'bot');
-            } finally {
-                sendButton.disabled = false;
-                updateSendButtonState();
+                patolindoState.history.push({ role: "user", content: userMessage });
+                patolindoState.history.push({ role: "assistant", content: patolindoResponse });
+                updateChatStatus();
+
+            } catch (error) {
+                typingMessage.remove();
+                chatHistory.innerHTML += `<div class="chat-message message-patolindo" style="background-color: var(--color-danger); color: white;">Erro ao responder. Tente novamente.</div>`;
+                console.error("Erro no chatbot:", error);
             }
-        }
-        
-        function appendMessage(text, sender) {
-            const chatMessages = document.getElementById("chat-messages");
-            const messageElement = document.createElement("p");
-            
-            if (sender === 'user') {
-                messageElement.className = 'user-message';
-                messageElement.innerHTML = `<span class="user-bubble">${text}</span>`;
-            } else {
-                messageElement.className = 'bot-message';
-                // CORREÇÃO: Garante que o negrito **Markdown** é convertido para <b>HTML</b>
-                const htmlText = text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\n/g, "<br>");
-                messageElement.innerHTML = `<span class="bot-bubble">${htmlText}</span>`;
-            }
-            
-            chatMessages.appendChild(messageElement);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
         }
 
-    </script>
-</body>
-</html>
+        // --- INICIALIZAÇÃO E LISTENERS ---
+        document.addEventListener("DOMContentLoaded", async () => {
+            
+            // Tenta carregar o último nome de usuário logado
+            const lastLoggedInUser = localStorage.getItem("quackademyLastUser");
+            
+            if (
