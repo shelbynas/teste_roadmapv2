@@ -518,8 +518,12 @@
         const GROQ_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions";
         const MODEL_NAME = "llama-3.1-8b-instant"; 
 
-        // --- INICIALIZAÇÃO DO SUPABASE ---
-        const { createClient } = supabase;
+        // --- INICIALIZAÇÃO DO SUPABASE (CORRIGIDO!) ---
+        
+        // Acesso à função createClient no objeto global injetado pelo SDK
+        const { createClient } = window.supabase; 
+        
+        // Criação do cliente Supabase
         const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 
@@ -621,7 +625,6 @@
 
         /**
          * Salva/Atualiza uma trilha no Supabase (INSERT ou UPDATE).
-         * É chamada sempre que uma trilha é gerada ou uma etapa é concluída.
          */
         async function saveTrilhaToSupabase(trilhaObject) {
             if (currentUser.name === 'Convidado') return;
@@ -1008,6 +1011,37 @@
             await saveTrilhaToSupabase(trilha); 
         }
 
+        async function loadPreDefinedRoadmap(courseString) {
+            try {
+                const course = JSON.parse(courseString);
+                
+                const novaTrilha = {
+                    tema: course.tema,
+                    nivel: course.nivel,
+                    objetivo: course.objetivo,
+                    etapas: course.etapas
+                };
+                
+                if (currentUser.name !== 'Convidado') {
+                    await saveTrilhaToSupabase(novaTrilha); 
+                    
+                    currentUser.trilhas.push(novaTrilha);
+                    currentUser.currentTrilhaIndex = currentUser.trilhas.length - 1; 
+                    saveUserTrilhas();
+                } else {
+                    currentUser.trilhas = [novaTrilha];
+                    currentUser.currentTrilhaIndex = 0;
+                }
+                
+                loadRoadmap(novaTrilha);
+
+            } catch (e) {
+                alert("Erro ao carregar o curso pré-definido.");
+                console.error("Erro ao parsear curso pré-definido:", e);
+                showGeneratorView();
+            }
+        }
+
         async function gerarRoadmap() {
             const tema = document.getElementById('inputTema').value.trim();
             const nivel = document.getElementById('inputNivel').value;
@@ -1046,7 +1080,7 @@
                 const data = await response.json();
                 const jsonText = data.choices[0].message.content.trim();
                 
-                // Tenta extrair e limpar o JSON
+                // Tenta extrair e limpar o JSON (remove ```json e ```)
                 const cleanedJsonText = jsonText.substring(jsonText.indexOf('{'), jsonText.lastIndexOf('}') + 1);
                 
                 const novaTrilha = JSON.parse(cleanedJsonText);
@@ -1083,13 +1117,14 @@
         function updateChatStatus() {
             document.getElementById('questionsLeftDisplay').innerText = patolindoState.questionsLeft;
             const inputContainer = document.getElementById('chat-input-container');
-            if (patolindoState.questionsLeft <= 0 && currentUser.name === 'Convidado') {
+            if (currentUser.name === 'Convidado' && patolindoState.questionsLeft <= 0) {
                 inputContainer.classList.add('disabled-chat');
                 document.getElementById('chat-status').style.color = 'var(--color-danger)';
                 document.getElementById('chat-status').innerText = 'Limite de consultas atingido (Convidado). Faça login para continuar.';
             } else {
                 inputContainer.classList.remove('disabled-chat');
                 document.getElementById('chat-status').style.color = 'var(--color-text)';
+                document.getElementById('chat-status').innerText = `Consultas restantes: ${patolindoState.questionsLeft}`;
             }
         }
 
@@ -1099,9 +1134,11 @@
             if (!userMessage) return;
 
             const chatHistory = document.getElementById('chat-history');
+            
+            // Verifica se há trilha ativa e material gerado para contexto
             const trilha = currentUser.trilhas[currentUser.currentTrilhaIndex];
-            const etapaIndex = trilha.etapas.findIndex(e => e.material && e.material.length > 10); // Usa a etapa ativa
-
+            const etapaIndex = trilha ? trilha.etapas.findIndex(e => e.material && e.material.length > 10) : -1;
+            
             if (currentUser.name === 'Convidado' && patolindoState.questionsLeft <= 0) return;
             
             // Adiciona a mensagem do usuário
@@ -1120,8 +1157,12 @@
             const history = patolindoState.history.map(m => ({ role: m.role, content: m.content }));
             history.push({ role: "user", content: userMessage });
             
-            // 2. Chama a API
-            const materialContext = trilha.etapas[etapaIndex]?.material || "Nenhum material de estudo carregado para contexto.";
+            // 2. Cria o prompt de contexto
+            let materialContext = "Nenhum contexto de etapa disponível. Responda à pergunta do usuário.";
+            if (etapaIndex !== -1) {
+                materialContext = trilha.etapas[etapaIndex].material.substring(0, 1000); // Limita o contexto
+            }
+
             const systemPrompt = `Você é o Patolindo Bot, um assistente amigável e focado. Sua função é responder DÚVIDAS sobre a etapa de estudo atual. Responda de forma concisa. O contexto da etapa atual é: "${materialContext}". A pergunta do usuário é: "${userMessage}"`;
 
             try {
