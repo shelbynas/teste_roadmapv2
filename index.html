@@ -534,7 +534,7 @@
 
     <script>
         // ===================================================================
-        // JAVASCRIPT COMPLETO E FUNCIONAL (Utilizando LocalStorage e Voz)
+        // JAVASCRIPT COMPLETO E CORRIGIDO (Utilizando LocalStorage e Voz)
         // ===================================================================
 
         // --- CHAVES DE CONFIGURAÇÃO ---
@@ -545,7 +545,6 @@
         const GROQ_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions";
         const MODEL_NAME = "llama-3.1-8b-instant"; 
         
-        // Chave para o Local Storage 
         const LOCAL_STORAGE_PREFIX = "quackademyUser_"; 
 
 
@@ -599,11 +598,20 @@
             currentUser.name = username;
             document.getElementById("welcomeUserNameDisplay").innerText = username;
 
-            const key = getLocalStorageKey(username);
-            const savedData = JSON.parse(localStorage.getItem(key) || '{"trilhas":[], "currentTrilhaIndex":-1}');
-            currentUser.trilhas = savedData.trilhas;
-            currentUser.currentTrilhaIndex = savedData.currentTrilhaIndex;
+            try {
+                const key = getLocalStorageKey(username);
+                const savedData = JSON.parse(localStorage.getItem(key) || '{"trilhas":[], "currentTrilhaIndex":-1}');
+                currentUser.trilhas = savedData.trilhas;
+                currentUser.currentTrilhaIndex = savedData.currentTrilhaIndex;
+            } catch (e) {
+                 // Caso LocalStorage esteja corrompido, inicia vazio
+                currentUser.trilhas = [];
+                currentUser.currentTrilhaIndex = -1;
+                console.error("Erro ao carregar dados do LocalStorage:", e);
+            }
+            
 
+            // Atualiza os displays após o carregamento
             document.getElementById("userNameDisplay").innerText = currentUser.name;
             updateTrilhasCountDisplay();
         }
@@ -634,13 +642,18 @@
             document.querySelectorAll('.view').forEach(view => {
                 view.style.display = 'none';
             });
-            document.getElementById(viewId).style.display = 'block';
+            const viewToShow = document.getElementById(viewId);
+            if(viewToShow) {
+                viewToShow.style.display = 'block';
+            } else {
+                 console.error(`View ID "${viewId}" não encontrada.`);
+            }
         }
 
         function showLoginView() { 
             showView('login-view'); 
             document.getElementById('auth-message').innerText = '';
-            localStorage.removeItem("quackademyLastUser");
+            // Não removemos o lastUser aqui para evitar loop
         }
 
         function showWelcomeScreen() {
@@ -681,7 +694,7 @@
             
             loadUserData(username);
             localStorage.setItem("quackademyLastUser", username);
-            showMainApp(true);
+            showWelcomeScreen(); // Mudado para Welcome, para não pular a introdução
         }
         
         function handleSkipLogin() {
@@ -695,6 +708,7 @@
 
         function handleLogout() {
             currentUser = { name: null, trilhas: [], currentTrilhaIndex: -1 };
+            localStorage.removeItem("quackademyLastUser"); // Garante que não faça auto-login
             showLoginView();
         }
 
@@ -743,6 +757,7 @@
 
         function showEtapaView(index) {
             const trilha = currentUser.trilhas[currentUser.currentTrilhaIndex];
+            if (!trilha) return; 
             const etapa = trilha.etapas[index];
 
             document.getElementById("etapa-title").innerText = etapa.nome;
@@ -767,6 +782,8 @@
         function markEtapaComplete(e) {
             const index = parseInt(e.target.dataset.index);
             const trilha = currentUser.trilhas[currentUser.currentTrilhaIndex];
+            if (!trilha) return; 
+
             const etapa = trilha.etapas[index];
 
             etapa.status = 'concluido';
@@ -885,7 +902,7 @@
                 return data.choices[0].message.content;
             } catch (error) {
                 console.error("Erro ao comunicar com a API Groq:", error);
-                return "Desculpe, houve um erro ao buscar o material. Tente novamente mais tarde.";
+                return "Desculpe, houve um erro ao buscar o material. Tente novamente mais tarde. Verifique se sua API KEY está correta e se há saldo.";
             }
         }
         
@@ -985,7 +1002,7 @@
             } catch (error) {
                 console.error("Erro na API ou ao processar JSON:", error);
                 loadingModal.style.display = 'none';
-                alert("Ocorreu um erro ao gerar o roadmap. Tente novamente ou ajuste os detalhes.");
+                alert("Ocorreu um erro ao gerar o roadmap. Tente novamente ou ajuste os detalhes. Verifique a chave da API!");
             }
         }
         
@@ -1000,7 +1017,6 @@
                 
                 const utterance = new SpeechSynthesisUtterance(text);
                 
-                // Tenta definir a voz para Português, se disponível
                 const ptVoice = window.speechSynthesis.getVoices().find(voice => voice.lang.startsWith('pt-'));
                 if (ptVoice) {
                     utterance.voice = ptVoice;
@@ -1023,11 +1039,10 @@
         
         function startSpeechRecognition() {
             if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-                alert("A entrada de voz (microfone) não é suportada neste navegador. Use o Google Chrome ou Edge.");
+                alert("A entrada de voz (microfone) não é suportada neste navegador. Use o Google Chrome ou Edge, e acesse por HTTPS (Vercel) ou localhost.");
                 return;
             }
             
-            // Se já estiver ouvindo, pare.
             if (recognition) {
                 recognition.stop();
                 return;
@@ -1050,7 +1065,6 @@
                 const transcript = event.results[0][0].transcript;
                 inputField.value = transcript;
                 
-                // Oculta a animação e envia a mensagem
                 speakButton.classList.remove('listening');
                 inputField.placeholder = "Pergunte sobre a etapa...";
                 handleChatSend();
@@ -1122,11 +1136,9 @@
             chatHistory.appendChild(typingMessage);
             chatHistory.scrollTop = chatHistory.scrollHeight;
             
-            // 1. Constrói o histórico para o Groq
             const history = patolindoState.history.map(m => ({ role: m.role, content: m.content }));
             history.push({ role: "user", content: userMessage });
             
-            // 2. Cria o prompt de contexto
             let materialContext = "Nenhum contexto de etapa disponível. Responda à pergunta do usuário.";
             if (etapa) {
                 materialContext = etapa.material.substring(0, 1000); 
@@ -1192,9 +1204,11 @@
             const lastLoggedInUser = localStorage.getItem("quackademyLastUser");
             
             if (lastLoggedInUser) {
+                // Tenta fazer auto-login se houver um último usuário salvo
                 loadUserData(lastLoggedInUser);
                 showMainApp(true); 
             } else {
+                 // **CORREÇÃO:** Garante que a tela de login será exibida se não houver dados
                  showLoginView(); 
             }
 
@@ -1209,12 +1223,24 @@
             document.getElementById("btnLogout").addEventListener("click", handleLogout);
             
             document.getElementById("btnMarkComplete").addEventListener("click", markEtapaComplete);
-            document.getElementById("btnBackToRoadmap").addEventListener("click", () => loadRoadmap(currentUser.trilhas[currentUser.currentTrilhaIndex]));
+            document.getElementById("btnBackToRoadmap").addEventListener("click", () => {
+                if(currentUser.currentTrilhaIndex !== -1) {
+                    loadRoadmap(currentUser.trilhas[currentUser.currentTrilhaIndex]);
+                } else {
+                    showGeneratorView();
+                }
+            });
             document.getElementById("btnBackToMain").addEventListener("click", showGeneratorView);
 
             // --- LISTENERS DE CHATBOT (VOZ e TEXTO) ---
             document.getElementById("btnShowChatbot").addEventListener("click", showChatView);
-            document.getElementById("btnBackToRoadmapFromChat").addEventListener("click", () => loadRoadmap(currentUser.trilhas[currentUser.currentTrilhaIndex]));
+            document.getElementById("btnBackToRoadmapFromChat").addEventListener("click", () => {
+                 if(currentUser.currentTrilhaIndex !== -1) {
+                    loadRoadmap(currentUser.trilhas[currentUser.currentTrilhaIndex]);
+                } else {
+                    showGeneratorView();
+                }
+            });
             document.getElementById("btnChatSend").addEventListener("click", handleChatSend);
             document.getElementById("chat-input").addEventListener("keypress", (e) => {
                 if (e.key === 'Enter') {
