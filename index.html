@@ -686,9 +686,9 @@
                 
                 <h3>⚙️ Como Funciona Nossa Trilha</h3>
                 <ul>
-                    <li><strong>Trilhas Guiadas:</strong> Você informa o tema e o nível, e nossa IA gera um plano de <strong>10+ Etapas</strong> personalizadas.</li>
-                    <li><strong>Flashcards:</strong> Use **flashcards por tópico** para memorizar conceitos chave rapidamente.</li>
-                    <li><strong>Simulado de Etapa:</strong> Faça um **simulado completo por etapa** (20+ questões) para testar sua aplicação do conteúdo.</li>
+                    <li><strong>Trilhas Guiadas:</strong> Você informa o tema e o nível, e nossa IA gera um plano de 10+ Etapas personalizadas.</li>
+                    <li><strong>Flashcards:</strong> Use <b>flashcards por tópico</b> para memorizar conceitos chave rapidamente.</li>
+                    <li><strong>Simulado de Etapa:</strong> Faça um <b>simulado completo por etapa</b> (20+ questões) para testar sua aplicação do conteúdo.</li>
                 </ul>
             </div>
             <button id="btnExplanationContinue" class="btn-primary">Começar Minha Trilha 🚀</button>
@@ -817,7 +817,7 @@
         // JAVASCRIPT INTEGRADO (script.js)
         // ===================================================
 
-        // ⚠️ ATENÇÃO: SUBSTITUA ESTA STRING PELA SUA CHAVE REAL DA GROQ
+        // ⚠️ ATENÇÃO: CHAVE DA API ATUALIZADA AQUI
         const API_KEY = "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"; 
         
         const GROQ_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions";
@@ -1365,10 +1365,10 @@
             
             const themeRestriction = currentTheme ? `O ÚNICO TEMA permitida para conversação é: "${currentTheme}". Você deve RECUSAR educadamente perguntas fora deste assunto.` : "Nenhuma trilha de estudos foi gerada. Você deve recusar perguntas até que uma trilha seja gerada.";
 
-            // ⚠️ ATENÇÃO: INSTRUÇÃO DE TUTORIA INCLUÍDA AQUI
+            // ⚠️ ATENÇÃO: INSTRUÇÃO DE TUTORIA E EXCEÇÃO INCLUÍDAS AQUI
             patolindoState.history = [{
                 role: "system",
-                content: `Você é o Patolindo, um assistente de estudos prestativo e didático. Sua função é responder a no máximo 5 perguntas do usuário. Sua **principal diretriz é guiar o usuário à resposta**, nunca a entregando de forma completa e direta. Transforme a resposta em uma dica ou uma pergunta instigante para fomentar o aprendizado ativo. Seja conciso e focado. ${themeRestriction}`
+                content: `Você é o Patolindo, um assistente de estudos prestativo e didático. Sua função é responder a no máximo 5 perguntas do usuário. Sua **principal diretriz é guiar o usuário à resposta**, nunca a entregando de forma completa e direta. Transforme a resposta em uma dica ou uma pergunta instigante para fomentar o aprendizado ativo. **Você só deve fornecer a resposta completa e direta se o usuário solicitar explicitamente.** Seja conciso e focado. ${themeRestriction}`
             }]; 
 
             const chatMessages = document.getElementById("chat-messages");
