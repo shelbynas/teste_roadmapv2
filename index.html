@@ -1272,7 +1272,9 @@
             document.getElementById("btnSkipLogin").addEventListener("click", handleSkipLogin);
             
             document.getElementById("btnWelcomeContinue").addEventListener("click", showExplanationScreen);
-            document.getElementById("btnExplanationContinue").addEventListener("click", showPreDefinedCoursesView); // Nova Transição
+            
+            // 🐛 CORREÇÃO APLICADA AQUI: Chama showMainApp que decide o próximo passo (Cursos Pré-Definidos)
+            document.getElementById("btnExplanationContinue").addEventListener("click", () => showMainApp(false)); 
             
             document.getElementById("btnGerar").addEventListener("click", gerarRoadmap);
             
@@ -1311,9 +1313,6 @@
             if (isExistingUser && currentUser.trilhas.length > 0) {
                  // Usuário recorrente vai para o Gerenciamento
                  showUserTrilhasView();
-            } else if (currentUser.name === 'Convidado') {
-                 // Convidado vai direto para os cursos pré-definidos (ou criar)
-                 showPreDefinedCoursesView();
             } else {
                  // Usuário novo ou sem trilhas vai para a lista de cursos
                  showPreDefinedCoursesView();
@@ -1413,6 +1412,9 @@
 
         // --- NOVO: TELA DE CURSOS PRÉ-DEFINIDOS ---
         function showPreDefinedCoursesView() {
+            // Garante que a aplicação principal está visível antes de exibir a sub-tela
+            document.getElementById("main-app").style.display = 'block'; 
+            
             hideAllViews();
             window.scrollTo(0, 0); 
             updateChatButtonVisibility(false); 
