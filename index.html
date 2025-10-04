@@ -39,7 +39,7 @@
             margin: 0 auto;
         }
         
-        /* --- ESTILOS DAS TELAS INICIAIS (Boas-Vindas e Explicação) --- */
+        /* --- ESTILOS DAS TELAS INICIAIS (Login, Boas-Vindas e Explicação) --- */
         .full-screen-message {
             display: flex;
             justify-content: center;
@@ -74,6 +74,47 @@
             font-size: 2.2em; 
             margin-top: 10px;
             margin-bottom: 20px;
+        }
+
+        /* --- Estilos do Formulário de Login --- */
+        #login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        #login-form label {
+            text-align: left;
+            font-weight: bold;
+        }
+
+        #login-form input {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 1em;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .login-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        #btnAuthSubmit {
+            background-color: var(--color-primary);
+            color: var(--color-secondary);
+            font-weight: bold;
+        }
+
+        #btnSkipLogin {
+            background-color: #6c757d;
+            color: white;
+            font-weight: bold;
         }
         
         /* --- Layout Principal (Header e Main) --- */
@@ -722,6 +763,14 @@
             .topico-bloco {
                 justify-content: space-between;
             }
+
+            .login-actions {
+                flex-direction: row;
+                justify-content: space-between;
+            }
+            .login-actions button {
+                width: calc(50% - 5px);
+            }
         }
         
         /* Desktop (Telas maiores que 993px) */
@@ -734,8 +783,31 @@
     </style>
 </head>
 <body>
+    
+    <section id="login-screen" class="full-screen-message" style="display: flex;">
+        <div class="message-card">
+            <img src="mascote_inicial.png" alt="Mascote Quackademy, o Pato" class="mascote-welcome">
+            
+            <h2>👋 Entre ou Crie sua Conta</h2>
+            <p>Faça login para salvar suas trilhas de estudo e gerenciar seu progresso.</p>
 
-    <section id="welcome-screen" class="full-screen-message">
+            <form id="login-form">
+                <label for="username">Nome de Usuário:</label>
+                <input type="text" id="username" placeholder="Seu nome de usuário" required>
+                
+                <label for="password">Senha (Apenas para Simulação):</label>
+                <input type="password" id="password" placeholder="Sua senha (protótipo)" required>
+
+                <div class="login-actions">
+                    <button type="submit" id="btnAuthSubmit" class="btn-primary">Entrar / Cadastrar</button>
+                    <button type="button" id="btnSkipLogin" class="btn-secondary">Pular Login (Modo Convidado)</button>
+                </div>
+            </form>
+            <p id="auth-message" style="color: var(--color-danger); margin-top: 10px;"></p>
+        </div>
+    </section>
+
+    <section id="welcome-screen" class="full-screen-message" style="display: none;">
         <div class="message-card">
             <img src="mascote_inicial.png" alt="Mascote Quackademy, o Pato" class="mascote-welcome">
             
@@ -791,7 +863,7 @@
                     </div>
                 </div>
 
-                <div id="form-view" class="content-view">
+                <div id="form-view" class="content-view" style="display: none;">
                     <div class="controles">
                         <div class="mascote-area">
                              <img src="mascote.png" alt="Mascote Quackademy" class="mascote">
@@ -910,10 +982,12 @@
 
         // --- SISTEMA DE USUÁRIO SIMPLES (LOCALSTORAGE) ---
         let currentUser = {
-            name: 'Usuário Prototipo', 
-            trilhas: [], 
+            name: null, // Será o nome de usuário ou 'Convidado'
+            trilhas: [], // Array de todas as trilhas (roadmaps) salvas
             currentTrilhaIndex: -1 // Índice da trilha atualmente ativa
         };
+        // Armazena todos os dados de usuários no localStorage
+        let allUsersData = {}; 
 
         let modalState = {}; 
         let patolindoState = {
@@ -922,40 +996,124 @@
             lastView: "roadmap-view" 
         };
         
-        let currentTheme = ""; 
+        // --- FUNÇÕES DE PERSISTÊNCIA (ATUALIZADAS) ---
 
-        // --- FUNÇÕES DE PERSISTÊNCIA ---
+        function loadAllUsersData() {
+            const data = localStorage.getItem('quackademyAllUsers');
+            if (data) {
+                allUsersData = JSON.parse(data);
+            }
+        }
 
-        function saveUserData() {
-            localStorage.setItem('quackademyUser', JSON.stringify(currentUser));
+        function saveAllUsersData() {
+            localStorage.setItem('quackademyAllUsers', JSON.stringify(allUsersData));
+        }
+
+        function loadUserData(username) {
+            loadAllUsersData();
+            
+            if (!username || username === 'Convidado') {
+                currentUser.name = 'Convidado';
+                currentUser.trilhas = []; // Convidado não tem trilhas salvas
+                currentUser.currentTrilhaIndex = -1;
+            } else {
+                const userData = allUsersData[username];
+                if (userData) {
+                    currentUser.name = username;
+                    currentUser.trilhas = userData.trilhas || [];
+                    currentUser.currentTrilhaIndex = userData.currentTrilhaIndex || -1;
+                } else {
+                    // Novo usuário
+                    currentUser.name = username;
+                    currentUser.trilhas = [];
+                    currentUser.currentTrilhaIndex = -1;
+                    allUsersData[username] = { trilhas: [], currentTrilhaIndex: -1, password: document.getElementById('password').value }; // Salva a senha (simulada)
+                }
+            }
+            document.getElementById("userNameDisplay").innerText = currentUser.name;
+            saveAllUsersData();
             updateTrilhasCountDisplay();
         }
 
-        function loadUserData() {
-            const data = localStorage.getItem('quackademyUser');
-            if (data) {
-                const loadedUser = JSON.parse(data);
-                // Mescla os dados para garantir que a estrutura atualizada seja mantida
-                currentUser = { ...currentUser, ...loadedUser }; 
+        function saveUserTrilhas() {
+            if (currentUser.name && currentUser.name !== 'Convidado') {
+                allUsersData[currentUser.name] = {
+                    ...allUsersData[currentUser.name],
+                    trilhas: currentUser.trilhas,
+                    currentTrilhaIndex: currentUser.currentTrilhaIndex
+                };
+                saveAllUsersData();
             }
             updateTrilhasCountDisplay();
-            document.getElementById("userNameDisplay").innerText = currentUser.name;
         }
 
         function updateTrilhasCountDisplay() {
             const count = currentUser.trilhas ? currentUser.trilhas.length : 0;
             document.getElementById("btnMinhasTrilhas").innerText = `Minhas Trilhas (${count})`;
+            document.getElementById("btnMinhasTrilhas").disabled = currentUser.name === 'Convidado';
         }
 
-        // --- CONTROLE DE FLUXO DA INTERFACE ---
+        // --- NOVO: CONTROLE DE FLUXO DE AUTENTICAÇÃO ---
 
-        document.addEventListener("DOMContentLoaded", () => {
-            loadUserData(); // Carrega os dados ao iniciar
-
+        function showLoginView() {
+            document.getElementById("login-screen").style.display = 'flex';
+            document.getElementById("welcome-screen").style.display = 'none';
             document.getElementById("explanation-screen").style.display = 'none';
             document.getElementById("main-app").style.display = 'none';
-            document.getElementById("welcome-screen").style.display = 'flex'; 
+            // Garante que os campos de login estejam limpos
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('auth-message').innerText = '';
+        }
 
+        function handleAuthSubmit(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const authMessage = document.getElementById('auth-message');
+            
+            if (username.toLowerCase() === 'convidado') {
+                authMessage.innerText = "Nome de usuário 'Convidado' é reservado. Escolha outro.";
+                return;
+            }
+            if (username.length < 3 || password.length < 3) {
+                authMessage.innerText = "Nome de usuário e senha devem ter no mínimo 3 caracteres.";
+                return;
+            }
+
+            loadAllUsersData(); 
+
+            if (allUsersData[username]) {
+                // Tenta Logar
+                if (allUsersData[username].password === password) {
+                    loadUserData(username);
+                    authMessage.innerText = `Login bem-sucedido para ${username}!`;
+                    showWelcomeScreen();
+                } else {
+                    authMessage.innerText = "Senha incorreta.";
+                }
+            } else {
+                // Tenta Cadastrar (Simulado)
+                loadUserData(username); // Cria o novo usuário
+                authMessage.innerText = `Usuário ${username} criado e logado!`;
+                showWelcomeScreen();
+            }
+        }
+        
+        function handleSkipLogin() {
+            loadUserData('Convidado');
+            showWelcomeScreen();
+        }
+
+        // --- Listeners de Transição Inicial ---
+
+        document.addEventListener("DOMContentLoaded", () => {
+            
+            showLoginView(); // Inicia na tela de login
+
+            document.getElementById("login-form").addEventListener("submit", handleAuthSubmit);
+            document.getElementById("btnSkipLogin").addEventListener("click", handleSkipLogin);
+            
             document.getElementById("btnWelcomeContinue").addEventListener("click", showExplanationScreen);
             document.getElementById("btnExplanationContinue").addEventListener("click", showMainApp);
             
@@ -977,6 +1135,11 @@
         });
 
         // Funções de transição de telas iniciais
+        function showWelcomeScreen() {
+            document.getElementById("login-screen").style.display = 'none';
+            document.getElementById("welcome-screen").style.display = 'flex';
+        }
+
         function showExplanationScreen() {
             document.getElementById("welcome-screen").style.display = 'none';
             document.getElementById("explanation-screen").style.display = 'flex';
@@ -987,7 +1150,9 @@
             document.getElementById("main-app").style.display = 'block';
             
             // Tenta carregar a última trilha ativa ou mostra o formulário/gerenciamento
-            if (currentUser.currentTrilhaIndex !== -1 && currentUser.trilhas[currentUser.currentTrilhaIndex]) {
+            if (currentUser.name === 'Convidado') {
+                 showFormView(); // Convidado vai direto criar uma trilha (não salva)
+            } else if (currentUser.currentTrilhaIndex !== -1 && currentUser.trilhas[currentUser.currentTrilhaIndex]) {
                  loadRoadmap(currentUser.trilhas[currentUser.currentTrilhaIndex]);
                  showRoadmapView();
             } else if (currentUser.trilhas.length > 0) {
@@ -1017,14 +1182,26 @@
         }
         
         function updateChatButtonVisibility(isVisible) {
-            document.getElementById("chat-button").style.display = isVisible ? 'block' : 'none';
+            // Esconde o chat se o usuário for convidado
+            if (currentUser.name === 'Convidado') {
+                document.getElementById("chat-button").style.display = 'none';
+            } else {
+                 document.getElementById("chat-button").style.display = isVisible ? 'block' : 'none';
+            }
         }
 
-        // --- NOVO: TELA DE GERENCIAMENTO DE TRILHAS ---
+        // --- TELA DE GERENCIAMENTO DE TRILHAS ---
         function showUserTrilhasView() {
             hideAllViews();
             window.scrollTo(0, 0); 
             updateChatButtonVisibility(false); 
+
+            if (currentUser.name === 'Convidado') {
+                // Força o Convidado a criar uma nova, pois não há gerenciamento
+                showFormView();
+                return;
+            }
+            
             viewMap["user-trilhas-view"].style.display = 'block';
 
             const trilhasList = document.getElementById("trilhas-list");
@@ -1072,9 +1249,9 @@
         function showRoadmapView() {
             hideAllViews();
             window.scrollTo(0, 0); 
-            // Mostra o chat apenas se houver uma trilha carregada
+            // Mostra o chat apenas se houver uma trilha carregada e não for convidado
             const currentTrilha = currentUser.trilhas[currentUser.currentTrilhaIndex];
-            updateChatButtonVisibility(currentTrilha ? true : false);
+            updateChatButtonVisibility(currentTrilha && currentUser.name !== 'Convidado' ? true : false);
             patolindoState.lastView = "roadmap-view";
             viewMap["roadmap-view"].style.display = 'block';
         }
@@ -1166,7 +1343,7 @@
             }
         }
 
-        // --- FUNÇÕES DE GERENCIAMENTO DE TRILHAS ---
+        // --- FUNÇÕES DE GERENCIAMENTO DE TRILHAS (ATUALIZADAS PARA CONVIDADO) ---
 
         // Carrega os dados da trilha (roadmap) e exibe o RoadmapView
         function loadRoadmap(trilha) {
@@ -1177,7 +1354,7 @@
 
             modalState.etapas = trilha.etapas;
             currentTheme = trilha.tema;
-            document.getElementById("roadmap-title").innerText = `Sua Trilha: ${trilha.tema} (${trilha.nivel})`;
+            document.getElementById("roadmap-title").innerText = `Sua Trilha: ${trilha.tema} (${trilha.nivel}) - ${currentUser.name}`;
             
             const roadmapDiv = document.getElementById("roadmap");
             roadmapDiv.innerHTML = "";
@@ -1196,15 +1373,19 @@
 
         // Define a trilha ativa, carrega e exibe
         function loadAndShowRoadmap(index) {
+            if (currentUser.name === 'Convidado') return; // Convidado não tem trilhas salvas
+
             if (index >= 0 && index < currentUser.trilhas.length) {
                 currentUser.currentTrilhaIndex = index;
                 loadRoadmap(currentUser.trilhas[index]);
-                saveUserData(); // Salva o índice ativo
+                saveUserTrilhas(); // Salva o índice ativo
                 showRoadmapView();
             }
         }
 
         function deleteTrilha(index) {
+             if (currentUser.name === 'Convidado') return;
+
             if (confirm(`Tem certeza que deseja excluir a trilha "${currentUser.trilhas[index].tema}"?`)) {
                 
                 // Remove a trilha
@@ -1219,7 +1400,7 @@
                     currentUser.currentTrilhaIndex--;
                 }
                 
-                saveUserData();
+                saveUserTrilhas();
                 showUserTrilhasView(); // Atualiza a lista
             }
         }
@@ -1241,6 +1422,9 @@
                 return;
             }
             
+            // Simulação de delay para a API, pois o processo é lento
+            await new Promise(resolve => setTimeout(resolve, 500)); 
+
             try {
                 
                 const systemPrompt = `Você é um especialista em educação técnica. Crie um roadmap **detalhado e extenso** com **no mínimo 10 (dez) etapas obrigatórias**. Para cada etapa, liste **no mínimo 4 (quatro) tópicos essenciais** para garantir profundidade no aprendizado. Use mais etapas e tópicos se o tema for complexo. Cada tópico **DEVE incluir uma URL de documentação oficial ou tutorial renomado** no campo 'material'. Sua única resposta deve ser APENAS JSON válido, sem texto introdutório ou blocos de código markdown. O JSON deve seguir este formato: {"etapas": [{"titulo": "Etapa 1: Nome da etapa", "topicos": [{"tópico": "Nome do tópico", "material": "URL de uma fonte externa"}], "atividade": "Descrição da atividade prática"}]}.`;
@@ -1283,7 +1467,7 @@
                 
                 const etapas = parsed.etapas;
                 
-                // ⚠️ NOVO: Salva a nova trilha no array de trilhas do usuário
+                // Salva ou carrega a nova trilha no contexto do usuário
                 const novaTrilha = {
                     id: Date.now(),
                     tema: tema,
@@ -1291,10 +1475,17 @@
                     objetivo: objetivo,
                     etapas: etapas
                 };
-
-                currentUser.trilhas.push(novaTrilha);
-                currentUser.currentTrilhaIndex = currentUser.trilhas.length - 1; // Define como a trilha ativa
-                saveUserData(); 
+                
+                // Se o usuário não for convidado, a trilha é salva
+                if (currentUser.name !== 'Convidado') {
+                    currentUser.trilhas.push(novaTrilha);
+                    currentUser.currentTrilhaIndex = currentUser.trilhas.length - 1; // Define como a trilha ativa
+                    saveUserTrilhas(); 
+                } else {
+                     // Usuário Convidado: usa uma estrutura temporária
+                    currentUser.trilhas = [novaTrilha];
+                    currentUser.currentTrilhaIndex = 0;
+                }
                 
                 // Carrega a trilha recém-criada
                 loadRoadmap(novaTrilha);
@@ -1305,6 +1496,9 @@
                 updateChatButtonVisibility(false); 
             }
         }
+
+        // O restante das funções (fetchAndRenderMaterial, fetchAndRenderFlashcards, etc.) 
+        // permanecem inalteradas, pois dependem apenas da `currentUser.trilhas[currentUser.currentTrilhaIndex]`
 
         async function fetchAndRenderMaterial(topico, material) {
             // Recarrega o tema atual da trilha ativa
