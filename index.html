@@ -1506,14 +1506,14 @@
             const password = document.getElementById('password').value;
 
             if (loadUserData(username, password)) {
-                 document.getElementById('login-screen').style.display = 'none';
+                 // document.getElementById('login-screen').style.display = 'none'; // REMOVIDO: showView já gerencia o display
                  showView('welcome-screen');
             }
         }
 
         function handleSkipLogin() {
             loadUserData('Convidado', '');
-            document.getElementById('login-screen').style.display = 'none';
+            // document.getElementById('login-screen').style.display = 'none'; // REMOVIDO: showView já gerencia o display
             showView('welcome-screen');
         }
 
@@ -1538,7 +1538,7 @@
 
             Instruções:
             1. O resultado deve ser um **JSON puro e válido**, sem nenhum texto adicional, cabeçalho ou explicação (nem mesmo 'json', '```' ou '```json').
-            2. O objeto JSON deve ter a estrutura: { "etapas": [ { "titulo": "...", "topicos": [ { "tópico": "...", "material": "Link de Material de Referência (Invente se for preciso, mas deve ser um link válido)" }, ... ], "atividade": "Atividade prática de aplicação" }, ... ] }
+            2. O objeto JSON deve ter a estrutura: { "etapas": [ { "titulo": "...", "topicos": [ { "tópico": "...", "material": "Link de Material de Referência (Invente se for preciso, mas deve ser um link válido)" }, ... ], "atividade": "atividade prática de aplicação" }, ... ] }
             3. O título da etapa deve ser sucinto.
             4. Cada etapa deve ter 3 a 4 tópicos, cada um com um link de material de referência.
             5. A "atividade" deve ser uma tarefa prática que aplique todos os tópicos daquela etapa.
@@ -1905,7 +1905,13 @@
         }
 
         function openChatView() {
-            patolindoState.history.push({ role: "system", content: "Você é Patolindo, o assistente de estudos do Quackademy. Seu objetivo é responder de forma concisa e útil às perguntas do usuário sobre a trilha de estudos ativa, que é sobre o tema: " + currentUser.trilhas[currentUser.currentTrilhaIndex].tema + " no nível: " + currentUser.trilhas[currentUser.currentTrilhaIndex].nivel + ". Você tem apenas 5 perguntas para responder. Seja breve e atencioso." });
+            const currentTrilha = currentUser.trilhas[currentUser.currentTrilhaIndex];
+            if (!currentTrilha) {
+                 alert('Você precisa ter uma trilha de estudos ativa para usar o Patolindo. Crie ou selecione uma.');
+                 return;
+            }
+
+            patolindoState.history.push({ role: "system", content: "Você é Patolindo, o assistente de estudos do Quackademy. Seu objetivo é responder de forma concisa e útil às perguntas do usuário sobre a trilha de estudos ativa, que é sobre o tema: " + currentTrilha.tema + " no nível: " + currentTrilha.nivel + ". Você tem apenas 5 perguntas para responder. Seja breve e atencioso." });
 
             const chatMessages = document.getElementById('chat-messages');
             chatMessages.innerHTML = ''; // Limpa mensagens anteriores
@@ -2006,7 +2012,7 @@
             });
             document.getElementById('btnExplanationContinue').addEventListener('click', () => {
                 document.getElementById('main-app').style.display = 'block';
-                showView('predefined-courses-view');
+                showPreDefinedCoursesView();
             });
 
             // Geração de Trilha
@@ -2014,8 +2020,13 @@
 
             // Botão do Chat Patolindo
             document.getElementById('chat-button').addEventListener('click', () => {
-                // Guarda a view atual para retornar
-                patolindoState.lastView = document.querySelector('.content-view[style*="block"]').id; 
+                const currentView = document.querySelector('.content-view[style*="block"]');
+                if (currentView) {
+                     patolindoState.lastView = currentView.id; 
+                } else {
+                     patolindoState.lastView = 'predefined-courses-view'; 
+                }
+                
                 openChatView();
             });
             document.getElementById('chat-exit-button').addEventListener('click', () => {
@@ -2047,15 +2058,17 @@
                 }
             });
 
-            // Se for a primeira vez que o usuário carrega a página, exibe a tela de login.
-            if (!localStorage.getItem('quackademyAllUsers')) {
+            // Lógica Inicial de Carregamento
+            if (!localStorage.getItem('quackademyAllUsers') || (localStorage.getItem('quackademyAllUsers') && Object.keys(JSON.parse(localStorage.getItem('quackademyAllUsers'))).length === 0)) {
+                // Se não há dados, mostra o login
                 showView('login-screen');
             } else {
-                 // Tenta carregar o usuário convidado ou o último usuário se nenhum tiver logado
+                 // Se há dados de usuário, assume Convidado para preencher a tela principal
                  loadUserData('Convidado', '');
-                 document.getElementById('login-screen').style.display = 'none';
                  document.getElementById('main-app').style.display = 'block';
-                 showPreDefinedCoursesView();
+                 // A tela de login estava inicialmente visível via CSS, mas showView já a esconde se outra for chamada.
+                 // Chamamos showView('predefined-courses-view') que já oculta todas as outras.
+                 showView('predefined-courses-view');
             }
         });
     </script>
