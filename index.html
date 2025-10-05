@@ -542,11 +542,23 @@
             margin-top: 20px;
         }
         
-        #flashcard-display img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 8px;
-            margin-bottom: 15px;
+        /* NOVO: CONTAINER PARA FLASHCARD + MASCOTE */
+        .flashcard-mascote-container {
+            display: flex;
+            align-items: center; 
+            justify-content: center; 
+            gap: 20px; 
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 700px;
+        }
+        
+        /* NOVO: ESTILO PARA O MASCOTE DO FLASHCARD */
+        .mascote-flashcard {
+            width: 150px; 
+            height: 150px;
+            object-fit: contain;
+            flex-shrink: 0;
         }
 
         .flashcard {
@@ -554,7 +566,6 @@
             max-width: 400px;
             height: 250px;
             perspective: 1000px;
-            margin-bottom: 20px;
         }
 
         .flashcard-inner {
@@ -659,23 +670,32 @@
             border-top: 1px solid #eee;
         }
 
+        /* NOVO: ESTILO PARA RESULTADO DO SIMULADO COM MASCOTE */
         #simulado-resultado {
+            display: flex; 
+            align-items: center; 
+            gap: 20px; 
             padding: 20px;
             background-color: var(--color-light-yellow);
             border-radius: 8px;
             margin-top: 20px;
-            text-align: center;
             border: 2px solid var(--color-primary);
+        }
+
+        .mascote-simulado {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            flex-shrink: 0;
+        }
+
+        .resultado-texto {
+            flex-grow: 1;
+            text-align: left;
             font-size: 1.1em;
             font-weight: bold;
         }
 
-        #simulado-resultado img {
-            width: 100px; 
-            height: 100px; 
-            margin-bottom: 15px;
-        }
-        
         /* --- Estilos do Chatbot Patolindo --- */
         
         #chat-button {
@@ -685,17 +705,22 @@
             width: 60px;
             height: 60px;
             border-radius: 50%;
+            
+            /* ALTERAÇÃO DA IMAGEM DO CHAT */
+            background-image: url('chat-masc.png'); 
+            background-size: 70%; 
+            background-repeat: no-repeat;
+            background-position: center;
+            color: transparent; 
+            font-size: 0; 
+            
             background-color: var(--color-primary-dark);
-            color: var(--color-secondary);
-            font-size: 2em;
-            font-weight: bold;
             border: 3px solid var(--color-primary);
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
             cursor: pointer;
             transition: background-color 0.2s;
             z-index: 1000;
             display: none; 
-            line-height: 1; /* Para centralizar o emoji */
         }
 
         #chat-button:hover {
@@ -716,7 +741,6 @@
         .user-message, .bot-message {
             display: flex;
             margin: 0;
-            align-items: flex-end; /* Alinha o texto na parte de baixo */
         }
         
         .user-message {
@@ -725,15 +749,6 @@
 
         .bot-message {
             justify-content: flex-start;
-        }
-
-        .bot-avatar {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            margin-right: 10px;
-            object-fit: cover;
-            border: 1px solid var(--color-primary-dark);
         }
 
         .user-bubble {
