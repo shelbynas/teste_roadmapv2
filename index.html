@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quackademy - Trilha de Estudos</title>
-    <link rel="icon" href="favicon.ico"> 
+    <link rel="icon" href="favicon.ico"> 
 
     <style>
         /* ===================================================
@@ -190,7 +190,7 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
             width: 100%; 
             max-width: 500px; 
-            height: fit-content; 
+            height: fit-content; 
         }
 
         .mascote-area {
@@ -203,11 +203,11 @@
         .mascote {
             width: 120px; 
             height: 120px; 
-            border-radius: 8px; 
+            border-radius: 8px; 
             object-fit: contain;
             margin-bottom: 10px;
             border: none;
-            background-color: transparent; 
+            background-color: transparent; 
         }
         
         .controles h2 {
@@ -265,8 +265,8 @@
         }
         
         .btn-secondary {
-            padding: 12px 18px; 
-            font-size: 1em; 
+            padding: 12px 18px; 
+            font-size: 1em; 
             background-color: #6c757d;
             color: white;
             border: none;
@@ -281,8 +281,8 @@
         }
 
         .btn-success {
-            padding: 12px 18px; 
-            font-size: 1em; 
+            padding: 12px 18px; 
+            font-size: 1em; 
             background-color: var(--color-success);
             color: white;
             border: none;
@@ -388,7 +388,7 @@
             flex: 1 1 100%; 
             min-width: unset;
             padding: 20px; 
-            background-color: var(--color-light-yellow); 
+            background-color: var(--color-light-yellow); 
             border: 1px solid var(--color-primary-dark);
             border-radius: 8px;
             text-align: center;
@@ -443,7 +443,7 @@
             text-align: left; 
             font-weight: 500;
             transition: background-color 0.1s;
-            box-shadow: none; 
+            box-shadow: none; 
             min-width: unset;
             font-size: 0.9em;
             border-radius: 6px; 
@@ -541,13 +541,31 @@
             align-items: center;
             margin-top: 20px;
         }
+        
+        /* NOVO: CONTAINER PARA FLASHCARD + MASCOTE */
+        .flashcard-mascote-container {
+            display: flex;
+            align-items: center; 
+            justify-content: center; 
+            gap: 20px; 
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 700px;
+        }
+        
+        /* NOVO: ESTILO PARA O MASCOTE DO FLASHCARD */
+        .mascote-flashcard {
+            width: 150px; 
+            height: 150px;
+            object-fit: contain;
+            flex-shrink: 0;
+        }
 
         .flashcard {
             width: 100%;
             max-width: 400px;
             height: 250px;
             perspective: 1000px;
-            margin-bottom: 20px;
         }
 
         .flashcard-inner {
@@ -616,7 +634,7 @@
             border-radius: 6px;
             transition: background-color 0.3s;
             cursor: pointer; 
-            background-color: var(--color-card); 
+            background-color: var(--color-card); 
             color: var(--color-secondary);
         }
         
@@ -636,7 +654,7 @@
         }
         
         .simulado-area li.correta-destacada {
-            background-color: #d4edda !important; 
+            background-color: #d4edda !important; 
             color: #155724 !important;
             border-color: #c3e6cb !important;
         }
@@ -652,17 +670,32 @@
             border-top: 1px solid #eee;
         }
 
+        /* NOVO: ESTILO PARA RESULTADO DO SIMULADO COM MASCOTE */
         #simulado-resultado {
+            display: flex; 
+            align-items: center; 
+            gap: 20px; 
             padding: 20px;
             background-color: var(--color-light-yellow);
             border-radius: 8px;
             margin-top: 20px;
-            text-align: center;
             border: 2px solid var(--color-primary);
+        }
+
+        .mascote-simulado {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            flex-shrink: 0;
+        }
+
+        .resultado-texto {
+            flex-grow: 1;
+            text-align: left;
             font-size: 1.1em;
             font-weight: bold;
         }
-        
+
         /* --- Estilos do Chatbot Patolindo --- */
         
         #chat-button {
@@ -672,10 +705,16 @@
             width: 60px;
             height: 60px;
             border-radius: 50%;
+            
+            /* ALTERAÇÃO DA IMAGEM DO CHAT */
+            background-image: url('chat-masc.png'); 
+            background-size: 70%; 
+            background-repeat: no-repeat;
+            background-position: center;
+            color: transparent; 
+            font-size: 0; 
+            
             background-color: var(--color-primary-dark);
-            color: var(--color-secondary);
-            font-size: 2em;
-            font-weight: bold;
             border: 3px solid var(--color-primary);
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
             cursor: pointer;
@@ -849,7 +888,7 @@
     
     <section id="login-screen" class="full-screen-message" style="display: flex;">
         <div class="message-card">
-            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48ZGVmcz48Y2xpcFBhdGggaWQ9ImEiPjxwYXRoIGQ9Ik0wIDBoNTEydjUxMkgwWiIvPjwvY2xpcFBhdGg+PC9kZWZzPjxjaXJjbGUgY3g9IjI1NiIgY3k9IjI1NiIgcj0iMjU2IiBmaWxsPSIjRkZDMTU1IiBjbGlwLXBhdGg9InVybCgjYSkiLz48cGF0aCBkPSJNMjU2IDBDMTE0LjYyIDAgMCAxMTQuNjIgMCAyNTZzMTE0LjYyIDI1NiAyNTYgMjU2IDI1Ni0xMTQuNjIgMjU2LTI1NlMzOTcuMzggMCAyNTYgMFptMCAzOTJjLTc1LjE4IDAtMTM2LTYwLjgyLTEzNi0xMzZTMTgwLjgyIDEyMCAyNTYgMTIwczEzNiA2MC44MiAxMzYgMTM2LTYwLjgyIDEzNi0xMzYgMTM2WiIgZmlsbD0iI0UwQjUxNyIvPjxwYXRoIGQ9Ik0yNTYgMTgwYzI0LjYgMCA0NC42MyAxOS40IDQ0LjYzIDQzLjM0cy0yMC4wMyA0My4zNC00NC42MyA0My4zNC00NC42My0xOS40LTQ0LjYzLTQzLjM0UzIzMS40IDE4MCAyNTYgMTgwWiIgZmlsbD0iIzM0Mzk0MiIvPjxwYXRoIGQ9Ik0yNjkgMzUyYy02NC4yMSAwLTEwMi40Mi0zMi41NS0xMDkuOTYtNTIuMTItMy4zNC04LjcyIDQtMTIuNDkgMTMuMy04LjExIDcgMy4yNyAxNy42IDguMzggMzMuMzcgMTAuMzMgNi4wMi43NCAxMS4wMiA1LjM0IDE0LjMgOS43OSAzLjM2IDQuNTggMy42IDkuNzQgMi4xIDE0LjQyLTIuMDYgNi43LTYuNjEgMTEuMzItMTEuNDIgMTMuNjUtNS40NiAyLjYzLTEyLjM5IDMuNjItMjAuNzkgNC4xMi0yNC4zNiAxLjQ1LTQ4LjgxIDAtNzUuMTcgMC0xMi42NS0uMjUtMTkuNjIgNy44Ny0xOC43IDE5LjU5Ljc4IDkuMzQgOC4wNSA0MS44OCAxMDEuNzkgNDEuODggMTAwLjE0IDAgMTExLjA1LTMwLjk3IDExMS43NS00MS4wMS44LTEwLjk1LTcuMjktMTguMjgtMTkuNzQtMTcuOTUtNDEuOTcgMC05MS44IDAtMTEzLjQ1IDAtMTAuNDcuMjQtMTYuMDctNy41NS0xNi4wNy0xOC40NSAwLTEwLjE5IDcuMjQtMjEuNjUgMTkuNzctMjEuNjUgMjMuNzggMCA0Ny41NiAwIDcxLjM1IDBsMi41Ny0uMDVjOS44LS4xOCAxNS4wOCAzLjYgMTcuMjUgMTIuMyAxLjI3IDUuMTQtLjc0IDkuOTctNC43MSAxMy4yMi0zLjQ4IDIuNzctMTAuMjcgNS4wNS0xOS40NSA0Ljc0LTI5LjY2LS45OC00OC41Ni01LjIyLTQ4LjY2LTkuODMtLjE0LTYuNjMgMi44LTEyLjgzIDYuNTEtMTcuOTUgNC4wNS01LjM2IDguODUtOS4xMiAxNC42My0xMi4wMiAxNi40OC04LjIgNDguODgtMTEuMyAxMTQuMTctMTEuMyAxMS4yMyAwIDE5LjQ2IDYuMzQgMTcuNzIgMTcuODgtMS43MSAxMy43NC0yMC4xNiAzMi4yMy04NC43IDMyLjIzeiIgZmlsbD0iIzM0Mzk0MiIvPjxwYXRoIGQ9Ik0yMzkgNDY2LjgyYzAgMTIuMTkgOS45MiAyMi4xMSAyMi4xMSAyMi4xMXMxMC41OS0xMC41MiAxMC41OS0yMi4xMS00LjM2LTIyLjExLTEwLjU5LTIyLjExLTExLjU1IDAtMjIuMTEgMjIuMTF6IiBmaWxsPSIjRjFGMkYzIi8+PC9zdmc+" alt="Mascote Quackademy, o Pato" class="mascote-welcome">
+            <img src="mascote_inicial.png" alt="Mascote Quackademy, o Pato" class="mascote-welcome">
             
             <h2>👋 Entre ou Crie sua Conta</h2>
             <p>Faça login para salvar suas trilhas de estudo e gerenciar seu progresso.</p>
@@ -872,7 +911,7 @@
 
     <section id="welcome-screen" class="full-screen-message" style="display: none;">
         <div class="message-card">
-            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48ZGVmcz48Y2xpcFBhdGggaWQ9ImEiPjxwYXRoIGQ9Ik0wIDBoNTEydjUxMkgwWiIvPjwvZGVmcz48Y2lyY2xlIGN4PSIyNTYiIGN5PSIyNTYiIHI9IjI1NiIgZmlsbD0iI0ZGQzE1NSIgY2xpcC1wYXRoPSJ1cmwoI2EpIi8+PHBhdGggZD0iTTI1NiAwQzExNC42MiAwIDAgMTE0LjYyIDAgMjU2czExNC42MiAyNTYgMjU2IDI1NiAyNTYtMTE0LjYyIDI1Ni0yNTZTMzk3LjM4IDAgMjU2IDBabTAgMzkyYy03NS4xOCAwLTEzNi02MC44Mi0xMzYtMTM2UzE4MC44MiAxMjAgMjU2IDEyMHMxMzYgNjAuODIgMTM2IDEzNi02MC44MiAxMzYtMTM2IDEzNloiIgZmlsbD0iI0UwQjU1MyIvPjxwYXRoIGQ9Ik0yNTYgMTgwYzI0LjYgMCA0NC42MyAxOS40IDQ0LjYzIDQzLjM0cy0yMC4wMyA0My4zNC00NC42MyA0My4zNC00NC42My0xOS40LTQ0LjYzLTQzLjM0UzIzMS40IDE4MCAyNTYgMTgwWiIgZmlsbD0iIzM0Mzk0MiIvPjxwYXRoIGQ9Ik0yNjkgMzUyYy02NC4yMSAwLTEwMi40Mi0zMi41NS0xMDkuOTYtNTIuMTItMy4zNC04LjcyIDQtMTIuNDkgMTMuMy04LjExIDcgMy4yNyAxNy42IDguMzggMzMuMzcgMTAuMzMgNi4wMi43NCAxMS4wMiA1LjM0IDE0LjMgOS43OSAzLjM2IDQuNTggMy42IDkuNzQgMi4xIDE0LjQyLTIuMDYgNi43LTYuNjEgMTEuMzItMTEuNDIgMTMuNjUtNS40NiAyLjYzLTEyLjM5IDMuNjItMjAuNzkgNC4xMi0yNC4zNiAxLjQ1LTQ4LjgxIDAtNzUuMTcgMC0xMi42NS0uMjUtMTkuNjIgNy44Ny0xOC43IDE5LjU5Ljc4IDkuMzQgOC4wNSA0MS44OCAxMDEuNzkgNDEuODggMTAwLjE0IDAgMTExLjA1LTMwLjk3IDExMS43NS00MS4wMS44LTEwLjk1LTcuMjktMTguMjgtMTkuNzQtMTcuOTUtNDEuOTcgMC05MS44IDAtMTEzLjQ1IDAtMTAuNDcuMjQtMTYuMDctNy41NS0xNi4wNy0xOC40NSAwLTEwLjE5IDcuMjQtMjEuNjUgMTkuNzctMjEuNjUgMjMuNzggMCA0Ny41NiAwIDcxLjM1IDBsMi41Ny0uMDVjOS44LS4xOCAxNS4wOCAzLjYgMTcuMjUgMTIuMyAxLjI3IDUuMTQtLjc0IDkuOTctNC43MSAxMy4yMi0zLjQ4IDIuNzctMTAuMjcgNS4wNS0xOS40NSA0Ljc0LTI5LjY2LS45OC00OC41Ni01LjIyLTQ4LjY2LTkuODMtLjE0LTYuNjMgMi44LTEyLjgzIDYuNTEtMTcuOTUgNC4wNS01LjM2IDguODUtOS4xMiAxNC42My0xMi4wMiAxNi40OC04LjIgNDguODgtMTEuMyAxMTQuMTctMTEuMyAxMS4yMyAwIDE5LjQ2IDYuMzQgMTcuNzIgMTcuODgtMS43MSAxMy43NC0yMC4xNiAzMi4yMy04NC43IDMyLjIzeiIgZmlsbD0iIzM0Mzk0MiIvPjxwYXRoIGQ9Ik0yMzkgNDY2LjgyYzAgMTIuMTkgOS45MiAyMi4xMSAyMi4xMSAyMi4xMXMxMC41OS0xMC41MiAxMC41OS0yMi4xMS00LjM2LTIyLjExLTEwLjU5LTIyLjExLTExLjU1IDAtMjIuMTEgMjIuMTF6IiBmaWxsPSIjRjFGMkYzIi8+PC9zdmc+" alt="Mascote Quackademy, o Pato" class="mascote-welcome">
+            <img src="mascote_inicial.png" alt="Mascote Quackademy, o Pato" class="mascote-welcome">
             
             <h2>🦆 Bem-vindo ao Quackademy! </h2>
             <p>Pare de se afogar em tutoriais soltos. Nós transformamos o caos do aprendizado online em uma <strong>trilha de estudos estruturada e à prova de procrastinação</strong>.</p>
@@ -942,7 +981,7 @@
                 <div id="form-view" class="content-view" style="display: none;">
                     <div class="controles">
                         <div class="mascote-area">
-                             <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48ZGVmcz48Y2xpcFBhdGggaWQ9ImEiPjxwYXRoIGQ9Ik0wIDBoNTEydjUxMkgwWiIvPjwvZGVmcz48Y2lyY2xlIGN4PSIyNTYiIGN5PSIyNTYiIHI9IjI1NiIgZmlsbD0iI0ZGQzE1NSIgY2xpcC1wYXRoPSJ1cmwoI2EpIi8+PHBhdGggZD0iTTI1NiA2NmMtNTUuMjQgMC0xMDcuMTcgMjEuMTUtMTQ3IDU5LjM1IDM5Ljg4IDM4LjcgNTIuODcgODUuNzQgNTQuNzMgMTQ0LjI2IDAgMy42LS42MyA2MC40LTkuNDYgMTE1LjE0LTIuMDYgMTIuODYgMy44NiAxOS41IDE1Ljc2IDE5LjUxIDI5LjY0LS4zMiA4NC4zNi4zMiAxMTIuNDUgNS44OSAyMy4wMyA0LjU5IDM5LjY2IDI2LjM5IDQxLjY0IDQ5LjIzLTYuOTctMzYuMjYgMTUuMzYtOTguNzggMTguMjQtMTE2Ljg3LTkuMDMtOTUuMyA0NS43My0xMDQuNzEgNzguMzktMTA3LjY3IDc1LjktNS43NiAxMzYuMTItNzAuNDcgMTQyLjk0LTE1Ni43OSAzLjM5LTg4LjY0LTIyLjA3LTIzOC4wNi01Mi41MS0yMzguMDYtMTQuODEtLjYtMTcuMTUgMjkuODUtMTcuMTUgMzYuODMgMCAuNTQtLjYgMjIuMTEtMy4wMSAzNi44Mi0yLjEgMTAuMzYgNC4wNiAxNi43IDE0LjQgMTUuNzQgMTUuNTEtLjUzIDI4LjUtMTYuNDMgMzMuMjctMzEuNTIgMTAuNDktMTcuOTctMjkuMjgtMjMuMTktMzkuMi0yMi41LTQ2LjY1IDYuOTctNzguMzQgMi41Mi05MC42Ny03Ljc0LTI1LjA5LTIxLjE5LTMyLjItNDEuMzctNDcuMDUtNTAuNDIiIGZpbGw9IiMzNDM5NDIiIGNsaXAtcGF0aD0idXJsKCNhKSIvPjxwYXRoIGQ9Ik01MjEuMDggMjM0LjljLTIuNTMtOS42OS0xNC40OC0xNi4zNy0zMC4yMS01LjU1LTEwLjg2IDcuMi02MC45NiA0MC40NC03OS4wOSAxMC44My0yMS40OC0zNC41LTM4LjI3LTY4LjIzLTQ1LjU2LTkxLjE4bDE0LjQ0LTQuMThjMTUuMjYtNC40MyA0LjM2LTE5LjQ4LTIuNzItMTIuMTktNy4yNCA3LjUtMjAuMTMgMjIuMDYtNDMuMzkgMjEuMDQtMTcuNTQtLjc1LTM5LjQzLTExLjc4LTYyLjExLTE5LjE5LTEzLjctNC40OC0xNy40MiAzLjM0LTkuNDcgMTAuNTYgNC4zIDMuOCAxMC4zMiA4LjA4IDE2Ljg2IDEwLjM0IDMuNSAxLjE5IDcuMjUgMS43IDEwLjk3IDEuNzUgMTIuNTUgMCAyMi41My0xMC4xOCAyMi41My0yMi43N3MtOC40OC0yMi45NS0yMi41My0yMi45NUMxODMuMjggMjQyLjQ4IDk5LjQ2IDI2NS42OCA4OS41OSAzMDguOTljLTcuNzcgMzMuMDUtMTQuMTMgNTkuODQtMjEuNTcgNzguMDUtMTEuNDEgMTIuMDMtMjIuOTQgMjIuNDktMzYuNzkgMjkuMjItMzIuNjcgMTUuOC04MC4xNi04LjA4LTg0LjE0LTM1LjIzLTQuMjItMjguNDIgMjkuNTEtNDcuNDIgNjMuNjctNDguMzkgMTkuMTMtLjU0IDM0LjAyIDYuMTQgNDQuMTYgMTcuNDMgMy45OCA0LjQ1IDYuNjUgMTAuMzUgNi41OSAxNi43Ni0uNDcgMzIuMS00Mi44MiA4Mi44NS00Mi44MiA5NC44MSAwIDYuNjggNS40MyAxMy4wOSAxMi4xMiAxNC42MyA0LjM2IDEuMDQgMjIuMjggMS44NiAzNC40NC00Ljg4IDIyLjYtMTMuNyAzOS41OS0zOC45IDU2LjcxLTU0Ljg3IDEzLjIzLTE0LjE5IDIzLjg1LTI4LjUyIDM0Ljc5LTM4LjE2IDEwLjk3LTkuNjYgMjIuNzQtMTkuMDcgNDAuNzgtMTYuMTggMTkuMzkgMi41NCA0MC4wMyAxNi4xNiA1OS4wMiAyMy41MyA0MC4zMyAxNS4wMSAxMDMuNDItMTMuOTIgMTIzLjA0LTI3Ljk5IDE5LjY3LTE0LjI0IDMyLjI3LTMyLjU3IDM4LjQtNDYuNTEgOS40OC0yMS40NSAxNC42Ny00MS45MSAyMS4zMS01My43MSAxMC43LTkuMTEgMjEuMTYtMTQuNDcgMzIuMTEtMTYuMiA0LjU2LS43MSAxMS4wMyA2LjA3IDEwLjE0IDEwLjM0LS45MiA0LjQzLTQuMjcgNy45Mi05LjE1IDkuNjgtMTIuNzcgNC41Ny0yOC4yMiA0LjI0LTQxLjUxLTIuNTktMjQuNjgtMTIuNDMtNDkuNDMtMjQuODctNzQuMTctMzcuMzEtMTAuNDYtNC4wNi0xNi41My0xMC43MS0xNi41My0yMi4xNCAwLTkuNDMgNi42OS0xOC45MiAxNy44MS0yMS45MiAzMC43Ni04LjQ3IDYyLjctMTYuMDkgOTMuMTMtMTQuNDYgMjcuNDggMS42NiA1MC4xNyAxNC4wOSA1OC4wMyAzNy41OCAzLjE0IDkuMjgtLjc1IDE1LjgtMTAuNjEgMTguMzEtMTEuNiAyLjg3LTMwLjIyIDMuMS00OS40NiAzLjE2LTI0LjAyIDAtNDEuMjItLjA1LTY3LjQtMS4zNi0xMi44NC0uNjQtMTcuMzcgNy4zMS0xNS41MiAxOC4wOCAxLjQgOC40MyA3LjY0IDU1LjY4IDg3LjUyIDU1LjY4IDcyLjY0IDAgODcuNzQtNDQuNzYgODguMzYtNTUuOTcgLjUtOS4yLTEuODItMTUuOTEtMTIuMTktMTcuMDktMTMuMy0xLjQ4LTQ0LjM3LTEuMS01Ny4zNy0zLjctNi42Ny0xLjM3LTE1LjE4LTEuNjMtMjQuMy0uMDItMTAuMjMgMS44NS0yMC4xOCAzLjI0LTMwLjgyIDQuNjItMTAuMjQgMS4zOC0xNi4xNCA2LjU0LTE0LjM3IDE2LjY3IDEuNDggOC4zOCA4Ljg3IDE1Ljc4IDE4LjQ0IDE3Ljc3IDIzLjYxIDQuODMgNDcuMTUgOC4xMSA3MC42IDExLjQyIDI4Ljk0IDQuMDUgNTUuODEtNS4yMiA2Ni4zOC0yNC42MiA4LjgtMTUuNjYgMTEuMDUtMzEuOTUgNy43Mi01NS40NS0uMzQtMi40Mi0xMi42Ni0zMS4yOC0zNC41NC00My41OS0xMS44Mi02LjY1LTI1LjA2LTguMjQtNDAuNTYtNC4yMS0zMy4yNyA4LjYyLTU4LjU5IDIzLjM2LTg3Ljg1IDMyLjcxLTMwLjE2IDkuNjMtNTkuOTUgMTkuMTItOTEuMjggMjguNDgtMTIuODcgMy45Ni0yMC42NyAxMS44Ny0xNy41MyAyMy40IDMuMTQgMTEuNzcgMTIuMTkgMTYuODkgMjQuNzcgMTYuNDYgMjIuNjMtLjc5IDQ1LjYtMi44NSA2OC4xOC00LjkgMTkuMTUtMS43IDMzLjg1LTEwLjg2IDM3LjExLTI5LjUzIDQuNDgtMjIuMjctMTEuMzItNDEuNDctMjkuODUtNTIuNTctMjAuNDktMTIuNDUtNDUuNDItMjIuMTgtNzEuMjctMjcuNDMtMTkuNzMtNC4wNi0zOS42OC03LjktNjEuMDctOS41MS0yMS4zNy0xLjYtMzcuMi04LjItNDIuNDctMjEuNTMtMi4yNS01LjU4LjI5LTEwLjUxIDQuNjctMTQuMzEgNy42My02LjY3IDIzLjI5LTcuMTkgNDEuNTktNS4yOSAzNC4zNyAzLjY2IDY5LjQgNi44NiAxMDMuMTUgOS4wNiAxNy4xOCAxLjEzIDMyLjcxLTEuNjMgNDQuMDUtMTIuMzcgOS42Ni04LjYgMTUuMzItMjAuMzUgMjAuMjctMzIuMzEgMTIuNTYtMzAuNTcgMjkuMjktNTcuMDYgNTYuMTItNzcuNDcgMjEuMTEtMTYuMzIgNDQuOTctMjQuMzEgNzEuMi0yNC4zMWgxMTIuOTZjMTcuMTcgMCAyNS42MyAxMy4wOSAyMi4zIDMyLjY2LTIuOTIgMTcuNjUtMTUuOTQgMzQuMjEtMjguMTQgNDcuMzUtMTIuMjIgMTMuMTUtMjQuMjcgMjUuNjQtMzcuNDcgMzYuNTktMTMuNDEgMTEuMzgtMjEuMDIgMjYuNTgtMjAuNjUgNDEuNDkuNDQgMTguNCAxNS40MiAzMi4wOSAzNC4xMyAzMy4yNyAyMy43OSAxLjQ5IDY2LjE1IDYuMjcgMTA2LjU0IDExLjY5eiIgZmlsbD0iIzNCNEQ1MSIvPjxwYXRoIGQ9Ik0zMzQuMjMgMTYwLjFjLTE1LjY1LTIwLjE3LTM4Ljg5LTExLjIxLTQ1LjQ5IDQtMi45OCAzLjktMi4yMSA4LjQzIDAgMTMuNTcgNC45MiAxMC43MSAxOS4wOCAzMS43NSAzMC40MiAzMS43NSAxMS41IDAgMTcuMjUtNy4yNSAxNy4yNS0xNy40NnMtNy41LTExLjc5LTEyLjE4LTEyLjU3YTM0LjYyIDM0LjYyIDAgMC0xLTkuODUtNi42N2MtMy4xMi0yLjkzLTQuMS02LjM1LTUuMTUtOS41MS0xLjQ0LTQuNDUtLjktMTAuMjQtMTUuMTMtMTMuNDd6IiBmaWxsPSIjRkZGQjFCIi8+PC9zdmc+" alt="Mascote Quackademy" class="mascote">
+                             <img src="mascote.png" alt="Mascote Quackademy" class="mascote">
                             <h2>Defina seu Desafio (Via IA)</h2>
                         </div>
                         
@@ -1069,7 +1108,7 @@
         // Armazena todos os dados de usuários no localStorage
         let allUsersData = {}; 
 
-        let modalState = {}; 
+        let modalState = {}; 
         let patolindoState = {
             questionsLeft: 5,
             history: [],
@@ -1148,7 +1187,9 @@
             }
         ];
 
+
         // --- FUNÇÕES DE PERSISTÊNCIA (ATUALIZADAS) ---
+
         function loadAllUsersData() {
             const data = localStorage.getItem('quackademyAllUsers');
             if (data) {
@@ -1162,6 +1203,7 @@
 
         function loadUserData(username) {
             loadAllUsersData();
+            
             if (!username || username === 'Convidado') {
                 currentUser.name = 'Convidado';
                 currentUser.trilhas = []; // Convidado não tem trilhas salvas
@@ -1187,10 +1229,10 @@
 
         function saveUserTrilhas() {
             if (currentUser.name && currentUser.name !== 'Convidado') {
-                allUsersData[currentUser.name] = { 
-                    ...allUsersData[currentUser.name], 
-                    trilhas: currentUser.trilhas, 
-                    currentTrilhaIndex: currentUser.currentTrilhaIndex 
+                allUsersData[currentUser.name] = {
+                    ...allUsersData[currentUser.name],
+                    trilhas: currentUser.trilhas,
+                    currentTrilhaIndex: currentUser.currentTrilhaIndex
                 };
                 saveAllUsersData();
             }
@@ -1200,181 +1242,990 @@
         function updateTrilhasCountDisplay() {
             const count = currentUser.trilhas ? currentUser.trilhas.length : 0;
             document.getElementById("btnMinhasTrilhas").innerText = `Minhas Trilhas (${count})`;
+            document.getElementById("btnMinhasTrilhas").disabled = currentUser.name === 'Convidado';
         }
 
-
-        // -----------------------------------------------
-        // --- FUNÇÕES DE NAVEGAÇÃO E UTILS (COMPLETADAS E CORRIGIDAS) ---
-        // -----------------------------------------------
-
-        // Função principal para mostrar telas full-screen (Login, Welcome, Explanation)
-        function showView(viewId) {
-            const screens = ['login-screen', 'welcome-screen', 'explanation-screen'];
-            screens.forEach(id => {
-                const screen = document.getElementById(id);
-                if (screen) {
-                    screen.style.display = 'none';
-                }
-            });
-            const targetScreen = document.getElementById(viewId);
-            if (targetScreen) {
-                targetScreen.style.display = 'flex';
-            }
-            // O chat e a área principal só devem aparecer após a navegação
-            document.getElementById('chat-button').style.display = 'none';
-            document.getElementById('main-app').style.display = 'none';
-        }
-
-        // Função para mostrar telas da aplicação principal (dentro do #main-app)
-        function showAppView(viewId) {
-            showView('main-app'); // Esconde as telas full-screen e mostra a área principal
-            document.getElementById('chat-button').style.display = 'flex'; // Mostra o botão do chat
+        // --- NOVO: CONTROLE DE FLUXO DE AUTENTICAÇÃO --- 
+        function showLoginView() {
+            document.getElementById("login-screen").style.display = 'flex';
+            document.getElementById("welcome-screen").style.display = 'none';
+            document.getElementById("explanation-screen").style.display = 'none';
+            document.getElementById("main-app").style.display = 'none';
+            document.getElementById("predefined-courses-view").style.display = 'none';
             
-            // Esconde todas as sub-telas
-            const appViews = document.querySelectorAll('#main-content-area .content-view');
-            appViews.forEach(view => {
-                view.style.display = 'none';
-            });
-
-            // Mostra a tela desejada
-            const targetView = document.getElementById(viewId);
-            if (targetView) {
-                targetView.style.display = 'block'; 
-                patolindoState.lastView = viewId.replace('-view', '');
-            }
+            // Garante que os campos de login estejam limpos
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('auth-message').innerText = '';
         }
-
-        // Funções de Tratamento de Autenticação
-        function handleAuthSubmit(event) {
-            event.preventDefault();
+        
+        function handleAuthSubmit(e) {
+            e.preventDefault();
             const username = document.getElementById('username').value.trim();
-            const password = document.getElementById('password').value; 
+            const password = document.getElementById('password').value.trim();
             const authMessage = document.getElementById('auth-message');
+            
+            if (username.toLowerCase() === 'convidado') {
+                authMessage.innerText = "Nome de usuário 'Convidado' é reservado. Escolha outro.";
+                return;
+            }
+            if (username.length < 3 || password.length < 3) {
+                authMessage.innerText = "Nome de usuário e senha devem ter no mínimo 3 caracteres.";
+                return;
+            }
 
-            if (username.length > 2 && password.length > 0) {
-                loadUserData(username); 
-                
-                if (currentUser.name === username) {
-                    authMessage.innerText = '';
-                    showView('welcome-screen');
-                    localStorage.setItem('quackademyLastUser', username);
+            loadAllUsersData(); 
+
+            let userExists = allUsersData[username];
+
+            if (userExists) {
+                // Tenta Logar
+                if (userExists.password === password) {
+                    loadUserData(username);
+                    authMessage.innerText = `Login bem-sucedido para ${username}!`;
+                    showMainApp(true); // Indica que o usuário já existe
                 } else {
-                    authMessage.innerText = "Erro no login simulado. Tente novamente.";
+                    authMessage.innerText = "Senha incorreta.";
                 }
             } else {
-                authMessage.innerText = "Preencha o nome de usuário (mín. 3 caracteres) e a senha.";
+                // Tenta Cadastrar (Simulado)
+                loadUserData(username); // Cria o novo usuário
+                authMessage.innerText = `Usuário ${username} criado e logado!`;
+                showWelcomeScreen(); // Novo usuário vê o fluxo completo
             }
         }
-
+        
         function handleSkipLogin() {
-            loadUserData('Convidado'); 
-            showView('welcome-screen');
-            localStorage.removeItem('quackademyLastUser');
+            loadUserData('Convidado');
+            showWelcomeScreen();
         }
 
-        // Funções de Navegação da Aplicação (usadas no onclick)
-        function showUserTrilhasView() {
-            // Lógica de renderização de trilhas viria aqui
-            showAppView('user-trilhas-view');
-        }
+        // --- Listeners de Transição Inicial ---
 
-        function showPreDefinedCoursesView() {
-            // Lógica de renderização de cursos viria aqui
-            showAppView('predefined-courses-view');
-        }
-
-        function showFormView() {
-            showAppView('form-view');
-        }
-
-        function showRoadmapView() {
-            // Lógica de renderização do roadmap viria aqui
-            showAppView('roadmap-view');
-        }
-
-
-        // Função para configurar outros Listeners da Aplicação Principal
-        function setupMainAppListeners() {
-            // Listener do Botão de Chat
-            document.getElementById('chat-button').addEventListener('click', () => {
-                const activeView = document.querySelector('#main-content-area .content-view[style*="block"]');
-                if (activeView) {
-                    patolindoState.lastView = activeView.id.replace('-view', '');
-                }
-                showAppView('chat-view');
-            });
-
-            document.getElementById('chat-exit-button').addEventListener('click', () => {
-                showAppView(patolindoState.lastView + '-view');
-            });
-
-            // Listener do Botão de Geração de Trilha
-            document.getElementById('btnGerar').addEventListener('click', (event) => {
-                event.preventDefault();
-                // Lógica da IA (generateRoadmap) viria aqui
-                showRoadmapView(); 
-            });
-
-            // Listeners de Voltar
-            document.getElementById('btnMaterialVoltar').addEventListener('click', () => {
-                showAppView('etapa-view');
-            });
-
-            document.getElementById('btnFlashcardVoltar').addEventListener('click', () => {
-                showAppView('etapa-view');
-            });
-
-            document.getElementById('btnSimuladoEtapaVoltar').addEventListener('click', () => {
-                showAppView('etapa-view');
-            });
-        }
-
-
-        // --- INICIALIZAÇÃO (CORREÇÃO ESSENCIAL) ---
-        function initializeApp() {
-            // 1. Carrega dados
-            loadAllUsersData();
-            const lastUser = localStorage.getItem('quackademyLastUser');
-            loadUserData(lastUser || null); 
-
-            // 2. Anexa Listeners de Navegação/Autenticação (CORRIGIDO)
+        document.addEventListener("DOMContentLoaded", () => {
             
-            // Login
-            const loginForm = document.getElementById('login-form');
-            if (loginForm) {
-                loginForm.addEventListener('submit', handleAuthSubmit);
-            }
+            showLoginView(); // Inicia na tela de login
 
-            const btnSkipLogin = document.getElementById('btnSkipLogin');
-            if (btnSkipLogin) {
-                btnSkipLogin.addEventListener('click', handleSkipLogin);
-            }
-
-            // Telas Iniciais
-            const btnWelcomeContinue = document.getElementById('btnWelcomeContinue');
-            if (btnWelcomeContinue) {
-                btnWelcomeContinue.addEventListener('click', () => showView('explanation-screen'));
-            }
-
-            const btnExplanationContinue = document.getElementById('btnExplanationContinue');
-            if (btnExplanationContinue) {
-                btnExplanationContinue.addEventListener('click', () => showAppView('predefined-courses-view'));
-            }
+            document.getElementById("login-form").addEventListener("submit", handleAuthSubmit);
+            document.getElementById("btnSkipLogin").addEventListener("click", handleSkipLogin);
             
-            // Outros Listeners da Aplicação
-            setupMainAppListeners();
+            document.getElementById("btnWelcomeContinue").addEventListener("click", showExplanationScreen);
             
-            // 3. Define a tela inicial correta
-            if (currentUser.name && lastUser) {
-                 showAppView('user-trilhas-view');
+            // 🐛 CORREÇÃO APLICADA AQUI: Chama showMainApp que decide o próximo passo (Cursos Pré-Definidos)
+            document.getElementById("btnExplanationContinue").addEventListener("click", () => showMainApp(false)); 
+            
+            document.getElementById("btnGerar").addEventListener("click", gerarRoadmap);
+            
+            // Listeners dos botões de voltar (dentro das telas de conteúdo)
+            document.getElementById("btnMaterialVoltar").addEventListener("click", () => showEtapaView(modalState.currentEtapa));
+            document.getElementById("btnFlashcardVoltar").addEventListener("click", () => showEtapaView(modalState.currentEtapa));
+            document.getElementById("btnSimuladoEtapaVoltar").addEventListener("click", () => showEtapaView(modalState.currentEtapa));
+            
+            // --- Listeners do Chatbot ---
+            document.getElementById("chat-button").addEventListener("click", () => showChatView(patolindoState.lastView));
+            document.getElementById("chat-exit-button").addEventListener("click", () => showLastView());
+            document.getElementById("chat-send-button").addEventListener("click", handleChatSend);
+            document.getElementById("chat-input").addEventListener("keypress", (e) => {
+                if (e.key === 'Enter') handleChatSend();
+            });
+            document.getElementById("chat-input").addEventListener("input", updateSendButtonState);
+        });
+
+        // Funções de transição de telas iniciais
+        function showWelcomeScreen() {
+            document.getElementById("login-screen").style.display = 'none';
+            document.getElementById("welcome-screen").style.display = 'flex';
+        }
+
+        function showExplanationScreen() {
+            document.getElementById("welcome-screen").style.display = 'none';
+            document.getElementById("explanation-screen").style.display = 'flex';
+        }
+
+        function showMainApp(isExistingUser = false) {
+            document.getElementById("explanation-screen").style.display = 'none';
+            document.getElementById("welcome-screen").style.display = 'none';
+            document.getElementById("login-screen").style.display = 'none';
+            document.getElementById("main-app").style.display = 'block';
+            
+            if (isExistingUser && currentUser.trilhas.length > 0) {
+                 // Usuário recorrente vai para o Gerenciamento
+                 showUserTrilhasView();
             } else {
-                 showView('login-screen');
+                 // Usuário novo ou sem trilhas vai para a lista de cursos
+                 showPreDefinedCoursesView();
             }
         }
 
-        // CORREÇÃO: Garante que os listeners são anexados após o DOM carregar
-        document.addEventListener('DOMContentLoaded', initializeApp); 
-        // ------------------------------------------------------------------
+        // --- LÓGICA DE NAVEGAÇÃO SPA ---
+
+        const viewMap = {
+            "user-trilhas-view": document.getElementById("user-trilhas-view"),
+            "predefined-courses-view": document.getElementById("predefined-courses-view"), // NOVO
+            "form-view": document.getElementById("form-view"),
+            "roadmap-view": document.getElementById("roadmap-view"),
+            "etapa-view": document.getElementById("etapa-view"),
+            "material-view": document.getElementById("material-view"),
+            "flashcard-view": document.getElementById("flashcard-view"), 
+            "simulado-etapa-view": document.getElementById("simulado-etapa-view"), 
+            "chat-view": document.getElementById("chat-view")
+        };
+        
+        function hideAllViews() {
+            for (const key in viewMap) {
+                viewMap[key].style.display = 'none';
+            }
+        }
+        
+        function updateChatButtonVisibility(isVisible) {
+            // Esconde o chat se o usuário for convidado
+            if (currentUser.name === 'Convidado') {
+                document.getElementById("chat-button").style.display = 'none';
+            } else {
+                 document.getElementById("chat-button").style.display = isVisible ? 'block' : 'none';
+            }
+        }
+
+        // --- TELA DE GERENCIAMENTO DE TRILHAS ---
+        function showUserTrilhasView() {
+            hideAllViews();
+            window.scrollTo(0, 0); 
+            updateChatButtonVisibility(false); 
+
+            if (currentUser.name === 'Convidado') {
+                showPreDefinedCoursesView();
+                return;
+            }
+            
+            viewMap["user-trilhas-view"].style.display = 'block';
+
+            const trilhasList = document.getElementById("trilhas-list");
+            trilhasList.innerHTML = '';
+            
+            if (currentUser.trilhas.length === 0) {
+                trilhasList.innerHTML = '<p class="placeholder-text">Nenhuma trilha de estudo salva. Crie uma nova para começar!</p>';
+                return;
+            }
+
+            // Garante que a trilha ativa está no topo
+            let trilhasOrdenadas = [...currentUser.trilhas];
+            if (currentUser.currentTrilhaIndex !== -1) {
+                const activeTrilha = trilhasOrdenadas.splice(currentUser.currentTrilhaIndex, 1)[0];
+                trilhasOrdenadas.unshift(activeTrilha); // Coloca a ativa na frente
+            }
+
+            trilhasOrdenadas.forEach((trilha, index) => {
+                // Encontra o índice original para ações
+                const originalIndex = currentUser.trilhas.findIndex(t => t.id === trilha.id); 
+                const isActive = currentUser.currentTrilhaIndex === originalIndex;
+                
+                const card = document.createElement('div');
+                card.className = 'trilha-card';
+                card.style.borderLeft = isActive ? '5px solid var(--color-success)' : '1px solid #ddd';
+
+                const info = `
+                    <div class="trilha-info">
+                        <h4>${trilha.tema} (${trilha.nivel}) ${isActive ? '<b>(ATIVA)</b>' : ''}</h4>
+                        <p>Objetivo: ${trilha.objetivo || 'Não especificado'}</p>
+                        <p>Etapas: ${trilha.etapas.length}</p>
+                    </div>
+                `;
+
+                const actions = `
+                    <div class="trilha-actions">
+                        <button class="btn-success" onclick="loadAndShowRoadmap(${originalIndex})" style="${isActive ? 'display: none;' : ''}">Abrir</button>
+                        <button class="btn-danger" onclick="deleteTrilha(${originalIndex})">Excluir</button>
+                    </div>
+                `;
+
+                card.innerHTML = info + actions;
+                trilhasList.appendChild(card);
+            });
+
+            // Se houver uma trilha ativa, carrega ela
+            if (currentUser.currentTrilhaIndex !== -1) {
+                 loadRoadmap(currentUser.trilhas[currentUser.currentTrilhaIndex], true); // Carrega a ativa, mas não mostra o roadmap
+            }
+        }
+
+        // --- NOVO: TELA DE CURSOS PRÉ-DEFINIDOS ---
+        function showPreDefinedCoursesView() {
+            // Garante que a aplicação principal está visível antes de exibir a sub-tela
+            document.getElementById("main-app").style.display = 'block'; 
+            
+            hideAllViews();
+            window.scrollTo(0, 0); 
+            updateChatButtonVisibility(false); 
+            viewMap["predefined-courses-view"].style.display = 'block';
+
+            const coursesListDiv = document.getElementById("predefined-courses-list");
+            coursesListDiv.innerHTML = '';
+            
+            preDefinedRoadmaps.forEach(categoryData => {
+                const categoryHtml = document.createElement('div');
+                categoryHtml.className = 'course-category';
+                categoryHtml.innerHTML = `<h3>${categoryData.category}</h3>`;
+                
+                const gridHtml = document.createElement('div');
+                gridHtml.className = 'courses-grid';
+
+                categoryData.courses.forEach(course => {
+                    const card = document.createElement('div');
+                    card.className = 'course-card';
+                    // Prepara o objeto para ser passado na função de carregamento
+                    const courseString = JSON.stringify(course).replace(/'/g, "\\'"); 
+                    card.setAttribute('onclick', `loadPreDefinedRoadmap('${courseString}')`);
+
+                    card.innerHTML = `
+                        <h4>${course.tema}</h4>
+                        <p>Nível: <b>${course.nivel}</b></p>
+                        <p>Objetivo: ${course.objetivo}</p>
+                    `;
+                    gridHtml.appendChild(card);
+                });
+                
+                categoryHtml.appendChild(gridHtml);
+                coursesListDiv.appendChild(categoryHtml);
+            });
+        }
+        
+        function showFormView() {
+            hideAllViews();
+            window.scrollTo(0, 0); 
+            updateChatButtonVisibility(false); 
+            viewMap["form-view"].style.display = 'flex'; 
+        }
+        
+        function showRoadmapView() {
+            hideAllViews();
+            window.scrollTo(0, 0); 
+            // Mostra o chat apenas se houver uma trilha carregada e não for convidado
+            const currentTrilha = currentUser.trilhas[currentUser.currentTrilhaIndex];
+            updateChatButtonVisibility(currentTrilha && currentUser.name !== 'Convidado' ? true : false);
+            patolindoState.lastView = "roadmap-view";
+            viewMap["roadmap-view"].style.display = 'block';
+        }
+
+        function showEtapaView(etapa) {
+            hideAllViews();
+            window.scrollTo(0, 0); 
+            updateChatButtonVisibility(true); 
+            patolindoState.lastView = "etapa-view";
+            viewMap["etapa-view"].style.display = 'block';
+            
+            modalState.currentEtapa = etapa; 
+            document.getElementById("etapa-titulo").innerText = etapa.titulo;
+            
+            const conteudo = etapa.topicos.map(t => {
+                const topicoEscapado = t.tópico.replace(/'/g,"\\'"); 
+                const materialLink = t.material ? t.material.replace(/'/g,"\\'") : "#"; 
+
+                return `
+                    <div class="topico-bloco">
+                        <button class="material-btn" onclick="showMaterialView('${topicoEscapado}', '${materialLink}')">
+                            📚 ${t.tópico}
+                        </button>
+                        <button class="btn-flashcard" onclick="showFlashcardView('${topicoEscapado}')">🧠 Gerar Flashcards</button>
+                    </div>
+                `;
+            }).join("");
+
+            // BOTÃO DE SIMULADO DA ETAPA
+            const simularTudoBtn = `<button class="btn-primary btn-simulado-etapa" onclick="showSimuladoEtapaView()">🎯 Gerar Simulado Completo da Etapa (${etapa.topicos.length} Tópicos)</button>`;
+
+            document.getElementById("etapa-conteudo").innerHTML = `
+                <h3>📌 Atividade prática:</h3>
+                <p>${etapa.atividade}</p>
+                <h3>📚 Tópicos de Estudo:</h3>
+                <div class="topicos-container">${conteudo}</div>
+                ${simularTudoBtn}
+            `;
+        }
+        
+        function showMaterialView(topico, material) {
+            hideAllViews();
+            window.scrollTo(0, 0); 
+            updateChatButtonVisibility(true); 
+            patolindoState.lastView = "material-view";
+            viewMap["material-view"].style.display = 'block';
+            
+            fetchAndRenderMaterial(topico, material);
+        }
+
+        function showFlashcardView(topico) {
+            hideAllViews();
+            window.scrollTo(0, 0); 
+            updateChatButtonVisibility(false); // Esconde o chat no modo Flashcard
+            patolindoState.lastView = "flashcard-view";
+            viewMap["flashcard-view"].style.display = 'block';
+
+            fetchAndRenderFlashcards(topico);
+        }
+
+        function showSimuladoEtapaView() {
+            hideAllViews();
+            window.scrollTo(0, 0); 
+            updateChatButtonVisibility(false); // Esconde o chat no modo Simulado
+            patolindoState.lastView = "simulado-etapa-view";
+            viewMap["simulado-etapa-view"].style.display = 'block';
+            
+            fetchAndRenderSimuladoEtapa();
+        }
+
+        function showChatView() {
+            hideAllViews();
+            window.scrollTo(0, 0); 
+            updateChatButtonVisibility(false); 
+            viewMap["chat-view"].style.display = 'block';
+            resetPatolindoSession();
+        }
+
+        function showLastView() {
+            // Volta para a view anterior salva
+            if (patolindoState.lastView === "roadmap-view") {
+                showRoadmapView();
+            } else if (patolindoState.lastView === "etapa-view" && modalState.currentEtapa) {
+                showEtapaView(modalState.currentEtapa);
+            } else if (patolindoState.lastView === "material-view" && modalState.currentEtapa) {
+                 showEtapaView(modalState.currentEtapa);
+            } else {
+                showRoadmapView(); 
+            }
+        }
+
+        // --- FUNÇÕES DE GERENCIAMENTO DE TRILHAS (ATUALIZADAS PARA CONVIDADO) ---
+
+        // Carrega os dados da trilha (roadmap) e exibe o RoadmapView
+        function loadRoadmap(trilha, skipViewChange = false) {
+            if (!trilha || !trilha.etapas) {
+                console.error("Trilha inválida.");
+                return;
+            }
+
+            modalState.etapas = trilha.etapas;
+            currentTheme = trilha.tema;
+            document.getElementById("roadmap-title").innerText = `Sua Trilha: ${trilha.tema} (${trilha.nivel}) - ${currentUser.name}`;
+            
+            const roadmapDiv = document.getElementById("roadmap");
+            roadmapDiv.innerHTML = "";
+
+            trilha.etapas.forEach(etapa => {
+                const blocoDiv = document.createElement("div");
+                blocoDiv.className = "bloco";
+                blocoDiv.innerText = etapa.titulo;
+                blocoDiv.onclick = () => showEtapaView(etapa);
+                roadmapDiv.appendChild(blocoDiv);
+            });
+
+            // Se não for para pular, mostra a view
+            if (!skipViewChange) {
+                showRoadmapView();
+            }
+        }
+
+        // Define a trilha ativa, carrega e exibe
+        function loadAndShowRoadmap(index) {
+            if (index >= 0 && index < currentUser.trilhas.length) {
+                currentUser.currentTrilhaIndex = index;
+                loadRoadmap(currentUser.trilhas[index]);
+                if (currentUser.name !== 'Convidado') {
+                    saveUserTrilhas(); // Salva o índice ativo
+                }
+            }
+        }
+
+        // NOVO: Carrega e salva um roadmap pré-definido
+        function loadPreDefinedRoadmap(courseString) {
+            try {
+                const course = JSON.parse(courseString);
+                
+                const novaTrilha = {
+                    id: Date.now(),
+                    tema: course.tema,
+                    nivel: course.nivel,
+                    objetivo: course.objetivo,
+                    etapas: course.etapas
+                };
+                
+                // Se o usuário não for convidado, a trilha é salva
+                if (currentUser.name !== 'Convidado') {
+                    currentUser.trilhas.push(novaTrilha);
+                    currentUser.currentTrilhaIndex = currentUser.trilhas.length - 1; // Define como a trilha ativa
+                    saveUserTrilhas(); 
+                } else {
+                     // Usuário Convidado: usa uma estrutura temporária
+                    currentUser.trilhas = [novaTrilha];
+                    currentUser.currentTrilhaIndex = 0;
+                }
+                
+                // Carrega a trilha recém-criada
+                loadRoadmap(novaTrilha);
+
+            } catch (e) {
+                alert("Erro ao carregar o curso pré-definido.");
+                console.error("Erro ao parsear curso pré-definido:", e);
+                showPreDefinedCoursesView();
+            }
+        }
+
+        function deleteTrilha(index) {
+             if (currentUser.name === 'Convidado') return;
+
+            if (confirm(`Tem certeza que deseja excluir a trilha "${currentUser.trilhas[index].tema}"?`)) {
+                
+                // Remove a trilha
+                currentUser.trilhas.splice(index, 1);
+                
+                // Se a trilha excluída era a ativa, desativa e carrega a próxima ou o gerenciamento
+                if (currentUser.currentTrilhaIndex === index) {
+                    currentUser.currentTrilhaIndex = -1;
+                    showUserTrilhasView(); // Volta para o gerenciamento
+                } else if (currentUser.currentTrilhaIndex > index) {
+                    // Ajusta o índice ativo se a excluída estava antes dele
+                    currentUser.currentTrilhaIndex--;
+                }
+                
+                saveUserTrilhas();
+                showUserTrilhasView(); // Atualiza a lista
+            }
+        }
+
+        // --- FUNÇÕES DE CONTEÚDO (Roadmap, Material) ---
+
+        async function gerarRoadmap() {
+            const tema = document.getElementById("tema").value;
+            const nivel = document.getElementById("nivel").value;
+            const objetivo = document.getElementById("objetivo").value;
+            const roadmapDiv = document.getElementById("roadmap");
+            
+            roadmapDiv.innerHTML = "✨ Gerando roadmap...";
+            showRoadmapView(); 
+
+            if (!tema) {
+                roadmapDiv.innerHTML = "⚠️ Por favor, preencha o campo Tema.";
+                updateChatButtonVisibility(false);
+                return;
+            }
+            
+            // Simulação de delay para a API, pois o processo é lento
+            await new Promise(resolve => setTimeout(resolve, 500)); 
+
+            try {
+                
+                const systemPrompt = `Você é um especialista em educação técnica. Crie um roadmap **detalhado e extenso** com **no mínimo 10 (dez) etapas obrigatórias**. Para cada etapa, liste **no mínimo 4 (quatro) tópicos essenciais** para garantir profundidade no aprendizado. Use mais etapas e tópicos se o tema for complexo. Cada tópico **DEVE incluir uma URL de documentação oficial ou tutorial renomado** no campo 'material'. Sua única resposta deve ser APENAS JSON válido, sem texto introdutório ou blocos de código markdown. O JSON deve seguir este formato: {"etapas": [{"titulo": "Etapa 1: Nome da etapa", "topicos": [{"tópico": "Nome do tópico", "material": "URL de uma fonte externa"}], "atividade": "Descrição da atividade prática"}]}.`;
+                const userPrompt = `Crie um roadmap de estudos detalhado e abrangente para o tema "${tema}" no nível "${nivel}"${objetivo ? ` com objetivo "${objetivo}"` : ""}. Inclua fontes externas de estudo no campo 'material' para todos os tópicos.`;
+
+                const response = await fetch(GROQ_ENDPOINT, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${API_KEY}`
+                    },
+                    body: JSON.stringify({ 
+                        model: MODEL_NAME,
+                        messages: [
+                            { role: "system", content: systemPrompt },
+                            { role: "user", content: userPrompt }
+                        ],
+                        response_format: { type: "json_object" }, 
+                        temperature: 0.7 
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(`Erro API: ${response.status} - ${errorData.error.message || 'Erro desconhecido.'}`);
+                }
+
+                const data = await response.json();
+                let texto = data?.choices?.[0]?.message?.content || "";
+
+                let textoLimpo = texto.trim();
+                let parsed;
+                try {
+                    parsed = JSON.parse(textoLimpo);
+                } catch (e) {
+                    let jsonMatch = textoLimpo.match(/\{[\s\S]*\}/);
+                    if (!jsonMatch) throw new Error("Não foi possível extrair JSON da resposta.");
+                    parsed = JSON.parse(jsonMatch[0]);
+                }
+                
+                const etapas = parsed.etapas;
+                
+                // Salva ou carrega a nova trilha no contexto do usuário
+                const novaTrilha = {
+                    id: Date.now(),
+                    tema: tema,
+                    nivel: nivel,
+                    objetivo: objetivo,
+                    etapas: etapas
+                };
+                
+                // Se o usuário não for convidado, a trilha é salva
+                if (currentUser.name !== 'Convidado') {
+                    currentUser.trilhas.push(novaTrilha);
+                    currentUser.currentTrilhaIndex = currentUser.trilhas.length - 1; // Define como a trilha ativa
+                    saveUserTrilhas(); 
+                } else {
+                     // Usuário Convidado: usa uma estrutura temporária
+                    currentUser.trilhas = [novaTrilha];
+                    currentUser.currentTrilhaIndex = 0;
+                }
+                
+                // Carrega a trilha recém-criada
+                loadRoadmap(novaTrilha);
+
+            } catch (err) {
+                console.error("Erro:", err);
+                roadmapDiv.innerHTML = `⚠️ Erro ao gerar roadmap. Verifique sua chave API e tente novamente. Causa: ${err.message}.`;
+                updateChatButtonVisibility(false); 
+            }
+        }
+
+        async function fetchAndRenderMaterial(topico, material) {
+            // Recarrega o tema atual da trilha ativa
+            const currentTrilha = currentUser.trilhas[currentUser.currentTrilhaIndex];
+            const currentTheme = currentTrilha ? currentTrilha.tema : "educação";
+            
+            const materialConteudo = document.getElementById("material-conteudo");
+            materialConteudo.innerHTML = `<p>Carregando conteúdo sobre: <strong>${topico}</strong>...</p>`;
+            document.getElementById("material-titulo").innerText = topico; // Define o título
+
+            
+            try {
+                // ATUALIZAÇÃO NO PROMPT: Detalhado, longo e requer múltiplas fontes citadas
+                const systemPromptMaterial = `Você é um professor especialista em ${currentTheme}. Explique de forma didática, **detalhada e longa** o tópico "${topico}". Utilize o conhecimento de **diversas fontes confiáveis** para enriquecer o texto. Seu conteúdo **DEVE terminar com uma seção 'Fontes Utilizadas'** (ou similar) listando as URLs das referências utilizadas na pesquisa e composição do texto, mesmo que sejam apenas exemplos. Use o formato: 'Fontes Utilizadas: [URL1], [URL2], [URLn]'.`;
+                const userPromptMaterial = `Explique o tópico "${topico}" (Nível: ${document.getElementById("nivel").value}).`;
+
+                const response = await fetch(GROQ_ENDPOINT, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json", "Authorization": `Bearer ${API_KEY}` },
+                    body: JSON.stringify({ model: MODEL_NAME, messages: [{ role: "system", content: systemPromptMaterial }, { role: "user", content: userPromptMaterial }], temperature: 0.8 })
+                });
+
+                if (!response.ok) { throw new Error(`Erro API: ${response.status}`); }
+                const data = await response.json();
+                let texto = data?.choices?.[0]?.message?.content || "Erro ao gerar conteúdo.";
+
+                // CORREÇÃO: Converte **negrito** para <b>negrito</b> e quebra de linha para <br>
+                texto = texto.replace(/\*\*(.*?)\*\*/g, "<b>$1</b>").replace(/\n/g, "<br>");
+                
+                // Extrai e formata as fontes citadas no final do texto (ex: Fontes Utilizadas: URL1, URL2)
+                let sourceHtml = '';
+                const sourceMatch = texto.match(/Fontes Utilizadas:(.*)/i);
+                if (sourceMatch && sourceMatch[1]) {
+                    const sources = sourceMatch[1].trim().split(',').map(s => s.trim()).filter(s => s.startsWith('http'));
+                    
+                    if (sources.length > 0) {
+                        sourceHtml = '<h3 style="margin-top: 30px; border-left: 5px solid #28A745; padding-left: 12px; color: #28A745;">🔗 Fontes Utilizadas</h3><ul>';
+                        sources.forEach(url => {
+                            sourceHtml += `<li><a href="${url}" target="_blank" style="color: #007bff; text-decoration: none;">${url}</a></li>`;
+                        });
+                        sourceHtml += '</ul>';
+                    }
+                    // Remove a seção de fontes do corpo principal do texto
+                    texto = texto.substring(0, sourceMatch.index).trim();
+                }
+
+                // Adiciona a fonte obrigatória fornecida no roadmap (se existir e não estiver nas fontes do corpo)
+                if (material && material !== 'null' && material.startsWith('http')) {
+                    sourceHtml += `<h3 style="margin-top: 30px; border-left: 5px solid var(--color-primary); padding-left: 12px;">📚 Fonte da Trilha</h3><p><a href="${material}" target="_blank" style="color: var(--color-primary-dark); font-weight: bold;">${material} (Abrirá em nova aba)</a></p>`;
+                }
+                
+                if (!sourceHtml) {
+                     sourceHtml = '<p style="margin-top: 20px; color: #999;">Nenhuma fonte de estudo externa foi citada pela IA ou no roadmap.</p>';
+                }
+
+                materialConteudo.innerHTML = `<div style="max-height:450px; overflow-y:auto; padding-right:10px;">${texto}</div>${sourceHtml}`;
+
+            } catch (err) {
+                console.error("Erro:", err);
+                materialConteudo.innerHTML = `<p>⚠️ Erro ao gerar conteúdo. Causa: ${err.message}.</p>`;
+            }
+        }
+        
+        // --- FUNÇÕES: FLASHCARDS POR TÓPICO ---
+
+        let currentFlashcards = [];
+        let currentFlashcardIndex = 0;
+
+        async function fetchAndRenderFlashcards(topico) {
+            document.getElementById("flashcard-titulo").innerText = `Flashcards: ${topico}`;
+            const flashcardDisplay = document.getElementById("flashcard-display");
+            flashcardDisplay.innerHTML = `<p>Carregando flashcards sobre: <strong>${topico}</strong>...</p>`;
+
+            try {
+                // ATUALIZAÇÃO NO PROMPT: Requer 5 objetos únicos
+                const systemPromptFlashcard = `Você é um gerador de flashcards. Sua única resposta deve ser APENAS JSON válido, sem texto introdutório. O JSON deve ser um array de **5 objetos**, onde cada objeto tem uma "pergunta" (frente do card) e uma "resposta" (verso do card). As 5 perguntas devem ser **únicas** e cobrir diferentes aspectos do tópico. O formato deve ser: [{"pergunta": "...", "resposta": "..."}, {"pergunta": "...", ...}].`;
+                const userPromptFlashcard = `Crie 5 flashcards de pergunta e resposta sobre o tópico "${topico}" no nível ${document.getElementById("nivel").value}.`;
+
+                const response = await fetch(GROQ_ENDPOINT, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json", "Authorization": `Bearer ${API_KEY}` },
+                    body: JSON.stringify({ model: MODEL_NAME, messages: [{ role: "system", content: systemPromptFlashcard }, { role: "user", content: userPromptFlashcard }], response_format: { type: "json_object" }, temperature: 0.6 })
+                });
+
+                if (!response.ok) { throw new Error(`Erro API: ${response.status}`); }
+                const data = await response.json();
+                let texto = data?.choices?.[0]?.message?.content || "Erro ao gerar flashcards.";
+
+                let parsedData;
+                try {
+                    parsedData = JSON.parse(texto.trim());
+                } catch (e) {
+                    let jsonMatch = texto.replace(/[\u0000-\u001F\u007F-\u009F]/g, "").trim().match(/\[[\s\S]*\]/);
+                    if (!jsonMatch) throw new Error("Não foi possível extrair JSON dos flashcards.");
+                    parsedData = JSON.parse(jsonMatch[0]);
+                }
+                
+                currentFlashcards = Array.isArray(parsedData) ? parsedData : parsedData.flashcards || [parsedData];
+                currentFlashcardIndex = 0;
+                renderFlashcard();
+
+            } catch (err) {
+                console.error("Erro no Flashcard:", err);
+                flashcardDisplay.innerHTML = `<p>⚠️ Erro ao gerar flashcards. Causa: ${err.message}.</p>`;
+            }
+        }
+        
+        function renderFlashcard() {
+            const flashcardDisplay = document.getElementById("flashcard-display");
+            
+            if (currentFlashcards.length === 0) {
+                flashcardDisplay.innerHTML = "<p>Nenhum flashcard gerado.</p>";
+                return;
+            }
+
+            const card = currentFlashcards[currentFlashcardIndex];
+            const total = currentFlashcards.length;
+
+            // CORREÇÃO: Converte **negrito** para <b>negrito</b> e quebra de linha para <br>
+            const perguntaFormatada = (card.pergunta || '')
+                .replace(/\*\*(.*?)\*\*/g, "<b>$1</b>")
+                .replace(/\n/g, "<br>");
+
+            // CORREÇÃO: Converte **negrito** para <b>negrito</b> e quebra de linha para <br>
+            const respostaFormatada = (card.resposta || '')
+                .replace(/\*\*(.*?)\*\*/g, "<b>$1</b>")
+                .replace(/\n/g, "<br>");
+
+            flashcardDisplay.innerHTML = `
+                <p>Card ${currentFlashcardIndex + 1} de ${total}</p>
+                <div class="flashcard" id="current-flashcard" onclick="toggleFlip()">
+                    <div class="flashcard-inner">
+                        <div class="flashcard-face flashcard-front">
+                            <p style="font-weight: bold;">PERGUNTA:</p>
+                            <p>${perguntaFormatada || 'Erro ao carregar pergunta.'}</p>
+                        </div>
+                        <div class="flashcard-face flashcard-back">
+                            <p style="font-weight: bold;">RESPOSTA:</p>
+                            <p>${respostaFormatada || 'Erro ao carregar resposta.'}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flashcard-navigation">
+                    <button class="btn-secondary" onclick="prevFlashcard()" ${currentFlashcardIndex === 0 ? 'disabled' : ''}>Anterior</button>
+                    <button class="btn-success" onclick="nextFlashcard()" ${currentFlashcardIndex === total - 1 ? 'disabled' : ''}>Próximo</button>
+                </div>
+            `;
+        }
+
+        function toggleFlip() {
+            document.getElementById('current-flashcard').classList.toggle('flipped');
+        }
+
+        function prevFlashcard() {
+            if (currentFlashcardIndex > 0) {
+                currentFlashcardIndex--;
+                // Remove a classe 'flipped' antes de renderizar o novo card para que ele comece virado para frente
+                document.getElementById('current-flashcard').classList.remove('flipped'); 
+                renderFlashcard();
+            }
+        }
+
+        function nextFlashcard() {
+            if (currentFlashcardIndex < currentFlashcards.length - 1) {
+                currentFlashcardIndex++;
+                // Remove a classe 'flipped' antes de renderizar o novo card para que ele comece virado para frente
+                document.getElementById('current-flashcard').classList.remove('flipped'); 
+                renderFlashcard();
+            }
+        }
+
+        // --- FUNÇÕES: SIMULADO POR ETAPA ---
+
+        let currentSimuladoEtapa = [];
+        let userAnswers = {};
+
+        async function fetchAndRenderSimuladoEtapa() {
+            const etapa = modalState.currentEtapa;
+            document.getElementById("simulado-etapa-titulo").innerText = `Simulado Completo: ${etapa.titulo}`;
+            const simuladoConteudo = document.getElementById("simulado-etapa-conteudo");
+            const simuladoBotoes = document.getElementById("simulado-etapa-botoes");
+
+            simuladoConteudo.innerHTML = `<p>Carregando simulado de 20+ questões sobre a etapa: <strong>${etapa.titulo}</strong>...</p>`;
+            simuladoBotoes.innerHTML = '';
+            currentSimuladoEtapa = [];
+            userAnswers = {};
+
+            try {
+                // ATUALIZAÇÃO NO PROMPT: Requer diversidade de perguntas, distribuição aleatória das respostas, e estilo de prova/vestibular.
+                const systemPromptSimulado = `Você é um gerador de questões de múltipla escolha no estilo de provas e vestibulares. Crie um simulado de no mínimo 20 (vinte) questões sobre todos os tópicos fornecidos. **Todas as questões devem ser únicas e cobrir diferentes áreas dos tópicos.** Sua única resposta deve ser APENAS JSON válido, sem texto introdutório. O JSON deve ser um objeto contendo um array de "simulados" seguindo o formato: {"simulados": [{"pergunta": "...", "alternativas": ["A) ...", "B) ...", "C) ...", "D) ...", "E) ..."], "resposta_correta": "Letra da alternativa correta (ex: C)"}, ...]}. **IMPORTANTE: Distribua a resposta correta de forma aleatória (A, B, C, D ou E) para evitar ciclos viciosos de repetição de letra.**`;
+                const topicosEtapa = etapa.topicos.map(t => t.tópico).join(", ");
+                const nivel = document.getElementById("nivel").value;
+                const userPromptSimulado = `Crie no mínimo 20 questões de múltipla escolha sobre os seguintes tópicos da etapa: ${topicosEtapa} no nível ${nivel}. As questões devem ter 5 alternativas e o estilo deve ser complexo e abrangente, como em um vestibular/curso técnico.`;
+
+                const response = await fetch(GROQ_ENDPOINT, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json", "Authorization": `Bearer ${API_KEY}` },
+                    body: JSON.stringify({ model: MODEL_NAME, messages: [{ role: "system", content: systemPromptSimulado }, { role: "user", content: userPromptSimulado }], response_format: { type: "json_object" }, temperature: 0.6 })
+                });
+
+                if (!response.ok) { throw new Error(`Erro API: ${response.status}`); }
+                const data = await response.json();
+                let texto = data?.choices?.[0]?.message?.content || "Erro ao gerar simulado.";
+
+                let parsedData;
+                try {
+                    parsedData = JSON.parse(texto.trim());
+                } catch (e) {
+                    let jsonMatch = texto.replace(/[\u0000-\u001F\u007F-\u009F]/g, "").trim().match(/\{[\s\S]*\}/);
+                    if (!jsonMatch) throw new Error("Não foi possível extrair JSON do simulado.");
+                    parsedData = JSON.parse(jsonMatch[0]);
+                }
+                
+                currentSimuladoEtapa = parsedData.simulados || [parsedData];
+                renderSimuladoEtapa();
+
+            } catch (err) {
+                console.error("Erro no Simulado Etapa:", err);
+                simuladoConteudo.innerHTML = `<p>⚠️ Erro ao gerar simulado da etapa. Causa: ${err.message}.</p>`;
+            }
+        }
+
+        function renderSimuladoEtapa() {
+            const simuladoConteudo = document.getElementById("simulado-etapa-conteudo");
+            const simuladoBotoes = document.getElementById("simulado-etapa-botoes");
+
+            if (currentSimuladoEtapa.length === 0) {
+                 simuladoConteudo.innerHTML = "<p>Nenhuma questão gerada.</p>";
+                 return;
+            }
+
+            const simuladosHtml = currentSimuladoEtapa.map((simulado, index) => {
+                const alternativasHtml = simulado.alternativas.map((alt, altIndex) => {
+                    // Tenta garantir que o formato seja A), B), C), etc.
+                    const letra = alt.charAt(0).toUpperCase(); 
+                    const isSelected = userAnswers[index] === letra;
+                    return `<li class="alternativa ${isSelected ? 'selected' : ''}" 
+                                data-question-index="${index}" 
+                                data-answer="${letra}" 
+                                onclick="selectAlternative(this)">
+                                ${alt}
+                            </li>`;
+                }).join("");
+
+                return `<div class="simulado-bloco" data-index="${index}">
+                            <h4>Questão ${index + 1}:</h4>
+                            <p><strong>${simulado.pergunta}</strong></p>
+                            <ul>${alternativasHtml}</ul>
+                        </div><hr>`;
+            }).join("");
+
+            simuladoConteudo.innerHTML = `<div class="simulado-area">${simuladosHtml}</div><div id="simulado-resultado" style="display:none;"></div>`;
+            
+            // Botão de corrigir só aparece se o simulado existir
+            simuladoBotoes.innerHTML = `<button class="btn-primary" onclick="corrigirSimuladoEtapa()">Corrigir e Ver Resultado</button>`;
+        }
+        
+        function selectAlternative(liElement) {
+            const questionIndex = liElement.getAttribute('data-question-index');
+            const answer = liElement.getAttribute('data-answer');
+            const ul = liElement.closest('ul');
+            
+            // Remove seleção de todas as alternativas
+            ul.querySelectorAll('.alternativa').forEach(li => li.classList.remove('selected'));
+            
+            // Adiciona seleção à alternativa clicada
+            liElement.classList.add('selected');
+            
+            // Armazena a resposta do usuário
+            userAnswers[questionIndex] = answer;
+        }
+
+        function corrigirSimuladoEtapa() {
+            let acertos = 0;
+            const totalQuestoes = currentSimuladoEtapa.length;
+
+            currentSimuladoEtapa.forEach((simulado, index) => {
+                const bloco = document.querySelector(`.simulado-bloco[data-index="${index}"]`);
+                if (!bloco) return;
+                
+                const alternativas = bloco.querySelectorAll('.alternativa');
+                // Garante que a resposta correta é a letra maiúscula
+                const respostaCorreta = simulado.resposta_correta.charAt(0).toUpperCase(); 
+                const respostaUsuario = userAnswers[index];
+                
+                // Desabilita cliques após a correção
+                alternativas.forEach(li => li.onclick = null);
+
+                alternativas.forEach(li => {
+                    const letra = li.getAttribute('data-answer');
+                    li.classList.remove('selected'); // Remove a seleção temporária
+
+                    if (letra === respostaCorreta) {
+                        li.classList.add('correta-destacada'); // Marca a correta
+                    } 
+                    
+                    if (letra === respostaUsuario && letra !== respostaCorreta) {
+                        li.classList.add('incorreta'); // Marca a incorreta do usuário
+                    }
+                });
+
+                if (respostaUsuario === respostaCorreta) {
+                    acertos++;
+                }
+            });
+
+            const porcentagem = (acertos / totalQuestoes) * 100;
+            const resultadoDiv = document.getElementById('simulado-resultado');
+            
+            resultadoDiv.innerHTML = `
+                <h3>Resultado Final</h3>
+                <p>Total de Questões: <strong>${totalQuestoes}</strong></p>
+                <p>Acertos: <strong style="color: var(--color-success);">${acertos}</strong></p>
+                <p>Erros: <strong style="color: var(--color-danger);">${totalQuestoes - acertos}</strong></p>
+                <p>Taxa de Acerto: <strong style="font-size: 1.5em; color: ${porcentagem >= 70 ? 'var(--color-success)' : 'var(--color-danger)'}">${porcentagem.toFixed(2)}%</strong></p>
+            `;
+            resultadoDiv.style.display = 'block';
+            
+            // Remove o botão de corrigir
+            document.getElementById("simulado-etapa-botoes").innerHTML = '';
+            
+            // Rola para o resultado
+            resultadoDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+
+
+        // --- LÓGICA DO CHATBOT PATOLINDO (COM RESTRIÇÃO DE TEMA E TUTORIA) ---
+
+        function updateSendButtonState() {
+            const input = document.getElementById("chat-input");
+            const sendButton = document.getElementById("chat-send-button");
+            const headerSpan = document.getElementById("chat-counter");
+            
+            sendButton.disabled = input.value.trim() === '' || patolindoState.questionsLeft <= 0;
+            input.disabled = patolindoState.questionsLeft <= 0;
+            
+            headerSpan.innerText = `(${patolindoState.questionsLeft} Perguntas)`;
+
+            if (patolindoState.questionsLeft <= 0) {
+                input.placeholder = "Sessão encerrada. Reabra para começar de novo.";
+            } else {
+                input.placeholder = "Sua pergunta...";
+            }
+        }
+
+        function resetPatolindoSession() {
+            patolindoState.questionsLeft = 5;
+            
+            const currentTrilha = currentUser.trilhas[currentUser.currentTrilhaIndex];
+            const theme = currentTrilha ? currentTrilha.tema : null;
+
+            const themeRestriction = theme ? `O ÚNICO TEMA permitida para conversação é: "${theme}". Você deve RECUSAR educadamente perguntas fora deste assunto.` : "Nenhuma trilha de estudos foi gerada. Você deve recusar perguntas até que uma trilha seja gerada.";
+
+            // ⚠️ ATENÇÃO: INSTRUÇÃO DE TUTORIA E EXCEÇÃO INCLUÍDAS AQUI
+            patolindoState.history = [{
+                role: "system",
+                content: `Você é o Patolindo, um assistente de estudos prestativo e didático. Sua função é responder a no máximo 5 perguntas do usuário. Sua **principal diretriz é guiar o usuário à resposta**, nunca a entregando de forma completa e direta. Transforme a resposta em uma dica ou uma pergunta instigante para fomentar o aprendizado ativo. **Você só deve fornecer a resposta completa e direta se o usuário solicitar explicitamente.** Seja conciso e focado. ${themeRestriction}`
+            }]; 
+
+            const chatMessages = document.getElementById("chat-messages");
+            // APLICANDO A FORMATAÇÃO PARA A MENSAGEM INICIAL DE BOAS-VINDAS
+            const welcomeText = `Olá! Sou o Patolindo. Você tem **${patolindoState.questionsLeft} perguntas** para tirar dúvidas sobre a sua trilha atual (**${theme || 'NENHUM TEMA'}**).`;
+            const welcomeHtml = welcomeText.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\n/g, "<br>");
+
+            chatMessages.innerHTML = `<p class="bot-message"><span class="bot-bubble">${welcomeHtml}</span></p>`;
+            chatMessages.scrollTop = chatMessages.scrollHeight; 
+            updateSendButtonState();
+        }
+
+        async function handleChatSend() {
+            const input = document.getElementById("chat-input");
+            const question = input.value.trim();
+            
+            if (!question || patolindoState.questionsLeft <= 0) return;
+            
+            appendMessage(question, 'user');
+            input.value = ''; 
+            
+            const sendButton = document.getElementById("chat-send-button");
+            sendButton.disabled = true; 
+            
+            try {
+                patolindoState.history.push({ role: "user", content: question });
+
+                const currentTrilha = currentUser.trilhas[currentUser.currentTrilhaIndex];
+                const roadmapContext = currentTrilha ? JSON.stringify(currentTrilha.etapas) : "Nenhuma trilha de estudos foi gerada ainda.";
+                
+                // Construa a lista de mensagens, garantindo que o System Prompt esteja no início.
+                const systemContext = {
+                    role: "system",
+                    content: patolindoState.history[0].content + 
+                             ` O contexto da trilha de estudos atual do usuário é: ${roadmapContext}. Você deve ser rigoroso em se manter APENAS no tema da trilha.`
+                };
+                
+                const messagesToSend = [systemContext].concat(patolindoState.history.slice(1)); 
+
+                const response = await fetch(GROQ_ENDPOINT, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json", "Authorization": `Bearer ${API_KEY}` },
+                    body: JSON.stringify({ model: MODEL_NAME, messages: messagesToSend, temperature: 0.8 })
+                });
+
+                if (!response.ok) { throw new Error(`Erro API: ${response.status}`); }
+
+                const data = await response.json();
+                const answer = data?.choices?.[0]?.message?.content || "Desculpe, ocorreu um erro de comunicação e não consegui gerar a resposta.";
+
+                appendMessage(answer, 'bot');
+                
+                // Verifica se a resposta foi uma recusa (para não descontar a pergunta)
+                const isRefusal = answer.toLowerCase().includes("não consigo responder") || answer.toLowerCase().includes("fora do tema");
+
+                if (!isRefusal) {
+                    patolindoState.history.push({ role: "assistant", content: answer });
+                    patolindoState.questionsLeft--;
+                } else {
+                     patolindoState.history.push({ role: "assistant", content: answer });
+                }
+                
+            } catch (err) {
+                console.error("Erro no Patolindo:", err);
+                appendMessage("Patolindo: Desculpe, ocorreu um erro de comunicação. Tente novamente.", 'bot');
+            } finally {
+                sendButton.disabled = false;
+                updateSendButtonState();
+            }
+        }
+        
+        function appendMessage(text, sender) {
+            const chatMessages = document.getElementById("chat-messages");
+            const messageElement = document.createElement("p");
+            
+            if (sender === 'user') {
+                messageElement.className = 'user-message';
+                messageElement.innerHTML = `<span class="user-bubble">${text}</span>`;
+            } else {
+                messageElement.className = 'bot-message';
+                // CORREÇÃO: Garante que o negrito **Markdown** é convertido para <b>HTML</b>
+                const htmlText = text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\n/g, "<br>");
+                messageElement.innerHTML = `<span class="bot-bubble">${htmlText}</span>`;
+            }
+            
+            chatMessages.appendChild(messageElement);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
 
     </script>
 </body>
