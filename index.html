@@ -535,140 +535,205 @@
         }
         
         /* --- Estilos da Tela Flashcard --- */
-        #flashcard-display {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-top: 20px;
-        }
-        
-        /* NOVO: CONTAINER PARA FLASHCARD + MASCOTE */
-        .flashcard-mascote-container {
-            display: flex;
-            align-items: center; 
-            justify-content: center; 
-            gap: 20px; 
-            margin-bottom: 20px;
-            width: 100%;
-            max-width: 700px;
-        }
-        
-        /* NOVO: ESTILO PARA O MASCOTE DO FLASHCARD */
-        .mascote-flashcard {
-            width: 180px; 
-            height: 180px;
-            object-fit: contain;
-            flex-shrink: 0;
-        }
+#flashcard-display {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
 
-        .flashcard {
-            width: 100%;
-            max-width: 400px;
-            height: 250px;
-            perspective: 1000px;
-        }
+/* CONTAINER PARA FLASHCARD + MASCOTE */
+.flashcard-mascote-container {
+    display: flex;
+    align-items: center; 
+    justify-content: center; 
+    gap: 20px; 
+    margin-bottom: 20px;
+    width: 100%;
+    max-width: 700px;
+}
 
-        .flashcard-inner {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            text-align: center;
-            transition: transform 0.6s;
-            transform-style: preserve-3d;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            border-radius: 10px;
-        }
+/* ESTILO PARA O MASCOTE DO FLASHCARD */
+.mascote-flashcard {
+    width: 150px; 
+    height: 150px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
 
-        .flashcard.flipped .flashcard-inner {
-            transform: rotateY(180deg);
-        }
+.flashcard {
+    width: 100%;
+    max-width: 400px;
+    height: 250px;
+    perspective: 1000px;
+}
 
-        .flashcard-face {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            border-radius: 10px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            box-sizing: border-box;
-            font-size: 1.1em;
-            font-weight: 500;
-        }
+.flashcard-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
 
-        .flashcard-front {
-            background-color: var(--color-primary);
-            color: var(--color-secondary);
-            border: 2px solid var(--color-primary-dark);
-        }
+.flashcard.flipped .flashcard-inner {
+    transform: rotateY(180deg);
+}
 
-        .flashcard-back {
-            background-color: #F0F0F0;
-            color: var(--color-secondary);
-            border: 2px solid #ddd;
-            transform: rotateY(180deg);
-            text-align: left;
-        }
+.flashcard-face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+    font-size: 1.1em;
+    font-weight: 500;
+}
 
-        .flashcard-navigation {
-            display: flex;
-            justify-content: space-between;
-            width: 100%;
-            max-width: 400px;
-        }
-        
-        /* --- Estilos da Tela Simulado (Etapa) --- */
-        .simulado-area ul {
-            list-style: none;
-            padding: 0;
-            margin-top: 15px;
-        }
-        
-        .simulado-area li.alternativa {
-            padding: 12px;
-            margin-bottom: 10px;
-            border: 1px solid #ced4da;
-            border-radius: 6px;
-            transition: background-color 0.3s;
-            cursor: pointer; 
-            background-color: var(--color-card); 
-            color: var(--color-secondary);
-        }
-        
-        .simulado-area li.alternativa:hover {
-             background-color: #f8f9fa;
-        }
-        
-        .simulado-area li.selected {
-            background-color: var(--color-primary) !important; 
-            border-color: var(--color-primary-dark) !important;
-        }
+.flashcard-front {
+    background-color: var(--color-primary);
+    color: var(--color-secondary);
+    border: 2px solid var(--color-primary-dark);
+}
 
-        .simulado-area li.incorreta {
-            background-color: #FFF3F3 !important; 
-            color: var(--color-danger) !important;
-            border-color: #F5C6CB !important;
-        }
-        
-        .simulado-area li.correta-destacada {
-            background-color: #d4edda !important; 
-            color: #155724 !important;
-            border-color: #c3e6cb !important;
-        }
+.flashcard-back {
+    background-color: #F0F0F0;
+    color: var(--color-secondary);
+    border: 2px solid #ddd;
+    transform: rotateY(180deg);
+    text-align: left;
+}
 
-        .simulado-bloco {
-            margin-bottom: 25px;
-            padding: 20px 0;
-        }
-        
-        .simulado-area hr {
-            margin-top: 25px;
-            margin-bottom: 25px;
-            border-top: 1px solid #eee;
-        }
+.flashcard-navigation {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 400px;
+}
+
+/* ---------------------------------------------------
+* MEDIA QUERIES OTIMIZADAS - FLASHCARDS MOBILE
+* --------------------------------------------------- */
+
+/* Tablet (Telas maiores que 601px) */
+@media (min-width: 601px) {
+    .bloco {
+        flex: 1 1 calc(50% - 15px); 
+        font-size: 1em;
+    }
+
+    .topico-bloco {
+        display: flex;
+        flex-direction: row; 
+        gap: 15px;
+    }
+
+    .modal-actions {
+        text-align: right;
+    }
+    
+    .modal-actions button {
+        width: auto; 
+    }
+    
+    .material-btn, .btn-flashcard {
+        flex: 1 1 50%; 
+    }
+    .topico-bloco {
+        justify-content: space-between;
+    }
+
+    .login-actions {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+    .login-actions button {
+        width: calc(50% - 5px);
+    }
+}
+
+/* MOBILE - Telas menores que 600px */
+@media (max-width: 600px) {
+    .flashcard-mascote-container {
+        flex-direction: column; /* Coloca a imagem abaixo do flashcard */
+        gap: 15px;
+    }
+    
+    .mascote-flashcard {
+        width: 120px; /* Reduz um pouco a imagem no mobile */
+        height: 120px;
+        order: 2; /* Coloca a imagem depois do flashcard */
+    }
+    
+    .flashcard {
+        order: 1; /* Garante que o flashcard venha primeiro */
+        height: 220px; /* Altura um pouco menor no mobile */
+        max-width: 350px;
+    }
+    
+    .flashcard-face {
+        padding: 15px; /* Menos padding no mobile */
+        font-size: 1em; /* Texto um pouco menor */
+    }
+    
+    .flashcard-navigation {
+        flex-direction: column; /* Botões em coluna no mobile */
+        gap: 10px;
+        max-width: 350px;
+    }
+    
+    .flashcard-navigation button {
+        width: 100%; /* Botões ocupam toda a largura */
+    }
+}
+
+/* MOBILE MUITO PEQUENO - Telas menores que 400px */
+@media (max-width: 400px) {
+    .flashcard {
+        height: 200px;
+        max-width: 300px;
+    }
+    
+    .flashcard-face {
+        padding: 12px;
+        font-size: 0.95em;
+    }
+    
+    .mascote-flashcard {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .flashcard-navigation {
+        max-width: 300px;
+    }
+}
+
+/* Desktop (Telas maiores que 993px) */
+@media (min-width: 993px) {
+    .bloco {
+        flex: 1 1 calc(33.333% - 20px); 
+        padding: 25px;
+    }
+    .course-card {
+        padding: 20px;
+    }
+    
+    /* Aumenta as imagens no desktop se quiser */
+    .mascote-flashcard {
+        width: 180px;
+        height: 180px;
+    }
+}
 
         /* NOVO: ESTILO PARA RESULTADO DO SIMULADO COM MASCOTE */
         #simulado-resultado {
