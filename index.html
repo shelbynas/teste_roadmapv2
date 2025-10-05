@@ -189,4 +189,945 @@
     .btn-primary:hover{background:var(--primary-dark)}
     .btn-secondary{background:#6c757d; color:#fff}
     .btn-success{background:var(--success); color:#fff}
-    .btn-ghost{background:transparent; border:1px
+    .btn-ghost{background:transparent; border:1px solid #eee}
+
+    /* small note */
+    .note{font-size:0.9rem;color:var(--muted)}
+
+    /* ---------------------------
+       CONTAINER PRINCIPAL (APP)
+       --------------------------- */
+    main.app-body{
+      margin-top:18px;
+      margin-bottom:40px;
+      display:flex;
+      gap:20px;
+      align-items:flex-start;
+    }
+
+    /* layout com duas colunas responsivas */
+    .col-left{
+      width:360px;
+      min-width:300px;
+    }
+    .col-right{flex:1;min-width:260px}
+
+    /* painéis */
+    .panel{
+      background:var(--card);
+      border-radius:var(--radius);
+      padding:18px;
+      box-shadow:var(--shadow-1);
+    }
+    .panel h2{margin:0 0 10px 0;color:var(--primary-dark)}
+    .small{font-size:0.9rem}
+
+    /* cursos grid */
+    .courses-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fill, minmax(180px,1fr));
+      gap:12px;
+      margin-top:12px;
+    }
+    .course-card{
+      background:linear-gradient(180deg,var(--light-yellow), #fff);
+      border-radius:12px;
+      padding:12px;
+      border:2px solid var(--primary);
+      box-shadow: 0 6px 16px rgba(16,24,40,0.04);
+      cursor:pointer;
+      transition: transform var(--transition), box-shadow var(--transition);
+      text-align:left;
+    }
+    .course-card:hover{transform: translateY(-6px); box-shadow: 0 14px 40px rgba(16,24,40,0.09)}
+    .course-card h4{margin:0 0 6px 0; font-size:1rem}
+    .course-meta{font-size:0.85rem;color:var(--muted)}
+
+    /* roadmap grid */
+    .roadmap-grid{
+      display:grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px,1fr));
+      gap:12px;
+      margin-top:12px;
+    }
+    .block{
+      background:linear-gradient(180deg,#fff,var(--light-yellow));
+      border-radius:12px;
+      padding:14px;
+      text-align:center;
+      font-weight:700;
+      border:1px solid var(--primary-dark);
+      cursor:pointer;
+      box-shadow: 0 8px 18px rgba(16,24,40,0.05);
+      transition: transform var(--transition), box-shadow var(--transition), background var(--transition);
+    }
+    .block:hover{transform: translateY(-6px); background:var(--primary); color:var(--text)}
+    .placeholder{padding:40px;text-align:center;color:#999;border-radius:10px}
+
+    /* topicos */
+    .topicos-container{margin-top:12px;display:flex;flex-direction:column;gap:10px}
+    .topic-row{display:flex;gap:10px}
+    .topic-btn{
+      flex:1;
+      padding:10px 12px;
+      border-radius:10px;
+      border:1px solid #e7e7e7;
+      background:#fafafa;
+      cursor:pointer;
+      text-align:left;
+      font-weight:600;
+      transition: transform var(--transition);
+    }
+    .topic-btn:hover{transform: translateY(-3px)}
+
+    /* flashcards */
+    .flashcard{
+      border-radius:12px;
+      perspective:1000px;
+      margin:18px auto;
+      max-width:480px;
+      height:260px;
+    }
+    .flashcard-inner{
+      width:100%;height:100%;
+      transition: transform 700ms;
+      transform-style:preserve-3d;
+      border-radius:12px;
+      box-shadow:var(--shadow-2);
+    }
+    .flashcard.flipped .flashcard-inner{transform: rotateY(180deg)}
+    .face{
+      position:absolute; inset:0; backface-visibility:hidden;
+      display:flex;align-items:center;justify-content:center;padding:20px;font-weight:700;border-radius:12px;
+    }
+    .face.front{background:var(--primary); color:var(--text); border:2px solid var(--primary-dark)}
+    .face.back{background:#F0F0F0;color:var(--text);transform:rotateY(180deg); border:1px solid #eaeaea; text-align:left}
+
+    /* chat button */
+    #chat-button{
+      position:fixed;right:28px;bottom:28px;width:62px;height:62px;border-radius:999px;
+      display:flex;align-items:center;justify-content:center;font-size:26px;
+      background:var(--primary-dark);color:var(--text);border:3px solid var(--primary);
+      box-shadow: 0 14px 40px rgba(16,24,40,0.18);cursor:pointer;z-index:1200;
+      transition: transform var(--transition);
+    }
+    #chat-button:hover{transform: translateY(-4px); background:var(--primary)}
+
+    /* chat container */
+    #chat-container{display:flex;flex-direction:column;height:70vh;min-height:360px}
+    #chat-messages{flex:1;overflow:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#f7f7f7;border-radius:0 0 10px 10px}
+    .user-bubble{align-self:flex-end;background:#007bff;color:white;padding:10px 12px;border-radius:12px 12px 0 12px;max-width:78%}
+    .bot-bubble{align-self:flex-start;background:white;color:var(--text);padding:10px 12px;border-radius:12px 12px 12px 0;max-width:78%;box-shadow: 0 6px 12px rgba(0,0,0,0.04)}
+
+    /* responsive */
+    @media (max-width:980px){
+      .wrap{width:95%}
+      main.app-body{flex-direction:column}
+      .col-left{width:100%;min-width:100%}
+      .col-right{width:100%}
+      .card{flex-direction:column;align-items:center;text-align:center}
+      .card .left{width:auto}
+    }
+
+    @media (max-width:420px){
+      .brand h1{font-size:1rem}
+      .mascote-big{width:110px;height:110px}
+    }
+  </style>
+</head>
+<body>
+
+  <div class="wrap">
+
+    <!-- HEADER -->
+    <header class="app-header" role="banner">
+      <div class="brand">
+        <div class="logo" title="Quackademy">
+          <img src="mascote.png" alt="Mascote Quackademy">
+        </div>
+        <div>
+          <h1>Quackademy</h1>
+          <div class="note">Trilha de Estudos</div>
+        </div>
+      </div>
+      <div class="header-actions">
+        <div class="user-pill">Usuário: <span id="userNameDisplay" style="margin-left:8px;font-weight:800">Carregando...</span></div>
+        <button id="btnMinhasTrilhas" class="btn btn-primary" title="Minhas Trilhas">Minhas Trilhas (0)</button>
+      </div>
+    </header>
+
+    <!-- TELA INICIAL (LOGIN) -->
+    <div id="login-screen" class="center-screen" style="display:flex; margin-top:18px;">
+      <div class="card" style="max-width:920px;">
+        <div class="left">
+          <img src="mascote_inicial.png" alt="Mascote Quackademy" class="mascote-big">
+          <div class="note" style="margin-top:8px">Seu amigo pato acompanha a jornada 🦆</div>
+        </div>
+
+        <div class="right">
+          <h2 style="margin:0 0 6px 0">👋 Entre ou Crie sua Conta</h2>
+          <p class="muted" style="margin:0 0 12px 0">Faça login para salvar suas trilhas e continuar de onde parou.</p>
+
+          <form id="login-form" autocomplete="off">
+            <label for="username">Nome de Usuário</label>
+            <input id="username" type="text" placeholder="Seu nome de usuário" required>
+
+            <label for="password">Senha (Protótipo)</label>
+            <input id="password" type="password" placeholder="Senha (mín. 3 caracteres)" required>
+
+            <div style="display:flex;gap:10px;margin-top:8px;">
+              <button class="btn btn-primary" id="btnAuthSubmit" type="submit">Entrar / Cadastrar</button>
+              <button class="btn btn-secondary" id="btnSkipLogin" type="button">Pular Login</button>
+            </div>
+
+            <p id="auth-message" class="note" style="margin-top:10px;color:var(--danger)"></p>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- WELCOME SCREEN -->
+    <section id="welcome-screen" class="center-screen" style="display:none">
+      <div class="card">
+        <div class="left">
+          <img src="mascote.png" alt="Mascote Quackademy" class="mascote-big">
+        </div>
+        <div class="right">
+          <h2>🦆 Bem-vindo ao Quackademy!</h2>
+          <p class="muted">Transformamos o caos do aprendizado online em uma trilha prática e personalizada.</p>
+          <div style="margin-top:16px;display:flex;gap:10px;">
+            <button id="btnWelcomeContinue" class="btn btn-primary">Começar</button>
+            <button id="btnExplanationContinue" class="btn btn-ghost">Como funciona</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EXPLANATION SCREEN -->
+    <section id="explanation-screen" class="center-screen" style="display:none">
+      <div class="card" style="max-width:820px;">
+        <div class="left">
+          <img src="mascote.png" alt="Mascote Quackademy" class="mascote-big">
+        </div>
+        <div class="right">
+          <h2>Sua Jornada de Aprendizado</h2>
+          <p class="muted">Crie trilhas, estude por tópicos com flashcards e teste-se com simulados por etapa.</p>
+          <ul style="margin-top:12px">
+            <li><strong>Trilhas Guiadas:</strong> Roadmaps com etapas e tópicos.</li>
+            <li><strong>Flashcards:</strong> Revisão rápida por tópico.</li>
+            <li><strong>Simulados:</strong> Teste prático por etapa.</li>
+          </ul>
+          <div style="margin-top:16px;">
+            <button id="btnExplanationContinue2" class="btn btn-primary">Ver Cursos Rápidos</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MAIN APP (oculto até login) -->
+    <div id="main-app" style="display:none">
+
+      <main class="app-body wrap" style="padding:0;">
+        <div class="col-left">
+          <div class="panel" style="margin-bottom:14px;">
+            <h2>Gerenciar Trilhas</h2>
+            <div id="trilhas-list" style="margin-top:10px;">
+              <p class="placeholder">Nenhuma trilha selecionada.</p>
+            </div>
+            <div style="margin-top:12px;text-align:right">
+              <button onclick="showPreDefinedCoursesView()" class="btn btn-success">➕ Criar Nova Trilha</button>
+            </div>
+          </div>
+
+          <div class="panel">
+            <h2>Criar Trilha IA</h2>
+            <p class="note">Gere um roadmap completo com a nossa IA (requer chave/configuração).</p>
+            <label for="tema">Tema</label>
+            <input id="tema" placeholder="Ex: Programação Python">
+            <label for="nivel" style="margin-top:8px">Nível</label>
+            <select id="nivel">
+              <option>Iniciante</option>
+              <option>Intermediário</option>
+              <option>Avançado</option>
+            </select>
+            <label for="objetivo" style="margin-top:8px">Objetivo (opcional)</label>
+            <textarea id="objetivo" placeholder="Ex: Construir API com Node.js" rows="3"></textarea>
+
+            <div style="margin-top:12px;display:flex;gap:8px">
+              <button id="btnGerar" class="btn btn-primary">Gerar Trilha 🚀</button>
+              <button onclick="showPreDefinedCoursesView()" class="btn btn-secondary">Cursos Prontos</button>
+            </div>
+            <p id="gerar-msg" class="note" style="margin-top:8px"></p>
+          </div>
+        </div>
+
+        <div class="col-right">
+          <!-- VIEWS -->
+          <div id="predefined-courses-view" class="panel" style="display:none">
+            <h2>Escolha um Curso Rápido</h2>
+            <p class="muted">Comece rápido com um dos cursos pré-definidos.</p>
+            <div id="predefined-courses-list" class="courses-grid" style="margin-top:12px;"></div>
+
+            <div style="margin-top:12px;text-align:right">
+              <button onclick="showFormView()" class="btn btn-primary">Criar Trilha Personalizada</button>
+            </div>
+          </div>
+
+          <div id="roadmap-view" class="panel" style="display:none">
+            <h2 id="roadmap-title">Sua Trilha de Estudos</h2>
+            <div id="roadmap" class="roadmap-grid" style="margin-top:12px;">
+              <p class="placeholder">Preencha o formulário e gere sua primeira trilha!</p>
+            </div>
+            <div style="margin-top:12px;text-align:right">
+              <button onclick="showUserTrilhasView()" class="btn btn-ghost">⬅ Voltar</button>
+            </div>
+          </div>
+
+          <div id="etapa-view" class="panel" style="display:none">
+            <h2 id="etapa-titulo"></h2>
+            <div id="etapa-conteudo" style="margin-top:10px"></div>
+            <div style="margin-top:12px;text-align:right">
+              <button onclick="showRoadmapView()" class="btn btn-ghost">⬅ Voltar à Trilha</button>
+            </div>
+          </div>
+
+          <div id="material-view" class="panel" style="display:none">
+            <h2 id="material-titulo"></h2>
+            <div id="material-conteudo" style="margin-top:10px"></div>
+            <div style="margin-top:12px;text-align:right">
+              <button id="btnMaterialVoltar" class="btn btn-ghost">⬅ Voltar</button>
+            </div>
+          </div>
+
+          <div id="flashcard-view" class="panel" style="display:none">
+            <h2 id="flashcard-titulo">Flashcards</h2>
+            <div id="flashcard-display"></div>
+            <div style="margin-top:12px;text-align:right">
+              <button id="btnFlashcardVoltar" class="btn btn-ghost">⬅ Voltar</button>
+            </div>
+          </div>
+
+          <div id="simulado-etapa-view" class="panel" style="display:none">
+            <h2 id="simulado-etapa-titulo">Simulado</h2>
+            <div id="simulado-etapa-conteudo"></div>
+            <div style="margin-top:12px;text-align:right">
+              <button id="btnSimuladoEtapaVoltar" class="btn btn-ghost">⬅ Voltar</button>
+            </div>
+          </div>
+
+          <div id="chat-view" class="panel" style="display:none">
+            <div id="chat-container">
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <strong>Patolindo - Assistente</strong>
+                <span id="chat-counter" class="muted">(5 Perguntas)</span>
+              </div>
+              <div id="chat-messages" style="margin-top:10px;"></div>
+              <div style="display:flex;gap:10px;margin-top:10px">
+                <input id="chat-input" placeholder="Sua pergunta..." disabled style="flex:1;padding:10px;border-radius:999px;border:1px solid #eee">
+                <button id="chat-send-button" class="btn btn-primary" disabled>Enviar</button>
+              </div>
+              <div style="margin-top:12px;text-align:right">
+                <button id="chat-exit-button" class="btn btn-ghost">Sair</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </main>
+    </div>
+
+  </div>
+
+  <!-- CHAT BUTTON FLOATER -->
+  <button id="chat-button" title="Abrir Chatbot Patolindo" style="display:none">🦆</button>
+
+  <script>
+    /*
+      Script integrado (mantive as funcionalidades principais).
+      Observações:
+      - Mantive os IDs e nomes de funções principais para compatibilidade.
+      - A geração via IA usa as mesmas variáveis (API_KEY, GROQ_ENDPOINT, MODEL_NAME).
+      - Se você quiser que eu remova a chave de API daqui, me diga e eu deixo um placeholder.
+    */
+
+    // === Configurações de API (mantidas do arquivo original) ===
+    const API_KEY = "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"; 
+    const GROQ_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions";
+    const MODEL_NAME = "llama-3.1-8b-instant";
+
+    // === Estado do app ===
+    let currentUser = { name: null, trilhas: [], currentTrilhaIndex: -1 };
+    let allUsersData = {};
+    let modalState = {};
+    let patolindoState = { questionsLeft: 5, history: [], lastView: "roadmap-view" };
+
+    // === Dados pré-definidos (mantive conteúdo similar ao original) ===
+    const preDefinedRoadmaps = [
+      {
+        category: "Programação e Tecnologia",
+        courses: [
+          { tema: "Python para Iniciantes", nivel: "Iniciante", objetivo: "Scripts básicos e lógica", etapas:[
+            { titulo: "Etapa 1: Fundamentos", topicos:[
+              { "tópico":"Variáveis e Tipos","material":"https://docs.python.org/pt-br/3/tutorial/introduction.html" },
+              { "tópico":"Controle de Fluxo","material":"https://docs.python.org/pt-br/3/tutorial/controlflow.html" },
+              { "tópico":"Funções","material":"https://docs.python.org/pt-br/3/tutorial/controlflow.html" },
+              { "tópico":"Listas e Dicionários","material":"https://docs.python.org/pt-br/3/tutorial/datastructures.html" }
+            ], atividade: "Criar uma calculadora básica em Python." }
+          ] },
+          { tema: "JavaScript Moderno (ES6+)", nivel:"Intermediário", objetivo:"Frontend e DOM", etapas:[
+            { titulo:"Etapa 1: Básicos", topicos:[
+              { "tópico":"Var/Let/Const","material":"https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Guide/Grammar_and_types" },
+              { "tópico":"Arrow Functions","material":"https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Functions/Arrow_functions" },
+              { "tópico":"Arrays","material":"https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Array" },
+              { "tópico":"Promises","material":"https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Guide/Using_promises" }
+            ], atividade: "Criar uma To-Do List manipulando o DOM." }
+          ] }
+        ]
+      },
+      {
+        category: "Idiomas e Linguagens",
+        courses: [
+          { tema:"Inglês Básico", nivel:"Iniciante", objetivo:"Conversação e leitura", etapas:[
+            { titulo:"Etapa 1: To Be", topicos:[
+              {"tópico":"Uso do 'To Be'","material":"https://www.ef.com.br/english-resources/english-grammar/be/"},
+              {"tópico":"Pronomes","material":"https://www.grammarly.com/blog/pronouns/"},
+              {"tópico":"Saudações","material":"https://www.bbc.co.uk/learningenglish"}
+            ], atividade:"Gravar um áudio se apresentando em inglês." }
+          ] }
+        ]
+      }
+    ];
+
+    // === Funções de persistência ===
+    function loadAllUsersData(){ const data = localStorage.getItem('quackademyAllUsers'); if(data) allUsersData = JSON.parse(data); }
+    function saveAllUsersData(){ localStorage.setItem('quackademyAllUsers', JSON.stringify(allUsersData)); }
+    function loadUserData(username){
+      loadAllUsersData();
+      if(!username || username === 'Convidado'){
+        currentUser.name = 'Convidado';
+        currentUser.trilhas = [];
+        currentUser.currentTrilhaIndex = -1;
+      } else {
+        const userData = allUsersData[username];
+        if(userData){
+          currentUser.name = username;
+          currentUser.trilhas = userData.trilhas || [];
+          currentUser.currentTrilhaIndex = userData.currentTrilhaIndex || -1;
+        } else {
+          currentUser.name = username;
+          currentUser.trilhas = [];
+          currentUser.currentTrilhaIndex = -1;
+          allUsersData[username] = { trilhas: [], currentTrilhaIndex: -1, password: document.getElementById('password').value };
+        }
+      }
+      document.getElementById("userNameDisplay").innerText = currentUser.name;
+      saveAllUsersData();
+      updateTrilhasCountDisplay();
+    }
+    function saveUserTrilhas(){
+      if(currentUser.name && currentUser.name !== 'Convidado'){
+        allUsersData[currentUser.name] = {
+          ...allUsersData[currentUser.name],
+          trilhas: currentUser.trilhas,
+          currentTrilhaIndex: currentUser.currentTrilhaIndex
+        };
+        saveAllUsersData();
+      }
+      updateTrilhasCountDisplay();
+    }
+    function updateTrilhasCountDisplay(){
+      const count = currentUser.trilhas ? currentUser.trilhas.length : 0;
+      const btn = document.getElementById("btnMinhasTrilhas");
+      if(btn) btn.innerText = `Minhas Trilhas (${count})`;
+      if(btn) btn.disabled = currentUser.name === 'Convidado';
+    }
+
+    // === Navegação e views ===
+    const viewMap = {
+      "user-trilhas-view": null,
+      "predefined-courses-view": document.getElementById("predefined-courses-view"),
+      "form-view": null,
+      "roadmap-view": document.getElementById("roadmap-view"),
+      "etapa-view": document.getElementById("etapa-view"),
+      "material-view": document.getElementById("material-view"),
+      "flashcard-view": document.getElementById("flashcard-view"),
+      "simulado-etapa-view": document.getElementById("simulado-etapa-view"),
+      "chat-view": document.getElementById("chat-view")
+    };
+
+    // helpers to show/hide main subviews
+    function hideAllMainViews(){
+      for(const id of ["predefined-courses-view","roadmap-view","etapa-view","material-view","flashcard-view","simulado-etapa-view","chat-view"]){
+        const el = document.getElementById(id);
+        if(el) el.style.display = 'none';
+      }
+    }
+
+    function showPreDefinedCoursesView(){
+      document.getElementById("main-app").style.display = 'block';
+      hideAllMainViews();
+      document.getElementById("predefined-courses-view").style.display = 'block';
+      updateChatButtonVisibility(false);
+      renderPredefinedCourses();
+    }
+    function showFormView(){
+      document.getElementById("main-app").style.display = 'block';
+      hideAllMainViews();
+      // reuse left-side form, scroll top
+      window.scrollTo({top:0, behavior:'smooth'});
+    }
+    function showRoadmapView(){
+      hideAllMainViews();
+      document.getElementById("roadmap-view").style.display = 'block';
+      updateChatButtonVisibility(true);
+      patolindoState.lastView = "roadmap-view";
+    }
+    function showEtapaView(etapa){
+      hideAllMainViews();
+      document.getElementById("etapa-view").style.display = 'block';
+      updateChatButtonVisibility(true);
+      patolindoState.lastView = "etapa-view";
+      modalState.currentEtapa = etapa;
+      document.getElementById("etapa-titulo").innerText = etapa.titulo || 'Etapa';
+      // render tópicos
+      const conteudo = etapa.topicos.map(t=>{
+        const topEsc = (t["tópico"]||t.topico||'Tópico').replace(/'/g,"\\'");
+        const mat = (t.material||'#').replace(/'/g,"\\'");
+        return `<div class="topicos-container"><div class="topic-row">
+            <button class="topic-btn" onclick="showMaterialView('${topEsc}','${mat}')">📚 ${t["tópico"]}</button>
+            <button class="topic-btn" style="max-width:160px" onclick="showFlashcardView('${topEsc}')">🧠 Flashcards</button>
+          </div></div>`;
+      }).join('');
+      const activity = etapa.atividade ? `<h3>Atividade</h3><p>${etapa.atividade}</p>` : '';
+      document.getElementById("etapa-conteudo").innerHTML = activity + '<h3>Tópicos</h3>' + conteudo +
+        `<div style="margin-top:12px"><button class="btn btn-primary" onclick="showSimuladoEtapaView()">🎯 Gerar Simulado da Etapa</button></div>`;
+    }
+
+    function showMaterialView(topico, material){
+      hideAllMainViews();
+      document.getElementById("material-view").style.display = 'block';
+      modalState.currentEtapa = modalState.currentEtapa || {};
+      document.getElementById("material-titulo").innerText = topico;
+      fetchAndRenderMaterial(topico, material);
+    }
+
+    function showFlashcardView(topico){
+      hideAllMainViews();
+      document.getElementById("flashcard-view").style.display = 'block';
+      document.getElementById("flashcard-titulo").innerText = topico;
+      fetchAndRenderFlashcards(topico);
+    }
+
+    function showSimuladoEtapaView(){
+      hideAllMainViews();
+      document.getElementById("simulado-etapa-view").style.display = 'block';
+      fetchAndRenderSimuladoEtapa();
+    }
+
+    // chat visibility
+    function updateChatButtonVisibility(isVisible){
+      const btn = document.getElementById("chat-button");
+      if(currentUser.name === 'Convidado') { if(btn) btn.style.display = 'none'; return; }
+      if(btn) btn.style.display = isVisible ? 'flex' : 'none';
+    }
+
+    // === Inicialização / Listeners ===
+    document.addEventListener("DOMContentLoaded", ()=>{
+      // inicial view
+      showLoginView();
+      // listeners
+      document.getElementById("login-form").addEventListener("submit", handleAuthSubmit);
+      document.getElementById("btnSkipLogin").addEventListener("click", handleSkipLogin);
+      document.getElementById("btnWelcomeContinue").addEventListener("click", showExplanationScreen);
+      document.getElementById("btnExplanationContinue").addEventListener("click", ()=>showMainApp(false));
+      document.getElementById("btnExplanationContinue2").addEventListener("click", showPreDefinedCoursesView);
+      document.getElementById("btnExplanationContinue2").addEventListener("click", ()=>showPreDefinedCoursesView());
+      document.getElementById("btnExplanationContinue").addEventListener("click", ()=>showPreDefinedCoursesView());
+      document.getElementById("btnExplanationContinue2").addEventListener("click", ()=>showPreDefinedCoursesView());
+      document.getElementById("btnMinhasTrilhas").addEventListener("click", showUserTrilhasView);
+      document.getElementById("btnGerar").addEventListener("click", gerarRoadmap);
+
+      document.getElementById("btnMaterialVoltar").addEventListener("click", ()=>showEtapaView(modalState.currentEtapa));
+      document.getElementById("btnFlashcardVoltar").addEventListener("click", ()=>showEtapaView(modalState.currentEtapa));
+      document.getElementById("btnSimuladoEtapaVoltar").addEventListener("click", ()=>showEtapaView(modalState.currentEtapa));
+
+      document.getElementById("chat-button").addEventListener("click", ()=>showChatView());
+      document.getElementById("chat-exit-button").addEventListener("click", ()=>showLastView());
+      document.getElementById("chat-send-button").addEventListener("click", handleChatSend);
+      document.getElementById("chat-input").addEventListener("keypress",(e)=>{ if(e.key==='Enter') handleChatSend(); });
+
+      renderPredefinedCourses();
+    });
+
+    // initial screens
+    function showLoginView(){
+      document.getElementById("login-screen").style.display = 'flex';
+      document.getElementById("welcome-screen").style.display = 'none';
+      document.getElementById("explanation-screen").style.display = 'none';
+      document.getElementById("main-app").style.display = 'none';
+      document.getElementById('username').value = '';
+      document.getElementById('password').value = '';
+      document.getElementById('auth-message').innerText = '';
+    }
+    function showWelcomeScreen(){
+      document.getElementById("login-screen").style.display = 'none';
+      document.getElementById("welcome-screen").style.display = 'flex';
+    }
+    function showExplanationScreen(){
+      document.getElementById("welcome-screen").style.display = 'none';
+      document.getElementById("explanation-screen").style.display = 'flex';
+    }
+    function showMainApp(isExistingUser=false){
+      document.getElementById("login-screen").style.display = 'none';
+      document.getElementById("welcome-screen").style.display = 'none';
+      document.getElementById("explanation-screen").style.display = 'none';
+      document.getElementById("main-app").style.display = 'block';
+      if(isExistingUser && currentUser.trilhas.length>0) showUserTrilhasView();
+      else showPreDefinedCoursesView();
+    }
+
+    // auth
+    function handleAuthSubmit(e){
+      e.preventDefault();
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
+      const authMessage = document.getElementById('auth-message');
+      if(username.toLowerCase() === 'convidado'){ authMessage.innerText = "Nome 'Convidado' reservado."; return; }
+      if(username.length < 3 || password.length < 3){ authMessage.innerText = "Nome e senha precisam ter ao menos 3 caracteres."; return; }
+      loadAllUsersData();
+      const userExists = allUsersData[username];
+      if(userExists){
+        if(userExists.password === password){
+          loadUserData(username);
+          authMessage.style.color = 'var(--success)';
+          authMessage.innerText = `Login efetuado: ${username}`;
+          showMainApp(true);
+        } else {
+          authMessage.style.color = 'var(--danger)';
+          authMessage.innerText = "Senha incorreta.";
+        }
+      } else {
+        // cadastra
+        loadUserData(username);
+        authMessage.style.color = 'var(--success)';
+        authMessage.innerText = `Conta criada: ${username}`;
+        showWelcomeScreen();
+      }
+    }
+
+    function handleSkipLogin(){
+      loadUserData('Convidado');
+      showWelcomeScreen();
+    }
+
+    // === Gerenciamento de trilhas ===
+    function showUserTrilhasView(){
+      hideAllMainViews();
+      document.getElementById("main-app").style.display = 'block';
+      updateChatButtonVisibility(false);
+      if(currentUser.name === 'Convidado'){ showPreDefinedCoursesView(); return; }
+      const trilhasList = document.getElementById("trilhas-list");
+      trilhasList.innerHTML = '';
+      if(!currentUser.trilhas || currentUser.trilhas.length === 0){
+        trilhasList.innerHTML = '<p class="placeholder">Nenhuma trilha salva. Crie uma nova!</p>';
+        return;
+      }
+      // ordena para mostrar ativa primeiro
+      let ordered = [...currentUser.trilhas];
+      if(currentUser.currentTrilhaIndex !== -1){
+        const active = ordered.splice(currentUser.currentTrilhaIndex,1)[0];
+        ordered.unshift(active);
+      }
+      ordered.forEach((trilha,i)=>{
+        const originalIndex = currentUser.trilhas.findIndex(t=>t.id === trilha.id);
+        const isActive = currentUser.currentTrilhaIndex === originalIndex;
+        const card = document.createElement('div');
+        card.className = 'trilha-card';
+        card.style.marginBottom = '10px';
+        card.style.padding = '12px';
+        card.style.borderRadius = '12px';
+        card.style.display = 'flex';
+        card.style.justifyContent = 'space-between';
+        card.style.alignItems = 'center';
+        card.style.background = '#fafafa';
+        card.innerHTML = `<div>
+            <div style="font-weight:700">${trilha.tema} ${isActive?'<span style="color:var(--success);font-weight:800"> (ATIVA)</span>':''}</div>
+            <div style="font-size:0.9rem;color:var(--muted)">Etapas: ${trilha.etapas.length} • Objetivo: ${trilha.objetivo||'—'}</div>
+        </div>
+        <div>
+          <button class="btn btn-success" onclick="loadAndShowRoadmap(${originalIndex})" style="${isActive?'display:none':''}">Abrir</button>
+          <button class="btn btn-secondary" onclick="deleteTrilha(${originalIndex})">Excluir</button>
+        </div>`;
+        trilhasList.appendChild(card);
+      });
+      // se tiver ativa, carrega
+      if(currentUser.currentTrilhaIndex !== -1){
+        loadRoadmap(currentUser.trilhas[currentUser.currentTrilhaIndex], true);
+      }
+    }
+
+    function loadRoadmap(trilha, skipViewChange=false){
+      if(!trilha || !trilha.etapas) return;
+      modalState.etapas = trilha.etapas;
+      const roadmapDiv = document.getElementById("roadmap");
+      document.getElementById("roadmap-title").innerText = `Sua Trilha: ${trilha.tema} (${trilha.nivel}) - ${currentUser.name}`;
+      roadmapDiv.innerHTML = '';
+      trilha.etapas.forEach(et=>{
+        const d = document.createElement('div');
+        d.className = 'block';
+        d.innerText = et.titulo;
+        d.onclick = ()=>showEtapaView(et);
+        roadmapDiv.appendChild(d);
+      });
+      if(!skipViewChange) showRoadmapView();
+    }
+
+    function loadAndShowRoadmap(index){
+      if(index>=0 && index < currentUser.trilhas.length){
+        currentUser.currentTrilhaIndex = index;
+        loadRoadmap(currentUser.trilhas[index]);
+        if(currentUser.name !== 'Convidado') saveUserTrilhas();
+      }
+    }
+
+    function deleteTrilha(index){
+      if(currentUser.name === 'Convidado') return;
+      if(!confirm(`Excluir a trilha "${currentUser.trilhas[index].tema}"?`)) return;
+      currentUser.trilhas.splice(index,1);
+      if(currentUser.currentTrilhaIndex === index){
+        currentUser.currentTrilhaIndex = -1;
+      } else if(currentUser.currentTrilhaIndex > index) currentUser.currentTrilhaIndex--;
+      saveUserTrilhas();
+      showUserTrilhasView();
+    }
+
+    // === Predefined courses render ===
+    function renderPredefinedCourses(){
+      const container = document.getElementById("predefined-courses-list");
+      if(!container) return;
+      container.innerHTML = '';
+      preDefinedRoadmaps.forEach(cat=>{
+        const catDiv = document.createElement('div');
+        const title = document.createElement('h3');
+        title.innerText = cat.category;
+        title.style.gridColumn = '1/-1';
+        catDiv.appendChild(title);
+        const grid = document.createElement('div');
+        grid.className = 'courses-grid';
+        cat.courses.forEach(course=>{
+          const card = document.createElement('div');
+          card.className = 'course-card';
+          card.onclick = ()=> loadPreDefinedRoadmap(JSON.stringify(course));
+          card.innerHTML = `<h4>${course.tema}</h4>
+            <div class="course-meta">Nível: <b>${course.nivel}</b></div>
+            <div class="course-meta" style="margin-top:6px">Objetivo: ${course.objetivo}</div>`;
+          grid.appendChild(card);
+        });
+        catDiv.appendChild(grid);
+        container.appendChild(catDiv);
+      });
+    }
+
+    function loadPreDefinedRoadmap(courseString){
+      try{
+        const course = JSON.parse(courseString);
+        const novaTrilha = { id: Date.now(), tema: course.tema, nivel: course.nivel, objetivo: course.objetivo, etapas: course.etapas };
+        if(currentUser.name !== 'Convidado'){
+          currentUser.trilhas.push(novaTrilha);
+          currentUser.currentTrilhaIndex = currentUser.trilhas.length - 1;
+          saveUserTrilhas();
+        } else {
+          currentUser.trilhas = [novaTrilha];
+          currentUser.currentTrilhaIndex = 0;
+        }
+        loadRoadmap(novaTrilha);
+      } catch(e){
+        alert("Erro ao carregar curso pré-definido.");
+        console.error(e);
+      }
+    }
+
+    // === Geração por IA (mantive lógica similar) ===
+    async function gerarRoadmap(){
+      const tema = document.getElementById("tema").value.trim();
+      const nivel = document.getElementById("nivel").value;
+      const objetivo = document.getElementById("objetivo").value;
+      const roadmapDiv = document.getElementById("roadmap");
+      document.getElementById("gerar-msg").innerText = '';
+      if(!tema){ document.getElementById("gerar-msg").innerText = 'Preencha o campo Tema.'; return; }
+      // feedback
+      roadmapDiv.innerHTML = '<p class="placeholder">✨ Gerando roadmap... aguarde (pode demorar alguns segundos)</p>';
+      showRoadmapView();
+
+      // prompt (similar ao original - exige chave válida)
+      const systemPrompt = `Você é um especialista em educação técnica. Crie um roadmap com no mínimo 10 etapas e ao menos 4 tópicos cada. Responda apenas JSON com estrutura: {"etapas":[{"titulo":"Etapa 1", "topicos":[{"tópico":"...","material":"URL"}], "atividade":"..."}] }`;
+      const userPrompt = `Crie um roadmap para "${tema}" no nível "${nivel}"${objetivo ? ` com objetivo: ${objetivo}` : ''}.`;
+
+      try{
+        // chamada externa (mesmo endpoint do arquivo original). Se a sua chave/endpoint não estiver configurado, falhará.
+        const resp = await fetch(GROQ_ENDPOINT, {
+          method: 'POST',
+          headers: { "Content-Type":"application/json", "Authorization": `Bearer ${API_KEY}` },
+          body: JSON.stringify({
+            model: MODEL_NAME,
+            messages: [{ role: "system", content: systemPrompt }, { role:"user", content: userPrompt }],
+            response_format: { type: "json_object" },
+            temperature: 0.7
+          })
+        });
+
+        if(!resp.ok){
+          const err = await resp.json().catch(()=>({}));
+          throw new Error(`Erro API: ${resp.status} ${err?.error?.message || ''}`);
+        }
+        const data = await resp.json();
+        let texto = data?.choices?.[0]?.message?.content || '';
+        texto = texto.trim();
+        let parsed;
+        try { parsed = JSON.parse(texto); }
+        catch(e){
+          // tenta extrair o JSON do texto
+          const m = texto.match(/\{[\s\S]*\}/);
+          if(!m) throw new Error('Não foi possível extrair JSON da resposta da IA.');
+          parsed = JSON.parse(m[0]);
+        }
+        const etapas = parsed.etapas;
+        if(!etapas || !Array.isArray(etapas) || etapas.length === 0) throw new Error('Resposta inválida da IA (sem etapas).');
+
+        const novaTrilha = { id: Date.now(), tema, nivel, objetivo, etapas };
+        if(currentUser.name !== 'Convidado'){
+          currentUser.trilhas.push(novaTrilha);
+          currentUser.currentTrilhaIndex = currentUser.trilhas.length - 1;
+          saveUserTrilhas();
+        } else {
+          currentUser.trilhas = [novaTrilha];
+          currentUser.currentTrilhaIndex = 0;
+        }
+        loadRoadmap(novaTrilha);
+      } catch(err){
+        console.error(err);
+        roadmapDiv.innerHTML = `<p class="placeholder">⚠️ Erro ao gerar roadmap: ${err.message}</p>`;
+      }
+    }
+
+    // === Material, Flashcards e Simulado (simulações básicas para manter UX) ===
+    async function fetchAndRenderMaterial(topico, material){
+      const content = document.getElementById("material-conteudo");
+      content.innerHTML = `<p>Carregando conteúdo sobre <strong>${topico}</strong>... (fonte: ${material || '—'})</p>`;
+      // Simulação: se houver URL, mostramos link; também tentamos gerar texto simples via request (opcional)
+      if(material && material.startsWith('http')){
+        content.innerHTML = `<p><strong>${topico}</strong></p>
+          <p class="muted">Fonte sugerida: <a href="${material}" target="_blank" rel="noopener">${material}</a></p>
+          <p style="margin-top:12px">Resumo rápido: aqui vai um resumo didático sobre o tópico para te ajudar a começar. Clique na fonte para aprofundar.</p>`;
+      } else {
+        content.innerHTML = `<p><strong>${topico}</strong></p><p class="muted">Sem material externo disponível.</p>`;
+      }
+    }
+
+    function fetchAndRenderFlashcards(topico){
+      const display = document.getElementById("flashcard-display");
+      display.innerHTML = '';
+      // Simulação: cria 4 flashcards com perguntas simples
+      const cards = [
+        {q:`O que é ${topico}?`, a:`Resposta curta sobre ${topico}.`},
+        {q:`Por que ${topico} é importante?`, a:`Porque...`},
+        {q:`Um exemplo prático de ${topico}`, a:`Exemplo...`},
+        {q:`Próximo passo após ${topico}`, a:`Estudar...`}
+      ];
+      cards.forEach((c, idx)=>{
+        const wrapper = document.createElement('div');
+        wrapper.className = 'flashcard';
+        wrapper.innerHTML = `<div class="flashcard-inner">
+            <div class="face front">${c.q}</div>
+            <div class="face back">${c.a}</div>
+          </div>`;
+        // flip ao clicar
+        wrapper.addEventListener('click', ()=> wrapper.classList.toggle('flipped'));
+        display.appendChild(wrapper);
+      });
+    }
+
+    function fetchAndRenderSimuladoEtapa(){
+      const container = document.getElementById("simulado-etapa-conteudo");
+      container.innerHTML = '';
+      const etapa = modalState.currentEtapa;
+      if(!etapa){ container.innerHTML = '<p class="placeholder">Nenhuma etapa selecionada.</p>'; return; }
+      // Cria perguntas simples simuladas
+      const qList = etapa.topicos.slice(0,5).map((t,i)=>({
+        pergunta: `Sobre: ${t["tópico"]}`,
+        alternativas: ["A","B","C","D"],
+        correta: 0
+      }));
+      qList.forEach((q, idx)=>{
+        const bloco = document.createElement('div');
+        bloco.style.padding='10px';
+        bloco.style.border='1px solid #eee';
+        bloco.style.borderRadius='10px';
+        bloco.style.marginBottom='10px';
+        bloco.innerHTML = `<div style="font-weight:700">Q${idx+1}: ${q.pergunta}</div>
+          <ul style="list-style:none;padding:0;margin-top:8px">
+            ${q.alternativas.map((alt,i)=>`<li class="sim-alt" style="padding:8px;border-radius:8px;margin-bottom:6px;border:1px solid #ddd;cursor:pointer" onclick="markAnswer(this, ${idx}, ${i})">${alt}</li>`).join('')}
+          </ul>`;
+        container.appendChild(bloco);
+      });
+    }
+
+    function markAnswer(el, qIdx, altIdx){
+      // Simples feedback visual
+      const parent = el.parentElement;
+      Array.from(parent.children).forEach(li=>li.style.background='');
+      el.style.background = 'var(--primary)';
+      el.style.color = 'var(--text)';
+    }
+
+    // === Chat (simples UI) ===
+    function resetPatolindoSession(){
+      const messages = document.getElementById("chat-messages");
+      messages.innerHTML = `<div class="bot-bubble">Olá! Como posso ajudar nos estudos?</div>`;
+      document.getElementById("chat-input").disabled = false;
+      document.getElementById("chat-send-button").disabled = false;
+      updateChatButtonVisibility(false);
+    }
+
+    function showChatView(){
+      hideAllMainViews();
+      document.getElementById("chat-view").style.display = 'block';
+      resetPatolindoSession();
+    }
+
+    function showLastView(){
+      if(patolindoState.lastView === "roadmap-view") showRoadmapView();
+      else if(patolindoState.lastView === "etapa-view" && modalState.currentEtapa) showEtapaView(modalState.currentEtapa);
+      else showRoadmapView();
+    }
+
+    function handleChatSend(){
+      const input = document.getElementById("chat-input");
+      const text = input.value.trim();
+      if(!text) return;
+      const messages = document.getElementById("chat-messages");
+      const userMsg = document.createElement('div'); userMsg.className = 'user-bubble'; userMsg.innerText = text;
+      messages.appendChild(userMsg);
+      input.value = '';
+      // resposta simulada
+      setTimeout(()=> {
+        const bot = document.createElement('div'); bot.className = 'bot-bubble';
+        bot.innerText = `Patolindo: boa pergunta! Resposta breve sobre "${text}".`;
+        messages.appendChild(bot);
+        messages.scrollTop = messages.scrollHeight;
+      },600);
+    }
+
+    // === UI utilities ===
+    // show main app after login
+    function showMainAfterLogin(){
+      document.getElementById("login-screen").style.display = 'none';
+      document.getElementById("main-app").style.display = 'block';
+    }
+
+    // basic helper to show predefined courses at start
+    // already called on load to fill the list
+
+  </script>
+</body>
+</html>
