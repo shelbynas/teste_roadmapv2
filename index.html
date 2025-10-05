@@ -547,16 +547,17 @@
             display: flex;
             align-items: center; 
             justify-content: center; 
-            gap: 15px; 
+            gap: 20px; /* Aumentado o espaço */
             margin-bottom: 20px;
             width: 100%;
-            max-width: 600px; /* Aumenta a largura máxima para acomodar o mascote */
+            max-width: 700px; /* Ajustado para acomodar a imagem maior */
         }
         
         .mascote-flashcard {
-            width: 100px; /* Tamanho do mascote ao lado do flashcard */
-            height: 100px;
+            width: 150px; /* Mascote Maior (150x150) */
+            height: 150px;
             object-fit: contain;
+            flex-shrink: 0;
         }
         
         .flashcard {
@@ -1066,15 +1067,14 @@
                     <div id="simulado-etapa-container">
                         <h2 id="simulado-titulo">Simulado da Etapa</h2>
                         <div class="simulado-area" id="simulado-area">
-                            <p class="placeholder-text">O simulado será carregado aqui.</p>
-                        </div>
+                            </div>
                         <div id="simulado-resultado" style="display: none;">
                             <img id="resultado-mascote" class="mascote-simulado" src="" alt="Mascote Resultado">
                             <span class="resultado-texto" id="resultado-texto"></span>
                         </div>
                         <div class="modal-actions">
-                            <button id="btnSimuladoSubmit" class="btn-primary" style="display: none;">Finalizar Simulado</button>
-                            <button id="btnSimuladoVoltar" onclick="showEtapaView(window.currentEtapa)" class="btn-secondary">⬅ Voltar à Etapa</button>
+                            <button id="btnSimuladoSubmit" class="btn-primary" onclick="finalizarSimulado()">Finalizar Simulado</button>
+                            <button id="btnSimuladoVoltar" onclick="showEtapaView(window.currentEtapa)" class="btn-secondary" style="display: none;">⬅ Voltar à Etapa</button>
                         </div>
                     </div>
                 </div>
@@ -1110,7 +1110,7 @@
     <button id="chat-button" title="Abrir Chatbot Patolindo"></button>
 
     <script>
-        // --- VARIÁVEIS GLOBAIS DE IMAGEM
+        // --- VARIÁVEIS DE IMAGEM
         const FLASHCARD_IMAGES = [
             'imagem1.png', 
             'imagem2.png', 
@@ -1119,54 +1119,109 @@
             'imagem5.png'
         ];
         const RESULTADO_IMGS = {
-            ruim: 'resul-ruim.png',
-            medio: 'resul-medio.png',
-            bom: 'resul-bom.png'
+            ruim: 'resul-ruim.png', // < 50%
+            medio: 'resul-medio.png', // 50% a 79%
+            bom: 'resul-bom.png' // >= 80%
         };
-
-        // --- FUNÇÕES DE LÓGICA DO SIMULADO (EXEMPLO)
-
-        // Função de SIMULAÇÃO do resultado do Simulado
-        function simularSimulado(totalPerguntas) {
-            // Geração de um score aleatório para demonstração
-            const scoreAleatorio = Math.floor(Math.random() * (totalPerguntas + 1));
-            const porcentagem = (scoreAleatorio / totalPerguntas) * 100;
-
-            const resultadoDiv = document.getElementById('simulado-resultado');
-            const resultadoTextoSpan = document.getElementById('resultado-texto');
-            const resultadoMascoteImg = document.getElementById('resultado-mascote');
-            
-            let imagem = RESULTADO_IMGS.ruim;
-            let mensagem = `Você acertou ${scoreAleatorio} de ${totalPerguntas} perguntas (${porcentagem.toFixed(0)}%). Continue estudando para o domínio completo!`;
-
-            if (porcentagem >= 80) {
-                imagem = RESULTADO_IMGS.bom;
-                mensagem = `🏆 PARABÉNS! Você acertou ${scoreAleatorio} de ${totalPerguntas} perguntas. Domínio da Etapa alcançado!`;
-            } else if (porcentagem >= 50) {
-                imagem = RESULTADO_IMGS.medio;
-                mensagem = `👍 Bom resultado! Você acertou ${scoreAleatorio} de ${totalPerguntas} perguntas. Revise os tópicos mais difíceis!`;
-            }
-
-            resultadoMascoteImg.src = imagem;
-            resultadoTextoSpan.innerHTML = mensagem;
-            resultadoDiv.style.display = 'flex'; // Mostra o resultado
-            document.getElementById('btnSimuladoSubmit').style.display = 'none'; // Esconde o botão de finalizar
-            
-            // Lógica para desabilitar alternativas, etc. (mantida a simplicidade aqui)
-        }
         
-        // Função que seria chamada ao clicar em 'Finalizar Simulado'
-        function finalizarSimulado() {
-            // Em um sistema real, você obteria as respostas do usuário
-            const totalPerguntas = 5; // Exemplo de um simulado com 5 perguntas
-            simularSimulado(totalPerguntas);
-        }
-
-        // --- FUNÇÕES DE LÓGICA DO FLASHCARD (EXEMPLO)
+        // --- MOCK DE DADOS E ESTADO GLOBAL (FUNCIONALIDADE RESTAURADA)
+        let currentUser = { name: "Convidado" };
+        let currentTrilha = null;
+        window.currentEtapa = null; 
+        
+        let flashcards = []; 
         let currentFlashcardIndex = 0;
-        let flashcards = []; // Array de flashcards (Pergunta/Resposta)
         const flashcardMascoteImg = document.getElementById('flashcard-mascote-img');
 
+        let simuladoAtual = []; 
+        let respostasUsuario = {};
+        
+        // --- FUNÇÕES DE NAVEGAÇÃO E VISUALIZAÇÃO
+        function changeView(viewId) {
+            const views = document.querySelectorAll('.content-view, .full-screen-message');
+            views.forEach(view => view.style.display = 'none');
+            
+            const targetView = document.getElementById(viewId);
+            if (viewId === 'login-screen' || viewId === 'welcome-screen' || viewId === 'explanation-screen') {
+                 targetView.style.display = 'flex';
+                 // Esconde o botão do chat nas telas iniciais
+                 document.getElementById('chat-button').style.display = 'none';
+            } else if (viewId === 'main-app' || viewId.endsWith('-view')) {
+                // As views dentro do main-app precisam de tratamento de display
+                document.getElementById('main-app').style.display = 'block';
+                targetView.style.display = 'block'; // Bloco/Grid para as views internas
+                
+                // Trata o alinhamento da área de conteúdo (para centralizar o formulário)
+                if (viewId === 'form-view') {
+                    document.getElementById('main-content-area').style.justifyContent = 'center';
+                } else {
+                    document.getElementById('main-content-area').style.justifyContent = 'flex-start';
+                }
+
+                // Garante que o botão do chat apareça nas telas de conteúdo
+                document.getElementById('chat-button').style.display = 'block';
+            }
+            window.currentView = viewId;
+        }
+
+        function initializeApp() {
+            document.getElementById('userNameDisplay').textContent = currentUser.name;
+            document.getElementById('btnMinhasTrilhas').textContent = `Minhas Trilhas (1)`; // Mock de uma trilha salva
+            document.getElementById('chat-button').style.display = 'block'; 
+        }
+
+        function showFormView() { changeView('form-view'); }
+        function showPreDefinedCoursesView() { changeView('predefined-courses-view'); }
+        function showUserTrilhasView() { changeView('user-trilhas-view'); }
+        function showChatView() { changeView('chat-view'); }
+        function hideChatView() { 
+            // Volta para a view anterior (ou para o roadmap, se não houver)
+            changeView(window.currentView === 'chat-view' ? 'roadmap-view' : window.currentView); 
+            document.getElementById('chat-button').style.display = 'block';
+        }
+        
+        function showRoadmapView() { 
+            if (!currentTrilha) {
+                // Caso não haja trilha, volta para o formulário
+                showFormView();
+                return;
+            }
+            document.getElementById('roadmap-title').textContent = `Roadmap: ${currentTrilha.tema}`;
+            document.getElementById('roadmap').innerHTML = currentTrilha.etapas.map(etapa => 
+                `<div class="bloco" onclick="showEtapaView(${etapa.id})">${etapa.titulo}</div>`
+            ).join('');
+            changeView('roadmap-view');
+        }
+
+        function showEtapaView(etapaId) {
+            const etapa = currentTrilha.etapas.find(e => e.id === etapaId);
+            if (!etapa) return;
+
+            document.getElementById('etapa-titulo').textContent = etapa.titulo;
+            document.getElementById('etapa-conteudo').innerHTML = `
+                <p>${etapa.descricao}</p>
+                <h3>Materiais de Estudo</h3>
+                <div class="topicos-container">
+                    ${etapa.topicos.map(topico => `
+                        <div class="topico-bloco">
+                            <button class="material-btn" onclick="showMaterialView('${topico.titulo}', '${topico.material}')">📚 Ler ${topico.titulo}</button>
+                            <button class="btn-flashcard" onclick="showFlashcardView('${topico.titulo}', ${JSON.stringify(topico.flashcards).replace(/"/g, '&quot;')})">🃏 Flashcards ${topico.titulo}</button>
+                        </div>
+                    `).join('')}
+                </div>
+                <button class="btn-primary btn-simulado-etapa" onclick="showSimuladoEtapaView(${etapaId})">🏁 Fazer Simulado da Etapa</button>
+            `;
+            window.currentEtapa = etapa;
+            changeView('etapa-view');
+        }
+
+        function showMaterialView(titulo, conteudo) { 
+            document.getElementById('material-titulo').textContent = `Material: ${titulo}`;
+            document.getElementById('material-conteudo').innerHTML = `<p>${conteudo}</p>`;
+            changeView('material-view');
+        }
+
+        // --- FUNÇÕES DE FLASHCARDS
         function updateFlashcardDisplay() {
             if (flashcards.length === 0) return;
 
@@ -1193,75 +1248,180 @@
             updateFlashcardDisplay();
         }
         
-        // Função de navegação de visualização (mantida a simplicidade)
-        function changeView(viewId) {
-            const views = document.querySelectorAll('.content-view, .full-screen-message');
-            views.forEach(view => view.style.display = 'none');
-            document.getElementById(viewId).style.display = 'flex'; 
-        }
-
-        function showFlashcardView(topico) {
-            // Exemplo de como carregar os flashcards
-            flashcards = [
-                { pergunta: 'O que é HTML?', resposta: 'HyperText Markup Language, a linguagem de marcação para criação de páginas web.' },
-                { pergunta: 'Qual a função do CSS?', resposta: 'Cascading Style Sheets, usado para estilizar e dar layout a um documento web.' },
-                { pergunta: 'O que faz o JavaScript?', resposta: 'É uma linguagem de programação usada para tornar as páginas web interativas.' },
-            ];
+        function showFlashcardView(topicoTitulo, flashcardDataJSON) {
+            try {
+                flashcards = JSON.parse(flashcardDataJSON);
+            } catch (e) {
+                console.error("Erro ao parsear flashcards:", e);
+                flashcards = []; // Fallback
+            }
             
-            document.getElementById('flashcard-titulo').textContent = `Flashcards - ${topico}`;
+            document.getElementById('flashcard-titulo').textContent = `Flashcards - ${topicoTitulo}`;
             currentFlashcardIndex = 0;
             updateFlashcardDisplay();
             changeView('flashcard-view');
         }
+
+        // --- FUNÇÕES DE SIMULADO
         
-        // --- FUNÇÕES DE NAVEGAÇÃO E INICIALIZAÇÃO (MOCK)
+        function showSimuladoEtapaView(etapaId) {
+            const etapa = currentTrilha.etapas.find(e => e.id === etapaId);
+            if (!etapa || !etapa.simulado || etapa.simulado.length === 0) {
+                 alert("Não há simulado disponível para esta etapa.");
+                 return;
+            }
 
-        let currentUser = { name: "Convidado" }; // Mock de usuário
-
-        function initializeApp() {
-            document.getElementById('userNameDisplay').textContent = currentUser.name;
-            // Mostra o botão do chat apenas no aplicativo principal
-            document.getElementById('chat-button').style.display = 'block'; 
-        }
-
-        function showFormView() { changeView('form-view'); }
-        function showRoadmapView() { changeView('roadmap-view'); }
-        function showEtapaView(etapa) { 
-            // Mock de carregamento da etapa
-            document.getElementById('etapa-titulo').textContent = `Etapa ${etapa.id}: ${etapa.titulo}`;
-            document.getElementById('etapa-conteudo').innerHTML = `
-                <p>${etapa.descricao}</p>
-                <h3>Materiais de Estudo</h3>
-                <div class="topicos-container">
-                    <div class="topico-bloco">
-                        <button class="material-btn" onclick="showMaterialView('Tópico A', 'Conteúdo A da Etapa ${etapa.id}')">📚 Ler Tópico A</button>
-                        <button class="btn-flashcard" onclick="showFlashcardView('Tópico A')">🃏 Flashcards Tópico A</button>
-                    </div>
+            simuladoAtual = etapa.simulado;
+            respostasUsuario = {};
+            
+            const simuladoArea = document.getElementById('simulado-area');
+            simuladoArea.innerHTML = simuladoAtual.map((questao, qIndex) => `
+                <div class="simulado-bloco" data-index="${qIndex}">
+                    <p><strong>${qIndex + 1}. ${questao.pergunta}</strong></p>
+                    <ul id="alternativas-${qIndex}">
+                        ${questao.alternativas.map((alt, aIndex) => `
+                            <li class="alternativa" data-qindex="${qIndex}" data-aindex="${aIndex}" onclick="selecionarAlternativa(this, ${qIndex}, '${alt}')">${alt}</li>
+                        `).join('')}
+                    </ul>
                 </div>
-                <button class="btn-primary btn-simulado-etapa" onclick="finalizarSimulado()">🏁 Fazer Simulado da Etapa</button>
-            `;
-            window.currentEtapa = etapa;
-            // Esconde resultados anteriores do simulado ao voltar
+                <hr>
+            `).join('');
+
+            document.getElementById('simulado-titulo').textContent = `Simulado da Etapa ${etapa.id}`;
             document.getElementById('simulado-resultado').style.display = 'none';
-            document.getElementById('btnSimuladoSubmit').style.display = 'none';
-            changeView('etapa-view');
-        }
-        function showMaterialView(titulo, conteudo) { 
-            document.getElementById('material-titulo').textContent = `Material: ${titulo}`;
-            document.getElementById('material-conteudo').innerHTML = `<p>${conteudo}</p>`;
-            changeView('material-view');
+            document.getElementById('btnSimuladoSubmit').style.display = 'block';
+            document.getElementById('btnSimuladoVoltar').style.display = 'none';
+            changeView('simulado-etapa-view');
         }
 
-        function showPreDefinedCoursesView() { changeView('predefined-courses-view'); }
-        function showUserTrilhasView() { changeView('user-trilhas-view'); }
-        function showChatView() { changeView('chat-view'); }
-        function hideChatView() { 
-            changeView(window.currentView || 'roadmap-view'); 
-            document.getElementById('chat-button').style.display = 'block';
+        function selecionarAlternativa(elemento, qIndex, resposta) {
+            // Deseleciona todos os outros
+            const alternativas = document.querySelectorAll(`#alternativas-${qIndex} li`);
+            alternativas.forEach(alt => alt.classList.remove('selected'));
+            
+            // Seleciona o atual
+            elemento.classList.add('selected');
+            respostasUsuario[qIndex] = resposta;
+        }
+
+        function finalizarSimulado() {
+            const totalPerguntas = simuladoAtual.length;
+            if (Object.keys(respostasUsuario).length !== totalPerguntas) {
+                alert("Por favor, responda todas as perguntas antes de finalizar.");
+                return;
+            }
+            
+            let acertos = 0;
+            const simuladoArea = document.getElementById('simulado-area');
+            simuladoArea.querySelectorAll('.simulado-bloco').forEach((bloco, qIndex) => {
+                const questao = simuladoAtual[qIndex];
+                const respostaCorreta = questao.correta;
+                const respostaDoUsuario = respostasUsuario[qIndex];
+                
+                const alternativas = bloco.querySelectorAll('li');
+                alternativas.forEach(alt => {
+                    alt.classList.remove('selected');
+                    alt.onclick = null; // Desabilita cliques
+                    
+                    const altText = alt.textContent;
+                    
+                    if (altText === respostaCorreta) {
+                        alt.classList.add('correta-destacada');
+                        if (respostaDoUsuario === respostaCorreta) {
+                            acertos++;
+                        }
+                    } else if (altText === respostaDoUsuario) {
+                         alt.classList.add('incorreta');
+                    }
+                });
+            });
+
+            // 1. Calcular resultado e definir imagem
+            const porcentagem = (acertos / totalPerguntas) * 100;
+            const resultadoMascoteImg = document.getElementById('resultado-mascote');
+            const resultadoTextoSpan = document.getElementById('resultado-texto');
+            
+            let imagem = RESULTADO_IMGS.ruim;
+            let mensagem = `Você acertou ${acertos} de ${totalPerguntas} perguntas (${porcentagem.toFixed(0)}%). Continue estudando para o domínio completo!`;
+
+            if (porcentagem >= 80) {
+                imagem = RESULTADO_IMGS.bom;
+                mensagem = `🏆 PARABÉNS! Você acertou ${acertos} de ${totalPerguntas} perguntas. Domínio da Etapa alcançado!`;
+            } else if (porcentagem >= 50) {
+                imagem = RESULTADO_IMGS.medio;
+                mensagem = `👍 Bom resultado! Você acertou ${acertos} de ${totalPerguntas} perguntas. Revise os tópicos mais difíceis!`;
+            }
+
+            // 2. Mostrar o resultado
+            resultadoMascoteImg.src = imagem;
+            resultadoTextoSpan.textContent = mensagem;
+            document.getElementById('simulado-resultado').style.display = 'flex'; 
+            
+            // 3. Gerenciar botões
+            document.getElementById('btnSimuladoSubmit').style.display = 'none'; 
+            document.getElementById('btnSimuladoVoltar').style.display = 'block';
+        }
+
+        // --- MOCK DE CARREGAMENTO DE CONTEÚDO
+        
+        // MOCK de Trilha de Exemplo (Estrutura detalhada)
+        function generateMockTrilha(tema, nivel) {
+            return {
+                id: 1,
+                tema: `${tema} (${nivel})`,
+                nivel: nivel,
+                etapas: [
+                    { 
+                        id: 1, 
+                        titulo: `Etapa 1: Fundamentos de ${tema}`, 
+                        descricao: "Esta etapa cobre os conceitos básicos e a estrutura fundamental que você usará.",
+                        topicos: [
+                            { 
+                                titulo: "Estrutura Básica", 
+                                material: "Detalhes sobre a sintaxe e a organização de arquivos no projeto.",
+                                flashcards: [
+                                    { pergunta: `Qual o comando inicial de ${tema}?`, resposta: "Comando 1" },
+                                    { pergunta: "Defina o conceito chave", resposta: "Conceito 1 é..." }
+                                ]
+                            },
+                            { 
+                                titulo: "Variáveis e Tipos", 
+                                material: "Explicação dos tipos de dados suportados e como declarar variáveis.",
+                                flashcards: [
+                                    { pergunta: "Diferença entre Tipo A e Tipo B", resposta: "Tipo A é estático, Tipo B é dinâmico." }
+                                ]
+                            }
+                        ],
+                        simulado: [
+                            { pergunta: "O que é um 'loop for'?", alternativas: ["A. Uma estrutura de repetição.", "B. Uma função de declaração.", "C. Um tipo de dado.", "D. Um comando de saída."], correta: "A. Uma estrutura de repetição." },
+                            { pergunta: "Qual o nível de dificuldade desta etapa?", alternativas: ["A. Iniciante", "B. Intermediário", "C. Avançado", "D. Mestre Jedi"], correta: "A. Iniciante" }
+                        ]
+                    },
+                    { 
+                        id: 2, 
+                        titulo: "Etapa 2: Aplicações Práticas e Módulos", 
+                        descricao: "Use o conhecimento da Etapa 1 para construir algo funcional.",
+                         topicos: [
+                            { 
+                                titulo: "Integração de Módulos", 
+                                material: "Como importar e utilizar bibliotecas externas.",
+                                flashcards: [
+                                    { pergunta: "Como importar um módulo?", resposta: "Use a sintaxe 'import nome_do_modulo'." }
+                                ]
+                            },
+                        ],
+                         simulado: [
+                            { pergunta: "Qual a melhor prática para nomear variáveis?", alternativas: ["A. camelCase", "B. snake_case", "C. kebab-case", "D. PascalCase"], correta: "B. snake_case" },
+                        ]
+                    }
+                ]
+            };
         }
 
 
-        // MOCK de Login/Navegação Inicial
+        // --- EVENTOS E INICIALIZAÇÃO
+
+        // Navegação Inicial
         document.getElementById('btnSkipLogin').addEventListener('click', () => {
             document.getElementById('login-screen').style.display = 'none';
             document.getElementById('welcome-screen').style.display = 'flex';
@@ -1274,26 +1434,31 @@
             document.getElementById('explanation-screen').style.display = 'none';
             document.getElementById('main-app').style.display = 'block';
             initializeApp();
-            showPreDefinedCoursesView(); // Começa na tela de cursos prontos
+            showPreDefinedCoursesView();
         });
         document.getElementById('chat-button').addEventListener('click', showChatView);
-        
-        // Mock para mostrar o roadmap (apenas para teste)
+
+        // Gerar Trilha
         document.getElementById('btnGerar').addEventListener('click', (e) => {
             e.preventDefault();
+            const tema = document.getElementById('tema').value;
+            const nivel = document.getElementById('nivel').value;
+
+            if (!tema) {
+                alert("Por favor, preencha o tema.");
+                return;
+            }
+
             changeView('loading-view');
+            
+            // Simulação da Geração da Trilha pela IA
             setTimeout(() => {
-                const tema = document.getElementById('tema').value || 'Trilha Personalizada';
-                document.getElementById('roadmap-title').textContent = `Roadmap: ${tema}`;
-                document.getElementById('roadmap').innerHTML = `
-                    <div class="bloco" onclick="showEtapaView({ id: 1, titulo: 'Fundamentos de ${tema}', descricao: 'Esta etapa cobre os conceitos básicos...' })">Etapa 1: Fundamentos</div>
-                    <div class="bloco" onclick="showEtapaView({ id: 2, titulo: 'Estruturas Avançadas', descricao: 'Aprofundamento em estruturas...' })">Etapa 2: Estruturas Avançadas</div>
-                `;
+                currentTrilha = generateMockTrilha(tema, nivel);
                 showRoadmapView();
             }, 1500); 
         });
 
-        // Mock para carregar cursos pré-definidos
+        // Carregar Mocks de Cursos/Trilhas Salvas
         document.getElementById('predefined-courses-list').innerHTML = `
             <div class="course-category">
                 <h3>Desenvolvimento Web</h3>
@@ -1309,8 +1474,6 @@
                 </div>
             </div>
         `;
-        
-        // Mock para carregar lista de trilhas
         document.getElementById('trilhas-list').innerHTML = `
             <div class="trilha-card">
                 <div class="trilha-info">
@@ -1318,17 +1481,7 @@
                     <p>Nível: Intermediário | Progresso: 3/12 Etapas</p>
                 </div>
                 <div class="trilha-actions">
-                    <button class="btn-success" onclick="showRoadmapView()">Continuar</button>
-                    <button class="btn-danger">Excluir</button>
-                </div>
-            </div>
-            <div class="trilha-card">
-                <div class="trilha-info">
-                    <h4>Cibersegurança (Fundamentos)</h4>
-                    <p>Nível: Iniciante | Progresso: 1/8 Etapas</p>
-                </div>
-                <div class="trilha-actions">
-                    <button class="btn-success" onclick="showRoadmapView()">Continuar</button>
+                    <button class="btn-success" onclick="currentTrilha=generateMockTrilha('Python', 'Intermediário'); showRoadmapView()">Continuar</button>
                     <button class="btn-danger">Excluir</button>
                 </div>
             </div>
@@ -1355,9 +1508,6 @@
                 }, 1000);
             }
         });
-
-        // Carregar a primeira view
-        // O restante do código JS que gerencia o estado e as visualizações precisa ser mantido ou completado aqui.
     </script>
 </body>
 </html>
