@@ -1076,1001 +1076,565 @@
 
 
     <script>
-        // ===================================================
-        // JAVASCRIPT INTEGRADO (script.js) - Versão Corrigida
-        // ===================================================
+// ===================================================
+// JAVASCRIPT INTEGRADO (script.js) - CORRIGIDO
+// ===================================================
 
-        // ⚠️ ATENÇÃO: CHAVE DA API ATUALIZADA AQUI
-        const API_KEY = "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"; 
-        
-        const GROQ_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions";
-        const MODEL_NAME = "llama-3.1-8b-instant"; 
+// ⚠️ ATENÇÃO: CHAVE DA API ATUALIZADA AQUI
+const API_KEY = "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"; 
 
-        // --- SISTEMA DE USUÁRIO SIMPLES (LOCALSTORAGE) ---
-        let currentUser = {
-            name: null, 
-            trilhas: [], 
-            currentTrilhaIndex: -1 
-        };
-        let allUsersData = {}; 
-        let modalState = {}; 
-        let patolindoState = {
-            questionsLeft: 5,
-            history: [],
-            lastView: "roadmap-view" 
-        };
-        // Estado do Simulado
-        let simuladoState = {
-            questions: [],
-            currentQuestionIndex: 0,
-            selectedAnswer: null,
-            score: 0,
-            isFinished: false
-        };
-        // Estado do Flashcard
-        let flashcardState = {
-            cards: [],
-            currentCardIndex: 0
-        };
-        
-        // --- DADOS PRÉ-DEFINIDOS ---
-        const preDefinedRoadmaps = [
+const GROQ_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions";
+const MODEL_NAME = "llama-3.1-8b-instant"; 
+
+// --- SISTEMA DE USUÁRIO SIMPLES (LOCALSTORAGE) ---
+let currentUser = {
+    name: null, // Será o nome de usuário ou 'Convidado'
+    trilhas: [], // Array de todas as trilhas (roadmaps) salvas
+    currentTrilhaIndex: -1 // Índice da trilha atualmente ativa
+};
+// Armazena todos os dados de usuários no localStorage
+let allUsersData = {}; 
+
+let modalState = {}; 
+let patolindoState = {
+    questionsLeft: 5,
+    history: [],
+    lastView: "roadmap-view" 
+};
+
+// --- DADOS PRÉ-DEFINIDOS (PARA ECONOMIZAR REQUISIÇÕES) ---
+const preDefinedRoadmaps = [
+    {
+        category: "Programação e Tecnologia",
+        courses: [
             {
-                category: "Programação e Tecnologia",
-                courses: [
-                    {
-                        tema: "Python para Iniciantes", nivel: "Iniciante", objetivo: "Desenvolvimento de scripts básicos e lógica de programação.",
-                        etapas: [
-                            { titulo: "Etapa 1: Fundamentos e Sintaxe", topicos: [{ tópico: "Variáveis e Tipos de Dados", material: "https://docs.python.org/pt-br/3/tutorial/introduction.html" }, { tópico: "Estruturas de Controle (If/Else)", material: "https://docs.python.org/pt-br/3/tutorial/controlflow.html" }, { tópico: "Laços de Repetição (For/While)", material: "https://docs.python.org/pt-br/3/tutorial/controlflow.html" }, { tópico: "Introdução a Funções", material: "https://docs.python.org/pt-br/3/tutorial/controlflow.html" }], atividade: "Criar uma calculadora simples que utilize If/Else e funções." }
-                        ]
-                    },
-                    {
-                        tema: "JavaScript Moderno (ES6+)", nivel: "Intermediário", objetivo: "Desenvolvimento Frontend e manipulação de DOM.",
-                        etapas: [
-                            { titulo: "Etapa 1: Variáveis e Scopes", topicos: [{ tópico: "Var, Let e Const", material: "https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Guide/Grammar_and_types" }, { tópico: "Arrow Functions e Template Literals", material: "https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Functions/Arrow_functions" }, { tópico: "Manipulação de Array (Map, Filter, Reduce)", material: "https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Array" }, { tópico: "Introdução a Promises e Async/Await", material: "https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Guide/Using_promises" }], atividade: "Criar uma lista de tarefas (To-Do List) que manipule o DOM e use funções de array." }
-                    },
-                    {
-                        tema: "Java: POO e Backend", nivel: "Avançado", objetivo: "Entender Programação Orientada a Objetos e estruturas de dados básicas.",
-                        etapas: [
-                            { titulo: "Etapa 1: Conceitos de POO", topicos: [{ tópico: "Classes, Objetos e Encapsulamento", material: "https://docs.oracle.com/javase/tutorial/java/concepts/index.html" }, { tópico: "Herança e Polimorfismo", material: "https://docs.oracle.com/javase/tutorial/java/concepts/index.html" }, { tópico: "Tratamento de Exceções", material: "https://docs.oracle.com/javase/tutorial/essential/exceptions/index.html" }, { tópico: "Estruturas de Dados (ArrayList e HashMap)", material: "https://docs.oracle.com/javase/8/docs/api/java/util/ArrayList.html" }], atividade: "Desenvolver um sistema bancário simples com classes Cliente e Conta, aplicando Herança." }
-                        ]
-                    },
+                tema: "Python para Iniciantes", nivel: "Iniciante", objetivo: "Desenvolvimento de scripts básicos e lógica de programação.",
+                etapas: [
+                    { titulo: "Etapa 1: Fundamentos e Sintaxe", topicos: [{ tópico: "Variáveis e Tipos de Dados", material: "https://docs.python.org/pt-br/3/tutorial/introduction.html" }, { tópico: "Estruturas de Controle (If/Else)", material: "https://docs.python.org/pt-br/3/tutorial/controlflow.html" }, { tópico: "Laços de Repetição (For/While)", material: "https://docs.python.org/pt-br/3/tutorial/controlflow.html" }, { tópico: "Introdução a Funções", material: "https://docs.python.org/pt-br/3/tutorial/controlflow.html" }], atividade: "Criar uma calculadora simples que utilize If/Else e funções." }
                 ]
             },
             {
-                category: "Idiomas e Linguagens",
-                courses: [
-                    {
-                        tema: "Inglês Básico", nivel: "Iniciante", objetivo: "Conversação simples e compreensão de textos básicos.",
-                        etapas: [
-                            { titulo: "Etapa 1: O Verbo 'To Be'", topicos: [{ tópico: "Afirmativa e Negativa", material: "https://www.youtube.com/watch?v=basico_to_be" }, { tópico: "Interrogativa e Short Answers", material: "https://www.duolingo.com/course/en/pt/learn-english" }, { tópico: "Pronomes Pessoais e Possessivos", material: "https://www.bbc.co.uk/learningenglish/" }, { tópico: "Vocabulário de Saudação e Apresentação", material: "https://www.memrise.com/" }], atividade: "Gravar um áudio se apresentando e falando sobre 3 membros da família em inglês." }
-                        ]
-                    },
-                    {
-                        tema: "Espanhol Intermediário", nivel: "Intermediário", objetivo: "Dominar pretéritos e conversação em viagens.",
-                        etapas: [
-                            { titulo: "Etapa 1: Pretéritos do Indicativo", topicos: [{ tópico: "Pretérito Perfeito Simples (Pasado Simple)", material: "https://www.rae.es/" }, { tópico: "Pretérito Imperfeito", material: "https://espanhol.com/gramatica/passado-espanhol" }, { tópico: "Verbos Irregulares Comuns", material: "https://conjuga-me.net/espanhol/verbos/irregulares" }, { tópico: "Vocabulário de Viagem e Turismo", material: "https://cervantes.es/" }], atividade: "Escrever um parágrafo contando suas últimas férias usando os pretéritos estudados." }
-                        ]
-                    }
+                tema: "JavaScript Moderno (ES6+)", nivel: "Intermediário", objetivo: "Desenvolvimento Frontend e manipulação de DOM.",
+                etapas: [
+                    { titulo: "Etapa 1: Variáveis e Scopes", topicos: [{ tópico: "Var, Let e Const", material: "https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Guide/Grammar_and_types" }, { tópico: "Arrow Functions e Template Literals", material: "https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Functions/Arrow_functions" }, { tópico: "Manipulação de Array (Map, Filter, Reduce)", material: "https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Array" }, { tópico: "Introdução a Promises e Async/Await", material: "https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Guide/Using_promises" }], atividade: "Criar uma lista de tarefas (To-Do List) que manipule o DOM e use funções de array." }
                 ]
             },
             {
-                category: "Matérias Escolares - Ensino Fundamental (Anos Finais)",
-                courses: [
-                    {
-                        tema: "Matemática (6º Ano)", nivel: "Intermediário", objetivo: "Dominar números inteiros, frações e operações básicas.",
-                        etapas: [
-                            { titulo: "Etapa 1: Números Inteiros e Racionais", topicos: [{ tópico: "Conjunto dos Números Inteiros (Z)", material: "https://www.auladegratis.net/matematica/6-ano/numeros-inteiros.html" }, { tópico: "Soma e Subtração de Frações", material: "https://www.somatematica.com.br/fundamental/6ano/fracoes.php" }, { tópico: "Múltiplos e Divisores (MMC e MDC)", material: "https://www.infoescola.com/matematica/mmc-e-mdc/" }, { tópico: "Expressões Numéricas", material: "https://www.toda_materia.com.br/expressoes-numericas" }], atividade: "Resolver uma lista de 10 problemas que envolvam frações em situações do dia a dia." }
-                        ]
-                    },
-                    {
-                        tema: "História (9º Ano)", nivel: "Intermediário", objetivo: "Compreender a 1ª República, a Era Vargas e a Guerra Fria.",
-                        etapas: [
-                            { titulo: "Etapa 1: República Oligárquica e Vargas", topicos: [{ tópico: "Primeira República e Coronelismo", material: "https://brasilescola.uol.com.br/historiab/primeira-republica.htm" }, { tópico: "Revolução de 1930 e Era Vargas", material: "https://www.politize.com.br/era-vargas-resumo/" }, { tópico: "A Grande Depressão de 1929 e o Brasil", material: "https://www.sohistoria.com.br/ef2/crise29/" }, { tópico: "O Estado Novo (1937-1945)", material: "https://www.historiadigital.org/estado-novo/" }], atividade: "Criar uma linha do tempo ilustrada da Era Vargas (1930-1945) com os principais eventos." }
-                        ]
-                    }
+                tema: "Java: POO e Backend", nivel: "Avançado", objetivo: "Entender Programação Orientada a Objetos e estruturas de dados básicas.",
+                etapas: [
+                    { titulo: "Etapa 1: Conceitos de POO", topicos: [{ tópico: "Classes, Objetos e Encapsulamento", material: "https://docs.oracle.com/javase/tutorial/java/concepts/index.html" }, { tópico: "Herança e Polimorfismo", material: "https://docs.oracle.com/javase/tutorial/java/concepts/index.html" }, { tópico: "Tratamento de Exceções", material: "https://docs.oracle.com/javase/tutorial/essential/exceptions/index.html" }, { tópico: "Estruturas de Dados (ArrayList e HashMap)", material: "https://docs.oracle.com/javase/8/docs/api/java/util/ArrayList.html" }], atividade: "Desenvolver um sistema bancário simples com classes Cliente e Conta, aplicando Herança." }
+                ]
+            },
+        ]
+    },
+    {
+        category: "Idiomas e Linguagens",
+        courses: [
+            {
+                tema: "Inglês Básico", nivel: "Iniciante", objetivo: "Conversação simples e compreensão de textos básicos.",
+                etapas: [
+                    { titulo: "Etapa 1: O Verbo 'To Be'", topicos: [{ tópico: "Afirmativa e Negativa", material: "https://www.youtube.com/watch?v=basico_to_be" }, { tópico: "Interrogativa e Short Answers", material: "https://www.duolingo.com/course/en/pt/learn-english" }, { tópico: "Pronomes Pessoais e Possessivos", material: "https://www.bbc.co.uk/learningenglish/" }, { tópico: "Vocabulário de Saudação e Apresentação", material: "https://www.memrise.com/" }], atividade: "Gravar um áudio se apresentando e falando sobre 3 membros da família em inglês." }
                 ]
             },
             {
-                category: "Matérias Escolares - Ensino Médio",
-                courses: [
-                    {
-                        tema: "Português (1º Ano EM)", nivel: "Avançado", objetivo: "Dominar a estrutura frasal, concordância e as primeiras escolas literárias.",
-                        etapas: [
-                            { titulo: "Etapa 1: Sintaxe e Concordância", topicos: [{ tópico: "Estrutura da Oração (Sujeito, Predicado)", material: "https://www.normaculta.com.br/estrutura-da-oracao/" }, { tópico: "Concordância Verbal e Nominal", material: "https://www.portuguesonline.com.br/concordancia-verbal-e-nominal/" }, { tópico: "Introdução à Literatura: Quinhentismo e Barroco", material: "https://www.infoescola.com/literatura/quinhentismo/" }, { tópico: "Análise de Figuras de Linguagem", material: "https://www.todamateria.com.br/figuras-de-linguagem/" }], atividade: "Analisar um trecho de um poema Barroco identificando o sujeito, predicado e as figuras de linguagem." }
-                        ]
-                    }
+                tema: "Espanhol Intermediário", nivel: "Intermediário", objetivo: "Dominar pretéritos e conversação em viagens.",
+                etapas: [
+                    { titulo: "Etapa 1: Pretéritos do Indicativo", topicos: [{ tópico: "Pretérito Perfeito Simples (Pasado Simple)", material: "https://www.rae.es/" }, { tópico: "Pretérito Imperfeito", material: "https://espanhol.com/gramatica/passado-espanhol" }, { tópico: "Verbos Irregulares Comuns", material: "https://conjuga-me.net/espanhol/verbos/irregulares" }, { tópico: "Vocabulário de Viagem e Turismo", material: "https://cervantes.es/" }], atividade: "Escrever um parágrafo contando suas últimas férias usando os pretéritos estudados." }
                 ]
             }
-        ]; 
+        ]
+    },
+    {
+        category: "Matérias Escolares - Ensino Fundamental (Anos Finais)",
+        courses: [
+            {
+                tema: "Matemática (6º Ano)", nivel: "Intermediário", objetivo: "Dominar números inteiros, frações e operações básicas.",
+                etapas: [
+                    { titulo: "Etapa 1: Números Inteiros e Racionais", topicos: [{ tópico: "Conjunto dos Números Inteiros (Z)", material: "https://www.auladegratis.net/matematica/6-ano/numeros-inteiros.html" }, { tópico: "Soma e Subtração de Frações", material: "https://www.somatematica.com.br/fundamental/6ano/fracoes.php" }, { tópico: "Múltiplos e Divisores (MMC e MDC)", material: "https://www.infoescola.com/matematica/mmc-e-mdc/" }, { tópico: "Expressões Numéricas", material: "https://www.toda_materia.com.br/expressoes-numericas" }], atividade: "Resolver uma lista de 10 problemas que envolvam frações em situações do dia a dia." }
+                ]
+            },
+            {
+                tema: "História (9º Ano)", nivel: "Intermediário", objetivo: "Compreender a 1ª República, a Era Vargas e a Guerra Fria.",
+                etapas: [
+                    { titulo: "Etapa 1: República Oligárquica e Vargas", topicos: [{ tópico: "Primeira República e Coronelismo", material: "https://brasilescola.uol.com.br/historiab/primeira-republica.htm" }, { tópico: "Revolução de 1930 e Era Vargas", material: "https://www.politize.com.br/era-vargas-resumo/" }, { tópico: "A Grande Depressão de 1929 e o Brasil", material: "https://www.sohistoria.com.br/ef2/crise29/" }, { tópico: "O Estado Novo (1937-1945)", material: "https://www.historiadigital.org/estado-novo/" }], atividade: "Criar uma linha do tempo ilustrada da Era Vargas (1930-1945) com os principais eventos." }
+                ]
+            }
+        ]
+    },
+    {
+        category: "Matérias Escolares - Ensino Médio",
+        courses: [
+            {
+                tema: "Português (1º Ano EM)", nivel: "Avançado", objetivo: "Dominar a estrutura frasal, concordância e as primeiras escolas literárias.",
+                etapas: [
+                    { titulo: "Etapa 1: Sintaxe e Concordância", topicos: [{ tópico: "Estrutura da Oração (Sujeito, Predicado)", material: "https://www.normaculta.com.br/estrutura-da-oracao/" }, { tópico: "Concordância Verbal e Nominal", material: "https://www.portuguesonline.com.br/concordancia-verbal-e-nominal/" }, { tópico: "Introdução à Literatura: Quinhentismo e Barroco", material: "https://www.infoescola.com/literatura/quinhentismo/" }, { tópico: "Análise de Figuras de Linguagem", material: "https://www.todamateria.com.br/figuras-de-linguagem/" }], atividade: "Analisar um trecho de um poema Barroco identificando o sujeito, predicado e as figuras de linguagem." }
+                ]
+            }
+        ]
+    }
+];
+
+// --- FUNÇÕES DE PERSISTÊNCIA (ATUALIZADAS) ---
+function loadAllUsersData() {
+    const data = localStorage.getItem('quackademyAllUsers');
+    if (data) {
+        allUsersData = JSON.parse(data);
+    }
+}
+
+function saveAllUsersData() {
+    localStorage.setItem('quackademyAllUsers', JSON.stringify(allUsersData));
+}
+
+function loadUserData(username) {
+    loadAllUsersData();
+    if (!username || username === 'Convidado') {
+        currentUser.name = 'Convidado';
+        currentUser.trilhas = []; // Convidado não tem trilhas salvas
+        currentUser.currentTrilhaIndex = -1;
+    } else {
+        const userData = allUsersData[username];
+        if (userData) {
+            currentUser.name = username;
+            currentUser.trilhas = userData.trilhas || [];
+            currentUser.currentTrilhaIndex = userData.currentTrilhaIndex || -1;
+        } else {
+            // Novo usuário
+            currentUser.name = username;
+            currentUser.trilhas = [];
+            currentUser.currentTrilhaIndex = -1;
+            // A senha é salva na função handleAuthSubmit para o novo usuário
+        }
+    }
+    document.getElementById("userNameDisplay").innerText = currentUser.name;
+    saveAllUsersData();
+    updateTrilhasCountDisplay();
+}
+
+function saveUserTrilhas() {
+    if (currentUser.name && currentUser.name !== 'Convidado') {
+        allUsersData[currentUser.name] = { 
+            ...allUsersData[currentUser.name], 
+            trilhas: currentUser.trilhas, 
+            currentTrilhaIndex: currentUser.currentTrilhaIndex 
+        };
+        saveAllUsersData();
+    }
+    updateTrilhasCountDisplay();
+}
+
+function updateTrilhasCountDisplay() {
+    const count = currentUser.trilhas ? currentUser.trilhas.length : 0;
+    document.getElementById("btnMinhasTrilhas").innerText = `Minhas Trilhas (${count})`;
+    document.getElementById("btnMinhasTrilhas").disabled = currentUser.name === 'Convidado';
+}
+
+// ===================================================
+// CONTROLE DE FLUXO DE TELAS (CRÍTICO PARA O BUG)
+// ===================================================
+
+const views = ["login-screen", "welcome-screen", "explanation-screen", "main-app"];
+const mainContentViews = ["user-trilhas-view", "predefined-courses-view", "form-view", "roadmap-view", "etapa-view", "material-view", "flashcard-view", "simulado-etapa-view", "chat-view"];
+
+/**
+ * Controla a exibição de todas as telas principais e sub-telas.
+ * Garante que apenas a tela desejada e a área principal (se aplicável) estejam visíveis.
+ */
+function showView(viewId) {
+    // Esconde todas as telas full-screen e o main-app
+    views.forEach(id => {
+        const view = document.getElementById(id);
+        if (view) {
+            // As telas "screen" usam display: flex. O "main-app" usa display: block.
+            view.style.display = 'none'; 
+        }
+    });
+
+    // Esconde todas as sub-telas dentro de #main-content-area
+    mainContentViews.forEach(id => {
+        const view = document.getElementById(id);
+        if (view) {
+            view.style.display = 'none';
+        }
+    });
+
+    // Lógica para telas iniciais (full-screen-message)
+    const targetView = document.getElementById(viewId);
+    if (targetView && views.includes(viewId)) {
+        targetView.style.display = viewId.includes('screen') ? 'flex' : 'block';
+    }
+
+    // Lógica para sub-telas dentro de #main-content-area
+    if (mainContentViews.includes(viewId)) {
+        // Garantir que o container principal esteja visível
+        document.getElementById("main-app").style.display = 'block';
         
-        // --- FUNÇÕES DE PERSISTÊNCIA ---
-        function loadAllUsersData() {
-            const data = localStorage.getItem('quackademyAllUsers');
-            if (data) {
-                allUsersData = JSON.parse(data);
-            }
+        // Exibir a sub-tela específica
+        if (targetView) {
+            targetView.style.display = 'block';
         }
+    }
+}
 
-        function saveAllUsersData() {
-            localStorage.setItem('quackademyAllUsers', JSON.stringify(allUsersData));
+
+function showLoginView() {
+    showView('login-screen');
+    // Garante que os campos de login estejam limpos
+    document.getElementById('username').value = '';
+    document.getElementById('password').value = '';
+    document.getElementById('auth-message').innerText = '';
+}
+
+function handleAuthSubmit(e) {
+    e.preventDefault();
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value.trim();
+    const authMessage = document.getElementById('auth-message');
+
+    if (username.toLowerCase() === 'convidado') {
+        authMessage.innerText = 'Não é possível usar "Convidado" como nome de usuário. Use o botão "Pular Login" se quiser entrar como convidado.';
+        return;
+    }
+
+    if (!username || !password) {
+        authMessage.innerText = 'Preencha o nome de usuário e a senha.';
+        return;
+    }
+    
+    loadAllUsersData();
+    const userData = allUsersData[username];
+
+    if (userData) {
+        // Usuário existente: verifica senha
+        if (userData.password === password) {
+            // Login bem-sucedido
+            loadUserData(username); // Recarrega dados e atualiza currentUser
+            authMessage.innerText = '';
+            showView('welcome-screen'); // <--- Ação de prosseguir
+        } else {
+            // Senha incorreta
+            authMessage.innerText = 'Senha incorreta.';
         }
-
-        function loadUserData(username, password) {
-            loadAllUsersData();
-            if (!username || username === 'Convidado') {
-                currentUser.name = 'Convidado';
-                currentUser.trilhas = []; 
-                currentUser.currentTrilhaIndex = -1;
-            } else {
-                const userData = allUsersData[username];
-                if (userData) {
-                    // Simulação de login
-                    if (userData.password !== password) {
-                         document.getElementById('auth-message').innerText = 'Senha incorreta.';
-                         return false;
-                    }
-                    currentUser.name = username;
-                    currentUser.trilhas = userData.trilhas || [];
-                    currentUser.currentTrilhaIndex = userData.currentTrilhaIndex || -1;
-                } else { 
-                    // Novo usuário (simulação de cadastro)
-                    currentUser.name = username;
-                    currentUser.trilhas = [];
-                    currentUser.currentTrilhaIndex = -1;
-                    allUsersData[username] = { 
-                        trilhas: [], 
-                        currentTrilhaIndex: -1, 
-                        password: password
-                    };
-                }
-            }
-            document.getElementById("userNameDisplay").innerText = currentUser.name;
-            saveAllUsersData();
-            updateTrilhasCountDisplay();
-            document.getElementById('auth-message').innerText = ''; // Limpa a mensagem de erro
-            return true;
-        }
-
-        function saveUserTrilhas() {
-            if (currentUser.name && currentUser.name !== 'Convidado') {
-                allUsersData[currentUser.name] = { 
-                    ...allUsersData[currentUser.name], 
-                    trilhas: currentUser.trilhas, 
-                    currentTrilhaIndex: currentUser.currentTrilhaIndex 
-                };
-                saveAllUsersData();
-            }
-            updateTrilhasCountDisplay();
-        }
-
-        function updateTrilhasCountDisplay() {
-            const count = currentUser.trilhas ? currentUser.trilhas.length : 0;
-            document.getElementById("btnMinhasTrilhas").innerText = `Minhas Trilhas (${count})`;
-            document.getElementById("btnMinhasTrilhas").disabled = currentUser.name === 'Convidado';
-        }
-
-        // --- CONTROLE DE FLUXO E VIEWS ---
-        function showView(viewId) {
-            const views = document.querySelectorAll('.content-view, .full-screen-message');
-            views.forEach(view => {
-                view.style.display = 'none';
-            });
-            document.getElementById(viewId).style.display = viewId.includes('screen') ? 'flex' : 'block';
-
-            if (viewId.includes('main-app')) {
-                 document.getElementById('main-app').style.display = 'block';
-            }
-            
-            // Exibe ou esconde o botão do chat
-            document.getElementById('chat-button').style.display = (viewId === 'roadmap-view' || viewId === 'etapa-view' || viewId === 'material-view' || viewId === 'flashcard-view' || viewId === 'simulado-etapa-view') ? 'block' : 'none';
-            
-            // Atualiza o estado da última view para o Patolindo
-            if (viewId !== 'chat-view' && viewId !== 'login-screen' && viewId !== 'welcome-screen' && viewId !== 'explanation-screen') {
-                patolindoState.lastView = viewId.replace('-view', '-container');
-            }
-        }
+    } else {
+        // Novo usuário: cria a conta (simulada)
+        // Salva o novo usuário com a senha
+        allUsersData[username] = { trilhas: [], currentTrilhaIndex: -1, password: password };
+        saveAllUsersData();
+        loadUserData(username); // Carrega o novo usuário
         
-        // Funções específicas de navegação
-        function showUserTrilhasView() {
-            if (currentUser.name === 'Convidado') {
-                alert('O modo convidado não pode salvar trilhas. Faça login ou cadastre-se.');
-                return;
-            }
-            displayUserTrilhas();
-            showView('user-trilhas-view');
-        }
+        authMessage.innerText = 'Conta criada com sucesso!';
+        showView('welcome-screen'); // <--- Ação de prosseguir
+    }
+}
 
-        function showPreDefinedCoursesView() {
-            displayPreDefinedCourses();
-            showView('predefined-courses-view');
-        }
+function handleSkipLogin() {
+    loadUserData('Convidado');
+    // Reseta o estado do chat para o convidado
+    patolindoState.questionsLeft = 5;
+    patolindoState.history = [];
 
-        function showFormView() {
-            showView('form-view');
-        }
+    showView('welcome-screen'); // <--- Ação de prosseguir
+}
 
-        function showRoadmapView() {
-            displayRoadmap();
-            showView('roadmap-view');
-        }
+// ===================================================
+// FUNÇÕES AUXILIARES DE NAVEGAÇÃO E RENDERIZAÇÃO
+// ===================================================
 
-        function showEtapaView(etapaIndex) {
-            const trilha = currentUser.trilhas[currentUser.currentTrilhaIndex];
-            if (!trilha || !trilha.etapas[etapaIndex]) return;
-            
-            const etapa = trilha.etapas[etapaIndex];
-            modalState.currentEtapaIndex = etapaIndex; // Salva o índice da etapa
-            document.getElementById('etapa-titulo').innerText = `Etapa ${etapaIndex + 1}: ${etapa.titulo}`;
-            
-            let html = `
-                <div class="topicos-container">
-                    <h3>📚 Tópicos de Estudo</h3>
-            `;
-            
-            etapa.topicos.forEach(topico => {
-                html += `
-                    <div class="topico-bloco">
-                        <p class="material-btn" onclick="showMaterialView('${topico.tópico}', '${etapa.titulo}', '${topico.material}')">
-                            ${topico.tópico} (Material)
-                        </p>
-                        <button class="btn-flashcard" onclick="showFlashcardView('${topico.tópico}')">
-                            Flashcards (Conceitos)
-                        </button>
-                    </div>
-                `;
-            });
+// Funções de navegação do header e botões
+function showUserTrilhasView() {
+    showView('user-trilhas-view');
+    // renderUserTrilhas(); // Placeholder: função de renderização não definida
+}
 
-            html += `
-                    <h3>🎯 Atividade Prática</h3>
-                    <p style="padding: 10px; border-left: 5px solid #E0A800; background-color: #FFFBEA;">
-                        <strong>Tarefa:</strong> ${etapa.atividade}
-                    </p>
-                </div>
-                
-                <button class="btn-primary btn-simulado-etapa" onclick="showSimuladoView('${etapa.titulo}')">
-                    Simulado da Etapa (20 Questões) 🧠
-                </button>
-            `;
+function showPreDefinedCoursesView() {
+    showView('predefined-courses-view');
+    renderPreDefinedCourses(); // Renderiza os cursos
+}
 
-            document.getElementById('etapa-conteudo').innerHTML = html;
-            showView('etapa-view');
-        }
+function showFormView() {
+    showView('form-view');
+}
 
-        function showMaterialView(topico, etapaTitulo, materialLink) {
-            document.getElementById('material-titulo').innerText = `${etapaTitulo}: ${topico}`;
-            
-            let html = `
-                <p>Aqui você verá o material gerado pela IA (ou link de referência) para o tópico: <strong>${topico}</strong>.</p>
-                <p><strong>Link de Referência:</strong> <a href="${materialLink}" target="_blank">${materialLink}</a></p>
-                
-                <div id="material-texto-gerado" style="margin-top: 20px; padding: 15px; border: 1px dashed #ccc; border-radius: 8px; background-color: #f9f9f9;">
-                    Carregando material de estudo gerado por IA...
-                </div>
-            `;
-            document.getElementById('material-conteudo').innerHTML = html;
-            
-            // Botão de voltar
-            document.getElementById('btnMaterialVoltar').onclick = () => showEtapaView(modalState.currentEtapaIndex);
-            
-            showView('material-view');
-            generateContent(topico, 'material');
-        }
+function showRoadmapView() {
+    showView('roadmap-view');
+    renderRoadmap(); // Renderiza o roadmap
+}
 
-        function showFlashcardView(topico) {
-            document.getElementById('flashcard-titulo').innerText = `Flashcards: ${topico}`;
-            document.getElementById('flashcard-display').innerHTML = 'Gerando flashcards...';
-            
-            // Resetar estado do flashcard
-            flashcardState.cards = [];
-            flashcardState.currentCardIndex = 0;
+// Placeholders de renderização para evitar erros "function not defined"
+function renderUserTrilhas() {
+    document.getElementById('trilhas-list').innerHTML = `<p class="placeholder-text">Nenhuma trilha encontrada. Crie uma nova!</p>`;
+}
 
-            // Botão de voltar
-            document.getElementById('btnFlashcardVoltar').onclick = () => showEtapaView(modalState.currentEtapaIndex);
-            
-            showView('flashcard-view');
-            generateContent(topico, 'flashcard');
-        }
+function renderPreDefinedCourses() {
+    // Lógica simples para exibir os cursos pré-definidos
+    const listContainer = document.getElementById('predefined-courses-list');
+    if (!listContainer) return;
+    listContainer.innerHTML = '';
 
-        function showSimuladoView(etapaTitulo) {
-            document.getElementById('simulado-etapa-titulo').innerText = `Simulado: ${etapaTitulo}`;
-            document.getElementById('simulado-etapa-conteudo').innerHTML = 'Gerando 20 questões de múltipla escolha...';
-            document.getElementById('simulado-etapa-botoes').innerHTML = '';
-
-            // Botão de voltar
-            document.getElementById('btnSimuladoEtapaVoltar').onclick = () => showEtapaView(modalState.currentEtapaIndex);
-            
-            showView('simulado-etapa-view');
-            generateContent(etapaTitulo, 'simulado');
-        }
-
-        // --- FUNÇÕES DE RENDERIZAÇÃO DE LISTAS ---
-
-        function displayPreDefinedCourses() {
-            const listContainer = document.getElementById('predefined-courses-list');
-            listContainer.innerHTML = ''; 
-
-            preDefinedRoadmaps.forEach(cat => {
-                let html = `
-                    <div class="course-category">
-                        <h3>${cat.category}</h3>
-                        <div class="courses-grid">
-                `;
-                cat.courses.forEach(course => {
-                    html += `
-                        <div class="course-card" onclick="usePreDefinedCourse('${course.tema}', '${course.nivel}', '${course.objetivo}')">
+    preDefinedRoadmaps.forEach(cat => {
+        const categoryHtml = `
+            <div class="course-category">
+                <h3>${cat.category}</h3>
+                <div class="courses-grid">
+                    ${cat.courses.map(course => `
+                        <div class="course-card" onclick="alert('Funcionalidade de Seleção de Curso em desenvolvimento!')">
                             <h4>${course.tema}</h4>
-                            <p>Nível: ${course.nivel}</p>
-                            <p>Objetivo: ${course.objetivo}</p>
+                            <p>${course.nivel} - ${course.objetivo.substring(0, 40)}...</p>
                         </div>
-                    `;
-                });
-                html += `
-                        </div>
-                    </div>
-                `;
-                listContainer.innerHTML += html;
-            });
+                    `).join('')}
+                </div>
+            </div>
+        `;
+        listContainer.innerHTML += categoryHtml;
+    });
+}
+
+function renderRoadmap() {
+    const roadmap = currentUser.trilhas[currentUser.currentTrilhaIndex];
+    const roadmapDiv = document.getElementById('roadmap');
+    const roadmapTitle = document.getElementById('roadmap-title');
+
+    if (!roadmap || roadmap.etapas.length === 0) {
+        roadmapTitle.innerText = "Sua Trilha de Estudos";
+        roadmapDiv.innerHTML = '<p class="placeholder-text">Selecione ou crie uma trilha para começar!</p>';
+        return;
+    }
+
+    roadmapTitle.innerText = `Trilha Ativa: ${roadmap.tema} (${roadmap.nivel})`;
+    roadmapDiv.innerHTML = roadmap.etapas.map((etapa, index) => `
+        <div class="bloco" onclick="alert('Funcionalidade de Etapa em desenvolvimento!')">
+            Etapa ${index + 1}: ${etapa.titulo}
+        </div>
+    `).join('');
+}
+
+// Funções do Patolindo (Chatbot)
+function showChatView() {
+    // Verifica se há uma trilha ativa para usar o Patolindo
+    if (currentUser.currentTrilhaIndex === -1 && currentUser.name !== 'Convidado') {
+         alert('Você precisa ter uma trilha de estudos ativa para usar o Patolindo. Crie ou selecione uma.');
+         return;
+    }
+    
+    patolindoState.lastView = getCurrentViewId();
+    showView('chat-view');
+    document.getElementById('chat-counter').innerText = `(${patolindoState.questionsLeft} Perguntas)`;
+    updateSendButtonState();
+    
+    // Inicia a conversa se for a primeira vez
+    if (patolindoState.history.length === 0) {
+        appendMessage("Patolindo: Olá! Sou Patolindo, seu assistente de estudos. Posso tirar dúvidas sobre sua trilha de estudos atual ou sobre qualquer tema de programação/matemática. Tenho 5 perguntas disponíveis no modo convidado. Comece com 'Explique o que é...' ou 'Qual a diferença entre...'", 'bot');
+    }
+}
+
+function hideChatView() {
+    // Volta para a última tela que estava aberta
+    showView(patolindoState.lastView); 
+}
+
+function updateSendButtonState() {
+    const sendButton = document.getElementById('chat-send-button');
+    const input = document.getElementById('chat-input');
+    
+    // Convidado só tem 5 perguntas
+    const canChat = currentUser.name !== 'Convidado' || patolindoState.questionsLeft > 0;
+    
+    input.disabled = !canChat;
+    sendButton.disabled = !canChat;
+    
+    if (!canChat) {
+        input.placeholder = currentUser.name === 'Convidado' 
+            ? "Limite de perguntas atingido. Faça login para continuar."
+            : "Você pode perguntar!"; // Para usuários logados
+    } else {
+        input.placeholder = "Sua pergunta...";
+    }
+}
+
+function getCurrentViewId() {
+    const allIds = views.concat(mainContentViews);
+    for (const id of allIds) {
+        const view = document.getElementById(id);
+        if (view && (view.style.display === 'block' || view.style.display === 'flex') && view.id !== 'main-app') {
+            return id;
         }
+    }
+    return 'login-screen';
+}
 
-        function usePreDefinedCourse(tema, nivel, objetivo) {
-             const novaTrilha = {
+async function handleChatSubmit(e) {
+    e.preventDefault();
+    const chatInput = document.getElementById('chat-input');
+    const userMessage = chatInput.value.trim();
+    const sendButton = document.getElementById('chat-send-button');
+
+    if (!userMessage) return;
+    
+    // O chat é desabilitado para convidados quando o limite é atingido
+    if (currentUser.name === 'Convidado' && patolindoState.questionsLeft <= 0) {
+        appendMessage("Patolindo: Desculpe, como convidado você atingiu o limite de perguntas. Faça login para continuar.", 'bot');
+        return;
+    }
+
+    appendMessage(userMessage, 'user');
+    chatInput.value = '';
+    sendButton.disabled = true; // Desabilita enquanto espera a resposta
+    
+    try {
+        // Envia o histórico completo
+        const messages = patolindoState.history.concat([{ role: "user", content: userMessage }]);
+        
+        // Simula o "pensando"
+        appendMessage('Patolindo: Pensando...', 'bot');
+        const thinkingMessage = document.getElementById('chat-messages').lastChild; // Pega o último elemento
+        
+        const response = await fetch(GROQ_ENDPOINT, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${API_KEY}`,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                model: MODEL_NAME,
+                messages: [
+                    {
+                        "role": "system", 
+                        "content": "Você é Patolindo, um assistente de estudos divertido e muito prestativo. Seu papel é responder a dúvidas sobre programação, matemática ou trilhas de estudo de forma concisa e amigável. Use negrito (**) para palavras-chave."
+                    },
+                    ...messages
+                ],
+                temperature: 0.7,
+                max_tokens: 300
+            }),
+        });
+
+        const data = await response.json();
+        const answer = data.choices[0].message.content.trim();
+        
+        // Remove a mensagem de "Pensando..."
+        thinkingMessage.remove(); 
+        
+        appendMessage(`Patolindo: ${answer}`, 'bot');
+        
+        // Atualiza o histórico e o contador
+        patolindoState.history.push({ role: "user", content: userMessage });
+        patolindoState.history.push({ role: "assistant", content: answer });
+
+        if (currentUser.name === 'Convidado') {
+            patolindoState.questionsLeft--;
+        }
+        
+    } catch (err) {
+        console.error("Erro no Patolindo:", err);
+        // Tenta remover o "pensando" se falhar
+        const thinkingMessage = document.getElementById('chat-messages').lastChild;
+        if(thinkingMessage && thinkingMessage.innerText.includes('Pensando')) thinkingMessage.remove(); 
+        
+        appendMessage("Patolindo: Desculpe, ocorreu um erro de comunicação. Tente novamente.", 'bot');
+    } finally {
+        sendButton.disabled = false;
+        document.getElementById('chat-counter').innerText = `(${patolindoState.questionsLeft} Perguntas)`;
+        updateSendButtonState();
+    }
+}
+
+function appendMessage(text, sender) {
+    const chatMessages = document.getElementById("chat-messages");
+    const messageElement = document.createElement("div");
+    
+    if (sender === 'user') {
+        messageElement.className = 'user-message';
+        messageElement.innerHTML = `<span class="user-bubble">${text}</span>`;
+    } else {
+        messageElement.className = 'bot-message';
+        // Adiciona a imagem do mascote do chat
+        const avatar = `<img src="chat-masc.png" alt="Patolindo" class="bot-avatar">`; 
+        // CORREÇÃO: Garante que o negrito **Markdown** é convertido para <b>HTML</b>
+        const htmlText = text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\n/g, "<br>");
+        
+        messageElement.innerHTML = `${avatar}<span class="bot-bubble">${htmlText.replace('Patolindo: ', '')}</span>`;
+    }
+    
+    chatMessages.appendChild(messageElement);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+
+// ===================================================
+// INICIALIZAÇÃO DA APLICAÇÃO (INCLUINDO LISTENERS FALTANTES)
+// ===================================================
+
+function initializeApp() {
+    loadAllUsersData();
+    // Tenta iniciar no login, a menos que o localStorage indique o contrário
+    showView('login-screen'); 
+    
+    // --- ADICIONA EVENT LISTENERS CRÍTICOS (O MAIS PROVÁVEL CAUSADOR DO BUG) ---
+    const loginForm = document.getElementById('login-form');
+    const btnSkipLogin = document.getElementById('btnSkipLogin');
+    const btnWelcomeContinue = document.getElementById('btnWelcomeContinue');
+    const btnExplanationContinue = document.getElementById('btnExplanationContinue');
+    const btnGerar = document.getElementById('btnGerar');
+    const chatButton = document.getElementById('chat-button');
+    const chatExitButton = document.getElementById('chat-exit-button');
+    const chatSendButton = document.getElementById('chat-send-button');
+    const chatInput = document.getElementById('chat-input');
+
+    if (loginForm) loginForm.addEventListener('submit', handleAuthSubmit);
+    if (btnSkipLogin) btnSkipLogin.addEventListener('click', handleSkipLogin);
+    if (btnWelcomeContinue) btnWelcomeContinue.addEventListener('click', () => showView('explanation-screen'));
+    if (btnExplanationContinue) btnExplanationContinue.addEventListener('click', () => {
+        // Após a explicação, mostra a tela principal com a view de cursos prontos
+        showPreDefinedCoursesView();
+    });
+    
+    // Simula a criação de uma trilha ao clicar em Gerar
+    if (btnGerar) btnGerar.addEventListener('click', (e) => {
+        e.preventDefault();
+        const tema = document.getElementById('tema').value.trim();
+        if (tema) {
+            // Cria uma trilha fake usando o primeiro roadmap pré-definido como exemplo
+            currentUser.trilhas.push({
+                id: Date.now(),
                 tema: tema,
-                nivel: nivel,
-                objetivo: objetivo,
-                dataCriacao: new Date().toLocaleDateString(),
-                etapas: preDefinedRoadmaps.flatMap(cat => cat.courses)
-                    .find(c => c.tema === tema).etapas
-            };
-
-            currentUser.trilhas.push(novaTrilha);
+                nivel: document.getElementById('nivel').value,
+                objetivo: document.getElementById('objetivo').value || 'Não definido',
+                etapas: preDefinedRoadmaps[0].courses[0].etapas 
+            });
             currentUser.currentTrilhaIndex = currentUser.trilhas.length - 1;
             saveUserTrilhas();
             showRoadmapView();
+        } else {
+            alert('Por favor, defina um Tema para gerar a trilha.');
         }
+    });
 
-        function displayUserTrilhas() {
-            const trilhasList = document.getElementById('trilhas-list');
-            trilhasList.innerHTML = '';
-
-            if (currentUser.trilhas.length === 0) {
-                trilhasList.innerHTML = '<p class="placeholder-text">Nenhuma trilha salva. Crie uma nova para começar!</p>';
-                return;
-            }
-
-            currentUser.trilhas.forEach((trilha, index) => {
-                const card = document.createElement('div');
-                card.className = 'trilha-card';
-                card.innerHTML = `
-                    <div class="trilha-info">
-                        <h4>${trilha.tema} (${trilha.nivel})</h4>
-                        <p>Objetivo: ${trilha.objetivo}</p>
-                        <p>Criada em: ${trilha.dataCriacao}</p>
-                    </div>
-                    <div class="trilha-actions">
-                        <button class="btn-success" onclick="loadTrilha(${index})">Abrir</button>
-                        <button class="btn-danger" onclick="deleteTrilha(${index})">Excluir</button>
-                    </div>
-                `;
-                trilhasList.appendChild(card);
-            });
+    // Chatbot listeners
+    if (chatButton) chatButton.addEventListener('click', showChatView);
+    if (chatExitButton) chatExitButton.addEventListener('click', hideChatView);
+    if (chatSendButton) chatSendButton.addEventListener('click', handleChatSubmit);
+    if (chatInput) chatInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            // A função handleChatSubmit já pega o valor do input, não é necessário passar o evento diretamente.
+            chatSendButton.click(); 
         }
+    });
+    
+    // Ativa o botão de enviar do chat quando houver texto
+    if (chatInput) chatInput.addEventListener('input', () => {
+        chatSendButton.disabled = chatInput.value.trim() === '';
+    });
 
-        function loadTrilha(index) {
-            currentUser.currentTrilhaIndex = index;
-            saveUserTrilhas();
-            showRoadmapView();
-        }
 
-        function deleteTrilha(index) {
-            if (confirm(`Tem certeza que deseja excluir a trilha "${currentUser.trilhas[index].tema}"?`)) {
-                currentUser.trilhas.splice(index, 1);
-                
-                if (currentUser.currentTrilhaIndex === index) {
-                    currentUser.currentTrilhaIndex = -1; // Desseleciona a trilha atual
-                } else if (currentUser.currentTrilhaIndex > index) {
-                    currentUser.currentTrilhaIndex--; // Ajusta o índice se o excluído estava antes
-                }
+    // Placeholder: Inicializa as renderizações para a primeira visualização
+    renderPreDefinedCourses();
+    renderUserTrilhas();
+}
 
-                saveUserTrilhas();
-                displayUserTrilhas(); // Recarrega a lista
-            }
-        }
+// Inicia a aplicação após o carregamento completo do DOM
+document.addEventListener('DOMContentLoaded', initializeApp);
 
-        function displayRoadmap() {
-            const roadmapContainer = document.getElementById('roadmap');
-            const trilha = currentUser.trilhas[currentUser.currentTrilhaIndex];
-            
-            if (currentUser.currentTrilhaIndex === -1 || !trilha) {
-                document.getElementById('roadmap-title').innerText = 'Nenhuma Trilha Ativa';
-                roadmapContainer.innerHTML = '<p class="placeholder-text">Selecione ou crie uma trilha para ver seu roadmap.</p>';
-                return;
-            }
-
-            document.getElementById('roadmap-title').innerText = `Trilha Ativa: ${trilha.tema} (${trilha.nivel})`;
-            roadmapContainer.innerHTML = ''; 
-
-            trilha.etapas.forEach((etapa, index) => {
-                const bloco = document.createElement('div');
-                bloco.className = 'bloco';
-                bloco.innerText = `Etapa ${index + 1}: ${etapa.titulo}`;
-                bloco.onclick = () => showEtapaView(index);
-                roadmapContainer.appendChild(bloco);
-            });
-        }
-
-        // --- FUNÇÕES DE AUTENTICAÇÃO ---
-        function handleLoginSubmit(event) {
-            event.preventDefault();
-            const username = document.getElementById('username').value.trim();
-            const password = document.getElementById('password').value;
-
-            if (loadUserData(username, password)) {
-                 // document.getElementById('login-screen').style.display = 'none'; // REMOVIDO: showView já gerencia o display
-                 showView('welcome-screen');
-            }
-        }
-
-        function handleSkipLogin() {
-            loadUserData('Convidado', '');
-            // document.getElementById('login-screen').style.display = 'none'; // REMOVIDO: showView já gerencia o display
-            showView('welcome-screen');
-        }
-
-        // --- FUNÇÕES DE REQUISIÇÃO À IA (GROQ) ---
-        async function generateRoadmapFromInput() {
-            const tema = document.getElementById('tema').value.trim();
-            const nivel = document.getElementById('nivel').value;
-            const objetivo = document.getElementById('objetivo').value.trim();
-            const btn = document.getElementById('btnGerar');
-            
-            if (!tema) {
-                alert("Por favor, preencha o Tema ou Tecnologia.");
-                return;
-            }
-
-            btn.disabled = true;
-            btn.innerText = 'Gerando... (pode levar 30s)';
-
-            const systemPrompt = `Você é um gerador de Roadmaps (Trilhas de Estudos) para o aplicativo Quackademy.
-            Sua tarefa é criar um plano de estudos detalhado e prático com pelo menos 5 etapas, mas não mais que 8.
-            O usuário fornecerá o TEMA, o NÍVEL e um OBJETIVO.
-
-            Instruções:
-            1. O resultado deve ser um **JSON puro e válido**, sem nenhum texto adicional, cabeçalho ou explicação (nem mesmo 'json', '```' ou '```json').
-            2. O objeto JSON deve ter a estrutura: { "etapas": [ { "titulo": "...", "topicos": [ { "tópico": "...", "material": "Link de Material de Referência (Invente se for preciso, mas deve ser um link válido)" }, ... ], "atividade": "atividade prática de aplicação" }, ... ] }
-            3. O título da etapa deve ser sucinto.
-            4. Cada etapa deve ter 3 a 4 tópicos, cada um com um link de material de referência.
-            5. A "atividade" deve ser uma tarefa prática que aplique todos os tópicos daquela etapa.
-
-            Exemplo de Estrutura de Retorno:
-            {
-              "etapas": [
-                {
-                  "titulo": "Introdução ao Tema X e Ambiente",
-                  "topicos": [
-                    { "tópico": "O que é Tema X", "material": "https://pt.wikipedia.org/wiki/Tema_X" },
-                    { "tópico": "Instalação do Software Y", "material": "https://docs.softwarey.com/instalacao" }
-                  ],
-                  "atividade": "Configure o ambiente de trabalho e crie um arquivo 'ola_mundo' para testar."
-                }
-              ]
-            }
-            Crie o roadmap para o tema: ${tema}, no nível: ${nivel}, com o objetivo: ${objetivo}.`;
-
-            try {
-                const response = await fetch(GROQ_ENDPOINT, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${API_KEY}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        model: MODEL_NAME,
-                        messages: [{ role: 'system', content: systemPrompt }],
-                        temperature: 0.5,
-                        max_tokens: 2048,
-                        response_format: { type: 'json_object' }
-                    })
-                });
-
-                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                
-                const data = await response.json();
-                const jsonText = data.choices[0].message.content.trim();
-                const newRoadmap = JSON.parse(jsonText);
-
-                if (!newRoadmap.etapas || !Array.isArray(newRoadmap.etapas)) {
-                    throw new Error("Formato JSON inválido. Faltando o array 'etapas'.");
-                }
-
-                const novaTrilha = {
-                    tema: tema,
-                    nivel: nivel,
-                    objetivo: objetivo,
-                    dataCriacao: new Date().toLocaleDateString(),
-                    etapas: newRoadmap.etapas
-                };
-
-                currentUser.trilhas.push(novaTrilha);
-                currentUser.currentTrilhaIndex = currentUser.trilhas.length - 1;
-                saveUserTrilhas();
-                showRoadmapView();
-
-            } catch (error) {
-                console.error('Erro ao gerar roadmap:', error);
-                alert('Erro ao gerar a trilha. Verifique a chave API ou tente um tema diferente.');
-            } finally {
-                btn.disabled = false;
-                btn.innerText = 'Gerar Trilha 🚀';
-            }
-        }
-
-
-        async function generateContent(topico, type) {
-            const currentTrilha = currentUser.trilhas[currentUser.currentTrilhaIndex];
-            const systemContext = `Você é um gerador de conteúdo de estudos para o aplicativo Quackademy, baseado na trilha de estudos do usuário.
-            A trilha atual é sobre "${currentTrilha.tema}" no nível "${currentTrilha.nivel}".
-
-            Instruções:
-            1. O resultado deve ser um **JSON puro e válido**, sem nenhum texto adicional, cabeçalho ou explicação (nem mesmo 'json', '```' ou '```json').
-            2. O tipo de conteúdo solicitado é: ${type}.
-
-            Se o tipo for 'material', gere um texto de estudo detalhado de até 500 palavras sobre o tópico.
-            { "material_texto": "Seu texto detalhado aqui, formatado com negrito **markdown**." }
-            
-            Se o tipo for 'flashcard', gere no mínimo 5 e no máximo 10 flashcards sobre o tópico.
-            { "flashcards": [ { "frente": "Pergunta ou Conceito", "verso": "Resposta ou Explicação" }, ... ] }
-            
-            Se o tipo for 'simulado', gere exatamente 20 questões de múltipla escolha (com 4 alternativas A, B, C, D e a resposta correta).
-            { "questoes": [ { "pergunta": "...", "alternativas": { "A": "...", "B": "...", "C": "...", "D": "..." }, "resposta": "A" (ou B, C, D), "explicacao": "..." }, ... ] }`;
-
-            const userMessage = `Gere o conteúdo do tipo '${type}' para o tópico: ${topico}.`;
-            const containerId = type === 'material' ? 'material-texto-gerado' : type === 'flashcard' ? 'flashcard-display' : 'simulado-etapa-conteudo';
-            const container = document.getElementById(containerId);
-
-            container.innerHTML = `
-                <div style="text-align: center; padding: 20px;">
-                    <img src="mascote_load.gif" alt="Carregando" class="mascote" style="width: 80px; height: 80px;">
-                    <p>Gerando ${type}... Aguarde.</p>
-                </div>
-            `;
-
-            try {
-                const response = await fetch(GROQ_ENDPOINT, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${API_KEY}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        model: MODEL_NAME,
-                        messages: [
-                            { role: 'system', content: systemContext },
-                            { role: 'user', content: userMessage }
-                        ],
-                        temperature: 0.5,
-                        max_tokens: 3000,
-                        response_format: { type: 'json_object' }
-                    })
-                });
-
-                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                
-                const data = await response.json();
-                const jsonText = data.choices[0].message.content.trim();
-                const result = JSON.parse(jsonText);
-
-                if (type === 'material') {
-                    const htmlText = result.material_texto.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, "<br>");
-                    container.innerHTML = htmlText;
-                } else if (type === 'flashcard') {
-                    flashcardState.cards = result.flashcards;
-                    flashcardState.currentCardIndex = 0;
-                    renderFlashcard();
-                } else if (type === 'simulado') {
-                    simuladoState.questions = result.questoes;
-                    startSimulado();
-                }
-
-            } catch (error) {
-                console.error(`Erro ao gerar ${type}:`, error);
-                container.innerHTML = `<p style="color: var(--color-danger);">Desculpe, ocorreu um erro ao gerar o ${type}. Tente novamente mais tarde ou verifique a chave API.</p>`;
-            }
-        }
-
-
-        // --- FUNÇÕES FLASHCARD ---
-        function renderFlashcard() {
-            const display = document.getElementById('flashcard-display');
-            const card = flashcardState.cards[flashcardState.currentCardIndex];
-            
-            if (!card) {
-                display.innerHTML = '<p class="placeholder-text">Fim dos flashcards! Parabéns!</p>';
-                return;
-            }
-
-            const total = flashcardState.cards.length;
-            const current = flashcardState.currentCardIndex + 1;
-            const randomImageIndex = Math.floor(Math.random() * 5) + 1;
-
-            display.innerHTML = `
-                <img src="imagem${randomImageIndex}.png" alt="Ilustração de Conceito" style="max-height: 120px;">
-                <p style="font-size: 0.9em; margin-bottom: 5px;">Card ${current} de ${total}</p>
-                <div class="flashcard" onclick="toggleFlashcard(this)">
-                    <div class="flashcard-inner">
-                        <div class="flashcard-face flashcard-front">
-                            <p style="margin: 0;">${card.frente}</p>
-                            <p style="margin-top: 15px; font-size: 0.8em;">(Clique para virar)</p>
-                        </div>
-                        <div class="flashcard-face flashcard-back">
-                            <p style="margin: 0; white-space: pre-wrap;">${card.verso}</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="flashcard-navigation">
-                    <button class="btn-secondary" onclick="prevFlashcard()" ${current === 1 ? 'disabled' : ''}>⬅ Anterior</button>
-                    <button class="btn-success" onclick="nextFlashcard()" ${current === total ? 'disabled' : ''}>Próximo ➡</button>
-                </div>
-            `;
-        }
-
-        function toggleFlashcard(element) {
-            element.classList.toggle('flipped');
-        }
-
-        function nextFlashcard() {
-            if (flashcardState.currentCardIndex < flashcardState.cards.length - 1) {
-                flashcardState.currentCardIndex++;
-                renderFlashcard();
-            } else {
-                renderFlashcard(); // Renderiza a mensagem de fim
-            }
-        }
-
-        function prevFlashcard() {
-            if (flashcardState.currentCardIndex > 0) {
-                flashcardState.currentCardIndex--;
-                renderFlashcard();
-            }
-        }
-
-        // --- FUNÇÕES SIMULADO ---
-        function startSimulado() {
-            simuladoState.currentQuestionIndex = 0;
-            simuladoState.score = 0;
-            simuladoState.isFinished = false;
-            displaySimuladoQuestion();
-        }
-
-        function displaySimuladoQuestion() {
-            const container = document.getElementById('simulado-etapa-conteudo');
-            const question = simuladoState.questions[simuladoState.currentQuestionIndex];
-            const totalQuestions = simuladoState.questions.length;
-            
-            if (!question) {
-                displaySimuladoResult();
-                return;
-            }
-
-            let html = `
-                <div class="simulado-bloco">
-                    <h3>Questão ${simuladoState.currentQuestionIndex + 1} de ${totalQuestions}</h3>
-                    <p>${question.pergunta}</p>
-                    <ul>
-                        ${Object.keys(question.alternativas).map(key => `
-                            <li class="alternativa" 
-                                data-key="${key}"
-                                onclick="selectAlternative(this, '${key}')">
-                                <strong>${key}:</strong> ${question.alternativas[key]}
-                            </li>
-                        `).join('')}
-                    </ul>
-                    <div id="feedback-q${simuladoState.currentQuestionIndex}" style="margin-top: 15px;"></div>
-                </div>
-            `;
-            container.innerHTML = html;
-            
-            // Renderiza botões de navegação
-            const botoesContainer = document.getElementById('simulado-etapa-botoes');
-            botoesContainer.innerHTML = `
-                <button class="btn-secondary" onclick="prevSimuladoQuestion()" 
-                    ${simuladoState.currentQuestionIndex === 0 ? 'disabled' : ''}>
-                    ⬅ Anterior
-                </button>
-                <button id="btnSimuladoNext" class="btn-primary" onclick="checkAnswerAndNext()" disabled>
-                    ${simuladoState.currentQuestionIndex === totalQuestions - 1 ? 'Finalizar Simulado' : 'Próxima Questão ➡'}
-                </button>
-            `;
-            
-            simuladoState.selectedAnswer = null; // Reseta a seleção
-        }
-
-        function selectAlternative(element, key) {
-            if (simuladoState.isFinished) return; 
-
-            const parentUl = element.parentElement;
-            parentUl.querySelectorAll('.alternativa').forEach(li => {
-                li.classList.remove('selected');
-            });
-
-            element.classList.add('selected');
-            simuladoState.selectedAnswer = key;
-
-            document.getElementById('btnSimuladoNext').disabled = false;
-        }
-
-        function checkAnswerAndNext() {
-            const question = simuladoState.questions[simuladoState.currentQuestionIndex];
-            const alternatives = document.querySelectorAll('.alternativa');
-            const feedbackContainer = document.getElementById(`feedback-q${simuladoState.currentQuestionIndex}`);
-
-            // 1. Desabilita seleção e navegação
-            alternatives.forEach(li => li.onclick = null);
-            document.getElementById('btnSimuladoNext').disabled = true;
-
-            // 2. Verifica a resposta
-            let isCorrect = simuladoState.selectedAnswer === question.resposta;
-            if (isCorrect) {
-                simuladoState.score++;
-                feedbackContainer.innerHTML = `<p style="color: var(--color-success); font-weight: bold;">✅ Correto! Boa!</p>`;
-            } else {
-                feedbackContainer.innerHTML = `<p style="color: var(--color-danger); font-weight: bold;">❌ Incorreto. A resposta correta é ${question.resposta}.</p>`;
-            }
-            
-            // 3. Destaca alternativas
-            alternatives.forEach(li => {
-                const key = li.getAttribute('data-key');
-                if (key === question.resposta) {
-                    li.classList.add('correta-destacada'); // Correta
-                } else if (key === simuladoState.selectedAnswer && !isCorrect) {
-                    li.classList.add('incorreta'); // Incorreta selecionada
-                }
-            });
-
-            // 4. Exibe explicação
-            feedbackContainer.innerHTML += `<p style="margin-top: 10px; padding: 10px; border: 1px solid #ddd; border-radius: 4px;"><strong>Explicação:</strong> ${question.explicacao}</p>`;
-            
-            // 5. Próxima ação com delay (pode ser o "Próximo" novamente)
-            const nextButton = document.getElementById('btnSimuladoNext');
-            nextButton.disabled = false;
-            nextButton.innerText = simuladoState.currentQuestionIndex === simuladoState.questions.length - 1 ? 'Finalizar Simulado' : 'Próxima Questão ➡';
-            nextButton.onclick = nextSimuladoQuestion;
-        }
-
-        function nextSimuladoQuestion() {
-            if (simuladoState.currentQuestionIndex < simuladoState.questions.length - 1) {
-                simuladoState.currentQuestionIndex++;
-                displaySimuladoQuestion();
-            } else {
-                displaySimuladoResult();
-            }
-        }
-
-        function prevSimuladoQuestion() {
-            if (simuladoState.currentQuestionIndex > 0) {
-                simuladoState.currentQuestionIndex--;
-                displaySimuladoQuestion();
-            }
-        }
-
-        function displaySimuladoResult() {
-            simuladoState.isFinished = true;
-            const totalQuestions = simuladoState.questions.length;
-            const score = simuladoState.score;
-            const percentage = (score / totalQuestions) * 100;
-
-            let resultMessage = '';
-            let imagePath = '';
-
-            if (percentage >= 80) {
-                resultMessage = 'Resultado Ótimo! Você dominou o conteúdo desta etapa. Avance para a próxima!';
-                imagePath = 'resul-bom.png';
-            } else if (percentage >= 50) {
-                resultMessage = 'Resultado Mediano. Você tem um bom entendimento, mas revise os tópicos mais fracos.';
-                imagePath = 'resul-medio.png';
-            } else {
-                resultMessage = 'Resultado Ruim. Revise o material de estudo e os flashcards antes de tentar o simulado novamente.';
-                imagePath = 'resul-ruim.png';
-            }
-
-            const container = document.getElementById('simulado-etapa-conteudo');
-            container.innerHTML = `
-                <div id="simulado-resultado">
-                    <img src="${imagePath}" alt="Resultado Simulado">
-                    <h3>Pontuação Final: ${score} de ${totalQuestions} (${percentage.toFixed(1)}%)</h3>
-                    <p>${resultMessage}</p>
-                </div>
-            `;
-            document.getElementById('simulado-etapa-botoes').innerHTML = '';
-        }
-
-        // --- FUNÇÕES CHATBOT PATOLINDO ---
-        function updateSendButtonState() {
-            const input = document.getElementById('chat-input');
-            const sendButton = document.getElementById('chat-send-button');
-            const counter = document.getElementById('chat-counter');
-
-            counter.innerText = `(${patolindoState.questionsLeft} Perguntas)`;
-
-            if (patolindoState.questionsLeft <= 0) {
-                input.disabled = true;
-                sendButton.disabled = true;
-                input.placeholder = 'Você usou todas as 5 perguntas. Reinicie a página para resetar.';
-            } else {
-                input.disabled = false;
-                input.placeholder = 'Sua pergunta...';
-                // O botão é ativado pelo listener do input ou quando o texto é digitado
-            }
-        }
-
-        function openChatView() {
-            const currentTrilha = currentUser.trilhas[currentUser.currentTrilhaIndex];
-            if (!currentTrilha) {
-                 alert('Você precisa ter uma trilha de estudos ativa para usar o Patolindo. Crie ou selecione uma.');
-                 return;
-            }
-
-            patolindoState.history.push({ role: "system", content: "Você é Patolindo, o assistente de estudos do Quackademy. Seu objetivo é responder de forma concisa e útil às perguntas do usuário sobre a trilha de estudos ativa, que é sobre o tema: " + currentTrilha.tema + " no nível: " + currentTrilha.nivel + ". Você tem apenas 5 perguntas para responder. Seja breve e atencioso." });
-
-            const chatMessages = document.getElementById('chat-messages');
-            chatMessages.innerHTML = ''; // Limpa mensagens anteriores
-            appendMessage(`Olá ${currentUser.name}! Eu sou Patolindo. Tenho 5 perguntas para te ajudar sobre sua trilha de estudos atual. Pergunte sobre qualquer tópico!`, 'bot');
-            updateSendButtonState();
-            
-            showView('chat-view');
-        }
-
-        async function patolindoChat(message) {
-            const sendButton = document.getElementById('chat-send-button');
-            sendButton.disabled = true;
-
-            appendMessage(message, 'user');
-            
-            // Simula uma resposta de carregamento
-            appendMessage('Patolindo: Pensando...', 'bot');
-            const thinkingMessage = document.getElementById('chat-messages').lastChild.querySelector('.bot-bubble');
-            
-            patolindoState.history.push({ role: 'user', content: message });
-            
-            try {
-                const response = await fetch(GROQ_ENDPOINT, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${API_KEY}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        model: MODEL_NAME,
-                        messages: patolindoState.history,
-                        temperature: 0.7,
-                        max_tokens: 500
-                    })
-                });
-
-                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                
-                const data = await response.json();
-                const answer = data.choices[0].message.content.trim();
-
-                // Remove a mensagem de "Pensando..."
-                thinkingMessage.parentElement.remove();
-
-                // Adiciona a resposta final
-                if (patolindoState.questionsLeft > 0) {
-                    appendMessage(`Patolindo: ${answer}`, 'bot');
-                    patolindoState.history.push({ role: "assistant", content: answer });
-                    patolindoState.questionsLeft--;
-                } else {
-                     patolindoState.history.push({ role: "assistant", content: answer });
-                }
-                
-            } catch (err) {
-                console.error("Erro no Patolindo:", err);
-                // Remove a mensagem de "Pensando..." e adiciona a de erro
-                thinkingMessage.parentElement.remove();
-                appendMessage("Patolindo: Desculpe, ocorreu um erro de comunicação. Tente novamente.", 'bot');
-            } finally {
-                sendButton.disabled = false;
-                updateSendButtonState();
-            }
-        }
-        
-        function appendMessage(text, sender) {
-            const chatMessages = document.getElementById("chat-messages");
-            const messageElement = document.createElement("div");
-            
-            if (sender === 'user') {
-                messageElement.className = 'user-message';
-                messageElement.innerHTML = `<span class="user-bubble">${text}</span>`;
-            } else {
-                messageElement.className = 'bot-message';
-                // Adiciona a imagem do mascote do chat
-                const avatar = `<img src="chat-masc.png" alt="Patolindo" class="bot-avatar">`; 
-                // CORREÇÃO: Garante que o negrito **Markdown** é convertido para <b>HTML</b>
-                const htmlText = text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\n/g, "<br>");
-                messageElement.innerHTML = `${avatar}<span class="bot-bubble">${htmlText.replace('Patolindo: ', '')}</span>`;
-            }
-            
-            chatMessages.appendChild(messageElement);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-
-
-        // --- EVENT LISTENERS E INICIALIZAÇÃO ---
-        document.addEventListener('DOMContentLoaded', () => {
-            // Inicializa dados e verifica o estado de login
-            loadAllUsersData(); 
-            
-            // Associa os eventos de autenticação
-            document.getElementById('login-form').addEventListener('submit', handleLoginSubmit);
-            document.getElementById('btnSkipLogin').addEventListener('click', handleSkipLogin);
-            
-            // Continuação das telas de boas-vindas
-            document.getElementById('btnWelcomeContinue').addEventListener('click', () => {
-                showView('explanation-screen');
-            });
-            document.getElementById('btnExplanationContinue').addEventListener('click', () => {
-                document.getElementById('main-app').style.display = 'block';
-                showPreDefinedCoursesView();
-            });
-
-            // Geração de Trilha
-            document.getElementById('btnGerar').addEventListener('click', generateRoadmapFromInput);
-
-            // Botão do Chat Patolindo
-            document.getElementById('chat-button').addEventListener('click', () => {
-                const currentView = document.querySelector('.content-view[style*="block"]');
-                if (currentView) {
-                     patolindoState.lastView = currentView.id; 
-                } else {
-                     patolindoState.lastView = 'predefined-courses-view'; 
-                }
-                
-                openChatView();
-            });
-            document.getElementById('chat-exit-button').addEventListener('click', () => {
-                // Volta para a última view
-                showView(patolindoState.lastView);
-            });
-
-            // Lógica de Envio do Chat
-            const chatInput = document.getElementById('chat-input');
-            const chatSendButton = document.getElementById('chat-send-button');
-
-            chatInput.addEventListener('input', () => {
-                 chatSendButton.disabled = chatInput.value.trim() === '';
-            });
-
-            chatSendButton.addEventListener('click', () => {
-                const message = chatInput.value.trim();
-                if (message && patolindoState.questionsLeft > 0) {
-                    patolindoChat(message);
-                    chatInput.value = '';
-                    chatSendButton.disabled = true;
-                }
-            });
-
-            chatInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter' && !chatSendButton.disabled) {
-                    e.preventDefault();
-                    chatSendButton.click();
-                }
-            });
-
-            // Lógica Inicial de Carregamento
-            if (!localStorage.getItem('quackademyAllUsers') || (localStorage.getItem('quackademyAllUsers') && Object.keys(JSON.parse(localStorage.getItem('quackademyAllUsers'))).length === 0)) {
-                // Se não há dados, mostra o login
-                showView('login-screen');
-            } else {
-                 // Se há dados de usuário, assume Convidado para preencher a tela principal
-                 loadUserData('Convidado', '');
-                 document.getElementById('main-app').style.display = 'block';
-                 // A tela de login estava inicialmente visível via CSS, mas showView já a esconde se outra for chamada.
-                 // Chamamos showView('predefined-courses-view') que já oculta todas as outras.
-                 showView('predefined-courses-view');
-            }
-        });
     </script>
 </body>
 </html>
