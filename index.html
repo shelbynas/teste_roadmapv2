@@ -1254,10 +1254,7 @@
                 category: "Matérias Escolares - Ensino Fundamental (Anos Finais)",
                 courses: [
                     {
-                        tema: "Matemática (6º Ano)", nivel: "Intermediário", objetivo: "Dominar números inteiros, frações e operações básicas.",
-                        etapas: [
-                            { titulo: "Etapa 1: Números Inteiros e Racionais", topicos: [{ tópico: "Conjunto dos Números Inteiros (Z)", material: "https://www.auladegratis.net/matematica/6-ano/numeros-inteiros.html" }, { tópico: "Soma e Subtração de Frações", material: "https://www.somatematica.com.br/fundamental/6ano/fracoes.php" }, { tópico: "Múltiplos e Divisores (MMC e MDC)", material: "https://www.infoescola.com/matematica/mmc-e-mdc/" }, { tópico: "Expressões Numéricas", material: "https://www.toda_materia.com.br/expressoes-numericas" }], atividade: "Resolver uma lista de 10 problemas que envolvam frações em situações do dia a dia." }
-                        ]
+                        tema: "Matemática (6º Ano)", nivel: "Intermediário", objetivo: "Dominar números inteiros, frações e operações básica                        ]
                     },
                     {
                         tema: "História (9º Ano)", nivel: "Intermediário", objetivo: "Compreender a 1ª República, a Era Vargas e a Guerra Fria.",
@@ -2069,7 +2066,6 @@
             userAnswers = {};
 
             try {
-                // ATUALIZAÇÃO NO PROMPT: Requer diversidade de perguntas, distribuição aleatória das respostas, e estilo de prova/vestibular.
                 const systemPromptSimulado = `Você é um gerador de questões de múltipla escolha no estilo de provas e vestibulares. Crie um simulado de no mínimo 20 (vinte) questões sobre todos os tópicos fornecidos. **Todas as questões devem ser únicas e cobrir diferentes áreas dos tópicos.** Sua única resposta deve ser APENAS JSON válido, sem texto introdutório. O JSON deve ser um objeto contendo um array de "simulados" seguindo o formato: {"simulados": [{"pergunta": "...", "alternativas": ["A) ...", "B) ...", "C) ...", "D) ...", "E) ..."], "resposta_correta": "Letra da alternativa correta (ex: C)"}, ...]}. **IMPORTANTE: Distribua a resposta correta de forma aleatória (A, B, C, D ou E) para evitar ciclos viciosos de repetição de letra.**`;
                 const topicosEtapa = etapa.topicos.map(t => t.tópico).join(", ");
                 const nivel = document.getElementById("nivel").value;
@@ -2114,43 +2110,72 @@
 
             const simuladosHtml = currentSimuladoEtapa.map((simulado, index) => {
                 const alternativasHtml = simulado.alternativas.map((alt, altIndex) => {
-                    // Tenta garantir que o formato seja A), B), C), etc.
                     const letra = alt.charAt(0).toUpperCase(); 
                     const isSelected = userAnswers[index] === letra;
-                    return `<li class="alternativa ${isSelected ? 'selected' : ''}" 
-                                data-question-index="${index}" 
-                                data-answer="${letra}" 
-                                onclick="selectAlternative(this)">
-                                ${alt}
-                            </li>`;
+                    
+                    return `
+                        <li class="alternativa ${isSelected ? 'selected' : ''}" 
+                            data-question-index="${index}" 
+                            data-answer="${letra}" 
+                            onclick="selectAlternative(this)">
+                            ${alt}
+                        </li>
+                    `;
                 }).join("");
 
-                return `<div class="simulado-bloco" data-index="${index}">
-                            <h4>Questão ${index + 1}:</h4>
-                            <p><strong>${simulado.pergunta}</strong></p>
-                            <ul>${alternativasHtml}</ul>
-                        </div><hr>`;
+                return `
+                    <div class="simulado-bloco" data-index="${index}">
+                        <h4>Questão ${index + 1}:</h4>
+                        <p><strong>${simulado.pergunta}</strong></p>
+                        <ul class="simulado-area">${alternativasHtml}</ul>
+                    </div>
+                    ${index < currentSimuladoEtapa.length - 1 ? '<hr>' : ''}
+                `;
             }).join("");
 
-            simuladoConteudo.innerHTML = `<div class="simulado-area">${simuladosHtml}</div><div id="simulado-resultado" style="display:none;"></div>`;
+            simuladoConteudo.innerHTML = `
+                <div class="simulado-area">
+                    ${simuladosHtml}
+                </div>
+                <div id="simulado-resultado" style="display:none;"></div>
+            `;
             
             // Botão de corrigir só aparece se o simulado existir
-            simuladoBotoes.innerHTML = `<button class="btn-primary" onclick="corrigirSimuladoEtapa()">Corrigir e Ver Resultado</button>`;
+            simuladoBotoes.innerHTML = `
+                <button class="btn-primary" onclick="corrigirSimuladoEtapa()">Corrigir e Ver Resultado</button>
+            `;
         }
         
         function selectAlternative(liElement) {
-            const questionIndex = liElement.getAttribute('data-question-index');
+            const questionIndex = parseInt(liElement.getAttribute('data-question-index'));
             const answer = liElement.getAttribute('data-answer');
-            const ul = liElement.closest('ul');
+            const questionBlock = document.querySelector(`.simulado-bloco[data-index="${questionIndex}"]`);
             
-            // Remove seleção de todas as alternativas
-            ul.querySelectorAll('.alternativa').forEach(li => li.classList.remove('selected'));
+            if (!questionBlock) return;
+            
+            const ul = questionBlock.querySelector('ul');
+            
+            // Remove seleção de todas as alternativas desta questão
+            ul.querySelectorAll('.alternativa').forEach(li => {
+                li.classList.remove('selected');
+            });
             
             // Adiciona seleção à alternativa clicada
             liElement.classList.add('selected');
             
             // Armazena a resposta do usuário
             userAnswers[questionIndex] = answer;
+            
+            // Habilita o botão de corrigir se todas as questões foram respondidas
+            const totalQuestions = currentSimuladoEtapa.length;
+            const answeredQuestions = Object.keys(userAnswers).length;
+            
+            if (answeredQuestions === totalQuestions) {
+                const corrigirBtn = document.querySelector('#simulado-etapa-botoes button');
+                if (corrigirBtn) {
+                    corrigirBtn.disabled = false;
+                }
+            }
         }
 
         function corrigirSimuladoEtapa() {
@@ -2163,16 +2188,18 @@
                 
                 const alternativas = bloco.querySelectorAll('.alternativa');
                 // Garante que a resposta correta é a letra maiúscula
-                const respostaCorreta = simulado.resposta_correta.charAt(0).toUpperCase(); 
+                const respostaCorreta = simulado.resposta_correta ? simulado.resposta_correta.charAt(0).toUpperCase() : 'A';
                 const respostaUsuario = userAnswers[index];
                 
                 // Desabilita cliques após a correção
-                alternativas.forEach(li => li.onclick = null);
+                alternativas.forEach(li => {
+                    li.style.pointerEvents = 'none';
+                    li.style.cursor = 'default';
+                });
 
                 alternativas.forEach(li => {
                     const letra = li.getAttribute('data-answer');
-                    li.classList.remove('selected'); // Remove a seleção temporária
-
+                    
                     if (letra === respostaCorreta) {
                         li.classList.add('correta-destacada'); // Marca a correta
                     } 
@@ -2218,7 +2245,6 @@
             // Rola para o resultado
             resultadoDiv.scrollIntoView({ behavior: 'smooth' });
         }
-
 
         // --- LÓGICA DO CHATBOT PATOLINDO (COM RESTRIÇÃO DE TEMA E TUTORIA) ---
 
