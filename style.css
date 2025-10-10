@@ -168,24 +168,6 @@ header p {
     background-color: #A08000;
 }
 
-/* Botão Pomodoro */
-.btn-pomodoro {
-    background-color: #17a2b8;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 6px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.2s;
-    font-size: 0.9em;
-    white-space: nowrap;
-}
-
-.btn-pomodoro:hover {
-    background-color: #138496;
-}
-
 main {
     padding: 20px 0; 
 }
@@ -713,35 +695,6 @@ main {
 
 /* --- Estilos do Chatbot Patolindo --- */
 
-#chat-button {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    
-    /* ALTERAÇÃO DA IMAGEM DO CHAT */
-    background-image: url('chat-masc.png'); 
-    background-size: 70%; 
-    background-repeat: no-repeat;
-    background-position: center;
-    color: transparent; 
-    font-size: 0; 
-    
-    background-color: var(--color-primary-dark);
-    border: 3px solid var(--color-primary);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    cursor: pointer;
-    transition: background-color 0.2s;
-    z-index: 1000;
-    display: none; 
-}
-
-#chat-button:hover {
-    background-color: var(--color-primary);
-}
-
 #chat-messages {
     flex-grow: 1;
     overflow-y: auto;
@@ -844,11 +797,194 @@ main {
     font-size: 1.2em;
 }
 
+/* --- BOTÃO E MENU DE AÇÕES RÁPIDAS --- */
+
+.quick-actions-button {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: var(--color-primary-dark);
+    border: 3px solid var(--color-primary);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 1000;
+    display: none;
+    font-size: 1.5em;
+    color: white;
+}
+
+.quick-actions-button:hover {
+    background-color: var(--color-primary);
+    transform: scale(1.1);
+}
+
+.quick-actions-menu {
+    position: fixed;
+    bottom: 100px;
+    right: 30px;
+    width: 250px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    z-index: 1001;
+    animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.quick-actions-header {
+    background-color: var(--color-primary);
+    color: var(--color-secondary);
+    padding: 15px 20px;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.quick-actions-header h3 {
+    margin: 0;
+    font-size: 1.2em;
+}
+
+.close-actions {
+    background: none;
+    border: none;
+    font-size: 1.5em;
+    cursor: pointer;
+    color: var(--color-secondary);
+}
+
+.quick-actions-content {
+    padding: 15px 0;
+}
+
+.action-btn {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 15px 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    text-align: left;
+}
+
+.action-btn:hover {
+    background-color: #f8f9fa;
+}
+
+.action-icon {
+    font-size: 1.5em;
+    margin-right: 12px;
+    width: 30px;
+}
+
+.action-text {
+    font-weight: 500;
+    color: var(--color-secondary);
+}
+
 /* --- ESTILOS DO POMODORO --- */
+
+/* Timer Pomodoro Flutuante */
+.pomodoro-floating-timer {
+    position: fixed;
+    top: 120px;
+    right: 30px;
+    width: 180px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    z-index: 999;
+    border: 2px solid var(--color-primary);
+    animation: slideInRight 0.3s ease;
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.pomodoro-timer-content {
+    padding: 15px;
+}
+
+.pomodoro-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+#pomodoro-mode {
+    font-weight: bold;
+    font-size: 0.9em;
+}
+
+.pomodoro-close {
+    background: none;
+    border: none;
+    font-size: 1.2em;
+    cursor: pointer;
+    color: #6c757d;
+}
+
+.pomodoro-time {
+    font-size: 1.8em;
+    font-weight: bold;
+    text-align: center;
+    margin: 10px 0;
+    color: var(--color-primary-dark);
+}
+
+.pomodoro-controls-mini {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.pomodoro-controls-mini button {
+    background: var(--color-primary);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.2s;
+}
+
+.pomodoro-controls-mini button:hover {
+    background: var(--color-primary-dark);
+}
+
+/* Modal Pomodoro */
 .modal {
     display: none;
     position: fixed;
-    z-index: 1001;
+    z-index: 1002;
     left: 0;
     top: 0;
     width: 100%;
@@ -990,6 +1126,10 @@ main {
     font-size: 1.2em;
 }
 
+.break-actions {
+    margin-top: 20px;
+}
+
 /* --- MEDIA QUERIES OTIMIZADAS --- */
 
 /* Tablet (Telas maiores que 601px) */
@@ -1096,6 +1236,18 @@ main {
     .timer {
         font-size: 2.5em;
     }
+
+    /* Ajustes para o timer flutuante no mobile */
+    .pomodoro-floating-timer {
+        top: 100px;
+        right: 15px;
+        width: 160px;
+    }
+
+    .quick-actions-menu {
+        right: 15px;
+        width: 220px;
+    }
 }
 
 /* MOBILE MUITO PEQUENO - Telas menores que 400px */
@@ -1130,6 +1282,16 @@ main {
 
     .timer {
         font-size: 2em;
+    }
+
+    .pomodoro-floating-timer {
+        width: 140px;
+        right: 10px;
+    }
+
+    .quick-actions-menu {
+        width: 200px;
+        right: 10px;
     }
 }
 
