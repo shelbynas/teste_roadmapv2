@@ -6,6 +6,13 @@
 // ⚠️ ATENÇÃO: CHAVE DA API ATUALIZADA AQUI
 const API_KEY = "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"; 
 
+// ===================================================
+// JAVASCRIPT INTEGRADO (script.js)
+// ===================================================
+
+// ⚠️ ATENÇÃO: CHAVE DA API ATUALIZADA AQUI
+const API_KEY = "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"; 
+
 const GROQ_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions";
 const MODEL_NAME = "llama-3.1-8b-instant"; 
 
@@ -109,16 +116,8 @@ const preDefinedRoadmaps = [
 
 // --- FUNÇÕES POMODORO ---
 
-function togglePomodoroModal() {
-    const modal = document.getElementById('pomodoro-modal');
-    if (modal.style.display === 'block') {
-        closePomodoroModal();
-    } else {
-        openPomodoroModal();
-    }
-}
-
-function openPomodoroModal() {
+function showPomodoroModal() {
+    hideQuickActionsMenu();
     const modal = document.getElementById('pomodoro-modal');
     modal.style.display = 'block';
     updatePomodoroDisplay();
@@ -167,6 +166,10 @@ function startPomodoro() {
     pomodoroState.isRunning = true;
     pomodoroState.interval = setInterval(updatePomodoroTimer, 1000);
     updatePomodoroDisplay();
+    
+    // Mostra o timer flutuante
+    showPomodoroTimer();
+    closePomodoroModal();
 }
 
 function pausePomodoro() {
@@ -175,6 +178,7 @@ function pausePomodoro() {
     pomodoroState.isRunning = false;
     clearInterval(pomodoroState.interval);
     updatePomodoroDisplay();
+    updateFloatingTimer();
 }
 
 function resetPomodoro() {
@@ -187,6 +191,20 @@ function resetPomodoro() {
     pomodoroState.timeLeft = pomodoroState.workTime;
     
     updatePomodoroDisplay();
+    updateFloatingTimer();
+}
+
+function togglePomodoro() {
+    if (pomodoroState.isRunning) {
+        pausePomodoro();
+    } else {
+        startPomodoro();
+    }
+}
+
+function stopPomodoro() {
+    resetPomodoro();
+    hidePomodoroTimer();
 }
 
 function updatePomodoroTimer() {
@@ -201,24 +219,63 @@ function updatePomodoroTimer() {
             pomodoroState.isBreak = false;
             pomodoroState.timeLeft = pomodoroState.workTime;
             closeBreakModal();
+            showPomodoroNotification("🎉 Hora de voltar aos estudos!");
         } else {
             // Fim do tempo de foco - inicia descanso obrigatório
             pomodoroState.isBreak = true;
             pomodoroState.timeLeft = pomodoroState.breakTime;
             showBreakModal();
+            showPomodoroNotification("☕ Hora do descanso! Descanse um pouco.");
         }
     }
     
     updatePomodoroDisplay();
+    updateFloatingTimer();
+}
+
+function showPomodoroTimer() {
+    const floatingTimer = document.getElementById('pomodoro-floating-timer');
+    floatingTimer.style.display = 'block';
+    updateFloatingTimer();
+}
+
+function hidePomodoroTimer() {
+    const floatingTimer = document.getElementById('pomodoro-floating-timer');
+    floatingTimer.style.display = 'none';
+}
+
+function updateFloatingTimer() {
+    const minutes = Math.floor(pomodoroState.timeLeft / 60);
+    const seconds = pomodoroState.timeLeft % 60;
+    const timerDisplay = document.getElementById('pomodoro-timer-display');
+    const modeDisplay = document.getElementById('pomodoro-mode');
+    const playPauseBtn = document.getElementById('btn-pomodoro-play-pause');
+    
+    timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    
+    if (pomodoroState.isBreak) {
+        modeDisplay.textContent = '☕ Descanso';
+        timerDisplay.style.color = '#17a2b8';
+    } else {
+        modeDisplay.textContent = '⏱️ Foco';
+        timerDisplay.style.color = 'var(--color-primary-dark)';
+    }
+    
+    playPauseBtn.textContent = pomodoroState.isRunning ? '⏸️' : '▶️';
 }
 
 function showBreakModal() {
     const breakModal = document.getElementById('break-modal');
     const breakDuration = document.getElementById('break-duration');
     const breakTimer = document.getElementById('break-timer');
+    const continueBtn = document.getElementById('btn-break-continue');
     
     breakDuration.textContent = Math.floor(pomodoroState.breakTime / 60);
     breakModal.style.display = 'block';
+    continueBtn.disabled = true;
+    
+    // Desabilita interação com o conteúdo principal
+    disableMainContent();
     
     // Atualiza o timer do break modal
     const updateBreakTimer = () => {
@@ -226,6 +283,12 @@ function showBreakModal() {
             const minutes = Math.floor(pomodoroState.timeLeft / 60);
             const seconds = pomodoroState.timeLeft % 60;
             breakTimer.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            // Habilita o botão quando o tempo acabar
+            if (pomodoroState.timeLeft <= 0) {
+                continueBtn.disabled = false;
+                continueBtn.textContent = "Continuar Estudando";
+            }
         }
     };
     
@@ -242,7 +305,84 @@ function closeBreakModal() {
         clearInterval(parseInt(breakModal.dataset.interval));
     }
     breakModal.style.display = 'none';
+    
+    // Reabilita interação com o conteúdo principal
+    enableMainContent();
 }
+
+function disableMainContent() {
+    // Adiciona uma overlay sobre o conteúdo principal
+    const overlay = document.createElement('div');
+    overlay.id = 'break-overlay';
+    overlay.style.position = 'fixed';
+    overlay.style.top = '0';
+    overlay.style.left = '0';
+    overlay.style.width = '100%';
+    overlay.style.height = '100%';
+    overlay.style.background = 'rgba(0,0,0,0.5)';
+    overlay.style.zIndex = '998';
+    overlay.style.display = 'flex';
+    overlay.style.justifyContent = 'center';
+    overlay.style.alignItems = 'center';
+    overlay.style.color = 'white';
+    overlay.style.fontSize = '1.5em';
+    overlay.style.fontWeight = 'bold';
+    overlay.innerHTML = '⏰ Tempo de Descanso - Volte em alguns minutos!';
+    document.body.appendChild(overlay);
+}
+
+function enableMainContent() {
+    const overlay = document.getElementById('break-overlay');
+    if (overlay) {
+        overlay.remove();
+    }
+}
+
+function showPomodoroNotification(message) {
+    // Cria uma notificação temporária
+    const notification = document.createElement('div');
+    notification.style.position = 'fixed';
+    notification.style.top = '20px';
+    notification.style.left = '50%';
+    notification.style.transform = 'translateX(-50%)';
+    notification.style.background = 'var(--color-primary)';
+    notification.style.color = 'var(--color-secondary)';
+    notification.style.padding = '15px 20px';
+    notification.style.borderRadius = '8px';
+    notification.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
+    notification.style.zIndex = '1003';
+    notification.style.fontWeight = 'bold';
+    notification.textContent = message;
+    
+    document.body.appendChild(notification);
+    
+    // Remove após 3 segundos
+    setTimeout(() => {
+        notification.remove();
+    }, 3000);
+}
+
+// --- FUNÇÕES DO MENU DE AÇÕES RÁPIDAS ---
+
+function showQuickActionsMenu() {
+    const menu = document.getElementById('quick-actions-menu');
+    menu.style.display = 'block';
+}
+
+function hideQuickActionsMenu() {
+    const menu = document.getElementById('quick-actions-menu');
+    menu.style.display = 'none';
+}
+
+// Fecha o menu quando clicar fora
+document.addEventListener('click', function(event) {
+    const quickActionsBtn = document.getElementById('quick-actions-button');
+    const quickActionsMenu = document.getElementById('quick-actions-menu');
+    
+    if (!quickActionsBtn.contains(event.target) && !quickActionsMenu.contains(event.target)) {
+        hideQuickActionsMenu();
+    }
+});
 
 // --- FUNÇÕES DE PERSISTÊNCIA (ATUALIZADAS) ---
 
@@ -378,13 +518,15 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("btnSimuladoEtapaVoltar").addEventListener("click", () => showEtapaView(modalState.currentEtapa));
     
     // --- Listeners do Chatbot ---
-    document.getElementById("chat-button").addEventListener("click", () => showChatView(patolindoState.lastView));
     document.getElementById("chat-exit-button").addEventListener("click", () => showLastView());
     document.getElementById("chat-send-button").addEventListener("click", handleChatSend);
     document.getElementById("chat-input").addEventListener("keypress", (e) => {
         if (e.key === 'Enter') handleChatSend();
     });
     document.getElementById("chat-input").addEventListener("input", updateSendButtonState);
+    
+    // --- Listener do Botão de Ações Rápidas ---
+    document.getElementById("quick-actions-button").addEventListener("click", showQuickActionsMenu);
 });
 
 // Funções de transição de telas iniciais
@@ -403,6 +545,11 @@ function showMainApp(isExistingUser = false) {
     document.getElementById("welcome-screen").style.display = 'none';
     document.getElementById("login-screen").style.display = 'none';
     document.getElementById("main-app").style.display = 'block';
+    
+    // Mostra o botão de ações rápidas apenas se não for convidado
+    if (currentUser.name !== 'Convidado') {
+        document.getElementById("quick-actions-button").style.display = 'block';
+    }
     
     if (isExistingUser && currentUser.trilhas.length > 0) {
          // Usuário recorrente vai para o Gerenciamento
@@ -433,20 +580,10 @@ function hideAllViews() {
     }
 }
 
-function updateChatButtonVisibility(isVisible) {
-    // Esconde o chat se o usuário for convidado
-    if (currentUser.name === 'Convidado') {
-        document.getElementById("chat-button").style.display = 'none';
-    } else {
-         document.getElementById("chat-button").style.display = isVisible ? 'block' : 'none';
-    }
-}
-
 // --- TELA DE GERENCIAMENTO DE TRILHAS ---
 function showUserTrilhasView() {
     hideAllViews();
     window.scrollTo(0, 0); 
-    updateChatButtonVisibility(false); 
 
     if (currentUser.name === 'Convidado') {
         showPreDefinedCoursesView();
@@ -511,7 +648,6 @@ function showPreDefinedCoursesView() {
     
     hideAllViews();
     window.scrollTo(0, 0); 
-    updateChatButtonVisibility(false); 
     viewMap["predefined-courses-view"].style.display = 'block';
 
     const coursesListDiv = document.getElementById("predefined-courses-list");
@@ -548,16 +684,12 @@ function showPreDefinedCoursesView() {
 function showFormView() {
     hideAllViews();
     window.scrollTo(0, 0); 
-    updateChatButtonVisibility(false); 
     viewMap["form-view"].style.display = 'flex'; 
 }
 
 function showRoadmapView() {
     hideAllViews();
     window.scrollTo(0, 0); 
-    // Mostra o chat apenas se houver uma trilha carregada e não for convidado
-    const currentTrilha = currentUser.trilhas[currentUser.currentTrilhaIndex];
-    updateChatButtonVisibility(currentTrilha && currentUser.name !== 'Convidado' ? true : false);
     patolindoState.lastView = "roadmap-view";
     viewMap["roadmap-view"].style.display = 'block';
 }
@@ -565,7 +697,6 @@ function showRoadmapView() {
 function showEtapaView(etapa) {
     hideAllViews();
     window.scrollTo(0, 0); 
-    updateChatButtonVisibility(true); 
     patolindoState.lastView = "etapa-view";
     viewMap["etapa-view"].style.display = 'block';
     
@@ -601,7 +732,6 @@ function showEtapaView(etapa) {
 function showMaterialView(topico, material) {
     hideAllViews();
     window.scrollTo(0, 0); 
-    updateChatButtonVisibility(true); 
     patolindoState.lastView = "material-view";
     viewMap["material-view"].style.display = 'block';
     
@@ -611,7 +741,6 @@ function showMaterialView(topico, material) {
 function showFlashcardView(topico) {
     hideAllViews();
     window.scrollTo(0, 0); 
-    updateChatButtonVisibility(false); // Esconde o chat no modo Flashcard
     patolindoState.lastView = "flashcard-view";
     viewMap["flashcard-view"].style.display = 'block';
 
@@ -621,7 +750,6 @@ function showFlashcardView(topico) {
 function showSimuladoEtapaView() {
     hideAllViews();
     window.scrollTo(0, 0); 
-    updateChatButtonVisibility(false); // Esconde o chat no modo Simulado
     patolindoState.lastView = "simulado-etapa-view";
     viewMap["simulado-etapa-view"].style.display = 'block';
     
@@ -631,9 +759,9 @@ function showSimuladoEtapaView() {
 function showChatView() {
     hideAllViews();
     window.scrollTo(0, 0); 
-    updateChatButtonVisibility(false); 
     viewMap["chat-view"].style.display = 'block';
     resetPatolindoSession();
+    hideQuickActionsMenu();
 }
 
 function showLastView() {
@@ -759,7 +887,6 @@ async function gerarRoadmap() {
 
     if (!tema) {
         roadmapDiv.innerHTML = "⚠️ Por favor, preencha o campo Tema.";
-        updateChatButtonVisibility(false);
         return;
     }
     
@@ -834,7 +961,6 @@ async function gerarRoadmap() {
     } catch (err) {
         console.error("Erro:", err);
         roadmapDiv.innerHTML = `⚠️ Erro ao gerar roadmap. Verifique sua chave API e tente novamente. Causa: ${err.message}.`;
-        updateChatButtonVisibility(false); 
     }
 }
 
