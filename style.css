@@ -1,19 +1,21 @@
 /* ===================================================
-// CSS ORIGINAL + ADIÇÕES PARA O POMODORO
+// CSS INTEGRADO (com otimizações de responsividade)
 // =================================================== */
-
+        
+/* --- Variáveis de Cor (Paleta Amarela) --- */
 :root {
-    --color-primary: #FFC107;
-    --color-primary-dark: #E0A800;
-    --color-secondary: #343A40;
-    --color-background: #F8F9FA;
+    --color-primary: #FFC107; /* Amarelo Vibrante */
+    --color-primary-dark: #E0A800; /* Amarelo Escuro */
+    --color-secondary: #343A40; /* Cinza Escuro para Texto */
+    --color-background: #F8F9FA; /* Fundo Suave */
     --color-card: #FFFFFF;
     --color-success: #28A745;
     --color-danger: #DC3545;
-    --color-light-yellow: #FFFBEA;
-    --color-category: #495057;
+    --color-light-yellow: #FFFBEA; /* Amarelo muito claro para blocos */
+    --color-category: #495057; /* Cinza para categorias */
 }
 
+/* --- Estilos Gerais e Tipografia --- */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: var(--color-background);
@@ -29,6 +31,7 @@ body {
     margin: 0 auto;
 }
 
+/* --- ESTILOS DAS TELAS INICIAIS (Login, Boas-Vindas e Explicação) --- */
 .full-screen-message {
     display: flex;
     justify-content: center;
@@ -65,6 +68,7 @@ body {
     margin-bottom: 20px;
 }
 
+/* --- Estilos do Formulário de Login --- */
 #login-form {
     display: flex;
     flex-direction: column;
@@ -105,10 +109,11 @@ body {
     font-weight: bold;
 }
 
+/* --- Layout Principal (Header e Main) --- */
 header {
     background-color: var(--color-primary);
     color: var(--color-secondary);
-    padding: 20px 0;
+    padding: 20px 0; /* Ajustado para acomodar o botão */
     text-align: center;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     position: relative; 
@@ -130,7 +135,7 @@ header {
 
 header h1 {
     margin: 0;
-    font-size: 2em;
+    font-size: 2em; /* Reduzido um pouco */
     font-weight: 900;
 }
 
@@ -139,6 +144,7 @@ header p {
     font-size: 1em; 
 }
 
+/* Botão Minhas Trilhas */
 #btnMinhasTrilhas {
     background-color: var(--color-primary-dark);
     color: white;
@@ -160,12 +166,14 @@ main {
     padding: 20px 0; 
 }
 
+/* Contêiner para centralizar o formulário e gerenciar a troca de telas */
 #main-content-area {
     display: flex;
     justify-content: center;
     width: 100%; 
 }
 
+/* --- Controles (Formulário) --- */
 .controles {
     background-color: var(--color-card);
     padding: 20px; 
@@ -173,7 +181,7 @@ main {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
     width: 100%; 
     max-width: 500px; 
-    height: fit-content; 
+    height: fit-content; 
 }
 
 .mascote-area {
@@ -186,11 +194,11 @@ main {
 .mascote {
     width: 120px; 
     height: 120px; 
-    border-radius: 8px; 
+    border-radius: 8px; 
     object-fit: contain;
     margin-bottom: 10px;
     border: none;
-    background-color: transparent; 
+    background-color: transparent; 
 }
 
 .controles h2 {
@@ -226,6 +234,7 @@ main {
     min-height: 100px;
 }
 
+/* --- Botões --- */
 .btn-primary {
     display: block;
     width: 100%;
@@ -247,8 +256,8 @@ main {
 }
 
 .btn-secondary {
-    padding: 12px 18px; 
-    font-size: 1em; 
+    padding: 12px 18px; 
+    font-size: 1em; 
     background-color: #6c757d;
     color: white;
     border: none;
@@ -263,8 +272,8 @@ main {
 }
 
 .btn-success {
-    padding: 12px 18px; 
-    font-size: 1em; 
+    padding: 12px 18px; 
+    font-size: 1em; 
     background-color: var(--color-success);
     color: white;
     border: none;
@@ -278,6 +287,7 @@ main {
     background-color: #1e7e34;
 }
 
+/* --- ESTILOS DAS TELAS DE CONTEÚDO (Roadmap, Etapa, Material, Simulado) --- */
 .content-view {
     width: 100%;
 }
@@ -298,6 +308,7 @@ main {
     font-size: 1.6em; 
 }
 
+/* --- Estilos da Tela Cursos Pré-definidos --- */
 .course-category {
     margin-top: 25px;
     padding-bottom: 10px;
@@ -356,6 +367,7 @@ main {
     background-color: #5a6268;
 }
 
+/* --- Estilos da Tela Roadmap --- */
 .roadmap-grid {
     display: flex;
     flex-wrap: wrap;
@@ -367,7 +379,7 @@ main {
     flex: 1 1 100%; 
     min-width: unset;
     padding: 20px; 
-    background-color: var(--color-light-yellow); 
+    background-color: var(--color-light-yellow); 
     border: 1px solid var(--color-primary-dark);
     border-radius: 8px;
     text-align: center;
@@ -392,6 +404,7 @@ main {
     font-style: italic;
 }
 
+/* --- Estilos da Tela Etapa / Tópicos --- */
 #etapa-conteudo h3 {
     color: var(--color-secondary);
     margin-top: 30px;
@@ -421,7 +434,7 @@ main {
     text-align: left; 
     font-weight: 500;
     transition: background-color 0.1s;
-    box-shadow: none; 
+    box-shadow: none; 
     min-width: unset;
     font-size: 0.9em;
     border-radius: 6px; 
@@ -433,9 +446,10 @@ main {
     background-color: #E0E0E0;
 }
 
+/* Novo Botão para Flashcards */
 .btn-flashcard {
     flex: 1;
-    background-color: #007bff;
+    background-color: #007bff; /* Azul */
     color: white;
     border: none;
     padding: 10px 15px;
@@ -451,6 +465,7 @@ main {
     background-color: #0056b3;
 }
 
+/* Botão de Simulado da Etapa */
 .btn-simulado-etapa {
     width: 100%;
     margin-top: 20px;
@@ -471,6 +486,7 @@ main {
     width: 100%;
 }
 
+/* --- Estilos da Tela Gerenciamento de Trilhas --- */
 .trilha-card {
     display: flex;
     justify-content: space-between;
@@ -509,6 +525,7 @@ main {
     font-size: 0.9em;
 }
 
+/* --- Estilos da Tela Flashcard --- */
 #flashcard-display {
     display: flex;
     flex-direction: column;
@@ -576,6 +593,7 @@ main {
     max-width: 400px;
 }
 
+/* --- Estilos da Tela Simulado (Etapa) --- */
 .simulado-area ul {
     list-style: none;
     padding: 0;
@@ -589,7 +607,7 @@ main {
     border-radius: 6px;
     transition: background-color 0.3s;
     cursor: pointer; 
-    background-color: var(--color-card); 
+    background-color: var(--color-card); 
     color: var(--color-secondary);
 }
 
@@ -609,7 +627,7 @@ main {
 }
 
 .simulado-area li.correta-destacada {
-    background-color: #d4edda !important; 
+    background-color: #d4edda !important; 
     color: #155724 !important;
     border-color: #c3e6cb !important;
 }
@@ -635,6 +653,8 @@ main {
     font-size: 1.1em;
     font-weight: bold;
 }
+
+/* --- Estilos do Chatbot Patolindo --- */
 
 #chat-button {
     position: fixed;
@@ -737,9 +757,11 @@ main {
     cursor: not-allowed;
 }
 
+
 #chat-container {
     display: flex;
     flex-direction: column;
+    /* Altura ajustada para caber bem na tela principal */
     height: 70vh; 
     min-height: 450px;
     background-color: var(--color-card);
@@ -760,86 +782,145 @@ main {
     font-size: 1.2em;
 }
 
-/* --- NOVO: Estilos do Pomodoro --- */
+/* --- Estilos do Pomodoro Customizável --- */
 #pomodoro-button {
     position: fixed;
     bottom: 30px;
-    right: 100px; /* Ao lado do botão de chat */
+    left: 30px; /* Mudado de right para left */
     width: 60px;
     height: 60px;
     border-radius: 50%;
-    background-color: var(--color-secondary);
-    color: white;
-    border: 3px solid white;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    background-color: var(--color-primary-dark);
+    color: var(--color-secondary);
+    font-size: 2em;
+    font-weight: bold;
+    border: 3px solid var(--color-primary);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     cursor: pointer;
-    display: none; /* Começa oculto */
-    justify-content: center;
-    align-items: center;
-    font-size: 1.8em;
+    transition: background-color 0.2s;
     z-index: 1000;
 }
 
-#pomodoro-modal {
-    display: none;
+#pomodoro-button:hover {
+    background-color: var(--color-primary);
+}
+
+/* Estilo Base do Modal */
+#pomodoro-modal, #config-modal {
     position: fixed;
-    z-index: 1001;
+    z-index: 2000; 
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0,0,0,0.6);
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4); 
+    display: flex;
     justify-content: center;
     align-items: center;
 }
 
 .pomodoro-content {
     background-color: var(--color-card);
-    padding: 20px;
+    padding: 30px;
     border-radius: 12px;
-    width: 90%;
-    max-width: 350px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
     text-align: center;
-    box-shadow: 0 5px 25px rgba(0,0,0,0.3);
+    position: relative;
+    max-width: 400px;
+    width: 90%;
 }
 
-#time-display {
-    font-size: 4em;
+.pomodoro-close-btn {
+    color: #aaa;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 28px;
     font-weight: bold;
+    cursor: pointer;
+}
+
+.pomodoro-close-btn:hover,
+.pomodoro-close-btn:focus {
+    color: var(--color-danger);
+    text-decoration: none;
+    cursor: pointer;
+}
+
+#timer-display {
+    font-size: 5em;
+    font-weight: 900;
     color: var(--color-primary-dark);
-    margin: 10px 0;
-}
-
-#pomodoro-settings {
-    margin-top: 15px;
-    text-align: left;
-    border-top: 1px solid #eee;
-    padding-top: 15px;
-}
-
-.setting-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     margin-bottom: 10px;
+    transition: color 0.3s;
 }
 
-.setting-input {
-    width: 60px;
-    padding: 5px;
+.pomodoro-status {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: var(--color-secondary);
+    margin-bottom: 20px;
 }
 
-.timer-controls {
-    margin-top: 20px;
-    display: flex;
-    justify-content: center;
-    gap: 10px;
+.pomodoro-controls button {
+    padding: 10px 15px;
+    margin: 5px;
+    border: none;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
 }
 
-#break-modal {
-    display: none;
+#start-pause-btn {
+    background-color: var(--color-primary);
+    color: var(--color-secondary);
 }
 
+#reset-btn {
+    background-color: #f1f1f1;
+    color: var(--color-secondary);
+}
+
+#config-btn {
+    background-color: #6c757d;
+    color: white;
+}
+
+/* Config Modal Specifics */
+.config-content h3 {
+    color: var(--color-primary-dark);
+    margin-top: 0;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+}
+.config-content label {
+    display: block;
+    text-align: left;
+    margin-top: 15px;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+.config-content input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 1em;
+}
+
+.config-content .btn-success {
+    margin-top: 25px;
+    width: 100%;
+}
+        
+/* ---------------------------------------------------
+* MEDIA QUERIES OTIMIZADAS
+* --------------------------------------------------- */
+        
+/* Tablet (Telas maiores que 601px) */
 @media (min-width: 601px) {
     .bloco {
         flex: 1 1 calc(50% - 15px); 
@@ -855,10 +936,12 @@ main {
     .modal-actions {
         text-align: right;
     }
+    /* Ação: Ajustar botões em modal-actions para caberem lado a lado no EtapaView */
     .modal-actions button {
         width: auto; 
     }
-    
+
+    /* Ajuste dos botões de tópico */
     .material-btn, .btn-flashcard {
         flex: 1 1 50%; 
     }
@@ -875,6 +958,7 @@ main {
     }
 }
 
+/* Desktop (Telas maiores que 993px) */
 @media (min-width: 993px) {
     .bloco {
         flex: 1 1 calc(33.333% - 20px); 
