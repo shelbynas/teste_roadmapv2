@@ -4,7 +4,6 @@
 
 // ⚠️ ATENÇÃO: CHAVE DA API ATUALIZADA AQUI (Mantenha sua nova chave aqui)
 const API_KEY = "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"; 
-
 const GROQ_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions";
 const MODEL_NAME = "llama-3.1-8b-instant"; 
 
@@ -22,7 +21,7 @@ let pomodoroSettings = {
     longBreak: 15
 };
 
-// --- Funções de Persistência e Inicialização ---
+// --- Funções de Persistência e Inicialização do Pomodoro ---
 function loadPomodoroSettings() {
     const savedSettings = localStorage.getItem('pomodoroSettings');
     if (savedSettings) {
@@ -40,14 +39,14 @@ function savePomodoroSettings() {
     localStorage.setItem('pomodoroSettings', JSON.stringify(pomodoroSettings));
 }
 
-// --- Funções Auxiliares ---
+// --- Funções Auxiliares do Pomodoro ---
 function formatTime(seconds) {
     const minutes = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${minutes < 10 ? '0' : ''}${minutes}:${secs < 10 ? '0' : ''}${secs}`;
 }
 
-// --- Funções de Controle do Timer ---
+// --- Funções de Controle do Timer Pomodoro ---
 function updateTimerDisplay() {
     const displayElement = document.getElementById('time-display');
     const titleElement = document.getElementById('timer-title');
