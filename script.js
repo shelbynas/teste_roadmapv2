@@ -1,10 +1,4 @@
 
-// ===================================================
-// JAVASCRIPT INTEGRADO (script.js)
-// ===================================================
-
-// ⚠️ ATENÇÃO: CHAVE DA API ATUALIZADA AQUI
-const API_KEY = "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"; 
 
 // ===================================================
 // JAVASCRIPT INTEGRADO (script.js)
