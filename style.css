@@ -1,0 +1,512 @@
+/* ===================================================
+// CSS INTEGRADO (com otimizações de responsividade)
+// =================================================== */
+
+/* --- Variáveis de Cor (Paleta Amarela) --- */
+:root {
+    --color-primary: #FFC107; /* Amarelo Vibrante */
+    --color-primary-dark: #E0A800; /* Amarelo Escuro */
+    --color-secondary: #343A40; /* Cinza Escuro para Texto */
+    --color-background: #F8F9FA; /* Fundo Suave */
+    --color-card: #FFFFFF;
+    --color-success: #28A745;
+    --color-danger: #DC3545;
+    --color-light-yellow: #FFFBEA; /* Amarelo muito claro para blocos */
+    --color-category: #495057; /* Cinza para categorias */
+}
+
+/* --- Estilos Gerais e Tipografia --- */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--color-background);
+    color: var(--color-secondary);
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+}
+
+h1, h2, h3, h4 {
+    color: var(--color-primary-dark);
+    margin-top: 0;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.full-screen-message {
+    display: none; /* Inicialmente oculto por JS, exceto login */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--color-background);
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    box-sizing: border-box;
+    z-index: 100;
+}
+
+/* Login e Boas-Vindas */
+.login-card, .welcome-card {
+    background-color: var(--color-card);
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+}
+.login-card input[type="text"], .login-card input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+.login-card button {
+    margin-top: 15px;
+}
+
+/* --- Estilos de Componentes --- */
+.btn-primary, .btn-secondary, .btn-success {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.btn-primary {
+    background-color: var(--color-primary);
+    color: var(--color-secondary);
+}
+.btn-primary:hover:not(:disabled) {
+    background-color: var(--color-primary-dark);
+}
+
+.btn-secondary {
+    background-color: #6C757D;
+    color: white;
+}
+.btn-secondary:hover:not(:disabled) {
+    background-color: #5A6268;
+}
+
+.btn-success {
+    background-color: var(--color-success);
+    color: white;
+}
+.btn-success:hover:not(:disabled) {
+    background-color: #218838;
+}
+
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.header {
+    background-color: var(--color-primary);
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+.header h1 {
+    font-size: 1.5em;
+    color: var(--color-secondary);
+    margin: 0;
+}
+.header button {
+    margin-left: 10px;
+}
+
+.main-content {
+    padding-top: 20px;
+}
+
+/* Estilos da Lista de Trilhas e Cursos */
+.trilha-card, .course-card {
+    background-color: var(--color-card);
+    border: 1px solid #dee2e6;
+    border-left: 5px solid var(--color-primary);
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: box-shadow 0.2s;
+}
+.trilha-card:hover, .course-card:hover {
+    box-shadow: 0 0 10px rgba(255, 193, 7, 0.3);
+}
+.trilha-actions button {
+    margin-left: 8px;
+}
+
+.course-category {
+    margin-bottom: 30px;
+}
+.courses-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+.course-card {
+    display: block;
+    border-left: 5px solid var(--color-success);
+}
+
+/* Estilos do Roadmap (Etapas) */
+#roadmap .bloco {
+    background-color: var(--color-light-yellow);
+    border: 1px solid var(--color-primary);
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Estilos da Etapa (Tópicos) */
+.topicos-container {
+    display: grid;
+    gap: 15px;
+    margin-top: 15px;
+}
+.topico-bloco {
+    background-color: var(--color-card);
+    padding: 15px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.topico-bloco button {
+    margin-left: 10px;
+}
+.btn-flashcard {
+    background-color: #007bff;
+    color: white;
+}
+.btn-flashcard:hover {
+    background-color: #0056b3;
+}
+.btn-simulado-etapa {
+    margin-top: 20px;
+    width: 100%;
+}
+
+/* Estilos de Flashcard */
+#flashcard-display {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.flashcard {
+    perspective: 1000px;
+    width: 300px;
+    height: 200px;
+    margin: 20px 0;
+    cursor: pointer;
+}
+.flashcard-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    border-radius: 8px;
+}
+.flashcard.flipped .flashcard-inner {
+    transform: rotateY(180deg);
+}
+.flashcard-face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: var(--color-card);
+    border: 1px solid var(--color-primary);
+    border-radius: 8px;
+}
+.flashcard-back {
+    transform: rotateY(180deg);
+    background-color: var(--color-light-yellow);
+}
+.flashcard-navigation {
+    display: flex;
+    justify-content: space-between;
+    width: 300px;
+    margin-top: 10px;
+}
+
+/* Estilos do Simulado */
+.simulado-bloco {
+    background-color: var(--color-card);
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    border: 1px solid #eee;
+}
+.simulado-bloco ul {
+    list-style: none;
+    padding: 0;
+}
+.alternativa {
+    padding: 8px;
+    margin-bottom: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+.alternativa:hover {
+    background-color: #f1f1f1;
+}
+.alternativa.selected {
+    background-color: var(--color-primary);
+    font-weight: bold;
+}
+.correta-destacada {
+    background-color: var(--color-success) !important;
+    color: white;
+    font-weight: bold;
+}
+.incorreta {
+    background-color: var(--color-danger);
+    color: white;
+    font-weight: bold;
+}
+#simulado-resultado {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: var(--color-primary-dark);
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.placeholder-text {
+    color: #999;
+    font-style: italic;
+    text-align: center;
+    padding: 40px;
+    border: 1px dashed #ccc;
+    border-radius: 5px;
+    margin: 20px 0;
+}
+
+/* Estilos do Chatbot Patolindo */
+#chat-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: var(--color-primary-dark);
+    color: white;
+    font-size: 2em;
+    border: 5px solid white;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+#chat-view {
+    display: none; /* Controlado pelo JS */
+    position: fixed;
+    bottom: 100px;
+    right: 20px;
+    width: 350px;
+    height: 450px;
+    background-color: var(--color-card);
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    flex-direction: column;
+    z-index: 100;
+}
+
+.chat-header {
+    background-color: var(--color-primary);
+    padding: 10px 15px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.chat-header h3 {
+    margin: 0;
+    color: var(--color-secondary);
+    font-size: 1.1em;
+}
+.chat-messages {
+    flex-grow: 1;
+    padding: 15px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+.chat-input-area {
+    border-top: 1px solid #ccc;
+    padding: 10px;
+    display: flex;
+}
+#chat-input {
+    flex-grow: 1;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-right: 8px;
+}
+.user-message, .bot-message {
+    max-width: 80%;
+    padding: 8px;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    word-wrap: break-word;
+}
+.user-message {
+    align-self: flex-end;
+    background-color: #DCF8C6;
+}
+.bot-message {
+    align-self: flex-start;
+    background-color: #EAEAEA;
+}
+.user-message span, .bot-message span {
+     display: inline-block;
+}
+.chat-counter {
+    font-size: 0.8em;
+    color: #6c757d;
+    margin-left: 10px;
+}
+
+/* --- NOVO: Estilos para o Pomodoro Timer Customizável --- */
+#pomodoro-container {
+    position: fixed;
+    bottom: 20px;
+    right: 120px; 
+    z-index: 101; 
+    display: block; 
+}
+
+#pomodoro-timer {
+    background-color: var(--color-card);
+    border: 2px solid var(--color-primary);
+    border-radius: 12px;
+    padding: 15px;
+    width: 240px; 
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+#timer-title {
+    font-size: 1.1em;
+    margin-bottom: 5px;
+    color: var(--color-secondary);
+}
+
+#time-display {
+    display: block;
+    font-size: 2.5em;
+    font-weight: bold;
+    color: var(--color-primary-dark);
+    margin-bottom: 10px;
+}
+
+#pomodoro-settings {
+    margin: 10px 0;
+    text-align: left;
+    padding: 0 10px;
+    border-top: 1px solid #eee;
+    padding-top: 10px;
+}
+
+#pomodoro-settings label {
+    display: block;
+    font-size: 0.9em;
+    font-weight: bold;
+    color: var(--color-secondary);
+    margin-top: 5px;
+}
+
+.setting-input {
+    width: 100%; 
+    padding: 5px;
+    margin-bottom: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box; 
+}
+
+.timer-controls button {
+    margin: 5px;
+    width: 95px; /* Ajustado */
+    padding: 8px;
+    font-size: 0.9em;
+}
+
+/* Ajuste para telas menores */
+@media (max-width: 600px) {
+    #pomodoro-container {
+        right: 80px;
+        bottom: 80px;
+    }
+}
+
+/* --- NOVO: Estilos da Modal de Pausa Forçada --- */
+#break-modal {
+    display: none; /* Oculto por padrão */
+    position: fixed;
+    z-index: 200; /* Acima de tudo */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.8); /* Fundo escuro */
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: var(--color-card);
+    margin: auto;
+    padding: 30px;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 500px;
+    text-align: center;
+    box-shadow: 0 5px 20px rgba(255, 193, 7, 0.7);
+    border: 3px solid var(--color-primary);
+}
+.modal-content h2 {
+    color: var(--color-danger);
+    font-size: 1.8em;
+}
