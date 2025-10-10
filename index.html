@@ -72,7 +72,6 @@
                 </div>
                 <div class="header-controls">
                     <button id="btnMinhasTrilhas" onclick="showUserTrilhasView()">Minhas Trilhas (0)</button>
-                    <button id="btnPomodoro" class="btn-pomodoro" onclick="togglePomodoroModal()">⏱️ Pomodoro</button>
                 </div>
             </div>
         </header>
@@ -80,6 +79,21 @@
         <main class="container">
             <div id="main-content-area">
                 
+                <!-- Timer Pomodoro Flutuante -->
+                <div id="pomodoro-floating-timer" class="pomodoro-floating-timer" style="display: none;">
+                    <div class="pomodoro-timer-content">
+                        <div class="pomodoro-header">
+                            <span id="pomodoro-mode">⏱️ Foco</span>
+                            <button class="pomodoro-close" onclick="hidePomodoroTimer()">×</button>
+                        </div>
+                        <div id="pomodoro-timer-display" class="pomodoro-time">25:00</div>
+                        <div class="pomodoro-controls-mini">
+                            <button id="btn-pomodoro-play-pause" onclick="togglePomodoro()">⏸️</button>
+                            <button id="btn-pomodoro-stop" onclick="stopPomodoro()">⏹️</button>
+                        </div>
+                    </div>
+                </div>
+
                 <div id="user-trilhas-view" class="content-view" style="display: none;">
                     <div id="user-trilhas-container">
                         <h2>Gerenciar Trilhas Salvas</h2>
@@ -208,6 +222,29 @@
         </main>
     </div>
 
+    <!-- Botão de Ações Rápidas (substitui o botão do chat) -->
+    <button id="quick-actions-button" class="quick-actions-button" title="Ações Rápidas">
+        ⚡
+    </button>
+
+    <!-- Menu de Ações Rápidas -->
+    <div id="quick-actions-menu" class="quick-actions-menu" style="display: none;">
+        <div class="quick-actions-header">
+            <h3>Ações Rápidas</h3>
+            <button class="close-actions" onclick="hideQuickActionsMenu()">×</button>
+        </div>
+        <div class="quick-actions-content">
+            <button class="action-btn" onclick="showChatView()">
+                <span class="action-icon">💬</span>
+                <span class="action-text">Chat com Patolindo</span>
+            </button>
+            <button class="action-btn" onclick="showPomodoroModal()">
+                <span class="action-icon">⏱️</span>
+                <span class="action-text">Iniciar Pomodoro</span>
+            </button>
+        </div>
+    </div>
+
     <!-- Modal Pomodoro -->
     <div id="pomodoro-modal" class="modal">
         <div class="modal-content">
@@ -231,7 +268,7 @@
                     </div>
                     
                     <div class="timer-controls">
-                        <button id="btn-start-pomodoro" class="btn-primary" onclick="startPomodoro()">Iniciar</button>
+                        <button id="btn-start-pomodoro" class="btn-primary" onclick="startPomodoro()">Iniciar Pomodoro</button>
                         <button id="btn-pause-pomodoro" class="btn-secondary" onclick="pausePomodoro()" disabled>Pausar</button>
                         <button id="btn-reset-pomodoro" class="btn-secondary" onclick="resetPomodoro()">Reiniciar</button>
                     </div>
@@ -253,14 +290,13 @@
                     <p>É hora de descansar. Faça uma pausa de <span id="break-duration">5</span> minutos.</p>
                     <p>O timer continuará contando e você não poderá voltar aos estudos até o descanso terminar.</p>
                     <div id="break-timer" class="timer break-timer">05:00</div>
+                    <div class="break-actions">
+                        <button class="btn-primary" onclick="closeBreakModal()" id="btn-break-continue" disabled>Continuar Estudando</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <button id="chat-button" title="Abrir Chatbot Patolindo">
-        🦆
-    </button>
 
     <script src="script.js"></script>
 </body>
