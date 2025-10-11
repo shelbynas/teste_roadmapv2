@@ -1,5 +1,6 @@
+
 // ===================================================
-// JAVASCRIPT INTEGRADO (script.js) - CORRIGIDO
+// JAVASCRIPT INTEGRADO (script.js)
 // ===================================================
 
 // ⚠️ ATENÇÃO: CHAVE DA API ATUALIZADA AQUI
@@ -17,17 +18,7 @@ let currentUser = {
 // Armazena todos os dados de usuários no localStorage
 let allUsersData = {}; 
 
-let modalState = {
-    flashcards: [],
-    currentFlashcardIndex: 0,
-    currentEtapa: null,
-    etapas: [],
-    simulado: [],
-    currentQuestionIndex: 0,
-    respostasSelecionadas: [],
-    simuladoFinalizado: false
-}; 
-
+let modalState = {}; 
 let patolindoState = {
     questionsLeft: 5,
     history: [],
@@ -90,7 +81,7 @@ const preDefinedRoadmaps = [
         category: "Matérias Escolares - Ensino Fundamental (Anos Finais)",
         courses: [
             {
-                tema: "Matemática (6º Ano)", nivel: "Intermediário", objetivo: "Dominar números inteiros, frações e operações básica.",
+                tema: "Matemática (6º Ano)", nivel: "Intermediário", objetivo: "Dominar números inteiros, frações e operações básicas.",
                 etapas: [
                     { titulo: "Etapa 1: Números Inteiros e Racionais", topicos: [{ tópico: "Conjunto dos Números Inteiros (Z)", material: "https://www.auladegratis.net/matematica/6-ano/numeros-inteiros.html" }, { tópico: "Soma e Subtração de Frações", material: "https://www.somatematica.com.br/fundamental/6ano/fracoes.php" }, { tópico: "Múltiplos e Divisores (MMC e MDC)", material: "https://www.infoescola.com/matematica/mmc-e-mdc/" }, { tópico: "Expressões Numéricas", material: "https://www.toda_materia.com.br/expressoes-numericas" }], atividade: "Resolver uma lista de 10 problemas que envolvam frações em situações do dia a dia." }
                 ]
@@ -117,6 +108,72 @@ const preDefinedRoadmaps = [
 ];
 
 // --- FUNÇÕES POMODORO ---
+
+// Sistema de arrastar o timer
+function initializePomodoroDrag() {
+    const timer = document.getElementById('pomodoro-floating-timer');
+    let isDragging = false;
+    let currentX;
+    let currentY;
+    let initialX;
+    let initialY;
+    let xOffset = 0;
+    let yOffset = 0;
+
+    timer.addEventListener('mousedown', dragStart);
+    timer.addEventListener('touchstart', dragStart);
+    document.addEventListener('mouseup', dragEnd);
+    document.addEventListener('touchend', dragEnd);
+    document.addEventListener('mousemove', drag);
+    document.addEventListener('touchmove', drag);
+
+    function dragStart(e) {
+        if (e.type === "touchstart") {
+            initialX = e.touches[0].clientX - xOffset;
+            initialY = e.touches[0].clientY - yOffset;
+        } else {
+            initialX = e.clientX - xOffset;
+            initialY = e.clientY - yOffset;
+        }
+
+        if (e.target.classList.contains('pomodoro-header') || 
+            e.target.classList.contains('pomodoro-drag-handle') ||
+            e.target.closest('.pomodoro-header')) {
+            isDragging = true;
+            timer.classList.add('dragging');
+        }
+    }
+
+    function dragEnd(e) {
+        initialX = currentX;
+        initialY = currentY;
+        isDragging = false;
+        timer.classList.remove('dragging');
+    }
+
+    function drag(e) {
+        if (isDragging) {
+            e.preventDefault();
+            
+            if (e.type === "touchmove") {
+                currentX = e.touches[0].clientX - initialX;
+                currentY = e.touches[0].clientY - initialY;
+            } else {
+                currentX = e.clientX - initialX;
+                currentY = e.clientY - initialY;
+            }
+
+            xOffset = currentX;
+            yOffset = currentY;
+
+            setTranslate(currentX, currentY, timer);
+        }
+    }
+
+    function setTranslate(xPos, yPos, el) {
+        el.style.transform = `translate3d(${xPos}px, ${yPos}px, 0)`;
+    }
+}
 
 function showPomodoroModal() {
     hideQuickActionsMenu();
@@ -169,8 +226,9 @@ function startPomodoro() {
     pomodoroState.interval = setInterval(updatePomodoroTimer, 1000);
     updatePomodoroDisplay();
     
+    // Mostra o timer flutuante
+    showPomodoroTimer();
     closePomodoroModal();
-    showPomodoroNotification("⏱️ Pomodoro iniciado! Foco nos estudos!");
 }
 
 function pausePomodoro() {
@@ -179,7 +237,7 @@ function pausePomodoro() {
     pomodoroState.isRunning = false;
     clearInterval(pomodoroState.interval);
     updatePomodoroDisplay();
-    showPomodoroNotification("⏸️ Pomodoro pausado");
+    updateFloatingTimer();
 }
 
 function resetPomodoro() {
@@ -192,7 +250,20 @@ function resetPomodoro() {
     pomodoroState.timeLeft = pomodoroState.workTime;
     
     updatePomodoroDisplay();
-    showPomodoroNotification("🔄 Pomodoro reiniciado");
+    updateFloatingTimer();
+}
+
+function togglePomodoro() {
+    if (pomodoroState.isRunning) {
+        pausePomodoro();
+    } else {
+        startPomodoro();
+    }
+}
+
+function stopPomodoro() {
+    resetPomodoro();
+    hidePomodoroTimer();
 }
 
 function updatePomodoroTimer() {
@@ -218,6 +289,41 @@ function updatePomodoroTimer() {
     }
     
     updatePomodoroDisplay();
+    updateFloatingTimer();
+}
+
+function showPomodoroTimer() {
+    const floatingTimer = document.getElementById('pomodoro-floating-timer');
+    floatingTimer.style.display = 'block';
+    updateFloatingTimer();
+    
+    // Inicializa o sistema de arrastar
+    initializePomodoroDrag();
+}
+
+function hidePomodoroTimer() {
+    const floatingTimer = document.getElementById('pomodoro-floating-timer');
+    floatingTimer.style.display = 'none';
+}
+
+function updateFloatingTimer() {
+    const minutes = Math.floor(pomodoroState.timeLeft / 60);
+    const seconds = pomodoroState.timeLeft % 60;
+    const timerDisplay = document.getElementById('pomodoro-timer-display');
+    const modeDisplay = document.getElementById('pomodoro-mode');
+    const playPauseBtn = document.getElementById('btn-pomodoro-play-pause');
+    
+    timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    
+    if (pomodoroState.isBreak) {
+        modeDisplay.textContent = '☕ Descanso';
+        timerDisplay.style.color = '#17a2b8';
+    } else {
+        modeDisplay.textContent = '⏱️ Foco';
+        timerDisplay.style.color = 'var(--color-primary-dark)';
+    }
+    
+    playPauseBtn.textContent = pomodoroState.isRunning ? '⏸️' : '▶️';
 }
 
 function showBreakModal() {
@@ -333,20 +439,15 @@ function hideQuickActionsMenu() {
 
 function updateQuickActionsMenu() {
     const chatBtn = document.getElementById('chat-action-btn');
-    const pomodoroBtn = document.getElementById('pomodoro-action-btn');
     const currentView = getCurrentView();
     
-    // Desabilita ações durante flashcards e simulado
+    // Desabilita o chat durante flashcards e simulado
     if (currentView === 'flashcard-view' || currentView === 'simulado-etapa-view') {
         chatBtn.disabled = true;
-        pomodoroBtn.disabled = true;
-        chatBtn.title = "Ação não disponível durante flashcards ou simulado";
-        pomodoroBtn.title = "Ação não disponível durante flashcards ou simulado";
+        chatBtn.title = "Chat não disponível durante flashcards ou simulado";
     } else {
         chatBtn.disabled = false;
-        pomodoroBtn.disabled = false;
-        chatBtn.title = "Abrir Chat com Quackito";
-        pomodoroBtn.title = "Iniciar Pomodoro";
+        chatBtn.title = "Abrir Chat com Patolindo";
     }
 }
 
@@ -363,12 +464,10 @@ function updateQuickActionsButton() {
     const quickActionsBtn = document.getElementById('quick-actions-button');
     const currentView = getCurrentView();
     
-    // Mostra o botão apenas quando estiver em uma trilha ativa, exceto flashcards e simulado
-    const shouldShow = (currentView === 'roadmap-view' || 
+    // Mostra o botão apenas quando estiver em uma trilha ativa
+    const shouldShow = currentView === 'roadmap-view' || 
                       currentView === 'etapa-view' || 
-                      currentView === 'material-view') &&
-                      currentView !== 'flashcard-view' &&
-                      currentView !== 'simulado-etapa-view' &&
+                      currentView === 'material-view' ||
                       (currentUser.currentTrilhaIndex !== -1 && currentUser.trilhas.length > 0);
     
     quickActionsBtn.style.display = shouldShow ? 'block' : 'none';
@@ -773,7 +872,7 @@ function showChatView() {
     hideAllViews();
     window.scrollTo(0, 0); 
     viewMap["chat-view"].style.display = 'block';
-    resetQuackitoSession();
+    resetPatolindoSession();
     hideQuickActionsMenu();
 }
 
@@ -977,427 +1076,9 @@ async function gerarRoadmap() {
     }
 }
 
-// --- FUNÇÕES PARA FLASHCARDS, SIMULADOS E MATERIAIS ---
+// ... (restante das funções permanecem iguais) ...
 
-async function fetchAndRenderMaterial(topico, material) {
-    document.getElementById("material-titulo").innerText = `Material: ${topico}`;
-    const materialConteudo = document.getElementById("material-conteudo");
-    
-    materialConteudo.innerHTML = `
-        <div style="text-align: center; margin: 20px 0;">
-            <p><strong>Tópico:</strong> ${topico}</p>
-            <p>🔗 <a href="${material}" target="_blank" style="color: var(--color-primary);">Acessar Material Externo</a></p>
-        </div>
-        <div id="material-gerado">
-            <p>📖 Gerando explicação detalhada...</p>
-        </div>
-    `;
-
-    try {
-        const systemPrompt = `Você é um especialista educacional. Forneça uma explicação CLARA e DETALHADA sobre o tópico solicitado, usando linguagem acessível. Inclua exemplos práticos quando possível. Seja conciso mas completo.`;
-        
-        const response = await fetch(GROQ_ENDPOINT, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${API_KEY}`
-            },
-            body: JSON.stringify({
-                model: MODEL_NAME,
-                messages: [
-                    { role: "system", content: systemPrompt },
-                    { role: "user", content: `Explique detalhadamente: ${topico}` }
-                ],
-                temperature: 0.7
-            })
-        });
-
-        if (!response.ok) throw new Error(`Erro API: ${response.status}`);
-
-        const data = await response.json();
-        const explicacao = data?.choices?.[0]?.message?.content || "Não foi possível gerar a explicação no momento.";
-
-        // Converte markdown para HTML básico
-        const htmlExplicacao = explicacao
-            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-            .replace(/\n/g, '<br>');
-
-        document.getElementById("material-gerado").innerHTML = `
-            <div style="background: var(--color-light-yellow); padding: 20px; border-radius: 8px; border-left: 4px solid var(--color-primary);">
-                ${htmlExplicacao}
-            </div>
-        `;
-
-    } catch (err) {
-        console.error("Erro ao gerar material:", err);
-        document.getElementById("material-gerado").innerHTML = `
-            <p style="color: var(--color-danger);">⚠️ Erro ao carregar explicação. Você pode acessar o material externo pelo link acima.</p>
-        `;
-    }
-}
-
-async function fetchAndRenderFlashcards(topico) {
-    document.getElementById("flashcard-titulo").innerText = `Flashcards: ${topico}`;
-    const flashcardDisplay = document.getElementById("flashcard-display");
-    
-    flashcardDisplay.innerHTML = `
-        <div style="text-align: center; margin: 20px 0;">
-            <p>🦆 Gerando flashcards para: <strong>${topico}</strong></p>
-        </div>
-        <div id="flashcards-container">
-            <p>⏳ Criando seus flashcards...</p>
-        </div>
-    `;
-
-    try {
-        const systemPrompt = `Você é um especialista em criar flashcards educacionais. Crie 5 flashcards sobre o tópico fornecido. Cada flashcard deve ter:
-        - Frente: Uma pergunta ou conceito claro
-        - Verso: Resposta direta e explicativa
-        Formato JSON: {"flashcards": [{"frente": "Pergunta", "verso": "Resposta"}]}`;
-
-        const response = await fetch(GROQ_ENDPOINT, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${API_KEY}`
-            },
-            body: JSON.stringify({
-                model: MODEL_NAME,
-                messages: [
-                    { role: "system", content: systemPrompt },
-                    { role: "user", content: `Crie 5 flashcards sobre: ${topico}` }
-                ],
-                response_format: { type: "json_object" },
-                temperature: 0.7
-            })
-        });
-
-        if (!response.ok) throw new Error(`Erro API: ${response.status}`);
-
-        const data = await response.json();
-        let texto = data?.choices?.[0]?.message?.content || "";
-        
-        let parsed;
-        try {
-            parsed = JSON.parse(texto.trim());
-        } catch (e) {
-            const jsonMatch = texto.match(/\{[\s\S]*\}/);
-            if (!jsonMatch) throw new Error("Não foi possível extrair JSON dos flashcards.");
-            parsed = JSON.parse(jsonMatch[0]);
-        }
-
-        const flashcards = parsed.flashcards || [];
-        renderFlashcards(flashcards);
-
-    } catch (err) {
-        console.error("Erro ao gerar flashcards:", err);
-        flashcardDisplay.innerHTML = `
-            <div style="text-align: center; color: var(--color-danger);">
-                <p>⚠️ Erro ao gerar flashcards: ${err.message}</p>
-                <button onclick="showEtapaView(modalState.currentEtapa)" class="btn-secondary">Voltar</button>
-            </div>
-        `;
-    }
-}
-
-function renderFlashcards(flashcards) {
-    if (!flashcards || flashcards.length === 0) {
-        document.getElementById("flashcards-container").innerHTML = `
-            <p style="color: var(--color-danger);">Não foi possível gerar flashcards para este tópico.</p>
-        `;
-        return;
-    }
-
-    modalState.flashcards = flashcards;
-    modalState.currentFlashcardIndex = 0;
-
-    const container = document.getElementById("flashcards-container");
-    container.innerHTML = `
-        <div class="flashcard-mascote-container">
-            <div class="flashcard" id="flashcard-element">
-                <div class="flashcard-inner">
-                    <div class="flashcard-face flashcard-front">
-                        <h3>${flashcards[0].frente}</h3>
-                        <p style="margin-top: 20px; font-size: 0.9em; color: #666;">Clique para virar</p>
-                    </div>
-                    <div class="flashcard-face flashcard-back">
-                        <p>${flashcards[0].verso}</p>
-                    </div>
-                </div>
-            </div>
-            <img src="mascote.png" alt="Mascote Quackademy" class="mascote-flashcard">
-        </div>
-        <div class="flashcard-navigation">
-            <button class="btn-secondary" onclick="previousFlashcard()" id="btn-prev-flashcard" disabled>⬅ Anterior</button>
-            <span style="padding: 10px; font-weight: bold;">
-                ${modalState.currentFlashcardIndex + 1} / ${flashcards.length}
-            </span>
-            <button class="btn-primary" onclick="nextFlashcard()" id="btn-next-flashcard">
-                ${modalState.currentFlashcardIndex === flashcards.length - 1 ? 'Finalizar' : 'Próximo'} ➡
-            </button>
-        </div>
-    `;
-
-    // Adiciona evento de clique para virar o flashcard
-    const flashcardElement = document.getElementById('flashcard-element');
-    flashcardElement.addEventListener('click', function() {
-        this.classList.toggle('flipped');
-    });
-}
-
-function nextFlashcard() {
-    const flashcards = modalState.flashcards;
-    if (modalState.currentFlashcardIndex < flashcards.length - 1) {
-        modalState.currentFlashcardIndex++;
-        updateFlashcardDisplay();
-    } else {
-        // Finalizar flashcards
-        showEtapaView(modalState.currentEtapa);
-    }
-}
-
-function previousFlashcard() {
-    if (modalState.currentFlashcardIndex > 0) {
-        modalState.currentFlashcardIndex--;
-        updateFlashcardDisplay();
-    }
-}
-
-function updateFlashcardDisplay() {
-    const flashcards = modalState.flashcards;
-    const currentIndex = modalState.currentFlashcardIndex;
-    const flashcardElement = document.getElementById('flashcard-element');
-    
-    // Remove evento anterior
-    const newFlashcard = flashcardElement.cloneNode(true);
-    flashcardElement.parentNode.replaceChild(newFlashcard, flashcardElement);
-    
-    // Atualiza conteúdo
-    const front = newFlashcard.querySelector('.flashcard-front');
-    const back = newFlashcard.querySelector('.flashcard-back');
-    
-    front.innerHTML = `<h3>${flashcards[currentIndex].frente}</h3><p style="margin-top: 20px; font-size: 0.9em; color: #666;">Clique para virar</p>`;
-    back.innerHTML = `<p>${flashcards[currentIndex].verso}</p>`;
-    
-    // Adiciona evento de clique
-    newFlashcard.addEventListener('click', function() {
-        this.classList.toggle('flipped');
-    });
-    
-    // Atualiza navegação
-    document.getElementById('btn-prev-flashcard').disabled = currentIndex === 0;
-    document.getElementById('btn-next-flashcard').innerHTML = currentIndex === flashcards.length - 1 ? 'Finalizar ➡' : 'Próximo ➡';
-    document.querySelector('.flashcard-navigation span').textContent = `${currentIndex + 1} / ${flashcards.length}`;
-}
-
-async function fetchAndRenderSimuladoEtapa() {
-    const etapa = modalState.currentEtapa;
-    document.getElementById("simulado-etapa-titulo").innerText = `Simulado: ${etapa.titulo}`;
-    const simuladoConteudo = document.getElementById("simulado-etapa-conteudo");
-    
-    simuladoConteudo.innerHTML = `
-        <div style="text-align: center; margin: 20px 0;">
-            <p>🎯 Gerando simulado para a etapa: <strong>${etapa.titulo}</strong></p>
-            <p>Este simulado cobrirá todos os ${etapa.topicos.length} tópicos da etapa.</p>
-        </div>
-        <div id="simulado-gerado">
-            <p>⏳ Preparando questões...</p>
-        </div>
-    `;
-
-    try {
-        const systemPrompt = `Você é um especialista em criar avaliações educacionais. Crie um simulado com 10 questões de múltipla escolha sobre os tópicos fornecidos. Cada questão deve ter:
-        - Enunciado claro
-        - 4 alternativas (A, B, C, D)
-        - Apenas UMA resposta correta
-        - Dificuldade variada
-        Formato JSON: {"questoes": [{"enunciado": "Texto da questão", "alternativas": ["A) Alternativa A", "B) Alternativa B", "C) Alternativa C", "D) Alternativa D"], "resposta_correta": 0}]}`;
-
-        const topicosTexto = etapa.topicos.map(t => t.tópico).join(", ");
-        
-        const response = await fetch(GROQ_ENDPOINT, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${API_KEY}`
-            },
-            body: JSON.stringify({
-                model: MODEL_NAME,
-                messages: [
-                    { role: "system", content: systemPrompt },
-                    { role: "user", content: `Crie um simulado com 10 questões sobre: ${topicosTexto}` }
-                ],
-                response_format: { type: "json_object" },
-                temperature: 0.7
-            })
-        });
-
-        if (!response.ok) throw new Error(`Erro API: ${response.status}`);
-
-        const data = await response.json();
-        let texto = data?.choices?.[0]?.message?.content || "";
-        
-        let parsed;
-        try {
-            parsed = JSON.parse(texto.trim());
-        } catch (e) {
-            const jsonMatch = texto.match(/\{[\s\S]*\}/);
-            if (!jsonMatch) throw new Error("Não foi possível extrair JSON do simulado.");
-            parsed = JSON.parse(jsonMatch[0]);
-        }
-
-        const questoes = parsed.questoes || [];
-        modalState.simulado = questoes;
-        modalState.currentQuestionIndex = 0;
-        modalState.respostasSelecionadas = new Array(questoes.length).fill(null);
-        modalState.simuladoFinalizado = false;
-
-        renderSimuladoQuestao();
-
-    } catch (err) {
-        console.error("Erro ao gerar simulado:", err);
-        simuladoConteudo.innerHTML = `
-            <div style="text-align: center; color: var(--color-danger);">
-                <p>⚠️ Erro ao gerar simulado: ${err.message}</p>
-                <button onclick="showEtapaView(modalState.currentEtapa)" class="btn-secondary">Voltar à Etapa</button>
-            </div>
-        `;
-    }
-}
-
-function renderSimuladoQuestao() {
-    const simuladoConteudo = document.getElementById("simulado-etapa-conteudo");
-    const botoesDiv = document.getElementById("simulado-etapa-botoes");
-    
-    if (modalState.simuladoFinalizado) {
-        mostrarResultadoSimulado();
-        return;
-    }
-
-    const questaoAtual = modalState.simulado[modalState.currentQuestionIndex];
-    const respostaSelecionada = modalState.respostasSelecionadas[modalState.currentQuestionIndex];
-
-    simuladoConteudo.innerHTML = `
-        <div class="simulado-bloco">
-            <h3>Questão ${modalState.currentQuestionIndex + 1} de ${modalState.simulado.length}</h3>
-            <p><strong>${questaoAtual.enunciado}</strong></p>
-            <ul class="alternativas-list">
-                ${questaoAtual.alternativas.map((alt, index) => `
-                    <li class="alternativa ${respostaSelecionada === index ? 'selected' : ''}" 
-                        onclick="selecionarAlternativa(${index})">
-                        ${alt}
-                    </li>
-                `).join('')}
-            </ul>
-        </div>
-    `;
-
-    botoesDiv.innerHTML = `
-        <button class="btn-secondary" onclick="questaoAnterior()" ${modalState.currentQuestionIndex === 0 ? 'disabled' : ''}>
-            ⬅ Anterior
-        </button>
-        <button class="btn-primary" onclick="proximaQuestao()"}">
-            ${modalState.currentQuestionIndex === modalState.simulado.length - 1 ? 'Finalizar Simulado' : 'Próxima ➡'}
-        </button>
-    `;
-}
-
-function selecionarAlternativa(index) {
-    modalState.respostasSelecionadas[modalState.currentQuestionIndex] = index;
-    renderSimuladoQuestao();
-}
-
-function questaoAnterior() {
-    if (modalState.currentQuestionIndex > 0) {
-        modalState.currentQuestionIndex--;
-        renderSimuladoQuestao();
-    }
-}
-
-function proximaQuestao() {
-    if (modalState.currentQuestionIndex < modalState.simulado.length - 1) {
-        modalState.currentQuestionIndex++;
-        renderSimuladoQuestao();
-    } else {
-        // Última questão - finalizar simulado
-        modalState.simuladoFinalizado = true;
-        renderSimuladoQuestao();
-    }
-}
-
-function mostrarResultadoSimulado() {
-    const simuladoConteudo = document.getElementById("simulado-etapa-conteudo");
-    const botoesDiv = document.getElementById("simulado-etapa-botoes");
-    
-    let acertos = 0;
-    const resultados = modalState.simulado.map((questao, index) => {
-        const respostaUsuario = modalState.respostasSelecionadas[index];
-        const respostaCorreta = questao.resposta_correta;
-        const acertou = respostaUsuario === respostaCorreta;
-        if (acertou) acertos++;
-        
-        return {
-            questao: questao.enunciado,
-            respostaUsuario,
-            respostaCorreta,
-            acertou,
-            alternativas: questao.alternativas
-        };
-    });
-
-    const percentual = Math.round((acertos / modalState.simulado.length) * 100);
-    
-    let mensagem = "";
-    let emoji = "";
-    if (percentual >= 90) {
-        mensagem = "Excelente! Você dominou completamente o conteúdo! 🎉";
-        emoji = "🏆";
-    } else if (percentual >= 70) {
-        mensagem = "Muito bom! Você tem um bom entendimento do conteúdo! 👍";
-        emoji = "⭐";
-    } else if (percentual >= 50) {
-        mensagem = "Bom trabalho! Continue estudando para melhorar! 💪";
-        emoji = "📚";
-    } else {
-        mensagem = "Não desanime! Revise o material e tente novamente! 🔄";
-        emoji = "🦆";
-    }
-
-    simuladoConteudo.innerHTML = `
-        <div id="simulado-resultado">
-            <img src="mascote.png" alt="Mascote Quackademy" class="mascote-simulado">
-            <div class="resultado-texto">
-                <h3>${emoji} Resultado do Simulado</h3>
-                <p><strong>${acertos}</strong> acertos de <strong>${modalState.simulado.length}</strong> questões</p>
-                <p><strong>${percentual}%</strong> de aproveitamento</p>
-                <p>${mensagem}</p>
-            </div>
-        </div>
-        
-        <h3 style="margin-top: 30px;">📊 Revisão das Questões:</h3>
-        ${resultados.map((result, index) => `
-            <div class="simulado-bloco" style="border-left: 4px solid ${result.acertou ? 'var(--color-success)' : 'var(--color-danger)'};">
-                <h4>Questão ${index + 1} ${result.acertou ? '✅' : '❌'}</h4>
-                <p><strong>${result.questao}</strong></p>
-                <p><strong>Sua resposta:</strong> ${result.alternativas[result.respostaUsuario] || 'Não respondida'}</p>
-                ${!result.acertou ? `<p><strong>Resposta correta:</strong> ${result.alternativas[result.respostaCorreta]}</p>` : ''}
-            </div>
-        `).join('')}
-    `;
-
-    botoesDiv.innerHTML = `
-        <button class="btn-success" onclick="refazerSimulado()">🔄 Refazer Simulado</button>
-    `;
-}
-
-function refazerSimulado() {
-    modalState.currentQuestionIndex = 0;
-    modalState.respostasSelecionadas = new Array(modalState.simulado.length).fill(null);
-    modalState.simuladoFinalizado = false;
-    renderSimuladoQuestao();
-}
-
-// --- LÓGICA DO CHATBOT QUACKITO (COM RESTRIÇÃO DE TEMA E TUTORIA) ---
+// --- LÓGICA DO CHATBOT PATOLINDO (COM RESTRIÇÃO DE TEMA E TUTORIA) ---
 
 function updateSendButtonState() {
     const input = document.getElementById("chat-input");
@@ -1416,7 +1097,7 @@ function updateSendButtonState() {
     }
 }
 
-function resetQuackitoSession() {
+function resetPatolindoSession() {
     patolindoState.questionsLeft = 5;
     
     const currentTrilha = currentUser.trilhas[currentUser.currentTrilhaIndex];
@@ -1427,12 +1108,12 @@ function resetQuackitoSession() {
     // ⚠️ ATENÇÃO: INSTRUÇÃO DE TUTORIA E EXCEÇÃO INCLUÍDAS AQUI
     patolindoState.history = [{
         role: "system",
-        content: `Você é o Quackito, um assistente de estudos prestativo e didático. Sua função é responder a no máximo 5 perguntas do usuário. Sua **principal diretriz é guiar o usuário à resposta**, nunca a entregando de forma completa e direta. Transforme a resposta em uma dica ou uma pergunta instigante para fomentar o aprendizado ativo. **Você só deve fornecer a resposta completa e direta se o usuário solicitar explicitamente.** Seja conciso e focado. ${themeRestriction}`
+        content: `Você é o Patolindo, um assistente de estudos prestativo e didático. Sua função é responder a no máximo 5 perguntas do usuário. Sua **principal diretriz é guiar o usuário à resposta**, nunca a entregando de forma completa e direta. Transforme a resposta em uma dica ou uma pergunta instigante para fomentar o aprendizado ativo. **Você só deve fornecer a resposta completa e direta se o usuário solicitar explicitamente.** Seja conciso e focado. ${themeRestriction}`
     }]; 
 
     const chatMessages = document.getElementById("chat-messages");
     // APLICANDO A FORMATAÇÃO PARA A MENSAGEM INICIAL DE BOAS-VINDAS
-    const welcomeText = `Olá! Sou o Quackito. Você tem **${patolindoState.questionsLeft} perguntas** para tirar dúvidas sobre a sua trilha atual (**${theme || 'NENHUM TEMA'}**).`;
+    const welcomeText = `Olá! Sou o Patolindo. Você tem **${patolindoState.questionsLeft} perguntas** para tirar dúvidas sobre a sua trilha atual (**${theme || 'NENHUM TEMA'}**).`;
     const welcomeHtml = welcomeText.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\n/g, "<br>");
 
     chatMessages.innerHTML = `<p class="bot-message"><span class="bot-bubble">${welcomeHtml}</span></p>`;
@@ -1491,8 +1172,8 @@ async function handleChatSend() {
         }
         
     } catch (err) {
-        console.error("Erro no Quackito:", err);
-        appendMessage("Quackito: Desculpe, ocorreu um erro de comunicação. Tente novamente.", 'bot');
+        console.error("Erro no Patolindo:", err);
+        appendMessage("Patolindo: Desculpe, ocorreu um erro de comunicação. Tente novamente.", 'bot');
     } finally {
         sendButton.disabled = false;
         updateSendButtonState();
