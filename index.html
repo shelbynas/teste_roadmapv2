@@ -79,6 +79,22 @@
         <main class="container">
             <div id="main-content-area">
                 
+                <!-- Timer Pomodoro Flutuante (Movível) -->
+                <div id="pomodoro-floating-timer" class="pomodoro-floating-timer" style="display: none;">
+                    <div class="pomodoro-timer-content">
+                        <div class="pomodoro-header">
+                            <span id="pomodoro-mode">⏱️ Foco</span>
+                            <div class="pomodoro-drag-handle">⠿</div>
+                            <button class="pomodoro-close" onclick="hidePomodoroTimer()">×</button>
+                        </div>
+                        <div id="pomodoro-timer-display" class="pomodoro-time">25:00</div>
+                        <div class="pomodoro-controls-mini">
+                            <button id="btn-pomodoro-play-pause" onclick="togglePomodoro()">⏸️</button>
+                            <button id="btn-pomodoro-stop" onclick="stopPomodoro()">⏹️</button>
+                        </div>
+                    </div>
+                </div>
+
                 <div id="user-trilhas-view" class="content-view" style="display: none;">
                     <div id="user-trilhas-container">
                         <h2>Gerenciar Trilhas Salvas</h2>
@@ -189,7 +205,7 @@
                 <div id="chat-view" class="content-view" style="display: none;">
                     <div id="chat-container">
                         <div id="chat-header-view">
-                            Quackito - Seu Assistente de Estudos <span id="chat-counter">(5 Perguntas)</span>
+                            Patolindo - Seu Assistente de Estudos <span id="chat-counter">(5 Perguntas)</span>
                         </div>
                         <div id="chat-messages">
                             </div>
@@ -207,7 +223,7 @@
         </main>
     </div>
 
-    <!-- Botão de Ações Rápidas (aparece apenas quando em trilha, exceto flashcards e simulado) -->
+    <!-- Botão de Ações Rápidas (aparece apenas quando em trilha) -->
     <button id="quick-actions-button" class="quick-actions-button" title="Ações Rápidas" style="display: none;">
         ⚡
     </button>
@@ -221,9 +237,9 @@
         <div class="quick-actions-content">
             <button class="action-btn" onclick="showChatView()" id="chat-action-btn">
                 <span class="action-icon">💬</span>
-                <span class="action-text">Chat com Quackito</span>
+                <span class="action-text">Chat com Patolindo</span>
             </button>
-            <button class="action-btn" onclick="showPomodoroModal()" id="pomodoro-action-btn">
+            <button class="action-btn" onclick="showPomodoroModal()">
                 <span class="action-icon">⏱️</span>
                 <span class="action-text">Iniciar Pomodoro</span>
             </button>
