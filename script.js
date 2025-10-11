@@ -1,4 +1,3 @@
-
 // ===================================================
 // JAVASCRIPT INTEGRADO (script.js)
 // ===================================================
@@ -109,72 +108,6 @@ const preDefinedRoadmaps = [
 
 // --- FUNÇÕES POMODORO ---
 
-// Sistema de arrastar o timer
-function initializePomodoroDrag() {
-    const timer = document.getElementById('pomodoro-floating-timer');
-    let isDragging = false;
-    let currentX;
-    let currentY;
-    let initialX;
-    let initialY;
-    let xOffset = 0;
-    let yOffset = 0;
-
-    timer.addEventListener('mousedown', dragStart);
-    timer.addEventListener('touchstart', dragStart);
-    document.addEventListener('mouseup', dragEnd);
-    document.addEventListener('touchend', dragEnd);
-    document.addEventListener('mousemove', drag);
-    document.addEventListener('touchmove', drag);
-
-    function dragStart(e) {
-        if (e.type === "touchstart") {
-            initialX = e.touches[0].clientX - xOffset;
-            initialY = e.touches[0].clientY - yOffset;
-        } else {
-            initialX = e.clientX - xOffset;
-            initialY = e.clientY - yOffset;
-        }
-
-        if (e.target.classList.contains('pomodoro-header') || 
-            e.target.classList.contains('pomodoro-drag-handle') ||
-            e.target.closest('.pomodoro-header')) {
-            isDragging = true;
-            timer.classList.add('dragging');
-        }
-    }
-
-    function dragEnd(e) {
-        initialX = currentX;
-        initialY = currentY;
-        isDragging = false;
-        timer.classList.remove('dragging');
-    }
-
-    function drag(e) {
-        if (isDragging) {
-            e.preventDefault();
-            
-            if (e.type === "touchmove") {
-                currentX = e.touches[0].clientX - initialX;
-                currentY = e.touches[0].clientY - initialY;
-            } else {
-                currentX = e.clientX - initialX;
-                currentY = e.clientY - initialY;
-            }
-
-            xOffset = currentX;
-            yOffset = currentY;
-
-            setTranslate(currentX, currentY, timer);
-        }
-    }
-
-    function setTranslate(xPos, yPos, el) {
-        el.style.transform = `translate3d(${xPos}px, ${yPos}px, 0)`;
-    }
-}
-
 function showPomodoroModal() {
     hideQuickActionsMenu();
     const modal = document.getElementById('pomodoro-modal');
@@ -226,9 +159,8 @@ function startPomodoro() {
     pomodoroState.interval = setInterval(updatePomodoroTimer, 1000);
     updatePomodoroDisplay();
     
-    // Mostra o timer flutuante
-    showPomodoroTimer();
     closePomodoroModal();
+    showPomodoroNotification("⏱️ Pomodoro iniciado! Foco nos estudos!");
 }
 
 function pausePomodoro() {
@@ -237,7 +169,7 @@ function pausePomodoro() {
     pomodoroState.isRunning = false;
     clearInterval(pomodoroState.interval);
     updatePomodoroDisplay();
-    updateFloatingTimer();
+    showPomodoroNotification("⏸️ Pomodoro pausado");
 }
 
 function resetPomodoro() {
@@ -250,20 +182,7 @@ function resetPomodoro() {
     pomodoroState.timeLeft = pomodoroState.workTime;
     
     updatePomodoroDisplay();
-    updateFloatingTimer();
-}
-
-function togglePomodoro() {
-    if (pomodoroState.isRunning) {
-        pausePomodoro();
-    } else {
-        startPomodoro();
-    }
-}
-
-function stopPomodoro() {
-    resetPomodoro();
-    hidePomodoroTimer();
+    showPomodoroNotification("🔄 Pomodoro reiniciado");
 }
 
 function updatePomodoroTimer() {
@@ -289,41 +208,6 @@ function updatePomodoroTimer() {
     }
     
     updatePomodoroDisplay();
-    updateFloatingTimer();
-}
-
-function showPomodoroTimer() {
-    const floatingTimer = document.getElementById('pomodoro-floating-timer');
-    floatingTimer.style.display = 'block';
-    updateFloatingTimer();
-    
-    // Inicializa o sistema de arrastar
-    initializePomodoroDrag();
-}
-
-function hidePomodoroTimer() {
-    const floatingTimer = document.getElementById('pomodoro-floating-timer');
-    floatingTimer.style.display = 'none';
-}
-
-function updateFloatingTimer() {
-    const minutes = Math.floor(pomodoroState.timeLeft / 60);
-    const seconds = pomodoroState.timeLeft % 60;
-    const timerDisplay = document.getElementById('pomodoro-timer-display');
-    const modeDisplay = document.getElementById('pomodoro-mode');
-    const playPauseBtn = document.getElementById('btn-pomodoro-play-pause');
-    
-    timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-    
-    if (pomodoroState.isBreak) {
-        modeDisplay.textContent = '☕ Descanso';
-        timerDisplay.style.color = '#17a2b8';
-    } else {
-        modeDisplay.textContent = '⏱️ Foco';
-        timerDisplay.style.color = 'var(--color-primary-dark)';
-    }
-    
-    playPauseBtn.textContent = pomodoroState.isRunning ? '⏸️' : '▶️';
 }
 
 function showBreakModal() {
@@ -439,15 +323,20 @@ function hideQuickActionsMenu() {
 
 function updateQuickActionsMenu() {
     const chatBtn = document.getElementById('chat-action-btn');
+    const pomodoroBtn = document.getElementById('pomodoro-action-btn');
     const currentView = getCurrentView();
     
-    // Desabilita o chat durante flashcards e simulado
+    // Desabilita ações durante flashcards e simulado
     if (currentView === 'flashcard-view' || currentView === 'simulado-etapa-view') {
         chatBtn.disabled = true;
-        chatBtn.title = "Chat não disponível durante flashcards ou simulado";
+        pomodoroBtn.disabled = true;
+        chatBtn.title = "Ação não disponível durante flashcards ou simulado";
+        pomodoroBtn.title = "Ação não disponível durante flashcards ou simulado";
     } else {
         chatBtn.disabled = false;
-        chatBtn.title = "Abrir Chat com Patolindo";
+        pomodoroBtn.disabled = false;
+        chatBtn.title = "Abrir Chat com Quackito";
+        pomodoroBtn.title = "Iniciar Pomodoro";
     }
 }
 
@@ -464,10 +353,12 @@ function updateQuickActionsButton() {
     const quickActionsBtn = document.getElementById('quick-actions-button');
     const currentView = getCurrentView();
     
-    // Mostra o botão apenas quando estiver em uma trilha ativa
-    const shouldShow = currentView === 'roadmap-view' || 
+    // Mostra o botão apenas quando estiver em uma trilha ativa, exceto flashcards e simulado
+    const shouldShow = (currentView === 'roadmap-view' || 
                       currentView === 'etapa-view' || 
-                      currentView === 'material-view' ||
+                      currentView === 'material-view') &&
+                      currentView !== 'flashcard-view' &&
+                      currentView !== 'simulado-etapa-view' &&
                       (currentUser.currentTrilhaIndex !== -1 && currentUser.trilhas.length > 0);
     
     quickActionsBtn.style.display = shouldShow ? 'block' : 'none';
@@ -872,7 +763,7 @@ function showChatView() {
     hideAllViews();
     window.scrollTo(0, 0); 
     viewMap["chat-view"].style.display = 'block';
-    resetPatolindoSession();
+    resetQuackitoSession();
     hideQuickActionsMenu();
 }
 
@@ -1076,9 +967,9 @@ async function gerarRoadmap() {
     }
 }
 
-// ... (restante das funções permanecem iguais) ...
+// ... (restante das funções de conteúdo permanecem iguais) ...
 
-// --- LÓGICA DO CHATBOT PATOLINDO (COM RESTRIÇÃO DE TEMA E TUTORIA) ---
+// --- LÓGICA DO CHATBOT QUACKITO (COM RESTRIÇÃO DE TEMA E TUTORIA) ---
 
 function updateSendButtonState() {
     const input = document.getElementById("chat-input");
@@ -1097,7 +988,7 @@ function updateSendButtonState() {
     }
 }
 
-function resetPatolindoSession() {
+function resetQuackitoSession() {
     patolindoState.questionsLeft = 5;
     
     const currentTrilha = currentUser.trilhas[currentUser.currentTrilhaIndex];
@@ -1108,12 +999,12 @@ function resetPatolindoSession() {
     // ⚠️ ATENÇÃO: INSTRUÇÃO DE TUTORIA E EXCEÇÃO INCLUÍDAS AQUI
     patolindoState.history = [{
         role: "system",
-        content: `Você é o Patolindo, um assistente de estudos prestativo e didático. Sua função é responder a no máximo 5 perguntas do usuário. Sua **principal diretriz é guiar o usuário à resposta**, nunca a entregando de forma completa e direta. Transforme a resposta em uma dica ou uma pergunta instigante para fomentar o aprendizado ativo. **Você só deve fornecer a resposta completa e direta se o usuário solicitar explicitamente.** Seja conciso e focado. ${themeRestriction}`
+        content: `Você é o Quackito, um assistente de estudos prestativo e didático. Sua função é responder a no máximo 5 perguntas do usuário. Sua **principal diretriz é guiar o usuário à resposta**, nunca a entregando de forma completa e direta. Transforme a resposta em uma dica ou uma pergunta instigante para fomentar o aprendizado ativo. **Você só deve fornecer a resposta completa e direta se o usuário solicitar explicitamente.** Seja conciso e focado. ${themeRestriction}`
     }]; 
 
     const chatMessages = document.getElementById("chat-messages");
     // APLICANDO A FORMATAÇÃO PARA A MENSAGEM INICIAL DE BOAS-VINDAS
-    const welcomeText = `Olá! Sou o Patolindo. Você tem **${patolindoState.questionsLeft} perguntas** para tirar dúvidas sobre a sua trilha atual (**${theme || 'NENHUM TEMA'}**).`;
+    const welcomeText = `Olá! Sou o Quackito. Você tem **${patolindoState.questionsLeft} perguntas** para tirar dúvidas sobre a sua trilha atual (**${theme || 'NENHUM TEMA'}**).`;
     const welcomeHtml = welcomeText.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\n/g, "<br>");
 
     chatMessages.innerHTML = `<p class="bot-message"><span class="bot-bubble">${welcomeHtml}</span></p>`;
@@ -1172,8 +1063,8 @@ async function handleChatSend() {
         }
         
     } catch (err) {
-        console.error("Erro no Patolindo:", err);
-        appendMessage("Patolindo: Desculpe, ocorreu um erro de comunicação. Tente novamente.", 'bot');
+        console.error("Erro no Quackito:", err);
+        appendMessage("Quackito: Desculpe, ocorreu um erro de comunicação. Tente novamente.", 'bot');
     } finally {
         sendButton.disabled = false;
         updateSendButtonState();
