@@ -79,12 +79,11 @@
         <main class="container">
             <div id="main-content-area">
                 
-                <!-- Timer Pomodoro Flutuante (Movível) -->
+                <!-- Timer Pomodoro Flutuante -->
                 <div id="pomodoro-floating-timer" class="pomodoro-floating-timer" style="display: none;">
                     <div class="pomodoro-timer-content">
                         <div class="pomodoro-header">
                             <span id="pomodoro-mode">⏱️ Foco</span>
-                            <div class="pomodoro-drag-handle">⠿</div>
                             <button class="pomodoro-close" onclick="hidePomodoroTimer()">×</button>
                         </div>
                         <div id="pomodoro-timer-display" class="pomodoro-time">25:00</div>
@@ -223,8 +222,8 @@
         </main>
     </div>
 
-    <!-- Botão de Ações Rápidas (aparece apenas quando em trilha) -->
-    <button id="quick-actions-button" class="quick-actions-button" title="Ações Rápidas" style="display: none;">
+    <!-- Botão de Ações Rápidas (substitui o botão do chat) -->
+    <button id="quick-actions-button" class="quick-actions-button" title="Ações Rápidas">
         ⚡
     </button>
 
@@ -235,7 +234,7 @@
             <button class="close-actions" onclick="hideQuickActionsMenu()">×</button>
         </div>
         <div class="quick-actions-content">
-            <button class="action-btn" onclick="showChatView()" id="chat-action-btn">
+            <button class="action-btn" onclick="showChatView()">
                 <span class="action-icon">💬</span>
                 <span class="action-text">Chat com Patolindo</span>
             </button>
