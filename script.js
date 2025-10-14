@@ -5,7 +5,7 @@
 // ===================================================
 
 // ⚠️ ATENÇÃO: CHAVE DA API ATUALIZADA AQUI
-const API_KEY = "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"; 
+const API_KEY = "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"; 
 
 const GROQ_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions";
 const MODEL_NAME = "llama-3.1-8b-instant"; 
