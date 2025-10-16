@@ -5,24 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quackademy - Trilha de Estudos</title>
     <link rel="icon" href="favicon.ico"> 
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css"> 
 </head>
 <body>
     
     <section id="login-screen" class="full-screen-message" style="display: flex;">
         <div class="message-card">
             <img src="mascote_inicial.png" alt="Mascote Quackademy, o Pato" class="mascote-welcome">
-            
             <h2>👋 Entre ou Crie sua Conta</h2>
             <p>Faça login para salvar suas trilhas de estudo e gerenciar seu progresso.</p>
-
             <form id="login-form">
                 <label for="username">Nome de Usuário:</label>
                 <input type="text" id="username" placeholder="Seu nome de usuário" required>
-                
                 <label for="password">Senha (Apenas para Simulação):</label>
                 <input type="password" id="password" placeholder="Sua senha (protótipo)" required>
-
                 <div class="login-actions">
                     <button type="submit" id="btnAuthSubmit" class="btn-primary">Entrar / Cadastrar</button>
                     <button type="button" id="btnSkipLogin" class="btn-secondary">Pular Login (Modo Convidado)</button>
@@ -35,8 +31,7 @@
     <section id="welcome-screen" class="full-screen-message" style="display: none;">
         <div class="message-card">
             <img src="mascote_inicial.png" alt="Mascote Quackademy, o Pato" class="mascote-welcome">
-            
-            <h2>🦆 Bem-vindo ao Quackademy! </h2>
+            <h2>🦆 Bem-vindo ao Quackademy!</h2>
             <p>Pare de se afogar em tutoriais soltos. Nós transformamos o caos do aprendizado online em uma <strong>trilha de estudos estruturada e à prova de procrastinação</strong>.</p>
             <button id="btnWelcomeContinue" class="btn-primary">Descubra como</button>
         </div>
@@ -46,17 +41,13 @@
         <div class="message-card">
             <h2>Sua Jornada de Aprendizado Personalizada</h2>
             <div style="text-align: left; margin: 20px 0;">
-                
                 <h3>🧠 O Nosso Propósito</h3>
-                <p>
-                    A <strong>Quackademy</strong> foi criada para você que está cansado de apenas copiar e colar. Usamos a IA para criar um plano de estudos único, focado em <strong>atividades práticas</strong> e no <strong>entendimento real</strong>.
-                </p>
-                
+                <p>A <strong>Quackademy</strong> foi criada para você que está cansado de apenas copiar e colar. Usamos a IA para criar um plano de estudos único, focado em <strong>atividades práticas</strong> e no <strong>entendimento real</strong>.</p>
                 <h3>⚙️ Como Funciona Nossa Trilha</h3>
                 <ul>
-                    <li>**Trilhas Guiadas:** Você informa o tema e o nível, e nossa IA gera um plano de 10+ Etapas personalizadas.</li>
-                    <li>**Flashcards:** Use <b>flashcards por tópico</b> para memorizar conceitos chave rapidamente.</li>
-                    <li>**Simulado de Etapa:** Faça um <b>simulado completo por etapa</b> (20+ questões) para testar sua aplicação do conteúdo.</li>
+                    <li><strong>Trilhas Guiadas:</strong> Você informa o tema e o nível, e nossa IA gera um plano de 10+ Etapas personalizadas.</li>
+                    <li><strong>Flashcards:</strong> Use <b>flashcards por tópico</b> para memorizar conceitos chave rapidamente.</li>
+                    <li><strong>Simulado de Etapa:</strong> Faça um <b>simulado completo por etapa</b> (20+ questões) para testar sua aplicação do conteúdo.</li>
                 </ul>
             </div>
             <button id="btnExplanationContinue" class="btn-primary">Ver Cursos Rápidos 🚀</button>
@@ -70,35 +61,17 @@
                     <h1>Quackademy Trilha de Estudos</h1>
                     <p>Usuário: <span id="userNameDisplay">Carregando...</span></p>
                 </div>
-                <div class="header-controls">
-                    <button id="btnMinhasTrilhas" onclick="showUserTrilhasView()">Minhas Trilhas (0)</button>
-                </div>
+                <button id="btnMinhasTrilhas" onclick="showUserTrilhasView()">Minhas Trilhas (0)</button>
             </div>
         </header>
 
         <main class="container">
-            <div id="main-content-area">
+            <div id="main-content-area" role="main" aria-live="polite" tabindex="-1">
                 
-                <!-- Timer Pomodoro Flutuante -->
-                <div id="pomodoro-floating-timer" class="pomodoro-floating-timer" style="display: none;">
-                    <div class="pomodoro-timer-content">
-                        <div class="pomodoro-header">
-                            <span id="pomodoro-mode">⏱️ Foco</span>
-                            <button class="pomodoro-close" onclick="hidePomodoroTimer()">×</button>
-                        </div>
-                        <div id="pomodoro-timer-display" class="pomodoro-time">25:00</div>
-                        <div class="pomodoro-controls-mini">
-                            <button id="btn-pomodoro-play-pause" onclick="togglePomodoro()">⏸️</button>
-                            <button id="btn-pomodoro-stop" onclick="stopPomodoro()">⏹️</button>
-                        </div>
-                    </div>
-                </div>
-
                 <div id="user-trilhas-view" class="content-view" style="display: none;">
                     <div id="user-trilhas-container">
                         <h2>Gerenciar Trilhas Salvas</h2>
-                        <div id="trilhas-list">
-                            </div>
+                        <div id="trilhas-list"></div>
                         <div class="modal-actions">
                             <button onclick="showPreDefinedCoursesView()" class="btn-success">➕ Criar Nova Trilha</button>
                         </div>
@@ -109,10 +82,7 @@
                     <div id="predefined-courses-container">
                         <h2>Escolha um Curso Rápido</h2>
                         <p>Selecione um curso pré-definido abaixo para começar imediatamente ou crie a sua trilha personalizada.</p>
-                        
-                        <div id="predefined-courses-list">
-                            </div>
-
+                        <div id="predefined-courses-list"></div>
                         <button onclick="showFormView()" class="btn-primary btn-custom-create">💡 Criar Trilha Personalizada (Usar IA)</button>
                     </div>
                 </div>
@@ -120,25 +90,20 @@
                 <div id="form-view" class="content-view" style="display: none;">
                     <div class="controles">
                         <div class="mascote-area">
-                             <img src="mascote.png" alt="Mascote Quackademy" class="mascote">
+                            <img src="mascote.png" alt="Mascote Quackademy" class="mascote">
                             <h2>Defina seu Desafio (Via IA)</h2>
                         </div>
-                        
                         <label for="tema">Tema ou Tecnologia:</label>
                         <input type="text" id="tema" placeholder="Ex: Programação Python, Cloud Computing, etc." required>
-                        
                         <label for="nivel">Nível de Dificuldade:</label>
                         <select id="nivel">
                             <option value="Iniciante">Iniciante</option>
                             <option value="Intermediário">Intermediário</option>
                             <option value="Avançado">Avançado</option>
                         </select>
-                        
                         <label for="objetivo">Objetivo Específico (Opcional):</label>
                         <textarea id="objetivo" placeholder="Ex: Aprender a criar um backend com Node.js e Express."></textarea>
-                        
                         <button id="btnGerar" class="btn-primary">Gerar Trilha 🚀</button>
-                        
                         <div class="modal-actions">
                             <button onclick="showPreDefinedCoursesView()" class="btn-secondary" style="width: auto;">⬅ Voltar aos Cursos Prontos</button>
                         </div>
@@ -148,11 +113,9 @@
                 <div id="roadmap-view" class="content-view" style="display: none;">
                     <div id="roadmap-container">
                         <h2 id="roadmap-title">Sua Trilha de Estudos</h2>
-                        <div id="roadmap" class="roadmap-grid">
-                            <p class="placeholder-text">Preencha o formulário e gere sua primeira trilha!</p>
-                        </div>
+                        <div id="roadmap" class="roadmap-grid"></div>
                         <div class="modal-actions" style="text-align: right;">
-                             <button onclick="showUserTrilhasView()" class="btn-secondary" style="width: auto;">⬅ Voltar a Minhas Trilhas</button>
+                            <button onclick="showUserTrilhasView()" class="btn-secondary" style="width: auto;">⬅ Voltar a Minhas Trilhas</button>
                         </div>
                     </div>
                 </div>
@@ -180,21 +143,18 @@
                 <div id="flashcard-view" class="content-view" style="display: none;">
                     <div id="flashcard-container">
                         <h2 id="flashcard-titulo"></h2>
-                        <div id="flashcard-display">
-                            </div>
+                        <div id="flashcard-display"></div>
                         <div class="modal-actions">
                             <button id="btnFlashcardVoltar" class="btn-secondary">⬅ Voltar à Etapa</button>
                         </div>
                     </div>
                 </div>
-
+                
                 <div id="simulado-etapa-view" class="content-view" style="display: none;">
                     <div id="simulado-etapa-container">
                         <h2 id="simulado-etapa-titulo"></h2>
-                        <div id="simulado-etapa-conteudo">
-                            </div>
-                        <div id="simulado-etapa-botoes" class="modal-actions">
-                            </div>
+                        <div id="simulado-etapa-conteudo"></div>
+                        <div id="simulado-etapa-botoes" class="modal-actions"></div>
                         <div class="modal-actions">
                             <button id="btnSimuladoEtapaVoltar" class="btn-secondary">⬅ Voltar à Etapa</button>
                         </div>
@@ -204,10 +164,9 @@
                 <div id="chat-view" class="content-view" style="display: none;">
                     <div id="chat-container">
                         <div id="chat-header-view">
-                            Patolindo - Seu Assistente de Estudos <span id="chat-counter">(5 Perguntas)</span>
+                            Quackito - Seu Assistente de Estudos <span id="chat-counter">(5 Perguntas)</span>
                         </div>
-                        <div id="chat-messages">
-                            </div>
+                        <div id="chat-messages"></div>
                         <div id="chat-input-area">
                             <input type="text" id="chat-input" placeholder="Sua pergunta..." disabled>
                             <button id="chat-send-button" disabled>Enviar</button>
@@ -217,87 +176,64 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </main>
     </div>
 
-    <!-- Botão de Ações Rápidas (substitui o botão do chat) -->
-    <button id="quick-actions-button" class="quick-actions-button" title="Ações Rápidas">
-        ⚡
-    </button>
+    <button id="chat-button" aria-label="Abrir Chatbot Quackito">🦆</button>
+    <button id="pomodoro-button" aria-label="Abrir timer Pomodoro">⏰</button>
 
-    <!-- Menu de Ações Rápidas -->
-    <div id="quick-actions-menu" class="quick-actions-menu" style="display: none;">
-        <div class="quick-actions-header">
-            <h3>Ações Rápidas</h3>
-            <button class="close-actions" onclick="hideQuickActionsMenu()">×</button>
-        </div>
-        <div class="quick-actions-content">
-            <button class="action-btn" onclick="showChatView()">
-                <span class="action-icon">💬</span>
-                <span class="action-text">Chat com Patolindo</span>
-            </button>
-            <button class="action-btn" onclick="showPomodoroModal()">
-                <span class="action-icon">⏱️</span>
-                <span class="action-text">Iniciar Pomodoro</span>
-            </button>
-        </div>
-    </div>
-
-    <!-- Modal Pomodoro -->
-    <div id="pomodoro-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>⏱️ Timer Pomodoro</h2>
-                <span class="close" onclick="closePomodoroModal()">&times;</span>
+    <div id="pomodoro-modal" style="display: none;">
+        <div class="pomodoro-content">
+            <div class="pomodoro-header">
+                <h3>Timer Pomodoro</h3>
+                <span class="pomodoro-close-btn" onclick="closePomodoroModal()">&times;</span>
             </div>
-            <div class="modal-body">
-                <div class="pomodoro-controls">
-                    <div class="time-inputs">
-                        <label for="work-time">Tempo de Foco (minutos):</label>
-                        <input type="number" id="work-time" min="1" max="60" value="25">
-                        
-                        <label for="break-time">Tempo de Descanso (minutos):</label>
-                        <input type="number" id="break-time" min="1" max="30" value="5">
-                    </div>
-                    
-                    <div class="timer-display">
-                        <div id="pomodoro-timer" class="timer">25:00</div>
-                        <div id="pomodoro-status" class="status">Pronto para começar</div>
-                    </div>
-                    
-                    <div class="timer-controls">
-                        <button id="btn-start-pomodoro" class="btn-primary" onclick="startPomodoro()">Iniciar Pomodoro</button>
-                        <button id="btn-pause-pomodoro" class="btn-secondary" onclick="pausePomodoro()" disabled>Pausar</button>
-                        <button id="btn-reset-pomodoro" class="btn-secondary" onclick="resetPomodoro()">Reiniciar</button>
-                    </div>
-                </div>
+            <div id="time-display">25:00</div>
+            <div class="pomodoro-status" id="pomodoro-status">Foco</div>
+            <div class="pomodoro-controls">
+                <button id="start-pause-btn" onclick="startPauseTimer()">Iniciar</button>
+                <button id="reset-btn" onclick="resetTimer()">Resetar</button>
+                <button id="config-btn" onclick="openConfigModal()">⚙️ Configurar</button>
             </div>
         </div>
     </div>
 
-    <!-- Modal de Descanso Obrigatório -->
-    <div id="break-modal" class="modal break-modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>🕒 Hora do Descanso!</h2>
+    <div id="config-modal" style="display: none;">
+        <div class="pomodoro-content config-content">
+             <div class="pomodoro-header">
+                <h3>Configurações</h3>
+                <span class="pomodoro-close-btn" onclick="closeConfigModal()">&times;</span>
             </div>
-            <div class="modal-body">
-                <div class="break-content">
-                    <div class="break-icon">☕</div>
-                    <p><strong>Tempo de foco terminou!</strong></p>
-                    <p>É hora de descansar. Faça uma pausa de <span id="break-duration">5</span> minutos.</p>
-                    <p>O timer continuará contando e você não poderá voltar aos estudos até o descanso terminar.</p>
-                    <div id="break-timer" class="timer break-timer">05:00</div>
-                    <div class="break-actions">
-                        <button class="btn-primary" onclick="closeBreakModal()" id="btn-break-continue" disabled>Continuar Estudando</button>
-                    </div>
-                </div>
+            <div class="setting-item">
+                <label for="work-duration">Foco (minutos):</label>
+                <input type="number" id="work-duration" value="25" min="1" max="60">
             </div>
+            <div class="setting-item">
+                <label for="short-break-duration">Pausa Curta (minutos):</label>
+                <input type="number" id="short-break-duration" value="5" min="1" max="30">
+            </div>
+            <div class="setting-item">
+                <label for="long-break-duration">Pausa Longa (minutos):</label>
+                <input type="number" id="long-break-duration" value="15" min="1" max="60">
+            </div>
+            <div class="setting-item">
+                <label for="session-count">Sessões até Pausa Longa:</label>
+                <input type="number" id="session-count" value="4" min="1" max="10">
+            </div>
+            
+            <button onclick="saveConfig()" class="btn-success">Salvar Configurações</button>
         </div>
     </div>
-
+    
+    <div id="break-modal" class="full-screen-message" style="display: none;">
+        <div class="message-card">
+            <h2 id="modal-title">🚨 HORA DA PAUSA! 🚨</h2>
+            <p id="modal-message">Seu tempo de estudo acabou. Descanse a mente!</p>
+            <button id="btnContinueBreak" class="btn-success">Entendi!</button>
+        </div>
+    </div>
+    
     <script src="script.js"></script>
 </body>
 </html>
