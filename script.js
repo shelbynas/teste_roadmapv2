@@ -1268,7 +1268,145 @@ async function fetchAndRenderFlashcards(topico) {
         flashcardDisplay.innerHTML = `<p>⚠️ Erro ao gerar flashcards. Causa: ${err.message}.</p>`;
     }
 }
+// Adicionar ao script.js existente - melhorias de UX mobile
 
+// Detectar dispositivo móvel
+function isMobileDevice() {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+           window.innerWidth <= 768;
+}
+
+// Melhorar experiência de touch
+function enhanceTouchExperience() {
+    // Aumentar área de toque para elementos interativos
+    const interactiveElements = document.querySelectorAll('button, .bloco, .course-card, .material-btn, .alternativa');
+    
+    interactiveElements.forEach(element => {
+        element.style.touchAction = 'manipulation';
+        element.addEventListener('touchstart', function() {
+            this.style.transform = 'scale(0.98)';
+        });
+        element.addEventListener('touchend', function() {
+            this.style.transform = 'scale(1)';
+        });
+    });
+}
+
+// Prevenir zoom em inputs (melhoria de UX mobile)
+function preventZoomOnInput() {
+    const inputs = document.querySelectorAll('input, textarea, select');
+    inputs.forEach(input => {
+        input.addEventListener('focus', function() {
+            this.style.fontSize = '16px'; // Prevenir zoom no iOS
+        });
+    });
+}
+
+// Otimizar scroll para mobile
+function optimizeMobileScroll() {
+    // Suavizar scroll em containers com overflow
+    const scrollContainers = document.querySelectorAll('#chat-messages, .modal-body');
+    scrollContainers.forEach(container => {
+        container.style.webkitOverflowScrolling = 'touch';
+    });
+}
+
+// Inicializar melhorias mobile quando o DOM estiver carregado
+document.addEventListener('DOMContentLoaded', function() {
+    enhanceTouchExperience();
+    preventZoomOnInput();
+    optimizeMobileScroll();
+    
+    // Ajustar altura da viewport em mobile
+    function setViewportHeight() {
+        let vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty('--vh', `${vh}px`);
+    }
+    
+    setViewportHeight();
+    window.addEventListener('resize', setViewportHeight);
+    window.addEventListener('orientationchange', setViewportHeight);
+});
+
+// Melhorar o sistema de arraste do Pomodoro para touch
+function initializePomodoroDrag() {
+    const timer = document.getElementById('pomodoro-floating-timer');
+    if (!timer) return;
+    
+    let isDragging = false;
+    let currentX, currentY, initialX, initialY, xOffset = 0, yOffset = 0;
+
+    timer.classList.add('draggable');
+
+    // Eventos para mouse
+    timer.addEventListener('mousedown', dragStart);
+    document.addEventListener('mouseup', dragEnd);
+    document.addEventListener('mousemove', drag);
+
+    // Eventos para touch
+    timer.addEventListener('touchstart', function(e) {
+        dragStart(e);
+        e.preventDefault(); // Prevenir scroll durante arraste
+    }, { passive: false });
+    
+    document.addEventListener('touchend', dragEnd);
+    document.addEventListener('touchmove', function(e) {
+        drag(e);
+        e.preventDefault(); // Prevenir scroll durante arraste
+    }, { passive: false });
+
+    function dragStart(e) {
+        if (e.type === "touchstart") {
+            initialX = e.touches[0].clientX - xOffset;
+            initialY = e.touches[0].clientY - yOffset;
+        } else {
+            initialX = e.clientX - xOffset;
+            initialY = e.clientY - yOffset;
+        }
+
+        if (e.target.classList.contains('pomodoro-header') || 
+            e.target.closest('.pomodoro-header')) {
+            isDragging = true;
+            timer.classList.add('dragging');
+        }
+    }
+
+    function dragEnd() {
+        initialX = currentX;
+        initialY = currentY;
+        isDragging = false;
+        timer.classList.remove('dragging');
+        savePomodoroPosition();
+    }
+
+    function drag(e) {
+        if (isDragging) {
+            if (e.type === "touchmove") {
+                currentX = e.touches[0].clientX - initialX;
+                currentY = e.touches[0].clientY - initialY;
+            } else {
+                currentX = e.clientX - initialX;
+                currentY = e.clientY - initialY;
+            }
+
+            xOffset = currentX;
+            yOffset = currentY;
+
+            // Limitar movimento dentro da tela
+            const maxX = window.innerWidth - timer.offsetWidth;
+            const maxY = window.innerHeight - timer.offsetHeight;
+            
+            currentX = Math.max(0, Math.min(currentX, maxX));
+            currentY = Math.max(0, Math.min(currentY, maxY));
+
+            setTranslate(currentX, currentY, timer);
+        }
+    }
+
+    function setTranslate(xPos, yPos, el) {
+        el.style.transform = `translate3d(${xPos}px, ${yPos}px, 0)`;
+    }
+}
 function renderFlashcard() {
     const flashcardDisplay = document.getElementById("flashcard-display");
     
