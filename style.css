@@ -1482,3 +1482,705 @@ main {
         flex-direction: row;
     }
 }
+/* ===================================================
+// CSS ATUALIZADO COM MELHORIAS DE RESPONSIVIDADE
+// =================================================== */
+
+/* --- Variáveis de Cor (Paleta Amarela) --- */
+:root {
+    --color-primary: #FFC107;
+    --color-primary-dark: #E0A800;
+    --color-secondary: #343A40;
+    --color-background: #F8F9FA;
+    --color-card: #FFFFFF;
+    --color-success: #28A745;
+    --color-danger: #DC3545;
+    --color-light-yellow: #FFFBEA;
+    --color-category: #495057;
+    
+    /* Novas variáveis para responsividade */
+    --container-padding: clamp(1rem, 3vw, 2rem);
+    --font-size-base: clamp(0.9rem, 2.5vw, 1rem);
+    --font-size-lg: clamp(1.1rem, 3vw, 1.25rem);
+    --font-size-xl: clamp(1.5rem, 4vw, 2rem);
+    --font-size-xxl: clamp(1.8rem, 5vw, 2.5rem);
+    --border-radius: clamp(0.5rem, 1.5vw, 0.75rem);
+}
+
+/* --- Reset e Estilos Base Melhorados --- */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--color-background);
+    color: var(--color-secondary);
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+    font-size: var(--font-size-base);
+}
+
+.container {
+    width: min(95%, 1200px);
+    margin: 0 auto;
+    padding: 0 var(--container-padding);
+}
+
+/* --- ESTILOS DAS TELAS INICIAIS OTIMIZADOS --- */
+.full-screen-message {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    min-height: 100dvh; /* Nova unidade para mobile */
+    width: 100%;
+    background-color: var(--color-background);
+    text-align: center;
+    padding: var(--container-padding);
+}
+
+.message-card {
+    background-color: var(--color-card);
+    padding: clamp(1.5rem, 4vw, 2.5rem);
+    border-radius: var(--border-radius);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    max-width: min(500px, 90vw);
+    width: 100%;
+}
+
+.mascote-welcome {
+    width: min(200px, 40vw);
+    height: min(200px, 40vw);
+    border-radius: 0;
+    object-fit: contain;
+    margin-bottom: clamp(1rem, 3vw, 1.25rem);
+    border: none;
+    background-color: transparent;
+}
+
+.message-card h2 {
+    color: var(--color-primary-dark);
+    font-size: var(--font-size-xxl);
+    margin-top: clamp(0.5rem, 2vw, 0.625rem);
+    margin-bottom: clamp(1rem, 3vw, 1.25rem);
+    line-height: 1.3;
+}
+
+/* --- Formulário de Login Responsivo --- */
+#login-form {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.75rem, 2vw, 0.9375rem);
+    margin-top: clamp(1rem, 3vw, 1.25rem);
+}
+
+#login-form label {
+    text-align: left;
+    font-weight: bold;
+    font-size: var(--font-size-base);
+}
+
+#login-form input {
+    padding: clamp(0.75rem, 2vw, 0.9375rem);
+    border: 1px solid #ccc;
+    border-radius: var(--border-radius);
+    font-size: var(--font-size-base);
+    width: 100%;
+}
+
+.login-actions {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.5rem, 1.5vw, 0.625rem);
+    margin-top: clamp(1rem, 3vw, 1.25rem);
+}
+
+/* --- Header Responsivo --- */
+header {
+    background-color: var(--color-primary);
+    color: var(--color-secondary);
+    padding: clamp(1rem, 3vw, 1.25rem) 0;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.header-content {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.75rem, 2vw, 1rem);
+    align-items: center;
+    width: min(95%, 1200px);
+    margin: 0 auto;
+    padding: 0 var(--container-padding);
+}
+
+.header-info {
+    text-align: center;
+    width: 100%;
+}
+
+header h1 {
+    margin: 0;
+    font-size: var(--font-size-xl);
+    font-weight: 900;
+    line-height: 1.2;
+}
+
+header p {
+    margin: clamp(0.25rem, 1vw, 0.3125rem) 0 0;
+    font-size: var(--font-size-base);
+}
+
+.header-controls {
+    display: flex;
+    gap: clamp(0.5rem, 1.5vw, 0.625rem);
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+/* Botão Minhas Trilhas Responsivo */
+#btnMinhasTrilhas {
+    background-color: var(--color-primary-dark);
+    color: white;
+    border: none;
+    padding: clamp(0.75rem, 2vw, 0.9375rem) clamp(1rem, 2.5vw, 1.25rem);
+    border-radius: var(--border-radius);
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    font-size: var(--font-size-base);
+    white-space: nowrap;
+    min-height: 44px; /* Tamanho mínimo para touch */
+}
+
+main {
+    padding: clamp(1rem, 3vw, 1.25rem) 0;
+}
+
+/* --- Controles (Formulário) Responsivo --- */
+.controles {
+    background-color: var(--color-card);
+    padding: clamp(1rem, 3vw, 1.25rem);
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    width: 100%;
+    max-width: min(500px, 90vw);
+    height: fit-content;
+}
+
+.mascote-area {
+    text-align: center;
+    margin-bottom: clamp(1rem, 3vw, 1.25rem);
+    padding-bottom: clamp(0.75rem, 2vw, 0.9375rem);
+    border-bottom: 1px solid #eee;
+}
+
+.mascote {
+    width: min(120px, 25vw);
+    height: min(120px, 25vw);
+    border-radius: calc(var(--border-radius) * 0.8);
+    object-fit: contain;
+    margin-bottom: clamp(0.5rem, 1.5vw, 0.625rem);
+}
+
+.controles h2 {
+    color: var(--color-secondary);
+    font-size: var(--font-size-lg);
+    margin-top: 0;
+    line-height: 1.3;
+}
+
+.controles label {
+    display: block;
+    margin-top: clamp(1rem, 3vw, 1.25rem);
+    margin-bottom: clamp(0.5rem, 1.5vw, 0.625rem);
+    font-weight: bold;
+    color: var(--color-secondary);
+    font-size: var(--font-size-base);
+}
+
+.controles input[type="text"],
+.controles select,
+.controles textarea {
+    width: 100%;
+    padding: clamp(0.75rem, 2vw, 0.9375rem);
+    border: 1px solid #ccc;
+    border-radius: var(--border-radius);
+    resize: vertical;
+    font-size: var(--font-size-base);
+    background-color: white;
+    color: var(--color-secondary);
+    min-height: 44px; /* Tamanho mínimo para touch */
+}
+
+.controles textarea {
+    min-height: 100px;
+}
+
+/* --- Botões Responsivos --- */
+.btn-primary, .btn-secondary, .btn-success {
+    display: block;
+    width: 100%;
+    padding: clamp(0.875rem, 2.5vw, 1rem);
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: var(--font-size-base);
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+    min-height: 44px; /* Tamanho mínimo para touch */
+    line-height: 1.2;
+}
+
+.btn-primary {
+    background-color: var(--color-primary);
+    color: var(--color-secondary);
+    margin-top: clamp(1.25rem, 4vw, 1.5625rem);
+}
+
+.btn-primary:hover {
+    background-color: var(--color-primary-dark);
+    transform: translateY(-1px);
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+.btn-success {
+    background-color: var(--color-success);
+    color: white;
+}
+
+.btn-success:hover {
+    background-color: #1e7e34;
+}
+
+/* --- Grid de Cursos Responsivo --- */
+.courses-grid {
+    display: grid;
+    gap: clamp(0.75rem, 2vw, 0.9375rem);
+    grid-template-columns: repeat(auto-fit, minmax(min(250px, 100%), 1fr));
+}
+
+.course-card {
+    background-color: var(--color-light-yellow);
+    border: 2px solid var(--color-primary);
+    border-radius: var(--border-radius);
+    padding: clamp(1rem, 3vw, 1.25rem);
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    min-height: 120px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.course-card h4 {
+    margin-top: 0;
+    margin-bottom: clamp(0.25rem, 1vw, 0.3125rem);
+    color: var(--color-secondary);
+    font-size: var(--font-size-lg);
+    line-height: 1.3;
+}
+
+.course-card p {
+    margin: 0;
+    font-size: var(--font-size-base);
+    color: var(--color-secondary);
+    line-height: 1.4;
+}
+
+/* --- Roadmap Grid Responsivo --- */
+.roadmap-grid {
+    display: grid;
+    gap: clamp(0.75rem, 2vw, 0.9375rem);
+    grid-template-columns: 1fr;
+}
+
+.bloco {
+    padding: clamp(1.25rem, 4vw, 1.5625rem) clamp(1rem, 3vw, 1.25rem);
+    background-color: var(--color-light-yellow);
+    border: 1px solid var(--color-primary-dark);
+    border-radius: var(--border-radius);
+    text-align: center;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    font-size: var(--font-size-base);
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    word-break: break-word;
+}
+
+/* --- Tópicos Responsivos --- */
+.topicos-container {
+    margin-top: clamp(1rem, 3vw, 1.25rem);
+}
+
+.topico-bloco {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.5rem, 1.5vw, 0.625rem);
+    margin-bottom: clamp(0.75rem, 2vw, 0.9375rem);
+}
+
+.material-btn, .btn-flashcard {
+    padding: clamp(0.75rem, 2vw, 0.9375rem);
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    text-align: left;
+    font-weight: 500;
+    transition: background-color 0.1s;
+    min-height: 44px;
+    font-size: var(--font-size-base);
+    border: 1px solid #ddd;
+    width: 100%;
+}
+
+.material-btn {
+    background-color: #F0F0F0;
+    color: var(--color-secondary);
+}
+
+.btn-flashcard {
+    background-color: #007bff;
+    color: white;
+    border: none;
+}
+
+/* --- Flashcard Responsivo --- */
+.flashcard-mascote-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(1rem, 3vw, 1.25rem);
+    margin-bottom: clamp(1rem, 3vw, 1.25rem);
+    width: 100%;
+}
+
+.flashcard {
+    width: 100%;
+    max-width: 400px;
+    height: min(250px, 60vw);
+    perspective: 1000px;
+}
+
+.mascote-flashcard {
+    width: min(150px, 30vw);
+    height: min(150px, 30vw);
+    object-fit: contain;
+}
+
+.flashcard-navigation {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(0.5rem, 1.5vw, 0.625rem);
+    width: 100%;
+    max-width: 400px;
+}
+
+/* --- Simulado Responsivo --- */
+.simulado-area li.alternativa {
+    padding: clamp(0.75rem, 2vw, 0.9375rem);
+    margin-bottom: clamp(0.5rem, 1.5vw, 0.625rem);
+    border: 1px solid #ced4da;
+    border-radius: var(--border-radius);
+    transition: background-color 0.3s;
+    cursor: pointer;
+    background-color: var(--color-card);
+    color: var(--color-secondary);
+    font-size: var(--font-size-base);
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+}
+
+#simulado-resultado {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(1rem, 3vw, 1.25rem);
+    padding: clamp(1rem, 3vw, 1.25rem);
+    background-color: var(--color-light-yellow);
+    border-radius: var(--border-radius);
+    margin-top: clamp(1rem, 3vw, 1.25rem);
+    border: 2px solid var(--color-primary);
+    text-align: center;
+}
+
+.mascote-simulado {
+    width: min(80px, 20vw);
+    height: min(80px, 20vw);
+    object-fit: contain;
+}
+
+/* --- Chat Responsivo --- */
+#chat-container {
+    display: flex;
+    flex-direction: column;
+    height: min(70vh, 600px);
+    min-height: 450px;
+    background-color: var(--color-card);
+    border-radius: var(--border-radius);
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
+}
+
+#chat-input-area {
+    display: flex;
+    padding: clamp(0.75rem, 2vw, 0.9375rem);
+    border-top: 1px solid #eee;
+    gap: clamp(0.5rem, 1.5vw, 0.625rem);
+}
+
+#chat-input {
+    flex-grow: 1;
+    padding: clamp(0.75rem, 2vw, 0.9375rem);
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    font-size: var(--font-size-base);
+    min-height: 44px;
+}
+
+/* --- Ações Rápidas Responsivas --- */
+.quick-actions-button {
+    position: fixed;
+    bottom: clamp(1rem, 3vw, 1.25rem);
+    right: clamp(1rem, 3vw, 1.25rem);
+    width: clamp(50px, 12vw, 60px);
+    height: clamp(50px, 12vw, 60px);
+    border-radius: 50%;
+    background-color: var(--color-primary-dark);
+    border: 3px solid var(--color-primary);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 1000;
+    display: none;
+    font-size: clamp(1.2rem, 3vw, 1.5rem);
+    color: white;
+}
+
+.quick-actions-menu {
+    position: fixed;
+    bottom: clamp(5rem, 15vw, 6.25rem);
+    right: clamp(1rem, 3vw, 1.25rem);
+    width: min(250px, 85vw);
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    z-index: 1001;
+    animation: slideUp 0.3s ease;
+}
+
+/* --- Pomodoro Responsivo --- */
+.pomodoro-floating-timer {
+    position: fixed;
+    top: clamp(7rem, 20vw, 8rem);
+    right: clamp(1rem, 3vw, 1.25rem);
+    width: min(180px, 70vw);
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    z-index: 999;
+    border: 2px solid var(--color-primary);
+}
+
+.pomodoro-time {
+    font-size: clamp(1.4rem, 4vw, 1.8rem);
+    font-weight: bold;
+    text-align: center;
+    margin: clamp(0.5rem, 1.5vw, 0.625rem) 0;
+}
+
+/* --- Modal Responsivo --- */
+.modal-content {
+    background-color: var(--color-card);
+    margin: 5% auto;
+    padding: 0;
+    border-radius: var(--border-radius);
+    width: min(90%, 500px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+}
+
+/* --- MEDIA QUERIES ESPECÍFICAS --- */
+
+/* Tablets (601px a 992px) */
+@media (min-width: 601px) and (max-width: 992px) {
+    .header-content {
+        flex-direction: row;
+        justify-content: space-between;
+        text-align: left;
+    }
+    
+    .header-info {
+        text-align: left;
+    }
+    
+    .roadmap-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .topico-bloco {
+        flex-direction: row;
+    }
+    
+    .material-btn, .btn-flashcard {
+        flex: 1;
+    }
+    
+    .flashcard-mascote-container {
+        flex-direction: row;
+        justify-content: center;
+    }
+    
+    .flashcard-navigation {
+        flex-direction: row;
+    }
+    
+    #simulado-resultado {
+        flex-direction: row;
+        text-align: left;
+    }
+}
+
+/* Desktop (993px+) */
+@media (min-width: 993px) {
+    .header-content {
+        flex-direction: row;
+        justify-content: space-between;
+        text-align: left;
+    }
+    
+    .header-info {
+        text-align: left;
+    }
+    
+    .roadmap-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+    
+    .bloco {
+        padding: 1.5625rem 1.25rem;
+    }
+    
+    .topico-bloco {
+        flex-direction: row;
+    }
+    
+    .login-actions {
+        flex-direction: row;
+    }
+    
+    .login-actions button {
+        width: calc(50% - 5px);
+    }
+    
+    .flashcard-mascote-container {
+        flex-direction: row;
+    }
+    
+    #simulado-resultado {
+        flex-direction: row;
+        text-align: left;
+    }
+}
+
+/* Mobile Pequeno (até 400px) */
+@media (max-width: 400px) {
+    :root {
+        --container-padding: 0.75rem;
+    }
+    
+    .message-card {
+        padding: 1rem;
+    }
+    
+    .mascote-welcome {
+        width: 120px;
+        height: 120px;
+    }
+    
+    .controles {
+        padding: 0.75rem;
+    }
+    
+    .mascote {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .course-card h4 {
+        font-size: 1rem;
+    }
+    
+    .course-card p {
+        font-size: 0.8rem;
+    }
+    
+    .pomodoro-floating-timer {
+        width: 140px;
+    }
+    
+    .quick-actions-menu {
+        width: 200px;
+    }
+}
+
+/* Melhorias para orientação landscape em mobile */
+@media (max-height: 500px) and (orientation: landscape) {
+    .full-screen-message {
+        padding: 1rem;
+        min-height: auto;
+    }
+    
+    .message-card {
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+    
+    #chat-container {
+        height: 85vh;
+    }
+}
+
+/* Suporte para dispositivos com notch */
+@supports(padding: max(0px)) {
+    .container, .header-content {
+        padding-left: max(var(--container-padding), env(safe-area-inset-left));
+        padding-right: max(var(--container-padding), env(safe-area-inset-right));
+    }
+    
+    .full-screen-message {
+        padding-top: max(var(--container-padding), env(safe-area-inset-top));
+        padding-bottom: max(var(--container-padding), env(safe-area-inset-bottom));
+    }
+}
+
+/* Melhorias de acessibilidade para reduzir movimento */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Modo escuro opcional (pode ser ativado posteriormente) */
+@media (prefers-color-scheme: dark) {
+    /* Adicionar variáveis para modo escuro aqui */
+}
