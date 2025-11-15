@@ -39,7 +39,7 @@
             <h2>🦆 Bem-vindo ao Quackademy! </h2>
             <p>Pare de se afogar em tutoriais soltos. Nós transformamos o caos do aprendizado online em uma <strong>trilha de estudos estruturada e à prova de procrastinação</strong>.</p>
             
-            <!-- NOVO: Seletor de Modo -->
+            <!-- Seletor de Modo -->
             <div class="mode-selector">
                 <h3>Selecione seu modo:</h3>
                 <div class="mode-options">
@@ -79,48 +79,82 @@
         </div>
     </section>
 
-    <!-- NOVA TELA: MODO PROFESSOR -->
+    <!-- TELA: MODO PROFESSOR -->
     <section id="professor-mode-view" class="full-screen-message" style="display: none;">
         <div class="message-card">
-            <h2>👨‍🏫 Modo Professor</h2>
-            <p>Crie conteúdo educacional estruturado para seus alunos.</p>
+            <div class="professor-header">
+                <h2>👨‍🏫 Modo Professor</h2>
+                <p>Crie conteúdo educacional estruturado para seus alunos</p>
+            </div>
             
             <div class="controles">
-                <label for="professor-tema">Tema ou Matéria:</label>
-                <input type="text" id="professor-tema" placeholder="Ex: Matemática Básica, História do Brasil, Programação Python" required>
-                
-                <label for="professor-nivel">Nível de Dificuldade:</label>
-                <select id="professor-nivel">
-                    <option value="Iniciante">Iniciante</option>
-                    <option value="Intermediário">Intermediário</option>
-                    <option value="Avançado">Avançado</option>
-                </select>
-                
-                <label for="professor-explicacoes">Explicações Detalhadas:</label>
-                <textarea id="professor-explicacoes" placeholder="Descreva detalhadamente o conteúdo que deseja ensinar, objetivos de aprendizagem, conceitos principais..." rows="5"></textarea>
-                
-                <label for="professor-etapas">Quantidade de Etapas:</label>
-                <input type="number" id="professor-etapas" min="1" max="20" value="5" placeholder="Número de etapas desejadas">
-                
-                <button id="btnGerarConteudoProfessor" class="btn-primary">Gerar Conteúdo e Exercícios</button>
-                
-                <div class="modal-actions">
-                    <button onclick="showWelcomeScreen()" class="btn-secondary" style="width: auto;">⬅ Voltar</button>
+                <div class="input-group">
+                    <label for="professor-tema">📚 Tema ou Matéria:</label>
+                    <input type="text" id="professor-tema" placeholder="Ex: Matemática Básica, História do Brasil, Programação Python" required>
                 </div>
+                
+                <div class="input-group">
+                    <label for="professor-nivel">🎯 Nível de Dificuldade:</label>
+                    <select id="professor-nivel">
+                        <option value="Iniciante">Iniciante</option>
+                        <option value="Intermediário">Intermediário</option>
+                        <option value="Avançado">Avançado</option>
+                    </select>
+                </div>
+                
+                <div class="input-group">
+                    <label for="professor-explicacoes">📝 Explicações Detalhadas:</label>
+                    <textarea id="professor-explicacoes" placeholder="Descreva detalhadamente o conteúdo que deseja ensinar, objetivos de aprendizagem, conceitos principais..." rows="4"></textarea>
+                </div>
+                
+                <div class="input-group">
+                    <label for="professor-etapas">🔢 Quantidade de Etapas:</label>
+                    <input type="number" id="professor-etapas" min="1" max="10" value="3" placeholder="Número de etapas desejadas">
+                </div>
+                
+                <button id="btnGerarConteudoProfessor" class="btn-primary professor-generate-btn">
+                    <span class="btn-icon">✨</span>
+                    Gerar Conteúdo e Exercícios
+                </button>
+            </div>
+            
+            <div class="modal-actions">
+                <button onclick="showWelcomeScreen()" class="btn-secondary back-button">
+                    <span class="btn-icon">⬅</span>
+                    Voltar
+                </button>
             </div>
         </div>
     </section>
 
-    <!-- NOVA TELA: RESULTADO DO MODO PROFESSOR -->
+    <!-- TELA: RESULTADO DO MODO PROFESSOR -->
     <section id="professor-result-view" class="full-screen-message" style="display: none;">
-        <div class="message-card">
-            <h2>📚 Conteúdo Gerado para Professores</h2>
-            <div id="professor-content-container">
-                <p>Gerando conteúdo educacional...</p>
+        <div class="message-card professor-result-card">
+            <div class="professor-result-header">
+                <h2>📚 Conteúdo Gerado</h2>
+                <div class="result-meta">
+                    <span class="meta-badge" id="result-tema"></span>
+                    <span class="meta-badge" id="result-nivel"></span>
+                    <span class="meta-badge" id="result-etapas"></span>
+                </div>
             </div>
-            <div class="modal-actions">
-                <button onclick="showProfessorModeView()" class="btn-secondary" style="width: auto;">⬅ Voltar</button>
-                <button onclick="showMainApp(false)" class="btn-primary">Ir para a Plataforma</button>
+            
+            <div id="professor-content-container" class="professor-content-container">
+                <div class="loading-content">
+                    <div class="loading-spinner"></div>
+                    <p>✨ Gerando conteúdo educacional...</p>
+                </div>
+            </div>
+            
+            <div class="modal-actions professor-actions">
+                <button onclick="showProfessorModeView()" class="btn-secondary back-button">
+                    <span class="btn-icon">⬅</span>
+                    Voltar
+                </button>
+                <button onclick="showMainApp(false)" class="btn-primary">
+                    <span class="btn-icon">🚀</span>
+                    Ir para a Plataforma
+                </button>
             </div>
         </div>
     </section>
@@ -158,24 +192,35 @@
 
                 <div id="user-trilhas-view" class="content-view" style="display: none;">
                     <div id="user-trilhas-container">
-                        <h2>Gerenciar Trilhas Salvas</h2>
+                        <div class="view-header">
+                            <h2>📁 Minhas Trilhas Salvas</h2>
+                            <p>Gerencie suas trilhas de estudo criadas</p>
+                        </div>
                         <div id="trilhas-list">
                             </div>
                         <div class="modal-actions">
-                            <button onclick="showPreDefinedCoursesView()" class="btn-success">➕ Criar Nova Trilha</button>
+                            <button onclick="showPreDefinedCoursesView()" class="btn-success">
+                                <span class="btn-icon">➕</span>
+                                Criar Nova Trilha
+                            </button>
                         </div>
                     </div>
                 </div>
 
                 <div id="predefined-courses-view" class="content-view" style="display: none;">
                     <div id="predefined-courses-container">
-                        <h2>Escolha um Curso Rápido</h2>
-                        <p>Selecione um curso pré-definido abaixo para começar imediatamente ou crie a sua trilha personalizada.</p>
+                        <div class="view-header">
+                            <h2>🚀 Cursos Rápidos</h2>
+                            <p>Selecione um curso pré-definido para começar imediatamente</p>
+                        </div>
                         
                         <div id="predefined-courses-list">
                             </div>
 
-                        <button onclick="showFormView()" class="btn-primary btn-custom-create">💡 Criar Trilha Personalizada (Usar IA)</button>
+                        <button onclick="showFormView()" class="btn-primary btn-custom-create">
+                            <span class="btn-icon">💡</span>
+                            Criar Trilha Personalizada (Usar IA)
+                        </button>
                     </div>
                 </div>
 
@@ -186,79 +231,121 @@
                             <h2>Defina seu Desafio (Via IA)</h2>
                         </div>
                         
-                        <label for="tema">Tema ou Tecnologia:</label>
-                        <input type="text" id="tema" placeholder="Ex: Programação Python, Cloud Computing, etc." required>
+                        <div class="input-group">
+                            <label for="tema">🎯 Tema ou Tecnologia:</label>
+                            <input type="text" id="tema" placeholder="Ex: Programação Python, Cloud Computing, etc." required>
+                        </div>
                         
-                        <label for="nivel">Nível de Dificuldade:</label>
-                        <select id="nivel">
-                            <option value="Iniciante">Iniciante</option>
-                            <option value="Intermediário">Intermediário</option>
-                            <option value="Avançado">Avançado</option>
-                        </select>
+                        <div class="input-group">
+                            <label for="nivel">📊 Nível de Dificuldade:</label>
+                            <select id="nivel">
+                                <option value="Iniciante">Iniciante</option>
+                                <option value="Intermediário">Intermediário</option>
+                                <option value="Avançado">Avançado</option>
+                            </select>
+                        </div>
                         
-                        <label for="objetivo">Objetivo Específico (Opcional):</label>
-                        <textarea id="objetivo" placeholder="Ex: Aprender a criar um backend com Node.js e Express."></textarea>
+                        <div class="input-group">
+                            <label for="objetivo">🎯 Objetivo Específico (Opcional):</label>
+                            <textarea id="objetivo" placeholder="Ex: Aprender a criar um backend com Node.js e Express."></textarea>
+                        </div>
                         
-                        <button id="btnGerar" class="btn-primary">Gerar Trilha 🚀</button>
+                        <button id="btnGerar" class="btn-primary">
+                            <span class="btn-icon">✨</span>
+                            Gerar Trilha 🚀
+                        </button>
                         
                         <div class="modal-actions">
-                            <button onclick="showPreDefinedCoursesView()" class="btn-secondary" style="width: auto;">⬅ Voltar aos Cursos Prontos</button>
+                            <button onclick="showPreDefinedCoursesView()" class="btn-secondary back-button">
+                                <span class="btn-icon">⬅</span>
+                                Voltar aos Cursos Prontos
+                            </button>
                         </div>
                     </div>
                 </div>
 
                 <div id="roadmap-view" class="content-view" style="display: none;">
                     <div id="roadmap-container">
-                        <h2 id="roadmap-title">Sua Trilha de Estudos</h2>
+                        <div class="view-header">
+                            <h2 id="roadmap-title">🗺️ Sua Trilha de Estudos</h2>
+                            <p>Clique em uma etapa para explorar o conteúdo</p>
+                        </div>
                         <div id="roadmap" class="roadmap-grid">
                             <p class="placeholder-text">Preencha o formulário e gere sua primeira trilha!</p>
                         </div>
-                        <div class="modal-actions" style="text-align: right;">
-                             <button onclick="showUserTrilhasView()" class="btn-secondary" style="width: auto;">⬅ Voltar a Minhas Trilhas</button>
+                        <div class="modal-actions">
+                            <button onclick="showUserTrilhasView()" class="btn-secondary back-button">
+                                <span class="btn-icon">⬅</span>
+                                Voltar a Minhas Trilhas
+                            </button>
                         </div>
                     </div>
                 </div>
                 
                 <div id="etapa-view" class="content-view" style="display: none;">
                     <div id="etapa-container">
-                        <h2 id="etapa-titulo"></h2>
+                        <div class="view-header">
+                            <h2 id="etapa-titulo"></h2>
+                            <p>Explore os tópicos e atividades desta etapa</p>
+                        </div>
                         <div id="etapa-conteudo"></div>
                         <div class="modal-actions"> 
-                            <button onclick="showRoadmapView()" class="btn-secondary">⬅ Voltar à Trilha</button>
+                            <button onclick="showRoadmapView()" class="btn-secondary back-button">
+                                <span class="btn-icon">⬅</span>
+                                Voltar à Trilha
+                            </button>
                         </div>
                     </div>
                 </div>
 
                 <div id="material-view" class="content-view" style="display: none;">
                     <div id="material-container">
-                        <h2 id="material-titulo"></h2>
+                        <div class="view-header">
+                            <h2 id="material-titulo"></h2>
+                            <p>Conteúdo detalhado do tópico</p>
+                        </div>
                         <div id="material-conteudo"></div>
                         <div class="modal-actions">
-                            <button id="btnMaterialVoltar" class="btn-secondary">⬅ Voltar à Etapa</button>
+                            <button id="btnMaterialVoltar" class="btn-secondary back-button">
+                                <span class="btn-icon">⬅</span>
+                                Voltar à Etapa
+                            </button>
                         </div>
                     </div>
                 </div>
 
                 <div id="flashcard-view" class="content-view" style="display: none;">
                     <div id="flashcard-container">
-                        <h2 id="flashcard-titulo"></h2>
+                        <div class="view-header">
+                            <h2 id="flashcard-titulo"></h2>
+                            <p>Estude com flashcards interativos</p>
+                        </div>
                         <div id="flashcard-display">
                             </div>
                         <div class="modal-actions">
-                            <button id="btnFlashcardVoltar" class="btn-secondary">⬅ Voltar à Etapa</button>
+                            <button id="btnFlashcardVoltar" class="btn-secondary back-button">
+                                <span class="btn-icon">⬅</span>
+                                Voltar à Etapa
+                            </button>
                         </div>
                     </div>
                 </div>
 
                 <div id="simulado-etapa-view" class="content-view" style="display: none;">
                     <div id="simulado-etapa-container">
-                        <h2 id="simulado-etapa-titulo"></h2>
+                        <div class="view-header">
+                            <h2 id="simulado-etapa-titulo"></h2>
+                            <p>Teste seus conhecimentos com este simulado</p>
+                        </div>
                         <div id="simulado-etapa-conteudo">
                             </div>
                         <div id="simulado-etapa-botoes" class="modal-actions">
                             </div>
                         <div class="modal-actions">
-                            <button id="btnSimuladoEtapaVoltar" class="btn-secondary">⬅ Voltar à Etapa</button>
+                            <button id="btnSimuladoEtapaVoltar" class="btn-secondary back-button">
+                                <span class="btn-icon">⬅</span>
+                                Voltar à Etapa
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -266,22 +353,50 @@
                 <div id="chat-view" class="content-view" style="display: none;">
                     <div id="chat-container">
                         <div id="chat-header-view">
-                            Patolindo - Seu Assistente de Estudos <span id="chat-counter">(5 Perguntas)</span>
+                            <div class="chat-header-content">
+                                <span class="chat-title">💬 Patolindo - Seu Assistente</span>
+                                <span id="chat-counter" class="chat-counter">(5 Perguntas)</span>
+                            </div>
                         </div>
                         <div id="chat-messages">
                             </div>
                         <div id="chat-input-area">
                             <input type="text" id="chat-input" placeholder="Sua pergunta..." disabled>
-                            <button id="chat-send-button" disabled>Enviar</button>
+                            <button id="chat-send-button" disabled>
+                                <span class="btn-icon">📤</span>
+                            </button>
                         </div>
-                        <div class="modal-actions" style="border-top: 1px solid #eee; padding-top: 15px;">
-                            <button id="chat-exit-button" class="btn-secondary">⬅ Sair do Chat</button>
+                        <div class="modal-actions">
+                            <button id="chat-exit-button" class="btn-secondary back-button">
+                                <span class="btn-icon">⬅</span>
+                                Sair do Chat
+                            </button>
                         </div>
                     </div>
                 </div>
 
             </div>
         </main>
+
+        <!-- Barra de Navegação Mobile -->
+        <nav id="bottom-nav" class="bottom-nav">
+            <button class="nav-btn active" data-view="user-trilhas-view" onclick="showUserTrilhasView()">
+                <span class="nav-icon">📁</span>
+                <span class="nav-text">Minhas Trilhas</span>
+            </button>
+            <button class="nav-btn" data-view="predefined-courses-view" onclick="showPreDefinedCoursesView()">
+                <span class="nav-icon">🚀</span>
+                <span class="nav-text">Cursos</span>
+            </button>
+            <button class="nav-btn" data-view="form-view" onclick="showFormView()">
+                <span class="nav-icon">💡</span>
+                <span class="nav-text">Criar</span>
+            </button>
+            <button class="nav-btn professor-nav-btn" onclick="showProfessorModeView()">
+                <span class="nav-icon">👨‍🏫</span>
+                <span class="nav-text">Professor</span>
+            </button>
+        </nav>
     </div>
 
     <!-- Botão de Ações Rápidas -->
