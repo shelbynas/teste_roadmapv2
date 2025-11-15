@@ -1,5 +1,5 @@
 // ===================================================
-// JAVASCRIPT COMPLETO COM TODAS AS FUNCIONALIDADES ORIGINAIS
+// JAVASCRIPT COMPLETO COM TODAS AS CORREÇÕES
 // ===================================================
 
 // ⚠️ ATENÇÃO: CHAVE DA API ATUALIZADA AQUI
@@ -744,9 +744,10 @@ function updateQuickActionsMenu() {
     }
 }
 
+// CORREÇÃO: Função para obter a view atual
 function getCurrentView() {
     for (const key in viewMap) {
-        if (viewMap[key].style.display !== 'none') {
+        if (viewMap[key] && viewMap[key].style.display !== 'none') {
             return key;
         }
     }
@@ -975,7 +976,7 @@ function showMainApp(isExistingUser = false) {
 }
 
 // ===================================================
-// LÓGICA DE NAVEGAÇÃO SPA
+// LÓGICA DE NAVEGAÇÃO SPA - CORRIGIDA
 // ===================================================
 
 const viewMap = {
@@ -990,11 +991,21 @@ const viewMap = {
     "chat-view": document.getElementById("chat-view")
 };
 
+// CORREÇÃO: Função para esconder todas as views principais
 function hideAllViews() {
     for (const key in viewMap) {
         if (viewMap[key]) {
             viewMap[key].style.display = 'none';
         }
+    }
+}
+
+// CORREÇÃO: Função para mostrar uma view específica
+function showView(viewId) {
+    hideAllViews();
+    const view = document.getElementById(viewId);
+    if (view) {
+        view.style.display = 'block';
     }
 }
 
@@ -1009,7 +1020,7 @@ function updateBottomNav(activeView) {
 }
 
 // ===================================================
-// TELA DE GERENCIAMENTO DE TRILHAS
+// TELA DE GERENCIAMENTO DE TRILHAS - CORRIGIDA
 // ===================================================
 
 function showUserTrilhasView() {
@@ -1021,9 +1032,7 @@ function showUserTrilhasView() {
         return;
     }
     
-    if (viewMap["user-trilhas-view"]) {
-        viewMap["user-trilhas-view"].style.display = 'block';
-    }
+    showView("user-trilhas-view");
     updateBottomNav('user-trilhas-view');
     updateQuickActionsButton();
     updateQuickActionsMenu();
@@ -1080,7 +1089,7 @@ function showUserTrilhasView() {
 }
 
 // ===================================================
-// TELA DE CURSOS PRÉ-DEFINIDOS
+// TELA DE CURSOS PRÉ-DEFINIDOS - CORRIGIDA
 // ===================================================
 
 function showPreDefinedCoursesView() {
@@ -1089,9 +1098,7 @@ function showPreDefinedCoursesView() {
     
     hideAllViews();
     window.scrollTo(0, 0); 
-    if (viewMap["predefined-courses-view"]) {
-        viewMap["predefined-courses-view"].style.display = 'block';
-    }
+    showView("predefined-courses-view");
     updateBottomNav('predefined-courses-view');
     updateQuickActionsButton();
     updateQuickActionsMenu();
@@ -1132,9 +1139,7 @@ function showPreDefinedCoursesView() {
 function showFormView() {
     hideAllViews();
     window.scrollTo(0, 0); 
-    if (viewMap["form-view"]) {
-        viewMap["form-view"].style.display = 'flex';
-    }
+    showView("form-view");
     updateBottomNav('form-view');
     updateQuickActionsButton();
     updateQuickActionsMenu();
@@ -1144,9 +1149,7 @@ function showRoadmapView() {
     hideAllViews();
     window.scrollTo(0, 0); 
     patolindoState.lastView = "roadmap-view";
-    if (viewMap["roadmap-view"]) {
-        viewMap["roadmap-view"].style.display = 'block';
-    }
+    showView("roadmap-view");
     updateBottomNav('user-trilhas-view');
     updateQuickActionsButton();
     updateQuickActionsMenu();
@@ -1156,9 +1159,7 @@ function showEtapaView(etapa) {
     hideAllViews();
     window.scrollTo(0, 0); 
     patolindoState.lastView = "etapa-view";
-    if (viewMap["etapa-view"]) {
-        viewMap["etapa-view"].style.display = 'block';
-    }
+    showView("etapa-view");
     updateQuickActionsButton();
     updateQuickActionsMenu();
     
@@ -1195,9 +1196,7 @@ function showMaterialView(topico, material) {
     hideAllViews();
     window.scrollTo(0, 0); 
     patolindoState.lastView = "material-view";
-    if (viewMap["material-view"]) {
-        viewMap["material-view"].style.display = 'block';
-    }
+    showView("material-view");
     updateQuickActionsButton();
     updateQuickActionsMenu();
     
@@ -1208,9 +1207,7 @@ function showFlashcardView(topico) {
     hideAllViews();
     window.scrollTo(0, 0); 
     patolindoState.lastView = "flashcard-view";
-    if (viewMap["flashcard-view"]) {
-        viewMap["flashcard-view"].style.display = 'block';
-    }
+    showView("flashcard-view");
     updateQuickActionsButton();
     updateQuickActionsMenu();
 
@@ -1221,9 +1218,7 @@ function showSimuladoEtapaView() {
     hideAllViews();
     window.scrollTo(0, 0); 
     patolindoState.lastView = "simulado-etapa-view";
-    if (viewMap["simulado-etapa-view"]) {
-        viewMap["simulado-etapa-view"].style.display = 'block';
-    }
+    showView("simulado-etapa-view");
     updateQuickActionsButton();
     updateQuickActionsMenu();
     
@@ -1248,10 +1243,11 @@ function showChatView() {
         notification.style.boxShadow = '0 4px 15px rgba(0,0,0,0.3)';
         notification.style.textAlign = 'center';
         notification.style.maxWidth = '300px';
+        notification.style.background = 'white';
+        notification.style.border = '2px solid var(--color-danger)';
         
         document.body.appendChild(notification);
         
-        // Remove após 3 segundos
         setTimeout(() => {
             notification.remove();
         }, 3000);
@@ -1260,9 +1256,7 @@ function showChatView() {
     
     hideAllViews();
     window.scrollTo(0, 0); 
-    if (viewMap["chat-view"]) {
-        viewMap["chat-view"].style.display = 'block';
-    }
+    showView("chat-view");
     resetPatolindoSession();
     hideQuickActionsMenu();
 }
