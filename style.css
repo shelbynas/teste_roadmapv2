@@ -1064,3 +1064,594 @@ body {
         text-align: center;
     }
 }
+
+/* ===================================================
+// ESTILOS PARA FLASHCARDS, SIMULADO E POMODORO
+// =================================================== */
+
+/* Flashcard Styles */
+.flashcard-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+}
+
+.flashcard {
+    width: 300px;
+    height: 200px;
+    perspective: 1000px;
+    cursor: pointer;
+}
+
+.flashcard-inner {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 0.6s;
+}
+
+.flashcard.flipped .flashcard-inner {
+    transform: rotateY(180deg);
+}
+
+.flashcard-front, .flashcard-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.flashcard-front {
+    background: linear-gradient(135deg, #FFC107, #E0A800);
+    color: #343A40;
+}
+
+.flashcard-back {
+    background: linear-gradient(135deg, #28A745, #1e7e34);
+    color: white;
+    transform: rotateY(180deg);
+}
+
+.flashcard-controls {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.flashcard-placeholder {
+    text-align: center;
+    padding: 40px 20px;
+    color: #6c757d;
+}
+
+/* Simulado Styles */
+.simulado-area ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 15px;
+}
+
+.simulado-area li.alternativa {
+    padding: 12px;
+    margin-bottom: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    transition: background-color 0.3s;
+    cursor: pointer; 
+    background-color: var(--color-card); 
+    color: var(--color-secondary);
+}
+
+.simulado-area li.alternativa:hover {
+     background-color: #f8f9fa;
+}
+
+.simulado-area li.selected {
+    background-color: var(--color-primary) !important; 
+    border-color: var(--color-primary-dark) !important;
+}
+
+.simulado-area li.incorreta {
+    background-color: #FFF3F3 !important; 
+    color: var(--color-danger) !important;
+    border-color: #F5C6CB !important;
+}
+
+.simulado-area li.correta-destacada {
+    background-color: #d4edda !important; 
+    color: #155724 !important;
+    border-color: #c3e6cb !important;
+}
+
+.simulado-bloco {
+    margin-bottom: 25px;
+    padding: 20px 0;
+}
+
+.simulado-area hr {
+    margin-top: 25px;
+    margin-bottom: 25px;
+    border-top: 1px solid #eee;
+}
+
+/* ESTILO PARA RESULTADO DO SIMULADO COM MASCOTE */
+#simulado-resultado {
+    display: flex; 
+    align-items: center; 
+    gap: 20px; 
+    padding: 20px;
+    background-color: var(--color-light-yellow);
+    border-radius: 8px;
+    margin-top: 20px;
+    border: 2px solid var(--color-primary);
+}
+
+.mascote-simulado {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+.resultado-texto {
+    flex-grow: 1;
+    text-align: left;
+    font-size: 1.1em;
+    font-weight: bold;
+}
+
+/* Pomodoro Styles */
+.pomodoro-floating-timer {
+    position: fixed;
+    top: 120px;
+    right: 30px;
+    width: 180px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    z-index: 999;
+    border: 2px solid var(--color-primary);
+    animation: slideInRight 0.3s ease;
+}
+
+.pomodoro-timer-content {
+    padding: 15px;
+}
+
+.pomodoro-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    cursor: move;
+    user-select: none;
+}
+
+#pomodoro-mode {
+    font-weight: bold;
+    font-size: 0.9em;
+}
+
+.pomodoro-close {
+    background: none;
+    border: none;
+    font-size: 1.2em;
+    cursor: pointer;
+    color: #6c757d;
+}
+
+.pomodoro-time {
+    font-size: 1.8em;
+    font-weight: bold;
+    text-align: center;
+    margin: 10px 0;
+    color: var(--color-primary-dark);
+}
+
+.pomodoro-controls-mini {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.pomodoro-controls-mini button {
+    background: var(--color-primary);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.2s;
+}
+
+.pomodoro-controls-mini button:hover {
+    background: var(--color-primary-dark);
+}
+
+/* Estilos para arraste do Pomodoro */
+.pomodoro-floating-timer.draggable {
+    cursor: move;
+    user-select: none;
+    touch-action: none;
+}
+
+.pomodoro-floating-timer.dragging {
+    opacity: 0.8;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* Modal Pomodoro */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1002;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+    background-color: var(--color-card);
+    margin: 5% auto;
+    padding: 0;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+    animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+    from { transform: translateY(-50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.modal-header {
+    background-color: var(--color-primary);
+    color: var(--color-secondary);
+    padding: 20px;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 1.5em;
+}
+
+.close {
+    color: var(--color-secondary);
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: #000;
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+.pomodoro-controls {
+    text-align: center;
+}
+
+.time-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.time-inputs label {
+    font-weight: bold;
+    color: var(--color-secondary);
+}
+
+.time-inputs input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1em;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.timer-display {
+    margin: 25px 0;
+}
+
+.timer {
+    font-size: 3.5em;
+    font-weight: bold;
+    color: var(--color-primary-dark);
+    margin: 10px 0;
+}
+
+.break-timer {
+    color: #17a2b8;
+    font-size: 2.5em;
+}
+
+.status {
+    font-size: 1.2em;
+    color: var(--color-secondary);
+    margin-top: 10px;
+}
+
+.timer-controls {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.timer-controls button {
+    padding: 12px 20px;
+    font-size: 1em;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+/* Modal de Descanso Especial */
+.break-modal .modal-content {
+    max-width: 400px;
+    text-align: center;
+}
+
+.break-content {
+    padding: 20px;
+}
+
+.break-icon {
+    font-size: 4em;
+    margin-bottom: 20px;
+}
+
+.break-content p {
+    margin: 10px 0;
+    font-size: 1.1em;
+}
+
+.break-content strong {
+    color: var(--color-primary-dark);
+    font-size: 1.2em;
+}
+
+.break-actions {
+    margin-top: 20px;
+}
+
+/* Chat Styles */
+#chat-messages {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    background-color: #f7f7f7;
+    border-radius: 0 0 10px 10px;
+}
+
+.user-message, .bot-message {
+    display: flex;
+    margin: 0;
+}
+
+.user-message {
+    justify-content: flex-end;
+}
+
+.bot-message {
+    justify-content: flex-start;
+}
+
+.user-bubble {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 15px 15px 0 15px;
+    max-width: 80%;
+    font-size: 0.95em;
+}
+
+.bot-bubble {
+    background-color: white;
+    color: var(--color-secondary);
+    padding: 10px 15px;
+    border-radius: 15px 15px 15px 0;
+    max-width: 80%;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    font-size: 0.95em;
+}
+
+#chat-input-area {
+    display: flex;
+    padding: 15px 20px;
+    border-top: 1px solid #eee;
+    gap: 10px;
+}
+
+#chat-input {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    font-size: 1em;
+}
+
+#chat-send-button {
+    background-color: var(--color-primary);
+    color: var(--color-secondary);
+    border: none;
+    padding: 10px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+#chat-send-button:hover:not(:disabled) {
+    background-color: var(--color-primary-dark);
+}
+
+#chat-send-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+#chat-container {
+    display: flex;
+    flex-direction: column;
+    height: 70vh;
+    min-height: 450px;
+    background-color: var(--color-card);
+    border-radius: 10px;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
+}
+
+#chat-header-view {
+    background-color: var(--color-primary);
+    color: var(--color-secondary);
+    padding: 15px 20px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.2em;
+}
+
+/* Quick Actions Styles */
+.quick-actions-button {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: var(--color-primary-dark);
+    border: 3px solid var(--color-primary);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 1000;
+    display: none;
+    font-size: 1.5em;
+    color: white;
+}
+
+.quick-actions-button:hover {
+    background-color: var(--color-primary);
+    transform: scale(1.1);
+}
+
+.quick-actions-menu {
+    position: fixed;
+    bottom: 100px;
+    right: 30px;
+    width: 250px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    z-index: 1001;
+    animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.quick-actions-header {
+    background-color: var(--color-primary);
+    color: var(--color-secondary);
+    padding: 15px 20px;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.quick-actions-header h3 {
+    margin: 0;
+    font-size: 1.2em;
+}
+
+.close-actions {
+    background: none;
+    border: none;
+    font-size: 1.5em;
+    cursor: pointer;
+    color: var(--color-secondary);
+}
+
+.quick-actions-content {
+    padding: 15px 0;
+}
+
+.action-btn {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 15px 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    text-align: left;
+}
+
+.action-btn:hover {
+    background-color: #f8f9fa;
+}
+
+.action-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: #f8f9fa !important;
+}
+
+.action-btn:disabled:hover {
+    background-color: #f8f9fa !important;
+}
+
+.action-icon {
+    font-size: 1.5em;
+    margin-right: 12px;
+    width: 30px;
+}
+
+.action-text {
+    font-weight: 500;
+    color: var(--color-secondary);
+}
