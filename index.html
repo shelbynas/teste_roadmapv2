@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quackademy - Trilha de Estudos</title>
+    <link rel="icon" href="favicon.ico"> 
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -192,6 +193,29 @@
                             <button id="btn-pomodoro-play-pause" onclick="togglePomodoro()">⏸️</button>
                             <button id="btn-pomodoro-stop" onclick="stopPomodoro()">⏹️</button>
                         </div>
+                    </div>
+                </div>
+
+                <!-- Botão de Ações Rápidas -->
+                <button id="quick-actions-button" class="quick-actions-button" title="Ações Rápidas" style="display: none;">
+                    ⚡
+                </button>
+
+                <!-- Menu de Ações Rápidas -->
+                <div id="quick-actions-menu" class="quick-actions-menu" style="display: none;">
+                    <div class="quick-actions-header">
+                        <h3>Ações Rápidas</h3>
+                        <button class="close-actions" onclick="hideQuickActionsMenu()">×</button>
+                    </div>
+                    <div class="quick-actions-content">
+                        <button class="action-btn" onclick="showChatView()" id="chat-action-btn">
+                            <span class="action-icon">💬</span>
+                            <span class="action-text">Chat com Patolindo</span>
+                        </button>
+                        <button class="action-btn" onclick="showPomodoroModal()">
+                            <span class="action-icon">⏱️</span>
+                            <span class="action-text">Iniciar Pomodoro</span>
+                        </button>
                     </div>
                 </div>
 
@@ -408,29 +432,6 @@
                 <span class="nav-text">Professor</span>
             </button>
         </nav>
-    </div>
-
-    <!-- Botão de Ações Rápidas -->
-    <button id="quick-actions-button" class="quick-actions-button" title="Ações Rápidas" style="display: none;">
-        ⚡
-    </button>
-
-    <!-- Menu de Ações Rápidas -->
-    <div id="quick-actions-menu" class="quick-actions-menu" style="display: none;">
-        <div class="quick-actions-header">
-            <h3>Ações Rápidas</h3>
-            <button class="close-actions" onclick="hideQuickActionsMenu()">×</button>
-        </div>
-        <div class="quick-actions-content">
-            <button class="action-btn" onclick="showChatView()" id="chat-action-btn">
-                <span class="action-icon">💬</span>
-                <span class="action-text">Chat com Patolindo</span>
-            </button>
-            <button class="action-btn" onclick="showPomodoroModal()">
-                <span class="action-icon">⏱️</span>
-                <span class="action-text">Iniciar Pomodoro</span>
-            </button>
-        </div>
     </div>
 
     <!-- Modal Pomodoro -->
