@@ -418,34 +418,58 @@ function showEtapaView(etapa) {
     const etapaTitulo = document.getElementById("etapa-titulo");
     if (etapaTitulo) etapaTitulo.innerText = etapa.titulo;
     
-    const conteudo = etapa.topicos.map(t => {
-        const topicoEscapado = t.tópico.replace(/'/g,"\\'"); 
-        const materialLink = t.material ? t.material.replace(/'/g,"\\'") : "#"; 
-
-        return `
-            <div class="topico-bloco">
-                <button class="material-btn" onclick="showMaterialView('${topicoEscapado}', '${materialLink}')">
-                    📚 ${t.tópico}
-                </button>
-                <button class="btn-flashcard" onclick="showFlashcardView('${topicoEscapado}')">🧠 Gerar Flashcards</button>
+    let conteudoHTML = '';
+    
+    // Seção de atividade prática
+    if (etapa.atividade) {
+        conteudoHTML += `
+            <div class="atividade-section">
+                <h3>🎯 Atividade Prática</h3>
+                <div class="atividade-card">
+                    <p>${etapa.atividade}</p>
+                </div>
             </div>
         `;
-    }).join("");
+    }
+    
+    // Seção de tópicos
+    if (etapa.topicos && etapa.topicos.length > 0) {
+        const topicosHTML = etapa.topicos.map(t => {
+            const topicoEscapado = t.tópico ? t.tópico.replace(/'/g,"\\'") : 'Tópico sem nome';
+            const materialLink = t.material ? t.material.replace(/'/g,"\\'") : "#";
 
+            return `
+                <div class="topico-bloco">
+                    <button class="material-btn" onclick="showMaterialView('${topicoEscapado}', '${materialLink}')">
+                        📚 ${t.tópico || 'Tópico sem nome'}
+                    </button>
+                    <button class="btn-flashcard" onclick="showFlashcardView('${topicoEscapado}')">🧠 Gerar Flashcards</button>
+                </div>
+            `;
+        }).join("");
+
+        conteudoHTML += `
+            <div class="topicos-section">
+                <h3>📚 Tópicos de Estudo</h3>
+                <div class="topicos-container">${topicosHTML}</div>
+            </div>
+        `;
+    } else {
+        conteudoHTML += `
+            <div class="topicos-section">
+                <h3>📚 Tópicos de Estudo</h3>
+                <div class="placeholder-content">
+                    <p>Nenhum tópico definido para esta etapa.</p>
+                </div>
+            </div>
+        `;
+    }
+    
     const etapaConteudo = document.getElementById("etapa-conteudo");
     if (etapaConteudo) {
         etapaConteudo.innerHTML = `
             <div class="etapa-content">
-                <div class="atividade-section">
-                    <h3>🎯 Atividade Prática</h3>
-                    <div class="atividade-card">
-                        <p>${etapa.atividade}</p>
-                    </div>
-                </div>
-                <div class="topicos-section">
-                    <h3>📚 Tópicos de Estudo</h3>
-                    <div class="topicos-container">${conteudo}</div>
-                </div>
+                ${conteudoHTML}
             </div>
         `;
     }
@@ -673,6 +697,10 @@ function loadPreDefinedCourses() {
     });
 }
 
+// ===================================================
+// FUNÇÃO GERARROADMAP CORRIGIDA - MODO ALUNO
+// ===================================================
+
 async function gerarRoadmap() {
     const tema = document.getElementById("tema")?.value;
     const nivel = document.getElementById("nivel")?.value;
@@ -695,9 +723,37 @@ async function gerarRoadmap() {
     showRoadmapView();
 
     try {
-        const systemPrompt = `Você é um especialista em educação técnica. Crie um roadmap detalhado com 8-12 etapas para o tema fornecido. Para cada etapa, inclua 3-5 tópicos essenciais com links de referência. Formato JSON obrigatório.`;
+        const systemPrompt = `Você é um especialista em educação técnica. Crie um roadmap detalhado com 8-12 etapas para o tema fornecido. 
+        
+PARA CADA ETAPA, forneça:
+1. Um TÍTULO claro e objetivo
+2. 3-5 TÓPICOS essenciais para estudo
+3. LINKS de referência confiáveis para cada tópico
+4. Uma ATIVIDADE prática relacionada
 
-        const userPrompt = `Crie um roadmap de estudos para "${tema}" no nível "${nivel}". ${objetivo ? `Objetivo: ${objetivo}` : ''}. Inclua fontes externas confiáveis.`;
+CRITÉRIOS IMPORTANTES:
+- Seja prático e aplicável
+- Inclua fontes externas confiáveis (MDN, documentação oficial, etc.)
+- Use linguagem adequada ao nível ${nivel}
+- Foque em aprendizado hands-on
+
+Formato obrigatório (APENAS JSON):
+{
+  "etapas": [
+    {
+      "titulo": "Nome da etapa",
+      "topicos": [
+        {
+          "tópico": "Nome do tópico",
+          "material": "https://link-de-referencia.com"
+        }
+      ],
+      "atividade": "Descrição da atividade prática"
+    }
+  ]
+}`;
+
+        const userPrompt = `Crie um roadmap de estudos para "${tema}" no nível "${nivel}". ${objetivo ? `Objetivo específico: ${objetivo}` : ''}. Inclua entre 8 e 12 etapas progressivas.`;
 
         const response = await fetch(GROQ_ENDPOINT, {
             method: "POST",
@@ -712,7 +768,8 @@ async function gerarRoadmap() {
                     { role: "user", content: userPrompt }
                 ],
                 response_format: { type: "json_object" }, 
-                temperature: 0.7 
+                temperature: 0.7,
+                max_tokens: 4000
             })
         });
 
@@ -723,23 +780,52 @@ async function gerarRoadmap() {
         const data = await response.json();
         let texto = data?.choices?.[0]?.message?.content || "";
 
+        console.log("Resposta da API:", texto);
+
         let textoLimpo = texto.trim();
         let parsed;
+        
         try {
             parsed = JSON.parse(textoLimpo);
         } catch (e) {
+            console.log("Primeiro parse falhou, tentando extrair JSON...");
             let jsonMatch = textoLimpo.match(/\{[\s\S]*\}/);
-            if (!jsonMatch) throw new Error("Não foi possível extrair JSON da resposta.");
-            parsed = JSON.parse(jsonMatch[0]);
+            if (jsonMatch) {
+                try {
+                    parsed = JSON.parse(jsonMatch[0]);
+                } catch (e2) {
+                    console.log("Segundo parse também falhou");
+                    throw new Error("Não foi possível interpretar a resposta da IA");
+                }
+            } else {
+                throw new Error("Resposta da IA não contém JSON válido");
+            }
         }
         
-        const etapas = parsed.etapas || [];
+        if (!parsed.etapas || !Array.isArray(parsed.etapas)) {
+            throw new Error("Estrutura da resposta inválida - etapas não encontradas");
+        }
+        
+        const etapas = parsed.etapas;
+        
+        // Validar estrutura básica das etapas
+        etapas.forEach((etapa, index) => {
+            if (!etapa.titulo) {
+                etapa.titulo = `Etapa ${index + 1}`;
+            }
+            if (!etapa.topicos || !Array.isArray(etapa.topicos)) {
+                etapa.topicos = [];
+            }
+            if (!etapa.atividade) {
+                etapa.atividade = "Atividade prática a ser definida.";
+            }
+        });
         
         const novaTrilha = {
             id: Date.now(),
             tema: tema,
             nivel: nivel,
-            objetivo: objetivo,
+            objetivo: objetivo || "Desenvolver habilidades práticas no tema escolhido",
             etapas: etapas
         };
         
@@ -756,28 +842,65 @@ async function gerarRoadmap() {
         showNotification("✅ Trilha criada com sucesso!", "success");
 
     } catch (err) {
-        console.error("Erro:", err);
-        if (roadmapDiv) {
-            roadmapDiv.innerHTML = `
-                <div class="error-content">
-                    <h3>⚠️ Erro ao gerar trilha</h3>
-                    <p>${err.message}</p>
-                    <button onclick="showFormView()" class="btn-secondary">Tentar Novamente</button>
-                </div>
-            `;
+        console.error("Erro detalhado:", err);
+        
+        // Fallback: criar trilha básica com estrutura mínima
+        const trilhaFallback = {
+            id: Date.now(),
+            tema: tema,
+            nivel: nivel,
+            objetivo: objetivo || "Desenvolver habilidades práticas",
+            etapas: [
+                {
+                    titulo: "Introdução e Fundamentos",
+                    topicos: [
+                        { tópico: "Conceitos Básicos", material: "#" },
+                        { tópico: "Configuração do Ambiente", material: "#" },
+                        { tópico: "Primeiros Passos", material: "#" }
+                    ],
+                    atividade: "Configure seu ambiente e crie um projeto simples para praticar os conceitos básicos."
+                },
+                {
+                    titulo: "Avançando no Tema",
+                    topicos: [
+                        { tópico: "Técnicas Intermediárias", material: "#" },
+                        { tópico: "Boas Práticas", material: "#" }
+                    ],
+                    atividade: "Implemente um projeto mais complexo aplicando as técnicas aprendidas."
+                }
+            ]
+        };
+        
+        if (currentUser.name !== 'Convidado') {
+            currentUser.trilhas.push(trilhaFallback);
+            currentUser.currentTrilhaIndex = currentUser.trilhas.length - 1;
+            saveUserTrilhas(); 
+        } else {
+            currentUser.trilhas = [trilhaFallback];
+            currentUser.currentTrilhaIndex = 0;
         }
+        
+        loadRoadmap(trilhaFallback);
+        showNotification("⚠️ Usando estrutura básica. A IA pode estar temporariamente indisponível.", "info");
     }
 }
 
+// ===================================================
+// FUNÇÃO LOADROADMAP CORRIGIDA
+// ===================================================
+
 function loadRoadmap(trilha, skipViewChange = false) {
     if (!trilha || !trilha.etapas) {
-        console.error("Trilha inválida.");
+        console.error("Trilha inválida:", trilha);
+        showNotification("❌ Erro ao carregar trilha", "error");
         return;
     }
 
     modalState.etapas = trilha.etapas;
     const roadmapTitle = document.getElementById("roadmap-title");
-    if (roadmapTitle) roadmapTitle.innerText = `🗺️ ${trilha.tema} (${trilha.nivel})`;
+    if (roadmapTitle) {
+        roadmapTitle.innerText = `🗺️ ${trilha.tema} (${trilha.nivel})`;
+    }
     
     const roadmapDiv = document.getElementById("roadmap");
     if (roadmapDiv) {
@@ -789,10 +912,27 @@ function loadRoadmap(trilha, skipViewChange = false) {
             blocoDiv.innerHTML = `
                 <div class="etapa-number">${index + 1}</div>
                 <div class="etapa-title">${etapa.titulo}</div>
+                <div class="etapa-preview">${etapa.topicos ? etapa.topicos.length : 0} tópicos • ${etapa.atividade ? 'Com atividade' : 'Sem atividade'}</div>
             `;
-            blocoDiv.onclick = () => showEtapaView(etapa);
+            blocoDiv.onclick = () => {
+                if (etapa.topicos && etapa.topicos.length > 0) {
+                    showEtapaView(etapa);
+                } else {
+                    showNotification("ℹ️ Esta etapa não possui tópicos detalhados.", "info");
+                }
+            };
             roadmapDiv.appendChild(blocoDiv);
         });
+
+        // Adicionar mensagem se não houver etapas
+        if (trilha.etapas.length === 0) {
+            roadmapDiv.innerHTML = `
+                <div class="placeholder-content">
+                    <p>📝 Esta trilha não possui etapas definidas.</p>
+                    <p>Tente criar uma nova trilha ou selecione um curso pré-definido.</p>
+                </div>
+            `;
+        }
     }
 
     if (!skipViewChange) {
