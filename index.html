@@ -5,154 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quackademy - Trilha de Estudos</title>
     <link rel="stylesheet" href="style.css">
-    <style>
-        /* Estilos inline para garantir funcionamento imediato */
-        #user-trilhas-view,
-        #predefined-courses-view, 
-        #form-view,
-        #roadmap-view,
-        #etapa-view,
-        #material-view,
-        #flashcard-view,
-        #simulado-etapa-view,
-        #chat-view {
-            display: none;
-        }
-
-        .container {
-            min-height: calc(100vh - 80px);
-        }
-
-        .professor-content-container {
-            max-height: 60vh;
-            overflow-y: auto;
-            padding-right: 10px;
-        }
-
-        .professor-content-container::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        .professor-content-container::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 10px;
-        }
-
-        .professor-content-container::-webkit-scrollbar-thumb {
-            background: #6f42c1;
-            border-radius: 10px;
-        }
-
-        .professor-content-container::-webkit-scrollbar-thumb:hover {
-            background: #5a32a3;
-        }
-
-        .flashcard-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-            padding: 20px;
-        }
-
-        .flashcard {
-            width: 300px;
-            height: 200px;
-            perspective: 1000px;
-            cursor: pointer;
-        }
-
-        .flashcard-inner {
-            width: 100%;
-            height: 100%;
-            position: relative;
-            transform-style: preserve-3d;
-            transition: transform 0.6s;
-        }
-
-        .flashcard.flipped .flashcard-inner {
-            transform: rotateY(180deg);
-        }
-
-        .flashcard-front, .flashcard-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-            text-align: center;
-        }
-
-        .flashcard-front {
-            background: linear-gradient(135deg, #FFC107, #E0A800);
-            color: #343A40;
-        }
-
-        .flashcard-back {
-            background: linear-gradient(135deg, #28A745, #1e7e34);
-            color: white;
-            transform: rotateY(180deg);
-        }
-
-        .flashcard-controls {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-        }
-
-        .flashcard-placeholder {
-            text-align: center;
-            padding: 40px 20px;
-            color: #6c757d;
-        }
-
-        /* Estilos para as imagens do mascote */
-        .mascote-welcome {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin: 0 auto 20px;
-            display: block;
-            border: 4px solid #FFC107;
-            background: #FFFBEA;
-        }
-
-        .mascote {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin: 0 auto 15px;
-            display: block;
-            border: 3px solid #FFC107;
-            background: #FFFBEA;
-        }
-
-        .mascote-area {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .etapa-preview {
-            font-size: 0.85em;
-            color: #666;
-            margin-top: 8px;
-            font-weight: normal;
-        }
-    </style>
 </head>
 <body>
     
     <section id="login-screen" class="full-screen-message" style="display: flex;">
         <div class="message-card">
-            <img src="https://i.imgur.com/3Q1A8qJ.png" alt="Mascote Quackademy" class="mascote-welcome">
+            <img src="mascote_inicial.png" alt="Mascote Quackademy, o Pato" class="mascote-welcome">
             
             <h2>👋 Entre ou Crie sua Conta</h2>
             <p>Faça login para salvar suas trilhas de estudo e gerenciar seu progresso.</p>
@@ -173,13 +31,13 @@
                     <button type="button" id="btnSkipLogin" class="btn-secondary">Pular Login (Modo Convidado)</button>
                 </div>
             </form>
-            <p id="auth-message" style="color: #DC3545; margin-top: 10px;"></p>
+            <p id="auth-message" style="color: var(--color-danger); margin-top: 10px;"></p>
         </div>
     </section>
 
     <section id="welcome-screen" class="full-screen-message" style="display: none;">
         <div class="message-card">
-            <img src="https://i.imgur.com/3Q1A8qJ.png" alt="Mascote Quackademy" class="mascote-welcome">
+            <img src="mascote_inicial.png" alt="Mascote Quackademy, o Pato" class="mascote-welcome">
             
             <h2>🦆 Bem-vindo ao Quackademy! </h2>
             <p>Pare de se afogar em tutoriais soltos. Nós transformamos o caos do aprendizado online em uma <strong>trilha de estudos estruturada e à prova de procrastinação</strong>.</p>
@@ -218,6 +76,8 @@
                     <li><strong>Trilhas Guiadas:</strong> Você informa o tema e o nível, e nossa IA gera um plano de 10+ Etapas personalizadas.</li>
                     <li><strong>Flashcards:</strong> Use <b>flashcards por tópico</b> para memorizar conceitos chave rapidamente.</li>
                     <li><strong>Simulado de Etapa:</strong> Faça um <b>simulado completo por etapa</b> (20+ questões) para testar sua aplicação do conteúdo.</li>
+                    <li><strong>Timer Pomodoro:</strong> Gerencie seu tempo de estudo com o timer Pomodoro integrado.</li>
+                    <li><strong>Assistente Patolindo:</strong> Tire dúvidas com nosso assistente de IA durante os estudos.</li>
                 </ul>
             </div>
             <button id="btnExplanationContinue" class="btn-primary">Ver Cursos Rápidos 🚀</button>
@@ -374,7 +234,7 @@
                 <div id="form-view" class="content-view">
                     <div class="controles">
                         <div class="mascote-area">
-                            <img src="https://i.imgur.com/3Q1A8qJ.png" alt="Mascote Quackademy" class="mascote">
+                            <img src="mascote.png" alt="Mascote Quackademy" class="mascote">
                             <h2>Defina seu Desafio (Via IA)</h2>
                         </div>
                         
