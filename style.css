@@ -964,6 +964,42 @@ main {
     margin-top: 25px;
     width: 100%;
 }
+
+/* NOVO: Estilos para conteúdo do professor */
+.professor-header {
+    text-align: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid var(--color-primary);
+}
+
+.etapa-professor {
+    background-color: var(--color-light-yellow);
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border-left: 4px solid var(--color-primary);
+}
+
+.etapa-professor h4 {
+    color: var(--color-primary-dark);
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+.resumo-professor h5, .exercicios-professor h5 {
+    color: var(--color-secondary);
+    margin-bottom: 10px;
+}
+
+.exercicios-professor ol {
+    padding-left: 20px;
+}
+
+.exercicios-professor li {
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
         
 @media (min-width: 601px) {
     .bloco {
