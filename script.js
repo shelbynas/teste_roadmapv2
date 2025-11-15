@@ -31,7 +31,7 @@ let modalState = {
 let patolindoState = {
     questionsLeft: 5,
     history: [],
-    lastView: "roadmap-view" 
+    lastView: "predefined-courses-view" // CORREÇÃO: View padrão mais segura
 };
 
 let userMode = "aluno";
@@ -119,7 +119,100 @@ const preDefinedRoadmaps = [
 ];
 
 // ===================================================
-// SISTEMA DE MODO PROFESSOR
+// SISTEMA DE NAVEGAÇÃO E HISTÓRICO - CORRIGIDO
+// ===================================================
+
+let navigationHistory = [];
+
+// CORREÇÃO: Sistema de histórico de navegação
+function addToHistory(view) {
+    // Não adiciona views duplicadas consecutivas
+    if (navigationHistory.length === 0 || navigationHistory[navigationHistory.length - 1] !== view) {
+        navigationHistory.push(view);
+    }
+    // Mantém apenas os últimos 10 itens no histórico
+    if (navigationHistory.length > 10) {
+        navigationHistory = navigationHistory.slice(-10);
+    }
+}
+
+function getPreviousView() {
+    if (navigationHistory.length < 2) {
+        return 'predefined-courses-view'; // View padrão segura
+    }
+    // Remove a view atual e retorna a anterior
+    navigationHistory.pop();
+    return navigationHistory.pop() || 'predefined-courses-view';
+}
+
+// CORREÇÃO: Função para navegação segura
+function navigateTo(view, addToHistoryFlag = true) {
+    if (addToHistoryFlag) {
+        addToHistory(view);
+    }
+    
+    hideAllScreens();
+    hideAllViews();
+    
+    switch(view) {
+        case 'login-screen':
+            showLoginView();
+            break;
+        case 'welcome-screen':
+            showWelcomeScreen();
+            break;
+        case 'explanation-screen':
+            showExplanationScreen();
+            break;
+        case 'professor-mode-view':
+            showProfessorModeView();
+            break;
+        case 'professor-result-view':
+            showProfessorResultView();
+            break;
+        case 'main-app':
+            showMainApp();
+            break;
+        case 'user-trilhas-view':
+            showUserTrilhasView();
+            break;
+        case 'predefined-courses-view':
+            showPreDefinedCoursesView();
+            break;
+        case 'form-view':
+            showFormView();
+            break;
+        case 'roadmap-view':
+            showRoadmapView();
+            break;
+        case 'etapa-view':
+            showEtapaView(modalState.currentEtapa);
+            break;
+        case 'material-view':
+            // Esta view é chamada com parâmetros específicos
+            break;
+        case 'flashcard-view':
+            // Esta view é chamada com parâmetros específicos
+            break;
+        case 'simulado-etapa-view':
+            // Esta view é chamada com parâmetros específicos
+            break;
+        case 'chat-view':
+            showChatView();
+            break;
+        default:
+            showPreDefinedCoursesView(); // View padrão
+    }
+}
+
+// CORREÇÃO: Função de voltar melhorada
+function goBack() {
+    const previousView = getPreviousView();
+    navigateTo(previousView, false); // Não adiciona ao histórico ao voltar
+}
+
+// ===================================================
+// SISTEMA DE MODO PROFESSOR - CORRIGIDO
 // ===================================================
 
 function initializeModeSelector() {
@@ -142,16 +235,34 @@ function selectMode(mode) {
 
 function showProfessorModeView() {
     hideAllScreens();
+    hideAllViews();
     const professorView = document.getElementById("professor-mode-view");
     if (professorView) professorView.style.display = 'flex';
-    updateBottomNav('professor');
+    addToHistory('professor-mode-view');
 }
 
 function showProfessorResultView() {
     hideAllScreens();
+    hideAllViews();
     const resultView = document.getElementById("professor-result-view");
     if (resultView) resultView.style.display = 'flex';
-    updateBottomNav('professor');
+    addToHistory('professor-result-view');
+}
+
+// CORREÇÃO: Função para voltar do modo professor
+function backFromProfessor() {
+    if (navigationHistory.length > 1) {
+        goBack();
+    } else {
+        // Se não há histórico, vai para uma tela segura
+        showWelcomeScreen();
+    }
+}
+
+// CORREÇÃO: Função para ir para a plataforma do professor
+function goToPlatformFromProfessor() {
+    hideAllScreens();
+    showMainApp(false);
 }
 
 function hideAllScreens() {
@@ -751,6 +862,20 @@ function getCurrentView() {
             return key;
         }
     }
+    
+    // Verifica também as telas principais
+    const mainScreens = [
+        "login-screen", "welcome-screen", "explanation-screen", 
+        "professor-mode-view", "professor-result-view"
+    ];
+    
+    for (const screen of mainScreens) {
+        const element = document.getElementById(screen);
+        if (element && element.style.display !== 'none') {
+            return screen;
+        }
+    }
+    
     return null;
 }
 
@@ -774,7 +899,8 @@ document.addEventListener('click', function(event) {
     const quickActionsBtn = document.getElementById('quick-actions-button');
     const quickActionsMenu = document.getElementById('quick-actions-menu');
     
-    if (!quickActionsBtn.contains(event.target) && !quickActionsMenu.contains(event.target)) {
+    if (quickActionsBtn && !quickActionsBtn.contains(event.target) && 
+        quickActionsMenu && !quickActionsMenu.contains(event.target)) {
         hideQuickActionsMenu();
     }
 });
@@ -839,15 +965,14 @@ function updateTrilhasCountDisplay() {
 }
 
 // ===================================================
-// CONTROLE DE FLUXO DE AUTENTICAÇÃO 
+// CONTROLE DE FLUXO DE AUTENTICAÇÃO - CORRIGIDO
 // ===================================================
 
 function showLoginView() {
+    hideAllScreens();
+    hideAllViews();
     document.getElementById("login-screen").style.display = 'flex';
-    document.getElementById("welcome-screen").style.display = 'none';
-    document.getElementById("explanation-screen").style.display = 'none';
-    document.getElementById("main-app").style.display = 'none';
-    document.getElementById("predefined-courses-view").style.display = 'none';
+    addToHistory('login-screen');
     
     // Garante que os campos de login estejam limpos
     document.getElementById('username').value = '';
@@ -897,7 +1022,7 @@ function handleSkipLogin() {
 }
 
 // ===================================================
-// Listeners de Transição Inicial
+// Listeners de Transição Inicial - CORRIGIDOS
 // ===================================================
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -909,18 +1034,17 @@ document.addEventListener("DOMContentLoaded", () => {
     
     document.getElementById("btnWelcomeContinue").addEventListener("click", showExplanationScreen);
     
-    // 🐛 CORREÇÃO APLICADA AQUI: Chama showMainApp que decide o próximo passo (Cursos Pré-Definidos)
     document.getElementById("btnExplanationContinue").addEventListener("click", () => showMainApp(false)); 
     
     document.getElementById("btnGerar").addEventListener("click", gerarRoadmap);
     
-    // Listeners dos botões de voltar (dentro das telas de conteúdo)
-    document.getElementById("btnMaterialVoltar").addEventListener("click", () => showEtapaView(modalState.currentEtapa));
-    document.getElementById("btnFlashcardVoltar").addEventListener("click", () => showEtapaView(modalState.currentEtapa));
-    document.getElementById("btnSimuladoEtapaVoltar").addEventListener("click", () => showEtapaView(modalState.currentEtapa));
+    // CORREÇÃO: Listeners dos botões de voltar com navegação segura
+    document.getElementById("btnMaterialVoltar").addEventListener("click", () => goBack());
+    document.getElementById("btnFlashcardVoltar").addEventListener("click", () => goBack());
+    document.getElementById("btnSimuladoEtapaVoltar").addEventListener("click", () => goBack());
     
     // --- Listeners do Chatbot ---
-    document.getElementById("chat-exit-button").addEventListener("click", () => showLastView());
+    document.getElementById("chat-exit-button").addEventListener("click", () => goBack());
     document.getElementById("chat-send-button").addEventListener("click", handleChatSend);
     document.getElementById("chat-input").addEventListener("keypress", (e) => {
         if (e.key === 'Enter') handleChatSend();
@@ -941,27 +1065,31 @@ document.addEventListener("DOMContentLoaded", () => {
     if (profBtn) profBtn.addEventListener("click", gerarConteudoProfessor);
 });
 
-// Funções de transição de telas iniciais
+// Funções de transição de telas iniciais - CORRIGIDAS
 function showWelcomeScreen() {
-    document.getElementById("login-screen").style.display = 'none';
+    hideAllScreens();
+    hideAllViews();
     document.getElementById("welcome-screen").style.display = 'flex';
+    addToHistory('welcome-screen');
 }
 
 function showExplanationScreen() {
-    document.getElementById("welcome-screen").style.display = 'none';
+    hideAllScreens();
+    hideAllViews();
     
     if (userMode === 'professor') {
         showProfessorModeView();
     } else {
         document.getElementById("explanation-screen").style.display = 'flex';
+        addToHistory('explanation-screen');
     }
 }
 
 function showMainApp(isExistingUser = false) {
-    document.getElementById("explanation-screen").style.display = 'none';
-    document.getElementById("welcome-screen").style.display = 'none';
-    document.getElementById("login-screen").style.display = 'none';
+    hideAllScreens();
+    hideAllViews();
     document.getElementById("main-app").style.display = 'block';
+    addToHistory('main-app');
     
     // Atualiza a visibilidade do botão de ações rápidas
     updateQuickActionsButton();
@@ -1000,15 +1128,6 @@ function hideAllViews() {
     }
 }
 
-// CORREÇÃO: Função para mostrar uma view específica
-function showView(viewId) {
-    hideAllViews();
-    const view = document.getElementById(viewId);
-    if (view) {
-        view.style.display = 'block';
-    }
-}
-
 function updateBottomNav(activeView) {
     const navButtons = document.querySelectorAll('.nav-btn');
     navButtons.forEach(btn => {
@@ -1024,6 +1143,7 @@ function updateBottomNav(activeView) {
 // ===================================================
 
 function showUserTrilhasView() {
+    hideAllScreens();
     hideAllViews();
     window.scrollTo(0, 0); 
 
@@ -1032,7 +1152,8 @@ function showUserTrilhasView() {
         return;
     }
     
-    showView("user-trilhas-view");
+    document.getElementById("user-trilhas-view").style.display = 'block';
+    addToHistory('user-trilhas-view');
     updateBottomNav('user-trilhas-view');
     updateQuickActionsButton();
     updateQuickActionsMenu();
@@ -1094,11 +1215,13 @@ function showUserTrilhasView() {
 
 function showPreDefinedCoursesView() {
     // Garante que a aplicação principal está visível antes de exibir a sub-tela
-    document.getElementById("main-app").style.display = 'block'; 
-    
+    hideAllScreens();
     hideAllViews();
+    document.getElementById("main-app").style.display = 'block'; 
+    document.getElementById("predefined-courses-view").style.display = 'block';
+    
     window.scrollTo(0, 0); 
-    showView("predefined-courses-view");
+    addToHistory('predefined-courses-view');
     updateBottomNav('predefined-courses-view');
     updateQuickActionsButton();
     updateQuickActionsMenu();
@@ -1137,29 +1260,35 @@ function showPreDefinedCoursesView() {
 }
 
 function showFormView() {
+    hideAllScreens();
     hideAllViews();
     window.scrollTo(0, 0); 
-    showView("form-view");
+    document.getElementById("form-view").style.display = 'block';
+    addToHistory('form-view');
     updateBottomNav('form-view');
     updateQuickActionsButton();
     updateQuickActionsMenu();
 }
 
 function showRoadmapView() {
+    hideAllScreens();
     hideAllViews();
     window.scrollTo(0, 0); 
     patolindoState.lastView = "roadmap-view";
-    showView("roadmap-view");
+    document.getElementById("roadmap-view").style.display = 'block';
+    addToHistory('roadmap-view');
     updateBottomNav('user-trilhas-view');
     updateQuickActionsButton();
     updateQuickActionsMenu();
 }
 
 function showEtapaView(etapa) {
+    hideAllScreens();
     hideAllViews();
     window.scrollTo(0, 0); 
     patolindoState.lastView = "etapa-view";
-    showView("etapa-view");
+    document.getElementById("etapa-view").style.display = 'block';
+    addToHistory('etapa-view');
     updateQuickActionsButton();
     updateQuickActionsMenu();
     
@@ -1193,10 +1322,12 @@ function showEtapaView(etapa) {
 }
 
 function showMaterialView(topico, material) {
+    hideAllScreens();
     hideAllViews();
     window.scrollTo(0, 0); 
     patolindoState.lastView = "material-view";
-    showView("material-view");
+    document.getElementById("material-view").style.display = 'block';
+    addToHistory('material-view');
     updateQuickActionsButton();
     updateQuickActionsMenu();
     
@@ -1204,10 +1335,12 @@ function showMaterialView(topico, material) {
 }
 
 function showFlashcardView(topico) {
+    hideAllScreens();
     hideAllViews();
     window.scrollTo(0, 0); 
     patolindoState.lastView = "flashcard-view";
-    showView("flashcard-view");
+    document.getElementById("flashcard-view").style.display = 'block';
+    addToHistory('flashcard-view');
     updateQuickActionsButton();
     updateQuickActionsMenu();
 
@@ -1215,10 +1348,12 @@ function showFlashcardView(topico) {
 }
 
 function showSimuladoEtapaView() {
+    hideAllScreens();
     hideAllViews();
     window.scrollTo(0, 0); 
     patolindoState.lastView = "simulado-etapa-view";
-    showView("simulado-etapa-view");
+    document.getElementById("simulado-etapa-view").style.display = 'block';
+    addToHistory('simulado-etapa-view');
     updateQuickActionsButton();
     updateQuickActionsMenu();
     
@@ -1254,25 +1389,16 @@ function showChatView() {
         return;
     }
     
+    hideAllScreens();
     hideAllViews();
     window.scrollTo(0, 0); 
-    showView("chat-view");
+    document.getElementById("chat-view").style.display = 'block';
+    addToHistory('chat-view');
     resetPatolindoSession();
     hideQuickActionsMenu();
 }
 
-function showLastView() {
-    // Volta para a view anterior salva
-    if (patolindoState.lastView === "roadmap-view") {
-        showRoadmapView();
-    } else if (patolindoState.lastView === "etapa-view" && modalState.currentEtapa) {
-        showEtapaView(modalState.currentEtapa);
-    } else if (patolindoState.lastView === "material-view" && modalState.currentEtapa) {
-         showEtapaView(modalState.currentEtapa);
-    } else {
-        showRoadmapView(); 
-    }
-}
+// CORREÇÃO: Função showLastView removida - usando sistema de histórico
 
 // ===================================================
 // FUNÇÕES DE GERENCIAMENTO DE TRILHAS (ATUALIZADAS PARA CONVIDADO)
