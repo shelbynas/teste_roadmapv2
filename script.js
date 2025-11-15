@@ -943,7 +943,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // Funções de transição de telas iniciais
 function showWelcomeScreen() {
-    document.getElementById("login-screen").style.display = 'none';
+    hideAllScreens();
     document.getElementById("welcome-screen").style.display = 'flex';
 }
 
