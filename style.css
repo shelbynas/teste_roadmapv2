@@ -136,7 +136,7 @@ body {
 .mode-text {
     font-weight: 700;
     color: var(--color-secondary);
-    font-size: 1em;
+    font-size: 1.em;
 }
 
 /* Estilos Específicos do Modo Professor */
