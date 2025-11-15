@@ -111,13 +111,48 @@
             padding: 40px 20px;
             color: #6c757d;
         }
+
+        /* Estilos para as imagens do mascote */
+        .mascote-welcome {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 20px;
+            display: block;
+            border: 4px solid #FFC107;
+            background: #FFFBEA;
+        }
+
+        .mascote {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 15px;
+            display: block;
+            border: 3px solid #FFC107;
+            background: #FFFBEA;
+        }
+
+        .mascote-area {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .etapa-preview {
+            font-size: 0.85em;
+            color: #666;
+            margin-top: 8px;
+            font-weight: normal;
+        }
     </style>
 </head>
 <body>
     
     <section id="login-screen" class="full-screen-message" style="display: flex;">
         <div class="message-card">
-            <div class="mascote-welcome">🦆</div>
+            <img src="https://i.imgur.com/3Q1A8qJ.png" alt="Mascote Quackademy" class="mascote-welcome">
             
             <h2>👋 Entre ou Crie sua Conta</h2>
             <p>Faça login para salvar suas trilhas de estudo e gerenciar seu progresso.</p>
@@ -144,7 +179,7 @@
 
     <section id="welcome-screen" class="full-screen-message" style="display: none;">
         <div class="message-card">
-            <div class="mascote-welcome">🦆</div>
+            <img src="https://i.imgur.com/3Q1A8qJ.png" alt="Mascote Quackademy" class="mascote-welcome">
             
             <h2>🦆 Bem-vindo ao Quackademy! </h2>
             <p>Pare de se afogar em tutoriais soltos. Nós transformamos o caos do aprendizado online em uma <strong>trilha de estudos estruturada e à prova de procrastinação</strong>.</p>
@@ -339,7 +374,7 @@
                 <div id="form-view" class="content-view">
                     <div class="controles">
                         <div class="mascote-area">
-                            <div class="mascote">🦆</div>
+                            <img src="https://i.imgur.com/3Q1A8qJ.png" alt="Mascote Quackademy" class="mascote">
                             <h2>Defina seu Desafio (Via IA)</h2>
                         </div>
                         
