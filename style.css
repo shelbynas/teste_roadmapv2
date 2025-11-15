@@ -60,13 +60,14 @@ body {
 }
 
 .mascote-welcome {
-    width: 120px;
-    height: 120px;
-    font-size: 80px;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
     margin: 0 auto 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: block;
+    border: 4px solid var(--color-primary);
+    background: var(--color-light-yellow);
 }
 
 .message-card h2 {
@@ -906,9 +907,14 @@ body {
 
 /* Mascote */
 .mascote {
-    font-size: 60px;
-    text-align: center;
-    margin-bottom: 20px;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 0 auto 15px;
+    display: block;
+    border: 3px solid var(--color-primary);
+    background: var(--color-light-yellow);
 }
 
 .mascote-area {
@@ -931,6 +937,14 @@ body {
 
 .professor-actions {
     justify-content: space-between;
+}
+
+/* Preview das etapas */
+.etapa-preview {
+    font-size: 0.85em;
+    color: #666;
+    margin-top: 8px;
+    font-weight: normal;
 }
 
 /* Responsividade */
@@ -1024,9 +1038,8 @@ body {
     }
     
     .mascote-welcome {
-        width: 100px;
-        height: 100px;
-        font-size: 60px;
+        width: 120px;
+        height: 120px;
     }
     
     .message-card h2 {
