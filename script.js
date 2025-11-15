@@ -1,14 +1,13 @@
 // ===================================================
-// JAVASCRIPT INTEGRADO (script.js) - COMPLETO COM MODO PROFESSOR
+// JAVASCRIPT COMPLETO COM TODAS AS FUNCIONALIDADES
 // ===================================================
 
-// ⚠️ ATENÇÃO: CHAVE DA API ATUALIZADA AQUI
+// Configuração da API
 const API_KEY = "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"; 
-
 const GROQ_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions";
 const MODEL_NAME = "llama-3.1-8b-instant"; 
 
-// --- SISTEMA DE USUÁRIO SIMPLES (LOCALSTORAGE) ---
+// Estados do Sistema
 let currentUser = {
     name: null,
     trilhas: [],
@@ -16,7 +15,6 @@ let currentUser = {
 };
 
 let allUsersData = {}; 
-
 let modalState = {
     flashcards: [],
     currentFlashcardIndex: 0,
@@ -34,10 +32,7 @@ let patolindoState = {
     lastView: "roadmap-view" 
 };
 
-// --- NOVO: Estado do Modo ---
 let userMode = "aluno";
-
-// --- SISTEMA POMODORO ---
 let pomodoroState = {
     isRunning: false,
     isBreak: false,
@@ -47,22 +42,75 @@ let pomodoroState = {
     interval: null
 };
 
-// --- DADOS PRÉ-DEFINIDOS ---
+// Dados Pré-definidos
 const preDefinedRoadmaps = [
     {
         category: "Programação e Tecnologia",
         courses: [
             {
-                tema: "Python para Iniciantes", nivel: "Iniciante", objetivo: "Desenvolvimento de scripts básicos e lógica de programação.",
+                tema: "Python para Iniciantes", 
+                nivel: "Iniciante", 
+                objetivo: "Desenvolvimento de scripts básicos e lógica de programação.",
                 etapas: [
-                    { titulo: "Etapa 1: Fundamentos e Sintaxe", topicos: [{ tópico: "Variáveis e Tipos de Dados", material: "https://docs.python.org/pt-br/3/tutorial/introduction.html" }, { tópico: "Estruturas de Controle (If/Else)", material: "https://docs.python.org/pt-br/3/tutorial/controlflow.html" }, { tópico: "Laços de Repetição (For/While)", material: "https://docs.python.org/pt-br/3/tutorial/controlflow.html" }, { tópico: "Introdução a Funções", material: "https://docs.python.org/pt-br/3/tutorial/controlflow.html" }], atividade: "Criar uma calculadora simples que utilize If/Else e funções." }
+                    { 
+                        titulo: "Etapa 1: Fundamentos e Sintaxe", 
+                        topicos: [
+                            { tópico: "Variáveis e Tipos de Dados", material: "https://docs.python.org/pt-br/3/tutorial/introduction.html" }, 
+                            { tópico: "Estruturas de Controle (If/Else)", material: "https://docs.python.org/pt-br/3/tutorial/controlflow.html" }, 
+                            { tópico: "Laços de Repetição (For/While)", material: "https://docs.python.org/pt-br/3/tutorial/controlflow.html" }, 
+                            { tópico: "Introdução a Funções", material: "https://docs.python.org/pt-br/3/tutorial/controlflow.html" }
+                        ], 
+                        atividade: "Criar uma calculadora simples que utilize If/Else e funções." 
+                    }
+                ]
+            },
+            {
+                tema: "JavaScript Moderno (ES6+)", 
+                nivel: "Intermediário", 
+                objetivo: "Desenvolvimento Frontend e manipulação de DOM.",
+                etapas: [
+                    { 
+                        titulo: "Etapa 1: Variáveis e Scopes", 
+                        topicos: [
+                            { tópico: "Var, Let e Const", material: "https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Guide/Grammar_and_types" }, 
+                            { tópico: "Arrow Functions e Template Literals", material: "https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Functions/Arrow_functions" }, 
+                            { tópico: "Manipulação de Array (Map, Filter, Reduce)", material: "https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Array" }, 
+                            { tópico: "Introdução a Promises e Async/Await", material: "https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Guide/Using_promises" }
+                        ], 
+                        atividade: "Criar uma lista de tarefas (To-Do List) que manipule o DOM e use funções de array." 
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        category: "Idiomas e Linguagens",
+        courses: [
+            {
+                tema: "Inglês Básico", 
+                nivel: "Iniciante", 
+                objetivo: "Conversação simples e compreensão de textos básicos.",
+                etapas: [
+                    { 
+                        titulo: "Etapa 1: O Verbo 'To Be'", 
+                        topicos: [
+                            { tópico: "Afirmativa e Negativa", material: "https://www.youtube.com/watch?v=basico_to_be" }, 
+                            { tópico: "Interrogativa e Short Answers", material: "https://www.duolingo.com/course/en/pt/learn-english" }, 
+                            { tópico: "Pronomes Pessoais e Possessivos", material: "https://www.bbc.co.uk/learningenglish/" }, 
+                            { tópico: "Vocabulário de Saudação e Apresentação", material: "https://www.memrise.com/" }
+                        ], 
+                        atividade: "Gravar um áudio se apresentando e falando sobre 3 membros da família em inglês." 
+                    }
                 ]
             }
         ]
     }
 ];
 
-// --- FUNÇÕES DO SISTEMA DE MODO ---
+// ===================================================
+// SISTEMA DE MODO PROFESSOR
+// ===================================================
+
 function initializeModeSelector() {
     const alunoBtn = document.getElementById('btnAlunoMode');
     const professorBtn = document.getElementById('btnProfessorMode');
@@ -84,11 +132,13 @@ function selectMode(mode) {
 function showProfessorModeView() {
     hideAllScreens();
     document.getElementById("professor-mode-view").style.display = 'flex';
+    updateBottomNav('professor');
 }
 
 function showProfessorResultView() {
     hideAllScreens();
     document.getElementById("professor-result-view").style.display = 'flex';
+    updateBottomNav('professor');
 }
 
 function hideAllScreens() {
@@ -109,35 +159,62 @@ async function gerarConteudoProfessor() {
     const etapas = parseInt(document.getElementById("professor-etapas").value);
     
     if (!tema) {
-        alert("Por favor, preencha o campo Tema.");
+        showNotification("⚠️ Por favor, preencha o campo Tema.", "error");
         return;
     }
     
+    if (etapas < 1 || etapas > 10) {
+        showNotification("⚠️ O número de etapas deve ser entre 1 e 10.", "error");
+        return;
+    }
+    
+    // Atualizar metadados do resultado
+    document.getElementById("result-tema").textContent = tema;
+    document.getElementById("result-nivel").textContent = nivel;
+    document.getElementById("result-etapas").textContent = `${etapas} etapas`;
+    
     showProfessorResultView();
     const contentContainer = document.getElementById("professor-content-container");
-    contentContainer.innerHTML = "<p>✨ Gerando conteúdo educacional e exercícios...</p>";
+    contentContainer.innerHTML = `
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <p>✨ Gerando conteúdo educacional personalizado...</p>
+            <p class="loading-details">Isso pode levar alguns segundos</p>
+        </div>
+    `;
     
     try {
-        const systemPrompt = `Você é um especialista em educação e criação de conteúdo didático. Crie um plano de ensino completo com ${etapas} etapas para o tema "${tema}" no nível "${nivel}". Para CADA etapa, forneça:
-1. Um RESUMO detalhado do tópico (mínimo 200 palavras)
-2. 3 EXERCÍCIOS práticos relacionados ao tópico
+        const systemPrompt = `Você é um especialista em educação e criação de conteúdo didático. Crie um plano de ensino completo com ${etapas} etapas para o tema "${tema}" no nível "${nivel}". 
+
+PARA CADA ETAPA, forneça:
+1. Um RESUMO detalhado e educativo (mínimo 250 palavras)
+2. 3 EXERCÍCIOS práticos com RESPOSTAS CORRETAS
+
+CRITÉRIOS IMPORTANTES:
+- Os exercícios devem ser objetivos e claros
+- Inclua a resposta correta para cada exercício
+- Use linguagem adequada ao nível ${nivel}
+- Seja prático e aplicável
 
 Formato obrigatório (APENAS JSON):
 {
   "etapas": [
     {
-      "titulo": "Nome da etapa",
-      "resumo": "Texto detalhado do resumo...",
+      "titulo": "Nome criativo da etapa",
+      "resumo": "Texto educativo detalhado...",
       "exercicios": [
-        "Exercício 1...",
-        "Exercício 2...", 
-        "Exercício 3..."
+        {
+          "pergunta": "Texto da pergunta...",
+          "resposta": "Resposta correta detalhada..."
+        }
       ]
     }
   ]
 }`;
 
-        const userPrompt = `Crie ${etapas} etapas de ensino sobre "${tema}" (Nível: ${nivel}). Detalhes adicionais: ${explicacoes}. Inclua resumos detalhados e exercícios práticos para cada etapa.`;
+        const userPrompt = `Crie ${etapas} etapas de ensino sobre "${tema}" (Nível: ${nivel}). 
+Contexto adicional: ${explicacoes || "Sem detalhes adicionais."}
+Inclua resumos educativos e exercícios práticos com respostas.`;
 
         const response = await fetch(GROQ_ENDPOINT, {
             method: "POST",
@@ -152,12 +229,13 @@ Formato obrigatório (APENAS JSON):
                     { role: "user", content: userPrompt }
                 ],
                 response_format: { type: "json_object" }, 
-                temperature: 0.7 
+                temperature: 0.7,
+                max_tokens: 4000
             })
         });
 
         if (!response.ok) {
-            throw new Error(`Erro API: ${response.status}`);
+            throw new Error(`Erro na API: ${response.status}`);
         }
 
         const data = await response.json();
@@ -175,57 +253,193 @@ Formato obrigatório (APENAS JSON):
         
         const conteudoGerado = parsed.etapas;
         renderConteudoProfessor(conteudoGerado, tema, nivel);
+        showNotification("✅ Conteúdo gerado com sucesso!", "success");
 
     } catch (err) {
         console.error("Erro:", err);
-        contentContainer.innerHTML = `⚠️ Erro ao gerar conteúdo. Causa: ${err.message}.`;
+        contentContainer.innerHTML = `
+            <div class="error-content">
+                <h3>⚠️ Erro ao gerar conteúdo</h3>
+                <p>${err.message}</p>
+                <button onclick="showProfessorModeView()" class="btn-secondary">Tentar Novamente</button>
+            </div>
+        `;
+        showNotification("❌ Erro ao gerar conteúdo", "error");
     }
 }
 
 function renderConteudoProfessor(conteudo, tema, nivel) {
     const contentContainer = document.getElementById("professor-content-container");
     
+    if (!conteudo || !Array.isArray(conteudo)) {
+        contentContainer.innerHTML = `
+            <div class="error-content">
+                <h3>⚠️ Formato inválido</h3>
+                <p>O conteúdo retornado não está no formato esperado.</p>
+            </div>
+        `;
+        return;
+    }
+    
     let html = `
-        <div class="professor-header">
-            <h3>📚 Conteúdo Gerado: ${tema} (${nivel})</h3>
-            <p>${conteudo.length} etapas criadas com resumos e exercícios</p>
-        </div>
+        <div class="professor-success">
+            <div class="success-header">
+                <h3>🎉 Conteúdo Gerado com Sucesso!</h3>
+                <p>${conteudo.length} etapas criadas para <strong>${tema}</strong> (${nivel})</p>
+            </div>
     `;
     
     conteudo.forEach((etapa, index) => {
+        const exerciciosHtml = etapa.exercicios && Array.isArray(etapa.exercicios) 
+            ? etapa.exercicios.map((exercicio, exIndex) => `
+                <div class="exercicio-item">
+                    <div class="exercicio-pergunta">
+                        <strong>${exIndex + 1}.</strong> ${exercicio.pergunta || 'Pergunta não disponível'}
+                    </div>
+                    <div class="exercicio-resposta">
+                        <span class="resposta-label">🎯 Resposta:</span>
+                        ${exercicio.resposta || 'Resposta não disponível'}
+                    </div>
+                </div>
+            `).join('')
+            : '<p>Exercícios não disponíveis para esta etapa.</p>';
+        
         html += `
             <div class="etapa-professor">
-                <h4>${index + 1}. ${etapa.titulo}</h4>
+                <h4>📖 ${etapa.titulo || `Etapa ${index + 1}`}</h4>
+                
                 <div class="resumo-professor">
-                    <h5>📖 Resumo:</h5>
+                    <h5>📚 Resumo Educativo</h5>
                     <p>${etapa.resumo || "Resumo não disponível."}</p>
                 </div>
+                
                 <div class="exercicios-professor">
-                    <h5>📝 Exercícios:</h5>
-                    <ol>
-                        ${etapa.exercicios ? etapa.exercicios.map(ex => `<li>${ex}</li>`).join('') : '<li>Exercícios não disponíveis.</li>'}
-                    </ol>
+                    <h5>📝 Exercícios Práticos</h5>
+                    <div class="exercicios-lista">
+                        ${exerciciosHtml}
+                    </div>
                 </div>
             </div>
-            <hr>
         `;
     });
     
+    html += `</div>`;
     contentContainer.innerHTML = html;
 }
 
-// --- FUNÇÕES DE AUTENTICAÇÃO E NAVEGAÇÃO ---
+// ===================================================
+// SISTEMA DE NAVEGAÇÃO E BOTTOM NAV
+// ===================================================
+
+const viewMap = {
+    "user-trilhas-view": document.getElementById("user-trilhas-view"),
+    "predefined-courses-view": document.getElementById("predefined-courses-view"),
+    "form-view": document.getElementById("form-view"),
+    "roadmap-view": document.getElementById("roadmap-view"),
+    "etapa-view": document.getElementById("etapa-view"),
+    "material-view": document.getElementById("material-view"),
+    "flashcard-view": document.getElementById("flashcard-view"), 
+    "simulado-etapa-view": document.getElementById("simulado-etapa-view"), 
+    "chat-view": document.getElementById("chat-view")
+};
+
+function hideAllViews() {
+    for (const key in viewMap) {
+        if (viewMap[key]) {
+            viewMap[key].style.display = 'none';
+        }
+    }
+}
+
+function updateBottomNav(activeView) {
+    const navButtons = document.querySelectorAll('.nav-btn');
+    navButtons.forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.getAttribute('data-view') === activeView) {
+            btn.classList.add('active');
+        }
+    });
+}
+
+function showUserTrilhasView() {
+    hideAllViews();
+    window.scrollTo(0, 0);
+    viewMap["user-trilhas-view"].style.display = 'block';
+    updateBottomNav('user-trilhas-view');
+    loadUserTrilhas();
+}
+
+function showPreDefinedCoursesView() {
+    hideAllViews();
+    window.scrollTo(0, 0);
+    viewMap["predefined-courses-view"].style.display = 'block';
+    updateBottomNav('predefined-courses-view');
+    loadPreDefinedCourses();
+}
+
+function showFormView() {
+    hideAllViews();
+    window.scrollTo(0, 0);
+    viewMap["form-view"].style.display = 'flex';
+    updateBottomNav('form-view');
+}
+
+function showRoadmapView() {
+    hideAllViews();
+    window.scrollTo(0, 0);
+    viewMap["roadmap-view"].style.display = 'block';
+    updateBottomNav('user-trilhas-view');
+}
+
+function showEtapaView(etapa) {
+    hideAllViews();
+    window.scrollTo(0, 0);
+    viewMap["etapa-view"].style.display = 'block';
+    
+    modalState.currentEtapa = etapa; 
+    document.getElementById("etapa-titulo").innerText = etapa.titulo;
+    
+    const conteudo = etapa.topicos.map(t => {
+        const topicoEscapado = t.tópico.replace(/'/g,"\\'"); 
+        const materialLink = t.material ? t.material.replace(/'/g,"\\'") : "#"; 
+
+        return `
+            <div class="topico-bloco">
+                <button class="material-btn" onclick="showMaterialView('${topicoEscapado}', '${materialLink}')">
+                    📚 ${t.tópico}
+                </button>
+                <button class="btn-flashcard" onclick="showFlashcardView('${topicoEscapado}')">🧠 Gerar Flashcards</button>
+            </div>
+        `;
+    }).join("");
+
+    document.getElementById("etapa-conteudo").innerHTML = `
+        <div class="etapa-content">
+            <div class="atividade-section">
+                <h3>🎯 Atividade Prática</h3>
+                <div class="atividade-card">
+                    <p>${etapa.atividade}</p>
+                </div>
+            </div>
+            <div class="topicos-section">
+                <h3>📚 Tópicos de Estudo</h3>
+                <div class="topicos-container">${conteudo}</div>
+            </div>
+        </div>
+    `;
+}
+
+// ===================================================
+// SISTEMA DE AUTENTICAÇÃO E USUÁRIO
+// ===================================================
+
 function showLoginView() {
+    hideAllScreens();
     document.getElementById("login-screen").style.display = 'flex';
-    document.getElementById("welcome-screen").style.display = 'none';
-    document.getElementById("explanation-screen").style.display = 'none';
-    document.getElementById("main-app").style.display = 'none';
-    document.getElementById("professor-mode-view").style.display = 'none';
-    document.getElementById("professor-result-view").style.display = 'none';
 }
 
 function showWelcomeScreen() {
-    document.getElementById("login-screen").style.display = 'none';
+    hideAllScreens();
     document.getElementById("welcome-screen").style.display = 'flex';
     selectMode('aluno');
 }
@@ -245,13 +459,12 @@ function showMainApp(isExistingUser = false) {
     document.getElementById("main-app").style.display = 'block';
     
     if (isExistingUser && currentUser.trilhas.length > 0) {
-         showUserTrilhasView();
+        showUserTrilhasView();
     } else {
-         showPreDefinedCoursesView();
+        showPreDefinedCoursesView();
     }
 }
 
-// --- SISTEMA DE AUTENTICAÇÃO ---
 function loadAllUsersData() {
     const data = localStorage.getItem('quackademyAllUsers');
     if (data) {
@@ -280,7 +493,11 @@ function loadUserData(username) {
             currentUser.name = username;
             currentUser.trilhas = [];
             currentUser.currentTrilhaIndex = -1;
-            allUsersData[username] = { trilhas: [], currentTrilhaIndex: -1, password: document.getElementById('password').value };
+            allUsersData[username] = { 
+                trilhas: [], 
+                currentTrilhaIndex: -1, 
+                password: document.getElementById('password').value 
+            };
         }
     }
     document.getElementById("userNameDisplay").innerText = currentUser.name;
@@ -309,15 +526,15 @@ function handleAuthSubmit(e) {
     if (userExists) {
         if (userExists.password === password) {
             loadUserData(username);
-            authMessage.innerText = `Login bem-sucedido para ${username}!`;
-            showMainApp(true);
+            authMessage.innerText = `✅ Login bem-sucedido para ${username}!`;
+            setTimeout(() => showMainApp(true), 1000);
         } else {
-            authMessage.innerText = "Senha incorreta.";
+            authMessage.innerText = "❌ Senha incorreta.";
         }
     } else {
         loadUserData(username);
-        authMessage.innerText = `Usuário ${username} criado e logado!`;
-        showWelcomeScreen();
+        authMessage.innerText = `🎉 Usuário ${username} criado e logado!`;
+        setTimeout(() => showWelcomeScreen(), 1000);
     }
 }
 
@@ -326,41 +543,23 @@ function handleSkipLogin() {
     showWelcomeScreen();
 }
 
-// --- NAVEGAÇÃO SPA ---
-const viewMap = {
-    "user-trilhas-view": document.getElementById("user-trilhas-view"),
-    "predefined-courses-view": document.getElementById("predefined-courses-view"),
-    "form-view": document.getElementById("form-view"),
-    "roadmap-view": document.getElementById("roadmap-view"),
-    "etapa-view": document.getElementById("etapa-view"),
-    "material-view": document.getElementById("material-view"),
-    "flashcard-view": document.getElementById("flashcard-view"), 
-    "simulado-etapa-view": document.getElementById("simulado-etapa-view"), 
-    "chat-view": document.getElementById("chat-view")
-};
+// ===================================================
+// SISTEMA DE TRILHAS E CONTEÚDO
+// ===================================================
 
-function hideAllViews() {
-    for (const key in viewMap) {
-        viewMap[key].style.display = 'none';
-    }
-}
-
-function showUserTrilhasView() {
-    hideAllViews();
-    window.scrollTo(0, 0); 
-
-    if (currentUser.name === 'Convidado') {
-        showPreDefinedCoursesView();
-        return;
-    }
-    
-    viewMap["user-trilhas-view"].style.display = 'block';
-
+function loadUserTrilhas() {
     const trilhasList = document.getElementById("trilhas-list");
+    if (!trilhasList) return;
+    
     trilhasList.innerHTML = '';
     
     if (currentUser.trilhas.length === 0) {
-        trilhasList.innerHTML = '<p class="placeholder-text">Nenhuma trilha de estudo salva. Crie uma nova para começar!</p>';
+        trilhasList.innerHTML = `
+            <div class="placeholder-content">
+                <p>📝 Nenhuma trilha de estudo salva.</p>
+                <p>Crie sua primeira trilha para começar!</p>
+            </div>
+        `;
         return;
     }
 
@@ -376,40 +575,37 @@ function showUserTrilhasView() {
         
         const card = document.createElement('div');
         card.className = 'trilha-card';
-        card.style.borderLeft = isActive ? '5px solid var(--color-success)' : '1px solid #ddd';
+        card.style.borderLeft = isActive ? '5px solid var(--color-success)' : '3px solid var(--color-primary)';
 
         const info = `
             <div class="trilha-info">
-                <h4>${trilha.tema} (${trilha.nivel}) ${isActive ? '<b>(ATIVA)</b>' : ''}</h4>
-                <p>Objetivo: ${trilha.objetivo || 'Não especificado'}</p>
-                <p>Etapas: ${trilha.etapas.length}</p>
+                <h4>${trilha.tema} (${trilha.nivel}) ${isActive ? '🎯' : ''}</h4>
+                <p>${trilha.objetivo || 'Sem objetivo específico'}</p>
+                <div class="trilha-meta">
+                    <span class="meta-item">📚 ${trilha.etapas.length} etapas</span>
+                    ${isActive ? '<span class="active-badge">ATIVA</span>' : ''}
+                </div>
             </div>
         `;
 
         const actions = `
             <div class="trilha-actions">
-                <button class="btn-success" onclick="loadAndShowRoadmap(${originalIndex})" style="${isActive ? 'display: none;' : ''}">Abrir</button>
-                <button class="btn-danger" onclick="deleteTrilha(${originalIndex})">Excluir</button>
+                <button class="btn-success" onclick="loadAndShowRoadmap(${originalIndex})">
+                    ${isActive ? '🎯 Abrir' : '📖 Abrir'}
+                </button>
+                <button class="btn-danger" onclick="deleteTrilha(${originalIndex})">🗑️</button>
             </div>
         `;
 
         card.innerHTML = info + actions;
         trilhasList.appendChild(card);
     });
-
-    if (currentUser.currentTrilhaIndex !== -1) {
-         loadRoadmap(currentUser.trilhas[currentUser.currentTrilhaIndex], true);
-    }
 }
 
-function showPreDefinedCoursesView() {
-    document.getElementById("main-app").style.display = 'block'; 
-    
-    hideAllViews();
-    window.scrollTo(0, 0); 
-    viewMap["predefined-courses-view"].style.display = 'block';
-
+function loadPreDefinedCourses() {
     const coursesListDiv = document.getElementById("predefined-courses-list");
+    if (!coursesListDiv) return;
+    
     coursesListDiv.innerHTML = '';
     
     preDefinedRoadmaps.forEach(categoryData => {
@@ -428,8 +624,11 @@ function showPreDefinedCoursesView() {
 
             card.innerHTML = `
                 <h4>${course.tema}</h4>
-                <p>Nível: <b>${course.nivel}</b></p>
-                <p>Objetivo: ${course.objetivo}</p>
+                <p><strong>Nível:</strong> ${course.nivel}</p>
+                <p>${course.objetivo}</p>
+                <div class="course-meta">
+                    <span>📖 ${course.etapas.length} etapa${course.etapas.length > 1 ? 's' : ''}</span>
+                </div>
             `;
             gridHtml.appendChild(card);
         });
@@ -439,39 +638,29 @@ function showPreDefinedCoursesView() {
     });
 }
 
-function showFormView() {
-    hideAllViews();
-    window.scrollTo(0, 0); 
-    viewMap["form-view"].style.display = 'flex'; 
-}
-
-function showRoadmapView() {
-    hideAllViews();
-    window.scrollTo(0, 0); 
-    patolindoState.lastView = "roadmap-view";
-    viewMap["roadmap-view"].style.display = 'block';
-}
-
-// --- FUNÇÕES DE CONTEÚDO ---
 async function gerarRoadmap() {
     const tema = document.getElementById("tema").value;
     const nivel = document.getElementById("nivel").value;
     const objetivo = document.getElementById("objetivo").value;
     const roadmapDiv = document.getElementById("roadmap");
     
-    roadmapDiv.innerHTML = "✨ Gerando roadmap...";
-    showRoadmapView(); 
-
     if (!tema) {
-        roadmapDiv.innerHTML = "⚠️ Por favor, preencha o campo Tema.";
+        showNotification("⚠️ Por favor, preencha o campo Tema.", "error");
         return;
     }
     
-    await new Promise(resolve => setTimeout(resolve, 500)); 
+    roadmapDiv.innerHTML = `
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <p>✨ Gerando trilha personalizada...</p>
+        </div>
+    `;
+    showRoadmapView();
 
     try {
-        const systemPrompt = `Você é um especialista em educação técnica. Crie um roadmap detalhado com no mínimo 10 etapas obrigatórias. Para cada etapa, liste no mínimo 4 tópicos essenciais. Cada tópico DEVE incluir uma URL de documentação oficial ou tutorial renomado. Sua única resposta deve ser APENAS JSON válido: {"etapas": [{"titulo": "Etapa 1: Nome", "topicos": [{"tópico": "Nome", "material": "URL"}], "atividade": "Descrição"}]}.`;
-        const userPrompt = `Crie um roadmap de estudos detalhado para o tema "${tema}" no nível "${nivel}"${objetivo ? ` com objetivo "${objetivo}"` : ""}. Inclua fontes externas de estudo.`;
+        const systemPrompt = `Você é um especialista em educação técnica. Crie um roadmap detalhado com 8-12 etapas para o tema fornecido. Para cada etapa, inclua 3-5 tópicos essenciais com links de referência. Formato JSON obrigatório.`;
+
+        const userPrompt = `Crie um roadmap de estudos para "${tema}" no nível "${nivel}". ${objetivo ? `Objetivo: ${objetivo}` : ''}. Inclua fontes externas confiáveis.`;
 
         const response = await fetch(GROQ_ENDPOINT, {
             method: "POST",
@@ -491,7 +680,7 @@ async function gerarRoadmap() {
         });
 
         if (!response.ok) {
-            throw new Error(`Erro API: ${response.status}`);
+            throw new Error(`Erro na API: ${response.status}`);
         }
 
         const data = await response.json();
@@ -507,7 +696,7 @@ async function gerarRoadmap() {
             parsed = JSON.parse(jsonMatch[0]);
         }
         
-        const etapas = parsed.etapas;
+        const etapas = parsed.etapas || [];
         
         const novaTrilha = {
             id: Date.now(),
@@ -527,10 +716,17 @@ async function gerarRoadmap() {
         }
         
         loadRoadmap(novaTrilha);
+        showNotification("✅ Trilha criada com sucesso!", "success");
 
     } catch (err) {
         console.error("Erro:", err);
-        roadmapDiv.innerHTML = `⚠️ Erro ao gerar roadmap. Causa: ${err.message}.`;
+        roadmapDiv.innerHTML = `
+            <div class="error-content">
+                <h3>⚠️ Erro ao gerar trilha</h3>
+                <p>${err.message}</p>
+                <button onclick="showFormView()" class="btn-secondary">Tentar Novamente</button>
+            </div>
+        `;
     }
 }
 
@@ -541,15 +737,18 @@ function loadRoadmap(trilha, skipViewChange = false) {
     }
 
     modalState.etapas = trilha.etapas;
-    document.getElementById("roadmap-title").innerText = `Sua Trilha: ${trilha.tema} (${trilha.nivel}) - ${currentUser.name}`;
+    document.getElementById("roadmap-title").innerText = `🗺️ ${trilha.tema} (${trilha.nivel})`;
     
     const roadmapDiv = document.getElementById("roadmap");
     roadmapDiv.innerHTML = "";
 
-    trilha.etapas.forEach(etapa => {
+    trilha.etapas.forEach((etapa, index) => {
         const blocoDiv = document.createElement("div");
         blocoDiv.className = "bloco";
-        blocoDiv.innerText = etapa.titulo;
+        blocoDiv.innerHTML = `
+            <div class="etapa-number">${index + 1}</div>
+            <div class="etapa-title">${etapa.titulo}</div>
+        `;
         blocoDiv.onclick = () => showEtapaView(etapa);
         roadmapDiv.appendChild(blocoDiv);
     });
@@ -591,10 +790,11 @@ function loadPreDefinedRoadmap(courseString) {
         }
         
         loadRoadmap(novaTrilha);
+        showNotification("✅ Curso carregado com sucesso!", "success");
 
     } catch (e) {
-        alert("Erro ao carregar o curso pré-definido.");
-        console.error("Erro ao parsear curso pré-definido:", e);
+        console.error("Erro ao carregar curso:", e);
+        showNotification("❌ Erro ao carregar o curso", "error");
         showPreDefinedCoursesView();
     }
 }
@@ -613,98 +813,107 @@ function saveUserTrilhas() {
 
 function updateTrilhasCountDisplay() {
     const count = currentUser.trilhas ? currentUser.trilhas.length : 0;
-    document.getElementById("btnMinhasTrilhas").innerText = `Minhas Trilhas (${count})`;
-    document.getElementById("btnMinhasTrilhas").disabled = currentUser.name === 'Convidado';
+    const btn = document.getElementById("btnMinhasTrilhas");
+    if (btn) {
+        btn.innerText = `Minhas Trilhas (${count})`;
+        btn.disabled = currentUser.name === 'Convidado';
+    }
 }
 
 function deleteTrilha(index) {
-     if (currentUser.name === 'Convidado') return;
+    if (currentUser.name === 'Convidado') return;
 
     if (confirm(`Tem certeza que deseja excluir a trilha "${currentUser.trilhas[index].tema}"?`)) {
         currentUser.trilhas.splice(index, 1);
         
         if (currentUser.currentTrilhaIndex === index) {
             currentUser.currentTrilhaIndex = -1;
-            showUserTrilhasView();
         } else if (currentUser.currentTrilhaIndex > index) {
             currentUser.currentTrilhaIndex--;
         }
         
         saveUserTrilhas();
         showUserTrilhasView();
+        showNotification("🗑️ Trilha excluída", "info");
     }
 }
 
-// --- INICIALIZAÇÃO ---
-document.addEventListener("DOMContentLoaded", () => {
-    showLoginView();
+// ===================================================
+// FUNÇÕES UTILITÁRIAS
+// ===================================================
 
-    document.getElementById("login-form").addEventListener("submit", handleAuthSubmit);
-    document.getElementById("btnSkipLogin").addEventListener("click", handleSkipLogin);
-    
-    initializeModeSelector();
-    
-    document.getElementById("btnGerarConteudoProfessor").addEventListener("click", gerarConteudoProfessor);
-    
-    document.getElementById("btnWelcomeContinue").addEventListener("click", showExplanationScreen);
-    document.getElementById("btnExplanationContinue").addEventListener("click", () => showMainApp(false)); 
-    document.getElementById("btnGerar").addEventListener("click", gerarRoadmap);
-    
-    // Listeners básicos para funcionalidade mínima
-    document.getElementById("btnMaterialVoltar")?.addEventListener("click", () => showEtapaView(modalState.currentEtapa));
-    document.getElementById("btnFlashcardVoltar")?.addEventListener("click", () => showEtapaView(modalState.currentEtapa));
-    document.getElementById("btnSimuladoEtapaVoltar")?.addEventListener("click", () => showEtapaView(modalState.currentEtapa));
-});
-
-// Funções básicas de etapa view para evitar erros
-function showEtapaView(etapa) {
-    hideAllViews();
-    window.scrollTo(0, 0); 
-    patolindoState.lastView = "etapa-view";
-    viewMap["etapa-view"].style.display = 'block';
-    
-    modalState.currentEtapa = etapa; 
-    document.getElementById("etapa-titulo").innerText = etapa.titulo;
-    
-    const conteudo = etapa.topicos.map(t => {
-        const topicoEscapado = t.tópico.replace(/'/g,"\\'"); 
-        const materialLink = t.material ? t.material.replace(/'/g,"\\'") : "#"; 
-
-        return `
-            <div class="topico-bloco">
-                <button class="material-btn" onclick="showMaterialView('${topicoEscapado}', '${materialLink}')">
-                    📚 ${t.tópico}
-                </button>
-                <button class="btn-flashcard" onclick="showFlashcardView('${topicoEscapado}')">🧠 Gerar Flashcards</button>
-            </div>
-        `;
-    }).join("");
-
-    document.getElementById("etapa-conteudo").innerHTML = `
-        <h3>📌 Atividade prática:</h3>
-        <p>${etapa.atividade}</p>
-        <h3>📚 Tópicos de Estudo:</h3>
-        <div class="topicos-container">${conteudo}</div>
+function showNotification(message, type = "info") {
+    // Criar elemento de notificação
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.innerHTML = `
+        <div class="notification-content">
+            <span class="notification-message">${message}</span>
+            <button class="notification-close" onclick="this.parentElement.parentElement.remove()">×</button>
+        </div>
     `;
+    
+    // Estilos da notificação
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: ${type === 'error' ? '#dc3545' : type === 'success' ? '#28a745' : '#17a2b8'};
+        color: white;
+        padding: 15px 20px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        z-index: 10000;
+        max-width: 300px;
+        animation: slideInRight 0.3s ease;
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Remover após 5 segundos
+    setTimeout(() => {
+        if (notification.parentElement) {
+            notification.remove();
+        }
+    }, 5000);
 }
 
-// Funções placeholder para evitar erros
 function showMaterialView(topico, material) {
     hideAllViews();
-    window.scrollTo(0, 0); 
-    patolindoState.lastView = "material-view";
+    window.scrollTo(0, 0);
     viewMap["material-view"].style.display = 'block';
     document.getElementById("material-titulo").innerText = topico;
-    document.getElementById("material-conteudo").innerHTML = `<p>Conteúdo sobre ${topico} seria carregado aqui.</p>`;
+    document.getElementById("material-conteudo").innerHTML = `
+        <div class="material-content">
+            <h3>📚 ${topico}</h3>
+            <div class="material-info">
+                <p>Conteúdo detalhado sobre <strong>${topico}</strong> seria carregado aqui.</p>
+                ${material && material !== '#' ? `
+                    <div class="material-link">
+                        <a href="${material}" target="_blank" class="btn-primary">
+                            🔗 Acessar Material Externo
+                        </a>
+                    </div>
+                ` : ''}
+            </div>
+        </div>
+    `;
 }
 
 function showFlashcardView(topico) {
     hideAllViews();
-    window.scrollTo(0, 0); 
-    patolindoState.lastView = "flashcard-view";
+    window.scrollTo(0, 0);
     viewMap["flashcard-view"].style.display = 'block';
     document.getElementById("flashcard-titulo").innerText = `Flashcards: ${topico}`;
-    document.getElementById("flashcard-display").innerHTML = `<p>Flashcards sobre ${topico} seriam gerados aqui.</p>`;
+    document.getElementById("flashcard-display").innerHTML = `
+        <div class="flashcard-placeholder">
+            <h3>🧠 Flashcards Interativos</h3>
+            <p>Flashcards sobre <strong>${topico}</strong> seriam gerados aqui.</p>
+            <button class="btn-primary" onclick="generateSampleFlashcards('${topico}')">
+                Gerar Flashcards de Exemplo
+            </button>
+        </div>
+    `;
 }
 
 function showLastView() {
@@ -716,3 +925,33 @@ function showLastView() {
         showRoadmapView(); 
     }
 }
+
+// ===================================================
+// INICIALIZAÇÃO
+// ===================================================
+
+document.addEventListener("DOMContentLoaded", () => {
+    showLoginView();
+
+    // Event Listeners
+    document.getElementById("login-form").addEventListener("submit", handleAuthSubmit);
+    document.getElementById("btnSkipLogin").addEventListener("click", handleSkipLogin);
+    
+    initializeModeSelector();
+    
+    document.getElementById("btnGerarConteudoProfessor").addEventListener("click", gerarConteudoProfessor);
+    
+    document.getElementById("btnWelcomeContinue").addEventListener("click", showExplanationScreen);
+    document.getElementById("btnExplanationContinue").addEventListener("click", () => showMainApp(false)); 
+    document.getElementById("btnGerar").addEventListener("click", gerarRoadmap);
+    
+    // Listeners de navegação
+    document.getElementById("btnMaterialVoltar")?.addEventListener("click", () => showEtapaView(modalState.currentEtapa));
+    document.getElementById("btnFlashcardVoltar")?.addEventListener("click", () => showEtapaView(modalState.currentEtapa));
+    document.getElementById("btnSimuladoEtapaVoltar")?.addEventListener("click", () => showEtapaView(modalState.currentEtapa));
+    
+    // Inicializar dados
+    loadAllUsersData();
+    
+    console.log("🚀 Quackademy inicializado com sucesso!");
+});
