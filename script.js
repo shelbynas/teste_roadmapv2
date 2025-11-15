@@ -1,5 +1,5 @@
 // ===================================================
-// JAVASCRIPT COMPLETO COM TODAS AS FUNCIONALIDADES
+// JAVASCRIPT COMPLETO E CORRIGIDO
 // ===================================================
 
 // Configuração da API
@@ -115,8 +115,8 @@ function initializeModeSelector() {
     const alunoBtn = document.getElementById('btnAlunoMode');
     const professorBtn = document.getElementById('btnProfessorMode');
     
-    alunoBtn.addEventListener('click', () => selectMode('aluno'));
-    professorBtn.addEventListener('click', () => selectMode('professor'));
+    if (alunoBtn) alunoBtn.addEventListener('click', () => selectMode('aluno'));
+    if (professorBtn) professorBtn.addEventListener('click', () => selectMode('professor'));
 }
 
 function selectMode(mode) {
@@ -125,19 +125,21 @@ function selectMode(mode) {
     const alunoBtn = document.getElementById('btnAlunoMode');
     const professorBtn = document.getElementById('btnProfessorMode');
     
-    alunoBtn.classList.toggle('active', mode === 'aluno');
-    professorBtn.classList.toggle('active', mode === 'professor');
+    if (alunoBtn) alunoBtn.classList.toggle('active', mode === 'aluno');
+    if (professorBtn) professorBtn.classList.toggle('active', mode === 'professor');
 }
 
 function showProfessorModeView() {
     hideAllScreens();
-    document.getElementById("professor-mode-view").style.display = 'flex';
+    const professorView = document.getElementById("professor-mode-view");
+    if (professorView) professorView.style.display = 'flex';
     updateBottomNav('professor');
 }
 
 function showProfessorResultView() {
     hideAllScreens();
-    document.getElementById("professor-result-view").style.display = 'flex';
+    const resultView = document.getElementById("professor-result-view");
+    if (resultView) resultView.style.display = 'flex';
     updateBottomNav('professor');
 }
 
@@ -148,15 +150,16 @@ function hideAllScreens() {
     ];
     
     screens.forEach(screen => {
-        document.getElementById(screen).style.display = 'none';
+        const element = document.getElementById(screen);
+        if (element) element.style.display = 'none';
     });
 }
 
 async function gerarConteudoProfessor() {
-    const tema = document.getElementById("professor-tema").value;
-    const nivel = document.getElementById("professor-nivel").value;
-    const explicacoes = document.getElementById("professor-explicacoes").value;
-    const etapas = parseInt(document.getElementById("professor-etapas").value);
+    const tema = document.getElementById("professor-tema")?.value;
+    const nivel = document.getElementById("professor-nivel")?.value;
+    const explicacoes = document.getElementById("professor-explicacoes")?.value;
+    const etapas = parseInt(document.getElementById("professor-etapas")?.value || '3');
     
     if (!tema) {
         showNotification("⚠️ Por favor, preencha o campo Tema.", "error");
@@ -169,19 +172,25 @@ async function gerarConteudoProfessor() {
     }
     
     // Atualizar metadados do resultado
-    document.getElementById("result-tema").textContent = tema;
-    document.getElementById("result-nivel").textContent = nivel;
-    document.getElementById("result-etapas").textContent = `${etapas} etapas`;
+    const resultTema = document.getElementById("result-tema");
+    const resultNivel = document.getElementById("result-nivel");
+    const resultEtapas = document.getElementById("result-etapas");
+    
+    if (resultTema) resultTema.textContent = tema;
+    if (resultNivel) resultNivel.textContent = nivel;
+    if (resultEtapas) resultEtapas.textContent = `${etapas} etapas`;
     
     showProfessorResultView();
     const contentContainer = document.getElementById("professor-content-container");
-    contentContainer.innerHTML = `
-        <div class="loading-content">
-            <div class="loading-spinner"></div>
-            <p>✨ Gerando conteúdo educacional personalizado...</p>
-            <p class="loading-details">Isso pode levar alguns segundos</p>
-        </div>
-    `;
+    if (contentContainer) {
+        contentContainer.innerHTML = `
+            <div class="loading-content">
+                <div class="loading-spinner"></div>
+                <p>✨ Gerando conteúdo educacional personalizado...</p>
+                <p class="loading-details">Isso pode levar alguns segundos</p>
+            </div>
+        `;
+    }
     
     try {
         const systemPrompt = `Você é um especialista em educação e criação de conteúdo didático. Crie um plano de ensino completo com ${etapas} etapas para o tema "${tema}" no nível "${nivel}". 
@@ -257,19 +266,22 @@ Inclua resumos educativos e exercícios práticos com respostas.`;
 
     } catch (err) {
         console.error("Erro:", err);
-        contentContainer.innerHTML = `
-            <div class="error-content">
-                <h3>⚠️ Erro ao gerar conteúdo</h3>
-                <p>${err.message}</p>
-                <button onclick="showProfessorModeView()" class="btn-secondary">Tentar Novamente</button>
-            </div>
-        `;
+        if (contentContainer) {
+            contentContainer.innerHTML = `
+                <div class="error-content">
+                    <h3>⚠️ Erro ao gerar conteúdo</h3>
+                    <p>${err.message}</p>
+                    <button onclick="showProfessorModeView()" class="btn-secondary">Tentar Novamente</button>
+                </div>
+            `;
+        }
         showNotification("❌ Erro ao gerar conteúdo", "error");
     }
 }
 
 function renderConteudoProfessor(conteudo, tema, nivel) {
     const contentContainer = document.getElementById("professor-content-container");
+    if (!contentContainer) return;
     
     if (!conteudo || !Array.isArray(conteudo)) {
         contentContainer.innerHTML = `
@@ -332,21 +344,22 @@ function renderConteudoProfessor(conteudo, tema, nivel) {
 // ===================================================
 
 const viewMap = {
-    "user-trilhas-view": document.getElementById("user-trilhas-view"),
-    "predefined-courses-view": document.getElementById("predefined-courses-view"),
-    "form-view": document.getElementById("form-view"),
-    "roadmap-view": document.getElementById("roadmap-view"),
-    "etapa-view": document.getElementById("etapa-view"),
-    "material-view": document.getElementById("material-view"),
-    "flashcard-view": document.getElementById("flashcard-view"), 
-    "simulado-etapa-view": document.getElementById("simulado-etapa-view"), 
-    "chat-view": document.getElementById("chat-view")
+    "user-trilhas-view": "user-trilhas-view",
+    "predefined-courses-view": "predefined-courses-view",
+    "form-view": "form-view",
+    "roadmap-view": "roadmap-view",
+    "etapa-view": "etapa-view",
+    "material-view": "material-view",
+    "flashcard-view": "flashcard-view", 
+    "simulado-etapa-view": "simulado-etapa-view", 
+    "chat-view": "chat-view"
 };
 
 function hideAllViews() {
     for (const key in viewMap) {
-        if (viewMap[key]) {
-            viewMap[key].style.display = 'none';
+        const element = document.getElementById(viewMap[key]);
+        if (element) {
+            element.style.display = 'none';
         }
     }
 }
@@ -364,7 +377,8 @@ function updateBottomNav(activeView) {
 function showUserTrilhasView() {
     hideAllViews();
     window.scrollTo(0, 0);
-    viewMap["user-trilhas-view"].style.display = 'block';
+    const view = document.getElementById("user-trilhas-view");
+    if (view) view.style.display = 'block';
     updateBottomNav('user-trilhas-view');
     loadUserTrilhas();
 }
@@ -372,7 +386,8 @@ function showUserTrilhasView() {
 function showPreDefinedCoursesView() {
     hideAllViews();
     window.scrollTo(0, 0);
-    viewMap["predefined-courses-view"].style.display = 'block';
+    const view = document.getElementById("predefined-courses-view");
+    if (view) view.style.display = 'block';
     updateBottomNav('predefined-courses-view');
     loadPreDefinedCourses();
 }
@@ -380,24 +395,28 @@ function showPreDefinedCoursesView() {
 function showFormView() {
     hideAllViews();
     window.scrollTo(0, 0);
-    viewMap["form-view"].style.display = 'flex';
+    const view = document.getElementById("form-view");
+    if (view) view.style.display = 'flex';
     updateBottomNav('form-view');
 }
 
 function showRoadmapView() {
     hideAllViews();
     window.scrollTo(0, 0);
-    viewMap["roadmap-view"].style.display = 'block';
+    const view = document.getElementById("roadmap-view");
+    if (view) view.style.display = 'block';
     updateBottomNav('user-trilhas-view');
 }
 
 function showEtapaView(etapa) {
     hideAllViews();
     window.scrollTo(0, 0);
-    viewMap["etapa-view"].style.display = 'block';
+    const view = document.getElementById("etapa-view");
+    if (view) view.style.display = 'block';
     
     modalState.currentEtapa = etapa; 
-    document.getElementById("etapa-titulo").innerText = etapa.titulo;
+    const etapaTitulo = document.getElementById("etapa-titulo");
+    if (etapaTitulo) etapaTitulo.innerText = etapa.titulo;
     
     const conteudo = etapa.topicos.map(t => {
         const topicoEscapado = t.tópico.replace(/'/g,"\\'"); 
@@ -413,20 +432,23 @@ function showEtapaView(etapa) {
         `;
     }).join("");
 
-    document.getElementById("etapa-conteudo").innerHTML = `
-        <div class="etapa-content">
-            <div class="atividade-section">
-                <h3>🎯 Atividade Prática</h3>
-                <div class="atividade-card">
-                    <p>${etapa.atividade}</p>
+    const etapaConteudo = document.getElementById("etapa-conteudo");
+    if (etapaConteudo) {
+        etapaConteudo.innerHTML = `
+            <div class="etapa-content">
+                <div class="atividade-section">
+                    <h3>🎯 Atividade Prática</h3>
+                    <div class="atividade-card">
+                        <p>${etapa.atividade}</p>
+                    </div>
+                </div>
+                <div class="topicos-section">
+                    <h3>📚 Tópicos de Estudo</h3>
+                    <div class="topicos-container">${conteudo}</div>
                 </div>
             </div>
-            <div class="topicos-section">
-                <h3>📚 Tópicos de Estudo</h3>
-                <div class="topicos-container">${conteudo}</div>
-            </div>
-        </div>
-    `;
+        `;
+    }
 }
 
 // ===================================================
@@ -435,28 +457,33 @@ function showEtapaView(etapa) {
 
 function showLoginView() {
     hideAllScreens();
-    document.getElementById("login-screen").style.display = 'flex';
+    const loginScreen = document.getElementById("login-screen");
+    if (loginScreen) loginScreen.style.display = 'flex';
 }
 
 function showWelcomeScreen() {
     hideAllScreens();
-    document.getElementById("welcome-screen").style.display = 'flex';
+    const welcomeScreen = document.getElementById("welcome-screen");
+    if (welcomeScreen) welcomeScreen.style.display = 'flex';
     selectMode('aluno');
 }
 
 function showExplanationScreen() {
-    document.getElementById("welcome-screen").style.display = 'none';
+    const welcomeScreen = document.getElementById("welcome-screen");
+    if (welcomeScreen) welcomeScreen.style.display = 'none';
     
     if (userMode === 'professor') {
         showProfessorModeView();
     } else {
-        document.getElementById("explanation-screen").style.display = 'flex';
+        const explanationScreen = document.getElementById("explanation-screen");
+        if (explanationScreen) explanationScreen.style.display = 'flex';
     }
 }
 
 function showMainApp(isExistingUser = false) {
     hideAllScreens();
-    document.getElementById("main-app").style.display = 'block';
+    const mainApp = document.getElementById("main-app");
+    if (mainApp) mainApp.style.display = 'block';
     
     if (isExistingUser && currentUser.trilhas.length > 0) {
         showUserTrilhasView();
@@ -480,43 +507,51 @@ function loadUserData(username) {
     loadAllUsersData();
     
     if (!username || username === 'Convidado') {
-        currentUser.name = 'Convidado';
-        currentUser.trilhas = [];
-        currentUser.currentTrilhaIndex = -1;
+        currentUser = {
+            name: 'Convidado',
+            trilhas: [],
+            currentTrilhaIndex: -1
+        };
     } else {
         const userData = allUsersData[username];
         if (userData) {
-            currentUser.name = username;
-            currentUser.trilhas = userData.trilhas || [];
-            currentUser.currentTrilhaIndex = userData.currentTrilhaIndex || -1;
+            currentUser = {
+                name: username,
+                trilhas: userData.trilhas || [],
+                currentTrilhaIndex: userData.currentTrilhaIndex || -1
+            };
         } else {
-            currentUser.name = username;
-            currentUser.trilhas = [];
-            currentUser.currentTrilhaIndex = -1;
+            currentUser = {
+                name: username,
+                trilhas: [],
+                currentTrilhaIndex: -1
+            };
             allUsersData[username] = { 
                 trilhas: [], 
                 currentTrilhaIndex: -1, 
-                password: document.getElementById('password').value 
+                password: document.getElementById('password')?.value || 'default'
             };
+            saveAllUsersData();
         }
     }
-    document.getElementById("userNameDisplay").innerText = currentUser.name;
-    saveAllUsersData();
+    
+    const userNameDisplay = document.getElementById("userNameDisplay");
+    if (userNameDisplay) userNameDisplay.innerText = currentUser.name;
     updateTrilhasCountDisplay();
 }
 
 function handleAuthSubmit(e) {
     e.preventDefault();
-    const username = document.getElementById('username').value.trim();
-    const password = document.getElementById('password').value.trim();
+    const username = document.getElementById('username')?.value.trim();
+    const password = document.getElementById('password')?.value.trim();
     const authMessage = document.getElementById('auth-message');
     
-    if (username.toLowerCase() === 'convidado') {
-        authMessage.innerText = "Nome de usuário 'Convidado' é reservado. Escolha outro.";
+    if (username?.toLowerCase() === 'convidado') {
+        if (authMessage) authMessage.innerText = "Nome de usuário 'Convidado' é reservado. Escolha outro.";
         return;
     }
-    if (username.length < 3 || password.length < 3) {
-        authMessage.innerText = "Nome de usuário e senha devem ter no mínimo 3 caracteres.";
+    if (!username || username.length < 3 || !password || password.length < 3) {
+        if (authMessage) authMessage.innerText = "Nome de usuário e senha devem ter no mínimo 3 caracteres.";
         return;
     }
 
@@ -526,14 +561,14 @@ function handleAuthSubmit(e) {
     if (userExists) {
         if (userExists.password === password) {
             loadUserData(username);
-            authMessage.innerText = `✅ Login bem-sucedido para ${username}!`;
+            if (authMessage) authMessage.innerText = `✅ Login bem-sucedido para ${username}!`;
             setTimeout(() => showMainApp(true), 1000);
         } else {
-            authMessage.innerText = "❌ Senha incorreta.";
+            if (authMessage) authMessage.innerText = "❌ Senha incorreta.";
         }
     } else {
         loadUserData(username);
-        authMessage.innerText = `🎉 Usuário ${username} criado e logado!`;
+        if (authMessage) authMessage.innerText = `🎉 Usuário ${username} criado e logado!`;
         setTimeout(() => showWelcomeScreen(), 1000);
     }
 }
@@ -639,9 +674,9 @@ function loadPreDefinedCourses() {
 }
 
 async function gerarRoadmap() {
-    const tema = document.getElementById("tema").value;
-    const nivel = document.getElementById("nivel").value;
-    const objetivo = document.getElementById("objetivo").value;
+    const tema = document.getElementById("tema")?.value;
+    const nivel = document.getElementById("nivel")?.value;
+    const objetivo = document.getElementById("objetivo")?.value;
     const roadmapDiv = document.getElementById("roadmap");
     
     if (!tema) {
@@ -649,12 +684,14 @@ async function gerarRoadmap() {
         return;
     }
     
-    roadmapDiv.innerHTML = `
-        <div class="loading-content">
-            <div class="loading-spinner"></div>
-            <p>✨ Gerando trilha personalizada...</p>
-        </div>
-    `;
+    if (roadmapDiv) {
+        roadmapDiv.innerHTML = `
+            <div class="loading-content">
+                <div class="loading-spinner"></div>
+                <p>✨ Gerando trilha personalizada...</p>
+            </div>
+        `;
+    }
     showRoadmapView();
 
     try {
@@ -720,13 +757,15 @@ async function gerarRoadmap() {
 
     } catch (err) {
         console.error("Erro:", err);
-        roadmapDiv.innerHTML = `
-            <div class="error-content">
-                <h3>⚠️ Erro ao gerar trilha</h3>
-                <p>${err.message}</p>
-                <button onclick="showFormView()" class="btn-secondary">Tentar Novamente</button>
-            </div>
-        `;
+        if (roadmapDiv) {
+            roadmapDiv.innerHTML = `
+                <div class="error-content">
+                    <h3>⚠️ Erro ao gerar trilha</h3>
+                    <p>${err.message}</p>
+                    <button onclick="showFormView()" class="btn-secondary">Tentar Novamente</button>
+                </div>
+            `;
+        }
     }
 }
 
@@ -737,21 +776,24 @@ function loadRoadmap(trilha, skipViewChange = false) {
     }
 
     modalState.etapas = trilha.etapas;
-    document.getElementById("roadmap-title").innerText = `🗺️ ${trilha.tema} (${trilha.nivel})`;
+    const roadmapTitle = document.getElementById("roadmap-title");
+    if (roadmapTitle) roadmapTitle.innerText = `🗺️ ${trilha.tema} (${trilha.nivel})`;
     
     const roadmapDiv = document.getElementById("roadmap");
-    roadmapDiv.innerHTML = "";
+    if (roadmapDiv) {
+        roadmapDiv.innerHTML = "";
 
-    trilha.etapas.forEach((etapa, index) => {
-        const blocoDiv = document.createElement("div");
-        blocoDiv.className = "bloco";
-        blocoDiv.innerHTML = `
-            <div class="etapa-number">${index + 1}</div>
-            <div class="etapa-title">${etapa.titulo}</div>
-        `;
-        blocoDiv.onclick = () => showEtapaView(etapa);
-        roadmapDiv.appendChild(blocoDiv);
-    });
+        trilha.etapas.forEach((etapa, index) => {
+            const blocoDiv = document.createElement("div");
+            blocoDiv.className = "bloco";
+            blocoDiv.innerHTML = `
+                <div class="etapa-number">${index + 1}</div>
+                <div class="etapa-title">${etapa.titulo}</div>
+            `;
+            blocoDiv.onclick = () => showEtapaView(etapa);
+            roadmapDiv.appendChild(blocoDiv);
+        });
+    }
 
     if (!skipViewChange) {
         showRoadmapView();
@@ -843,6 +885,10 @@ function deleteTrilha(index) {
 // ===================================================
 
 function showNotification(message, type = "info") {
+    // Remover notificações existentes
+    const existingNotifications = document.querySelectorAll('.notification');
+    existingNotifications.forEach(notif => notif.remove());
+    
     // Criar elemento de notificação
     const notification = document.createElement('div');
     notification.className = `notification notification-${type}`;
@@ -851,21 +897,6 @@ function showNotification(message, type = "info") {
             <span class="notification-message">${message}</span>
             <button class="notification-close" onclick="this.parentElement.parentElement.remove()">×</button>
         </div>
-    `;
-    
-    // Estilos da notificação
-    notification.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: ${type === 'error' ? '#dc3545' : type === 'success' ? '#28a745' : '#17a2b8'};
-        color: white;
-        padding: 15px 20px;
-        border-radius: 10px;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        z-index: 10000;
-        max-width: 300px;
-        animation: slideInRight 0.3s ease;
     `;
     
     document.body.appendChild(notification);
@@ -881,39 +912,127 @@ function showNotification(message, type = "info") {
 function showMaterialView(topico, material) {
     hideAllViews();
     window.scrollTo(0, 0);
-    viewMap["material-view"].style.display = 'block';
-    document.getElementById("material-titulo").innerText = topico;
-    document.getElementById("material-conteudo").innerHTML = `
-        <div class="material-content">
-            <h3>📚 ${topico}</h3>
-            <div class="material-info">
-                <p>Conteúdo detalhado sobre <strong>${topico}</strong> seria carregado aqui.</p>
-                ${material && material !== '#' ? `
-                    <div class="material-link">
-                        <a href="${material}" target="_blank" class="btn-primary">
-                            🔗 Acessar Material Externo
-                        </a>
-                    </div>
-                ` : ''}
+    const view = document.getElementById("material-view");
+    if (view) view.style.display = 'block';
+    
+    const materialTitulo = document.getElementById("material-titulo");
+    if (materialTitulo) materialTitulo.innerText = topico;
+    
+    const materialConteudo = document.getElementById("material-conteudo");
+    if (materialConteudo) {
+        materialConteudo.innerHTML = `
+            <div class="material-content">
+                <h3>📚 ${topico}</h3>
+                <div class="material-info">
+                    <p>Conteúdo detalhado sobre <strong>${topico}</strong> seria carregado aqui.</p>
+                    ${material && material !== '#' ? `
+                        <div class="material-link">
+                            <a href="${material}" target="_blank" class="btn-primary">
+                                🔗 Acessar Material Externo
+                            </a>
+                        </div>
+                    ` : ''}
+                </div>
             </div>
-        </div>
-    `;
+        `;
+    }
 }
 
 function showFlashcardView(topico) {
     hideAllViews();
     window.scrollTo(0, 0);
-    viewMap["flashcard-view"].style.display = 'block';
-    document.getElementById("flashcard-titulo").innerText = `Flashcards: ${topico}`;
-    document.getElementById("flashcard-display").innerHTML = `
-        <div class="flashcard-placeholder">
-            <h3>🧠 Flashcards Interativos</h3>
-            <p>Flashcards sobre <strong>${topico}</strong> seriam gerados aqui.</p>
-            <button class="btn-primary" onclick="generateSampleFlashcards('${topico}')">
-                Gerar Flashcards de Exemplo
-            </button>
+    const view = document.getElementById("flashcard-view");
+    if (view) view.style.display = 'block';
+    
+    const flashcardTitulo = document.getElementById("flashcard-titulo");
+    if (flashcardTitulo) flashcardTitulo.innerText = `Flashcards: ${topico}`;
+    
+    const flashcardDisplay = document.getElementById("flashcard-display");
+    if (flashcardDisplay) {
+        flashcardDisplay.innerHTML = `
+            <div class="flashcard-placeholder">
+                <h3>🧠 Flashcards Interativos</h3>
+                <p>Flashcards sobre <strong>${topico}</strong> seriam gerados aqui.</p>
+                <button class="btn-primary" onclick="generateSampleFlashcards('${topico}')">
+                    Gerar Flashcards de Exemplo
+                </button>
+            </div>
+        `;
+    }
+}
+
+// Funções para Flashcards
+function generateSampleFlashcards(topico) {
+    const flashcards = [
+        { frente: `O que é ${topico}?`, verso: `É o conceito fundamental que estamos estudando.` },
+        { frente: `Principais características de ${topico}`, verso: `São as funcionalidades e aspectos mais importantes.` },
+        { frente: `Exemplo prático de ${topico}`, verso: `Um caso de uso real dessa tecnologia/conceito.` }
+    ];
+    
+    modalState.flashcards = flashcards;
+    modalState.currentFlashcardIndex = 0;
+    
+    renderFlashcards();
+}
+
+function renderFlashcards() {
+    const display = document.getElementById("flashcard-display");
+    if (!display) return;
+    
+    if (modalState.flashcards.length === 0) {
+        display.innerHTML = `
+            <div class="flashcard-placeholder">
+                <h3>🧠 Nenhum flashcard disponível</h3>
+                <p>Gere flashcards para começar a estudar!</p>
+            </div>
+        `;
+        return;
+    }
+    
+    const currentCard = modalState.flashcards[modalState.currentFlashcardIndex];
+    display.innerHTML = `
+        <div class="flashcard-container">
+            <div class="flashcard" onclick="flipFlashcard(this)">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3>${currentCard.frente}</h3>
+                        <p>Clique para virar</p>
+                    </div>
+                    <div class="flashcard-back">
+                        <h3>Resposta</h3>
+                        <p>${currentCard.verso}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="flashcard-controls">
+                <button class="btn-secondary" onclick="previousFlashcard()" ${modalState.currentFlashcardIndex === 0 ? 'disabled' : ''}>
+                    ← Anterior
+                </button>
+                <span>${modalState.currentFlashcardIndex + 1} / ${modalState.flashcards.length}</span>
+                <button class="btn-secondary" onclick="nextFlashcard()" ${modalState.currentFlashcardIndex === modalState.flashcards.length - 1 ? 'disabled' : ''}>
+                    Próximo →
+                </button>
+            </div>
         </div>
     `;
+}
+
+function flipFlashcard(element) {
+    element.classList.toggle('flipped');
+}
+
+function previousFlashcard() {
+    if (modalState.currentFlashcardIndex > 0) {
+        modalState.currentFlashcardIndex--;
+        renderFlashcards();
+    }
+}
+
+function nextFlashcard() {
+    if (modalState.currentFlashcardIndex < modalState.flashcards.length - 1) {
+        modalState.currentFlashcardIndex++;
+        renderFlashcards();
+    }
 }
 
 function showLastView() {
@@ -933,22 +1052,36 @@ function showLastView() {
 document.addEventListener("DOMContentLoaded", () => {
     showLoginView();
 
-    // Event Listeners
-    document.getElementById("login-form").addEventListener("submit", handleAuthSubmit);
-    document.getElementById("btnSkipLogin").addEventListener("click", handleSkipLogin);
+    // Event Listeners com verificação de existência
+    const loginForm = document.getElementById("login-form");
+    if (loginForm) loginForm.addEventListener("submit", handleAuthSubmit);
+    
+    const skipBtn = document.getElementById("btnSkipLogin");
+    if (skipBtn) skipBtn.addEventListener("click", handleSkipLogin);
     
     initializeModeSelector();
     
-    document.getElementById("btnGerarConteudoProfessor").addEventListener("click", gerarConteudoProfessor);
+    const profBtn = document.getElementById("btnGerarConteudoProfessor");
+    if (profBtn) profBtn.addEventListener("click", gerarConteudoProfessor);
     
-    document.getElementById("btnWelcomeContinue").addEventListener("click", showExplanationScreen);
-    document.getElementById("btnExplanationContinue").addEventListener("click", () => showMainApp(false)); 
-    document.getElementById("btnGerar").addEventListener("click", gerarRoadmap);
+    const welcomeBtn = document.getElementById("btnWelcomeContinue");
+    if (welcomeBtn) welcomeBtn.addEventListener("click", showExplanationScreen);
+    
+    const explanationBtn = document.getElementById("btnExplanationContinue");
+    if (explanationBtn) explanationBtn.addEventListener("click", () => showMainApp(false));
+    
+    const generateBtn = document.getElementById("btnGerar");
+    if (generateBtn) generateBtn.addEventListener("click", gerarRoadmap);
     
     // Listeners de navegação
-    document.getElementById("btnMaterialVoltar")?.addEventListener("click", () => showEtapaView(modalState.currentEtapa));
-    document.getElementById("btnFlashcardVoltar")?.addEventListener("click", () => showEtapaView(modalState.currentEtapa));
-    document.getElementById("btnSimuladoEtapaVoltar")?.addEventListener("click", () => showEtapaView(modalState.currentEtapa));
+    const materialVoltar = document.getElementById("btnMaterialVoltar");
+    if (materialVoltar) materialVoltar.addEventListener("click", () => showEtapaView(modalState.currentEtapa));
+    
+    const flashcardVoltar = document.getElementById("btnFlashcardVoltar");
+    if (flashcardVoltar) flashcardVoltar.addEventListener("click", () => showEtapaView(modalState.currentEtapa));
+    
+    const simuladoVoltar = document.getElementById("btnSimuladoEtapaVoltar");
+    if (simuladoVoltar) simuladoVoltar.addEventListener("click", () => showEtapaView(modalState.currentEtapa));
     
     // Inicializar dados
     loadAllUsersData();
