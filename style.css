@@ -350,6 +350,7 @@ body {
 
 .nav-btn {
     flex: 1;
+    max-width: 20%; /* Limita a largura para caber 5 botões */
     background: none;
     border: none;
     padding: 12px 5px;
@@ -360,18 +361,24 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 4px;
+    text-align: center;
+    color: #6c757d;
+    font-size: 0.8em;
+    /* Melhoria UX/UI */
+    transition: background 0.3s, transform 0.3s;
 }
 
 .nav-btn:hover {
-    background: var(--color-light-yellow);
+    background-color: #f0f0f0;
     transform: translateY(-2px);
 }
 
 .nav-btn.active {
-    background: var(--color-primary);
-    color: var(--color-secondary);
-    font-weight: 600;
+    color: var(--color-primary-dark);
+    background-color: var(--color-light-yellow);
+    box-shadow: 0 0 10px rgba(255, 193, 7, 0.3);
+    /* Melhoria UX/UI */
+    transition: all 0.3s ease;
 }
 
 .nav-icon {
@@ -504,6 +511,7 @@ body {
 .btn-secondary:hover {
     background: #5a6268;
     transform: translateY(-2px);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
 }
 
 .btn-success {
@@ -514,6 +522,7 @@ body {
 .btn-success:hover {
     background: linear-gradient(135deg, #1e7e34, var(--color-success));
     transform: translateY(-2px);
+    box-shadow: 0 3px 10px rgba(40, 167, 69, 0.4);
 }
 
 /* Cards de Conteúdo */
@@ -1169,7 +1178,7 @@ body {
 
 .pomodoro-header {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-between;;
     align-items: center;
     margin-bottom: 10px;
     cursor: move;
@@ -1457,19 +1466,33 @@ body {
 #chat-send-button:disabled {
     background-color: #ccc;
     cursor: not-allowed;
+}.chat-view {
+    /* Removido, pois agora usa full-screen-message */
 }
 
-#chat-container {
+.full-screen-message {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: white;
+    z-index: 1000;
     display: flex;
     flex-direction: column;
-    height: 70vh;
-    min-height: 450px;
-    background-color: var(--color-card);
-    border-radius: 10px;
-    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
 }
 
-#chat-header-view {
+.chat-full-screen {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    border-radius: 0;
+    box-shadow: none;
+}#chat-header-view {
     background-color: var(--color-primary);
     color: var(--color-secondary);
     padding: 15px 20px;
