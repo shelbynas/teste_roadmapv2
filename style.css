@@ -121,13 +121,11 @@ body {
     box-shadow: 0 5px 15px rgba(255, 193, 7, 0.2);
 }
 
-.mode.nav-btn.active {
-    color: var(--color-primary-dark);
-    background-color: var(--color-light-yellow);
-    box-shadow: 0 0 10px rgba(255, 193, 7, 0.3);
-    /* Adiciona transição para o active state */
-    transition: all 0.3s ease;
-}   transform: translateY(-2px);
+.mode-btn.active {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary-dark);
+    box-shadow: 0 8px 25px rgba(255, 193, 7, 0.3);
+    transform: translateY(-2px);
 }
 
 .mode-icon {
@@ -361,14 +359,6 @@ body {
     border-radius: 10px;
     margin: 0 5px;
     display: flex;
-    /* Adiciona transição para o hover */
-    transition: background 0.3s, transform 0.3s;
-}
-
-.nav-btn:hover {
-    background-color: #f0f0f0;
-    transform: translateY(-2px);
-}
     flex-direction: column;
     align-items: center;
     gap: 4px;
@@ -503,8 +493,8 @@ body {
 
 .btn-primary:hover {
     background: linear-gradient(135deg, var(--color-primary-dark), var(--color-primary));
-    transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(255, 193, 7, 0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 193, 7, 0.3);
 }
 
 .btn-secondary {
@@ -515,7 +505,6 @@ body {
 .btn-secondary:hover {
     background: #5a6268;
     transform: translateY(-2px);
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
 }
 
 .btn-success {
@@ -526,7 +515,6 @@ body {
 .btn-success:hover {
     background: linear-gradient(135deg, #1e7e34, var(--color-success));
     transform: translateY(-2px);
-    box-shadow: 0 3px 10px rgba(40, 167, 69, 0.4);
 }
 
 /* Cards de Conteúdo */
