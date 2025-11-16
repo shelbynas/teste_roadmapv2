@@ -34,7 +34,7 @@ let patolindoState = {
     lastView: "roadmap-view" 
 };
 
-let userMode = localStorage.getItem('userMode') || "aluno";
+let userMode = "aluno";
 
 // --- SISTEMA POMODORO ---
 let pomodoroState = {
@@ -128,14 +128,10 @@ function initializeModeSelector() {
     
     if (alunoBtn) alunoBtn.addEventListener('click', () => selectMode('aluno'));
     if (professorBtn) professorBtn.addEventListener('click', () => selectMode('professor'));
-    
-    // Aplica o modo salvo ao carregar a tela
-    selectMode(userMode);
 }
 
 function selectMode(mode) {
     userMode = mode;
-    localStorage.setItem('userMode', mode); // Salva o modo no localStorage
     
     const alunoBtn = document.getElementById('btnAlunoMode');
     const professorBtn = document.getElementById('btnProfessorMode');
@@ -984,7 +980,8 @@ function showUserTrilhasView() {
     
     showView("user-trilhas-view");
     updateBottomNav('user-trilhas-view');
-
+    updateQuickActionsButton();
+    updateQuickActionsMenu();
 
     const trilhasList = document.getElementById("trilhas-list");
     if (!trilhasList) return;
@@ -1049,7 +1046,8 @@ function showPreDefinedCoursesView() {
     window.scrollTo(0, 0); 
     showView("predefined-courses-view");
     updateBottomNav('predefined-courses-view');
-
+    updateQuickActionsButton();
+    updateQuickActionsMenu();
 
     const coursesListDiv = document.getElementById("predefined-courses-list");
     if (!coursesListDiv) return;
@@ -1089,7 +1087,8 @@ function showFormView() {
     window.scrollTo(0, 0); 
     showView("form-view");
     updateBottomNav('form-view');
-
+    updateQuickActionsButton();
+    updateQuickActionsMenu();
 }
 
 function showRoadmapView() {
@@ -1098,7 +1097,8 @@ function showRoadmapView() {
     patolindoState.lastView = "roadmap-view";
     showView("roadmap-view");
     updateBottomNav('user-trilhas-view');
-
+    updateQuickActionsButton();
+    updateQuickActionsMenu();
 }
 
 function showEtapaView(etapa) {
@@ -1106,7 +1106,8 @@ function showEtapaView(etapa) {
     window.scrollTo(0, 0); 
     patolindoState.lastView = "etapa-view";
     showView("etapa-view");
-
+    updateQuickActionsButton();
+    updateQuickActionsMenu();
     
     modalState.currentEtapa = etapa; 
     document.getElementById("etapa-titulo").innerText = etapa.titulo;
@@ -1142,7 +1143,8 @@ function showMaterialView(topico, material) {
     window.scrollTo(0, 0); 
     patolindoState.lastView = "material-view";
     showView("material-view");
-
+    updateQuickActionsButton();
+    updateQuickActionsMenu();
     
     fetchAndRenderMaterial(topico, material);
 }
@@ -1152,7 +1154,8 @@ function showFlashcardView(topico) {
     window.scrollTo(0, 0); 
     patolindoState.lastView = "flashcard-view";
     showView("flashcard-view");
-
+    updateQuickActionsButton();
+    updateQuickActionsMenu();
 
     fetchAndRenderFlashcards(topico);
 }
@@ -1162,7 +1165,8 @@ function showSimuladoEtapaView() {
     window.scrollTo(0, 0); 
     patolindoState.lastView = "simulado-etapa-view";
     showView("simulado-etapa-view");
-
+    updateQuickActionsButton();
+    updateQuickActionsMenu();
     
     fetchAndRenderSimuladoEtapa();
 }
@@ -1189,15 +1193,13 @@ function showLastView() {
     // Volta para a view anterior salva
     if (patolindoState.lastView === "roadmap-view") {
         showRoadmapView();
-    } else if (patolindoState.lastView === "etapa-view") {
+    } else if (patolindoState.lastView === "etapa-view" && modalState.currentEtapa) {
         showEtapaView(modalState.currentEtapa);
-    } else if (patolindoState.lastView === "user-trilhas-view") {
-        showUserTrilhasView();
+    } else if (patolindoState.lastView === "material-view" && modalState.currentEtapa) {
+         showEtapaView(modalState.currentEtapa);
     } else {
-        showPreDefinedCoursesView();
+        showRoadmapView(); 
     }
-    // Garante que a nav bar seja atualizada ao voltar
-    updateBottomNav(patolindoState.lastView);
 }
 
 // ===================================================
