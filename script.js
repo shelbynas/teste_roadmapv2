@@ -34,7 +34,7 @@ let patolindoState = {
     lastView: "roadmap-view" 
 };
 
-let userMode = "aluno";
+let userMode = localStorage.getItem('userMode') || "aluno";
 
 // --- SISTEMA POMODORO ---
 let pomodoroState = {
@@ -128,10 +128,14 @@ function initializeModeSelector() {
     
     if (alunoBtn) alunoBtn.addEventListener('click', () => selectMode('aluno'));
     if (professorBtn) professorBtn.addEventListener('click', () => selectMode('professor'));
+    
+    // Aplica o modo salvo ao carregar a tela
+    selectMode(userMode);
 }
 
 function selectMode(mode) {
     userMode = mode;
+    localStorage.setItem('userMode', mode); // Salva o modo no localStorage
     
     const alunoBtn = document.getElementById('btnAlunoMode');
     const professorBtn = document.getElementById('btnProfessorMode');
@@ -453,6 +457,7 @@ function loadPomodoroPosition() {
 // ===================================================
 
 function showPomodoroModal() {
+    hideQuickActionsMenu(); // Esconde o menu de ações rápidas ao abrir o modal
     const modal = document.getElementById('pomodoro-modal');
     modal.style.display = 'block';
     updatePomodoroDisplay();
@@ -705,10 +710,9 @@ function showPomodoroNotification(message) {
 // FUNÇÕES DO MENU DE AÇÕES RÁPIDAS (ORIGINAIS)
 // ===================================================
 
-function showQuickActionsMenu() {
+function toggleQuickActionsMenu() {
     const menu = document.getElementById('quick-actions-menu');
-    menu.style.display = 'block';
-    updateQuickActionsMenu();
+    menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
 }
 
 function hideQuickActionsMenu() {
@@ -716,64 +720,12 @@ function hideQuickActionsMenu() {
     menu.style.display = 'none';
 }
 
-function updateQuickActionsMenu() {
-    const chatBtn = document.getElementById('chat-action-btn');
-    const currentView = getCurrentView();
-    
-    // Desabilita o chat durante flashcards e simulado
-    if (currentView === 'flashcard-view' || currentView === 'simulado-etapa-view') {
-        chatBtn.disabled = true;
-        chatBtn.title = "Chat não disponível durante flashcards ou simulado";
-        // Adiciona feedback visual
-        if (!chatBtn.querySelector('.disabled-badge')) {
-            const badge = document.createElement('span');
-            badge.className = 'disabled-badge';
-            badge.textContent = ' 🔒';
-            badge.style.marginLeft = '5px';
-            chatBtn.appendChild(badge);
-        }
-    } else {
-        chatBtn.disabled = false;
-        chatBtn.title = "Abrir Chat com Patolindo";
-        // Remove feedback visual
-        const badge = chatBtn.querySelector('.disabled-badge');
-        if (badge) {
-            badge.remove();
-        }
-    }
-}
-
-// CORREÇÃO: Função para obter a view atual
-function getCurrentView() {
-    for (const key in viewMap) {
-        if (viewMap[key] && viewMap[key].style.display !== 'none') {
-            return key;
-        }
-    }
-    return null;
-}
-
-function updateQuickActionsButton() {
-    const quickActionsBtn = document.getElementById('quick-actions-button');
-    const currentView = getCurrentView();
-    
-    // Mostra o botão apenas quando estiver em uma trilha ativa, exceto flashcards e simulado
-    const shouldShow = (currentView === 'roadmap-view' || 
-                      currentView === 'etapa-view' || 
-                      currentView === 'material-view') &&
-                      currentView !== 'flashcard-view' &&
-                      currentView !== 'simulado-etapa-view' &&
-                      (currentUser.currentTrilhaIndex !== -1 && currentUser.trilhas.length > 0);
-    
-    quickActionsBtn.style.display = shouldShow ? 'block' : 'none';
-}
-
 // Fecha o menu quando clicar fora
 document.addEventListener('click', function(event) {
-    const quickActionsBtn = document.getElementById('quick-actions-button');
+    const quickActionsBtn = document.getElementById('btnQuickActionsMenu');
     const quickActionsMenu = document.getElementById('quick-actions-menu');
     
-    if (!quickActionsBtn.contains(event.target) && !quickActionsMenu.contains(event.target)) {
+    if (quickActionsBtn && quickActionsMenu && !quickActionsBtn.contains(event.target) && !quickActionsMenu.contains(event.target)) {
         hideQuickActionsMenu();
     }
 });
@@ -926,8 +878,8 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     document.getElementById("chat-input").addEventListener("input", updateSendButtonState);
     
-    // --- Listener do Botão de Ações Rápidas ---
-    document.getElementById("quick-actions-button").addEventListener("click", showQuickActionsMenu);
+    // --- Listener do Botão de Ações Rápidas (Novo) ---
+    document.getElementById("btnQuickActionsMenu").addEventListener("click", toggleQuickActionsMenu);
     
     // Inicializa a posição do pomodoro
     loadPomodoroPosition();
@@ -962,8 +914,7 @@ function showMainApp(isExistingUser = false) {
     document.getElementById("login-screen").style.display = 'none';
     document.getElementById("main-app").style.display = 'block';
     
-    // Atualiza a visibilidade do botão de ações rápidas
-    updateQuickActionsButton();
+    // Lógica de visibilidade do botão de ações rápidas removida, pois agora está fixo na nav bar
     
     if (isExistingUser && currentUser.trilhas.length > 0) {
          // Usuário recorrente vai para o Gerenciamento
@@ -1033,8 +984,7 @@ function showUserTrilhasView() {
     
     showView("user-trilhas-view");
     updateBottomNav('user-trilhas-view');
-    updateQuickActionsButton();
-    updateQuickActionsMenu();
+
 
     const trilhasList = document.getElementById("trilhas-list");
     if (!trilhasList) return;
@@ -1099,8 +1049,7 @@ function showPreDefinedCoursesView() {
     window.scrollTo(0, 0); 
     showView("predefined-courses-view");
     updateBottomNav('predefined-courses-view');
-    updateQuickActionsButton();
-    updateQuickActionsMenu();
+
 
     const coursesListDiv = document.getElementById("predefined-courses-list");
     if (!coursesListDiv) return;
@@ -1140,8 +1089,7 @@ function showFormView() {
     window.scrollTo(0, 0); 
     showView("form-view");
     updateBottomNav('form-view');
-    updateQuickActionsButton();
-    updateQuickActionsMenu();
+
 }
 
 function showRoadmapView() {
@@ -1150,8 +1098,7 @@ function showRoadmapView() {
     patolindoState.lastView = "roadmap-view";
     showView("roadmap-view");
     updateBottomNav('user-trilhas-view');
-    updateQuickActionsButton();
-    updateQuickActionsMenu();
+
 }
 
 function showEtapaView(etapa) {
@@ -1159,8 +1106,7 @@ function showEtapaView(etapa) {
     window.scrollTo(0, 0); 
     patolindoState.lastView = "etapa-view";
     showView("etapa-view");
-    updateQuickActionsButton();
-    updateQuickActionsMenu();
+
     
     modalState.currentEtapa = etapa; 
     document.getElementById("etapa-titulo").innerText = etapa.titulo;
@@ -1196,8 +1142,7 @@ function showMaterialView(topico, material) {
     window.scrollTo(0, 0); 
     patolindoState.lastView = "material-view";
     showView("material-view");
-    updateQuickActionsButton();
-    updateQuickActionsMenu();
+
     
     fetchAndRenderMaterial(topico, material);
 }
@@ -1207,8 +1152,7 @@ function showFlashcardView(topico) {
     window.scrollTo(0, 0); 
     patolindoState.lastView = "flashcard-view";
     showView("flashcard-view");
-    updateQuickActionsButton();
-    updateQuickActionsMenu();
+
 
     fetchAndRenderFlashcards(topico);
 }
@@ -1218,58 +1162,42 @@ function showSimuladoEtapaView() {
     window.scrollTo(0, 0); 
     patolindoState.lastView = "simulado-etapa-view";
     showView("simulado-etapa-view");
-    updateQuickActionsButton();
-    updateQuickActionsMenu();
+
     
     fetchAndRenderSimuladoEtapa();
 }
 
 function showChatView() {
-    // Verifica se pode abrir o chat (não durante flashcards ou simulado)
-    const currentView = getCurrentView();
-    if (currentView === 'flashcard-view' || currentView === 'simulado-etapa-view') {
-        // Feedback visual para o usuário
-        const notification = document.createElement('div');
-        notification.className = 'chat-disabled-message';
-        notification.innerHTML = '💬 O chat não está disponível durante flashcards ou simulado.<br>Finalize a atividade atual primeiro.';
-        notification.style.position = 'fixed';
-        notification.style.top = '50%';
-        notification.style.left = '50%';
-        notification.style.transform = 'translate(-50%, -50%)';
-        notification.style.zIndex = '1004';
-        notification.style.padding = '20px';
-        notification.style.borderRadius = '10px';
-        notification.style.boxShadow = '0 4px 15px rgba(0,0,0,0.3)';
-        notification.style.textAlign = 'center';
-        notification.style.maxWidth = '300px';
-        notification.style.background = 'white';
-        notification.style.border = '2px solid var(--color-danger)';
-        
-        document.body.appendChild(notification);
-        
-        setTimeout(() => {
-            notification.remove();
-        }, 3000);
-        return;
-    }
+    // O Chat agora é uma tela full-screen, não uma view do main-app
     
-    hideAllViews();
+    // Esconde todas as telas iniciais e o main-app
+    hideAllScreens();
+    document.getElementById("main-app").style.display = 'none';
+    
+    // Mostra a tela de chat em tela cheia
+    const chatView = document.getElementById("chat-view");
+    if (chatView) chatView.style.display = 'flex';
+    
     window.scrollTo(0, 0); 
-    showView("chat-view");
     resetPatolindoSession();
+    
+    // Esconde o menu de ações rápidas, caso esteja aberto
+    hideQuickActionsMenu();
 }
 
 function showLastView() {
     // Volta para a view anterior salva
     if (patolindoState.lastView === "roadmap-view") {
         showRoadmapView();
-    } else if (patolindoState.lastView === "etapa-view" && modalState.currentEtapa) {
+    } else if (patolindoState.lastView === "etapa-view") {
         showEtapaView(modalState.currentEtapa);
-    } else if (patolindoState.lastView === "material-view" && modalState.currentEtapa) {
-         showEtapaView(modalState.currentEtapa);
+    } else if (patolindoState.lastView === "user-trilhas-view") {
+        showUserTrilhasView();
     } else {
-        showRoadmapView(); 
+        showPreDefinedCoursesView();
     }
+    // Garante que a nav bar seja atualizada ao voltar
+    updateBottomNav(patolindoState.lastView);
 }
 
 // ===================================================
