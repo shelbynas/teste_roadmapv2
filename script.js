@@ -453,7 +453,6 @@ function loadPomodoroPosition() {
 // ===================================================
 
 function showPomodoroModal() {
-    hideQuickActionsMenu();
     const modal = document.getElementById('pomodoro-modal');
     modal.style.display = 'block';
     updatePomodoroDisplay();
@@ -1258,7 +1257,6 @@ function showChatView() {
     window.scrollTo(0, 0); 
     showView("chat-view");
     resetPatolindoSession();
-    hideQuickActionsMenu();
 }
 
 function showLastView() {
