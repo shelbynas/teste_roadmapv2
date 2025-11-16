@@ -121,11 +121,13 @@ body {
     box-shadow: 0 5px 15px rgba(255, 193, 7, 0.2);
 }
 
-.mode-btn.active {
-    background-color: var(--color-primary);
-    border-color: var(--color-primary-dark);
-    box-shadow: 0 8px 25px rgba(255, 193, 7, 0.3);
-    transform: translateY(-2px);
+.mode.nav-btn.active {
+    color: var(--color-primary-dark);
+    background-color: var(--color-light-yellow);
+    box-shadow: 0 0 10px rgba(255, 193, 7, 0.3);
+    /* Adiciona transição para o active state */
+    transition: all 0.3s ease;
+}   transform: translateY(-2px);
 }
 
 .mode-icon {
@@ -359,6 +361,14 @@ body {
     border-radius: 10px;
     margin: 0 5px;
     display: flex;
+    /* Adiciona transição para o hover */
+    transition: background 0.3s, transform 0.3s;
+}
+
+.nav-btn:hover {
+    background-color: #f0f0f0;
+    transform: translateY(-2px);
+}
     flex-direction: column;
     align-items: center;
     gap: 4px;
@@ -493,8 +503,8 @@ body {
 
 .btn-primary:hover {
     background: linear-gradient(135deg, var(--color-primary-dark), var(--color-primary));
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(255, 193, 7, 0.3);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(255, 193, 7, 0.4);
 }
 
 .btn-secondary {
@@ -505,6 +515,7 @@ body {
 .btn-secondary:hover {
     background: #5a6268;
     transform: translateY(-2px);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
 }
 
 .btn-success {
@@ -515,6 +526,7 @@ body {
 .btn-success:hover {
     background: linear-gradient(135deg, #1e7e34, var(--color-success));
     transform: translateY(-2px);
+    box-shadow: 0 3px 10px rgba(40, 167, 69, 0.4);
 }
 
 /* Cards de Conteúdo */
@@ -1747,4 +1759,103 @@ body {
         padding: 15px;
         font-size: 1em;
     }
+}
+
+/* ===================================================
+// ESTILOS PARA CHAT EM TELA CHEIA (NOVO)
+// =================================================== */
+
+.full-screen-message#chat-view {
+    padding: 0;
+    margin: 0;
+    align-items: flex-start;
+    justify-content: flex-start;
+    /* Garante que o chat ocupe a tela toda */
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+.chat-full-screen {
+    max-width: 100%;
+    width: 100%;
+    height: 100vh;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: var(--color-card);
+    border-radius: 0;
+    box-shadow: none;
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
+}
+
+.chat-full-screen #chat-header-view {
+    padding: 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.chat-full-screen #chat-messages {
+    flex-grow: 1;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.chat-full-screen #chat-input-area {
+    padding: 10px 20px;
+    border-top: 1px solid #eee;
+}
+
+.chat-full-screen .modal-actions {
+    padding: 10px 20px;
+    border-top: 1px solid #eee;
+}
+
+/* ===================================================
+// ESTILOS PARA NOVO MENU DE AÇÕES RÁPIDAS (NOVO)
+// =================================================== */
+
+.quick-actions-menu {
+    position: fixed;
+    bottom: 80px; /* Ajustado para ficar acima da nav bar */
+    right: 20px;
+    background: var(--color-card);
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    overflow: hidden;
+    min-width: 200px;
+    padding: 10px 0; /* Adicionado padding para o menu */
+}
+
+.quick-actions-menu .action-btn {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    width: 100%;
+    text-align: left;
+    border: none;
+    background: none;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.quick-actions-menu .action-btn:hover {
+    background: var(--color-background);
+}
+
+.quick-actions-menu .action-icon {
+    margin-right: 10px;
+    font-size: 1.2em;
+}
+
+.quick-actions-menu .action-text {
+    font-weight: 500;
+}
+
+/* Esconder o botão de ações rápidas antigo, que não existe mais no HTML */
+#quick-actions-button {
+    display: none !important;
 }
