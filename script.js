@@ -848,27 +848,25 @@ function updateTrilhasCountDisplay() {
 
 // ===================================================
 // CONTROLE DE FLUXO DE AUTENTICAÇÃO 
-// ===================================================
-
-function showLoginView() {
-    document.getElementById("login-screen").style.display = 'flex';
-    document.getElementById("welcome-screen").style.display = 'none';
-    document.getElementById("explanation-screen").style.display = 'none';
+// ==============================================// Função showWelcomeScreen removida pois foi redefinida acima para usar hideAllScreens()
+// function showWelcomeScreen() {
+//     document.getElementById("login-screen").style.display = 'none';
+//     document.getElementById("welcome-screen").style.display = 'flex';
+//     initializeModeSelector();
+// }"explanation-screen").style.display = 'none';
     document.getElementById("main-app").style.display = 'none';
     document.getElementById("predefined-courses-view").style.display = 'none';
     
     // Garante que os campos de login estejam limpos
     document.getElementById('username').value = '';
     document.getElementById('password').value = '';
-    document.getElementById('auth-message').innerText = '';
-}
-
-function handleAuthSubmit(e) {
-    e.preventDefault();
-    const username = document.getElementById('username').value.trim();
-    const password = document.getElementById('password').value.trim();
+    document.getElementById('auth-message').innerTfunction handleAuthSubmit(event) {
+    event.preventDefault();
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
     const authMessage = document.getElementById('auth-message');
-    
+    authMessage.innerText = '';
+
     if (username.toLowerCase() === 'convidado') {
         authMessage.innerText = "Nome de usuário 'Convidado' é reservado. Escolha outro.";
         return;
@@ -899,10 +897,13 @@ function handleAuthSubmit(e) {
     }
 }
 
-function handleSkipLogin() {
+function skipLogin() {
     loadUserData('Convidado');
-    showWelcomeScreen();
-}
+    showWelcomeScre// Função handleSkipLogin removida pois foi redefinida como skipLogin()
+// function handleSkipLogin() {
+//     loadUserData('Convidado');
+//     showWelcomeScreen();
+// }
 
 // ===================================================
 // Listeners de Transição Inicial
@@ -913,7 +914,8 @@ document.addEventListener("DOMContentLoaded", () => {
     showLoginView(); // Inicia na tela de login
 
     document.getElementById("login-form").addEventListener("submit", handleAuthSubmit);
-    document.getElementById("btnSkipLogin").addEventListener("click", handleSkipLogin);
+    // O listener do btnSkipLogin foi movido para o HTML (onclick="skipLogin()") para simplificar.
+// document.getElementById("btnSkipLogin").addEventListener("click", handleSkipLogin);
     
     document.getElementById("btnWelcomeContinue").addEventListener("click", showExplanationScreen);
     
@@ -950,10 +952,16 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // Funções de transição de telas iniciais
+functfunction showLoginView() {
+    hideAllScreens();
+    document.getElementById("login-screen").style.display = 'flex';
+}
+
 function showWelcomeScreen() {
     hideAllScreens();
     document.getElementById("welcome-screen").style.display = 'flex';
-}
+    initializeModeSelector(); // Garante que o seletor de modo seja inicializado
+}}
 
 function showExplanationScreen() {
     document.getElementById("welcome-screen").style.display = 'none';
