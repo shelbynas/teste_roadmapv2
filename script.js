@@ -159,15 +159,21 @@ function showProfessorResultView() {
 }
 
 function hideAllScreens() {
-    const screens = [
-        "login-screen", "welcome-screen", "explanation-screen", 
-        "professor-mode-view", "professor-result-view", "main-app"
-    ];
-    
-    screens.forEach(screen => {
-        const element = document.getElementById(screen);
-        if (element) element.style.display = 'none';
+    // Esconde todas as telas de full-screen-message
+    const fullScreenMessages = document.querySelectorAll('.full-screen-message');
+    fullScreenMessages.forEach(element => {
+        element.style.display = 'none';
     });
+
+    // Esconde o main-app (que contém a barra de navegação)
+    const mainApp = document.getElementById("main-app");
+    if (mainApp) mainApp.style.display = 'none';
+    
+    // Esconde modais e menus flutuantes
+    const pomodoroModal = document.getElementById("pomodoro-modal");
+    if (pomodoroModal) pomodoroModal.style.display = 'none';
+    const quickActionsMenu = document.getElementById("quick-actions-menu");
+    if (quickActionsMenu) quickActionsMenu.style.display = 'none';
 }
 
 async function gerarConteudoProfessor() {
