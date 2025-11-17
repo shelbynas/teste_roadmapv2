@@ -718,17 +718,13 @@ function showPomodoroNotification(message) {
 
 function toggleQuickActionsMenu() {
     const menu = document.getElementById('quick-actions-menu');
+    // Alterna entre 'block' e 'none'
     menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
 }
 
 function hideQuickActionsMenu() {
     const menu = document.getElementById('quick-actions-menu');
-    menu.style.display = 'none';
-}
-
-function hideQuickActionsMenu() {
-    const menu = document.getElementById('quick-actions-menu');
-    menu.style.display = 'none';
+    if (menu) menu.style.display = 'none';
 }
 
 function updateQuickActionsMenu() {
