@@ -178,25 +178,48 @@
             </div>
         </header>
 
-	        <main class="container">
-	            <div id="main-content-area">
-	                
-	                <!-- Timer Pomodoro Flutuante -->
-	                <div id="pomodoro-floating-timer" class="pomodoro-floating-timer" style="display: none;">
-	                    <div class="pomodoro-timer-content">
-	                        <div class="pomodoro-header">
-	                            <span id="pomodoro-mode">⏱️ Foco</span>
-	                            <button class="pomodoro-close" onclick="hidePomodoroTimer()">×</button>
-	                        </div>
-	                        <div id="pomodoro-timer-display" class="pomodoro-time">25:00</div>
-	                        <div class="pomodoro-controls-mini">
-	                            <button id="btn-pomodoro-play-pause" onclick="togglePomodoro()">⏸️</button>
-	                            <button id="btn-pomodoro-stop" onclick="stopPomodoro()">⏹️</button>
-	                        </div>
-	                    </div>
-	                </div>
-	
-	                <div id="user-trilhas-view" class="content-view">
+        <main class="container">
+            <div id="main-content-area">
+                
+                <!-- Timer Pomodoro Flutuante -->
+                <div id="pomodoro-floating-timer" class="pomodoro-floating-timer" style="display: none;">
+                    <div class="pomodoro-timer-content">
+                        <div class="pomodoro-header">
+                            <span id="pomodoro-mode">⏱️ Foco</span>
+                            <button class="pomodoro-close" onclick="hidePomodoroTimer()">×</button>
+                        </div>
+                        <div id="pomodoro-timer-display" class="pomodoro-time">25:00</div>
+                        <div class="pomodoro-controls-mini">
+                            <button id="btn-pomodoro-play-pause" onclick="togglePomodoro()">⏸️</button>
+                            <button id="btn-pomodoro-stop" onclick="stopPomodoro()">⏹️</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Botão de Ações Rápidas -->
+                <button id="quick-actions-button" class="quick-actions-button" title="Ações Rápidas">
+                    ⚡
+                </button>
+
+                <!-- Menu de Ações Rápidas -->
+                <div id="quick-actions-menu" class="quick-actions-menu" style="display: none;">
+                    <div class="quick-actions-header">
+                        <h3>Ações Rápidas</h3>
+                        <button class="close-actions" onclick="hideQuickActionsMenu()">×</button>
+                    </div>
+                    <div class="quick-actions-content">
+                        <button class="action-btn" onclick="showChatView()" id="chat-action-btn">
+                            <span class="action-icon">💬</span>
+                            <span class="action-text">Chat com Patolindo</span>
+                        </button>
+                        <button class="action-btn" onclick="showPomodoroModal()">
+                            <span class="action-icon">⏱️</span>
+                            <span class="action-text">Iniciar Pomodoro</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="user-trilhas-view" class="content-view">
                     <div id="user-trilhas-container">
                         <div class="view-header">
                             <h2>📁 Minhas Trilhas Salvas</h2>
@@ -361,74 +384,65 @@
                     </div>
                 </div>
 
-	                </div>
-	
-	            </div>
-	        </main>
-	
-	        <!-- Barra de Navegação Mobile -->
-	        <nav id="bottom-nav" class="bottom-nav">
-	            <button class="nav-btn active" data-view="user-trilhas-view" onclick="showUserTrilhasView()">
-	                <span class="nav-icon">📁</span>
-	                <span class="nav-text">Minhas Trilhas</span>
-	            </button>
-	            <button class="nav-btn" data-view="predefined-courses-view" onclick="showPreDefinedCoursesView()">
-	                <span class="nav-icon">🚀</span>
-	                <span class="nav-text">Cursos</span>
-	            </button>
-	            <button class="nav-btn" data-view="form-view" onclick="showFormView()">
-	                <span class="nav-icon">💡</span>
-	                <span class="nav-text">Criar</span>
-	            </button>
-	            <button class="nav-btn" id="btnQuickActionsMenu">
-	                <span class="nav-icon">...</span>
-	                <span class="nav-text">Mais</span>
-	            </button>
-	        </nav>
-	    </div>
-	
-	    <!-- TELA: CHAT EM TELA CHEIA -->
-	    <section id="chat-view" class="full-screen-message" style="display: none;">
-	        <div id="chat-container" class="chat-full-screen">
-	            <div id="chat-header-view">
-	                <div class="chat-header-content">
-	                    <span class="chat-title">💬 Patolindo - Seu Assistente</span>
-	                    <span id="chat-counter" class="chat-counter">(5 Perguntas)</span>
-	                </div>
-	            </div>
-	            <div id="chat-messages">
-	                <!-- Mensagens do chat serão carregadas aqui -->
-	            </div>
-	            <div id="chat-input-area">
-	                <input type="text" id="chat-input" placeholder="Sua pergunta..." disabled>
-	                <button id="chat-send-button" disabled>
-	                    <span class="btn-icon">📤</span>
-	                </button>
-	            </div>
-	            <div class="modal-actions">
-	                <button id="chat-exit-button" class="btn-secondary back-button">
-	                    <span class="btn-icon">⬅</span>
-	                    Sair do Chat
-	                </button>
-	            </div>
-	        </div>
-	    </section>
-	
-	    <!-- Menu de Ações Rápidas (Novo) -->
-	    <div id="quick-actions-menu" class="quick-actions-menu" style="display: none;">
-	        <div class="quick-actions-content">
-	            <button class="action-btn" onclick="showProfessorModeView()">
-	                <span class="action-icon">👨‍🏫</span>
-	                <span class="action-text">Modo Professor</span>
-	            </button>
-	            <button class="action-btn" onclick="showPomodoroModal()">
-	                <span class="action-icon">⏱️</span>
-	                <span class="action-text">Iniciar Pomodoro</span>
-	            </button>
-	        </div>
-	    </div>
-	
-	    <!-- Modal Pomodoro -->
+                <div id="chat-view" class="content-view">
+                    <div id="chat-container">
+                        <div id="chat-header-view">
+                            <div class="chat-header-content">
+                                <span class="chat-title">💬 Patolindo - Seu Assistente</span>
+                                <span id="chat-counter" class="chat-counter">(5 Perguntas)</span>
+                            </div>
+                        </div>
+                        <div id="chat-messages">
+                            <!-- Mensagens do chat serão carregadas aqui -->
+                        </div>
+                        <div id="chat-input-area">
+                            <input type="text" id="chat-input" placeholder="Sua pergunta..." disabled>
+                            <button id="chat-send-button" disabled>
+                                <span class="btn-icon">📤</span>
+                            </button>
+                        </div>
+                        <div class="modal-actions">
+                            <button id="chat-exit-button" class="btn-secondary back-button">
+                                <span class="btn-icon">⬅</span>
+                                Sair do Chat
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+
+        <!-- Barra de Navegação Mobile -->
+        <nav id="bottom-nav" class="bottom-nav">
+            <button class="nav-btn active" data-view="user-trilhas-view" onclick="showUserTrilhasView()">
+                <span class="nav-icon">📁</span>
+                <span class="nav-text">Minhas Trilhas</span>
+            </button>
+            <button class="nav-btn" data-view="predefined-courses-view" onclick="showPreDefinedCoursesView()">
+                <span class="nav-icon">🚀</span>
+                <span class="nav-text">Cursos</span>
+            </button>
+            <button class="nav-btn" data-view="form-view" onclick="showFormView()">
+                <span class="nav-icon">💡</span>
+                <span class="nav-text">Criar</span>
+            </button>
+            <button class="nav-btn" onclick="showChatView()">
+                <span class="nav-icon">💬</span>
+                <span class="nav-text">Chat</span>
+            </button>
+            <button class="nav-btn" onclick="showPomodoroModal()">
+                <span class="nav-icon">⏱️</span>
+                <span class="nav-text">Pomodoro</span>
+            </button>
+            <button class="nav-btn professor-nav-btn" onclick="showProfessorModeView()">
+                <span class="nav-icon">👨‍🏫</span>
+                <span class="nav-text">Professor</span>
+            </button>
+        </nav>
+    </div>
+
+    <!-- Modal Pomodoro -->
     <div id="pomodoro-modal" class="modal" style="display: none;">
         <div class="modal-content">
             <div class="modal-header">
@@ -484,3 +498,4 @@
     <script src="script.js"></script>
 </body>
 </html>
+s
