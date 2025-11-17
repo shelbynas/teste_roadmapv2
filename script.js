@@ -34,7 +34,7 @@ let patolindoState = {
     lastView: "roadmap-view" 
 };
 
-let userMode = localStorage.getItem('userMode') || "aluno";
+let userMode = "aluno";
 
 // --- SISTEMA POMODORO ---
 let pomodoroState = {
@@ -128,14 +128,10 @@ function initializeModeSelector() {
     
     if (alunoBtn) alunoBtn.addEventListener('click', () => selectMode('aluno'));
     if (professorBtn) professorBtn.addEventListener('click', () => selectMode('professor'));
-    
-    // Aplica o modo salvo ao carregar a tela
-    selectMode(userMode);
 }
 
 function selectMode(mode) {
     userMode = mode;
-    localStorage.setItem('userMode', mode); // Salva o modo no localStorage
     
     const alunoBtn = document.getElementById('btnAlunoMode');
     const professorBtn = document.getElementById('btnProfessorMode');
@@ -159,21 +155,15 @@ function showProfessorResultView() {
 }
 
 function hideAllScreens() {
-    // Esconde todas as telas de full-screen-message
-    const fullScreenMessages = document.querySelectorAll('.full-screen-message');
-    fullScreenMessages.forEach(element => {
-        element.style.display = 'none';
-    });
-
-    // Esconde o main-app (que contém a barra de navegação)
-    const mainApp = document.getElementById("main-app");
-    if (mainApp) mainApp.style.display = 'none';
+    const screens = [
+        "login-screen", "welcome-screen", "explanation-screen", 
+        "professor-mode-view", "professor-result-view", "main-app"
+    ];
     
-    // Esconde modais e menus flutuantes
-    const pomodoroModal = document.getElementById("pomodoro-modal");
-    if (pomodoroModal) pomodoroModal.style.display = 'none';
-    const quickActionsMenu = document.getElementById("quick-actions-menu");
-    if (quickActionsMenu) quickActionsMenu.style.display = 'none';
+    screens.forEach(screen => {
+        const element = document.getElementById(screen);
+        if (element) element.style.display = 'none';
+    });
 }
 
 async function gerarConteudoProfessor() {
@@ -718,65 +708,12 @@ function showPomodoroNotification(message) {
 
 function toggleQuickActionsMenu() {
     const menu = document.getElementById('quick-actions-menu');
-    // Alterna entre 'block' e 'none'
     menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
 }
 
 function hideQuickActionsMenu() {
     const menu = document.getElementById('quick-actions-menu');
-    if (menu) menu.style.display = 'none';
-}
-
-function updateQuickActionsMenu() {
-    const chatBtn = document.getElementById('chat-action-btn');
-    const currentView = getCurrentView();
-    
-    // Desabilita o chat durante flashcards e simulado
-    if (currentView === 'flashcard-view' || currentView === 'simulado-etapa-view') {
-        chatBtn.disabled = true;
-        chatBtn.title = "Chat não disponível durante flashcards ou simulado";
-        // Adiciona feedback visual
-        if (!chatBtn.querySelector('.disabled-badge')) {
-            const badge = document.createElement('span');
-            badge.className = 'disabled-badge';
-            badge.textContent = ' 🔒';
-            badge.style.marginLeft = '5px';
-            chatBtn.appendChild(badge);
-        }
-    } else {
-        chatBtn.disabled = false;
-        chatBtn.title = "Abrir Chat com Patolindo";
-        // Remove feedback visual
-        const badge = chatBtn.querySelector('.disabled-badge');
-        if (badge) {
-            badge.remove();
-        }
-    }
-}
-
-// CORREÇÃO: Função para obter a view atual
-function getCurrentView() {
-    for (const key in viewMap) {
-        if (viewMap[key] && viewMap[key].style.display !== 'none') {
-            return key;
-        }
-    }
-    return null;
-}
-
-function updateQuickActionsButton() {
-    const quickActionsBtn = document.getElementById('quick-actions-button');
-    const currentView = getCurrentView();
-    
-    // Mostra o botão apenas quando estiver em uma trilha ativa, exceto flashcards e simulado
-    const shouldShow = (currentView === 'roadmap-view' || 
-                      currentView === 'etapa-view' || 
-                      currentView === 'material-view') &&
-                      currentView !== 'flashcard-view' &&
-                      currentView !== 'simulado-etapa-view' &&
-                      (currentUser.currentTrilhaIndex !== -1 && currentUser.trilhas.length > 0);
-    
-    quickActionsBtn.style.display = shouldShow ? 'block' : 'none';
+    menu.style.display = 'none';
 }
 
 // Fecha o menu quando clicar fora
@@ -849,16 +786,28 @@ function updateTrilhasCountDisplay() {
 }
 
 // ===================================================
-// CONTR// ===================================================
-// CONTROLE DE FLUXO DE AUTENTICAÇÃO
+// CONTROLE DE FLUXO DE AUTENTICAÇÃO 
 // ===================================================
 
-function handleAuthSubmit(event) {Default();
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
-    const authMessage = document.getElementById('auth-message');
-    authMessage.innerText = '';
+function showLoginView() {
+    document.getElementById("login-screen").style.display = 'flex';
+    document.getElementById("welcome-screen").style.display = 'none';
+    document.getElementById("explanation-screen").style.display = 'none';
+    document.getElementById("main-app").style.display = 'none';
+    document.getElementById("predefined-courses-view").style.display = 'none';
+    
+    // Garante que os campos de login estejam limpos
+    document.getElementById('username').value = '';
+    document.getElementById('password').value = '';
+    document.getElementById('auth-message').innerText = '';
+}
 
+function handleAuthSubmit(e) {
+    e.preventDefault();
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value.trim();
+    const authMessage = document.getElementById('auth-message');
+    
     if (username.toLowerCase() === 'convidado') {
         authMessage.innerText = "Nome de usuário 'Convidado' é reservado. Escolha outro.";
         return;
@@ -889,7 +838,7 @@ function handleAuthSubmit(event) {Default();
     }
 }
 
-function skipLogin() {
+function handleSkipLogin() {
     loadUserData('Convidado');
     showWelcomeScreen();
 }
@@ -903,8 +852,7 @@ document.addEventListener("DOMContentLoaded", () => {
     showLoginView(); // Inicia na tela de login
 
     document.getElementById("login-form").addEventListener("submit", handleAuthSubmit);
-    // O listener do btnSkipLogin foi movido para o HTML (onclick="skipLogin()") para simplificar.
-// document.getElementById("btnSkipLogin").addEventListener("click", handleSkipLogin);
+    document.getElementById("btnSkipLogin").addEventListener("click", handleSkipLogin);
     
     document.getElementById("btnWelcomeContinue").addEventListener("click", showExplanationScreen);
     
@@ -937,19 +885,17 @@ document.addEventListener("DOMContentLoaded", () => {
     
     // Listener para gerar conteúdo do professor
     const profBtn = document.getElementById("btnGerarConteudoProfessor");
-    if (profBtn) profBtn.addEventListener("click", ger// Funções de transição de telas iniciais
-function showLoginView() {
-    hideAllScreens();
-    document.getElementById("login-screen").style.display = 'flex';
-    // Garante que o botão de pular login esteja visível
-    document.getElementById("btnSkipLogin").style.display = 'inline-flex';
-}
+    if (profBtn) profBtn.addEventListener("click", gerarConteudoProfessor);
+});
 
+// Funções de transição de telas iniciais
 function showWelcomeScreen() {
     hideAllScreens();
     document.getElementById("welcome-screen").style.display = 'flex';
-    initializeModeSelector(); // Garante que o seletor de modo seja inifunction showExplanationScreen() {
-    hideAllScreens(); // Garante que todas as telas sejam escondidas
+}
+
+function showExplanationScreen() {
+    document.getElementById("welcome-screen").style.display = 'none';
     
     if (userMode === 'professor') {
         showProfessorModeView();
@@ -959,11 +905,12 @@ function showWelcomeScreen() {
 }
 
 function showMainApp(isExistingUser = false) {
-    hideAllScreens(); // Garante que todas as telas sejam escondidas
+    document.getElementById("explanation-screen").style.display = 'none';
+    document.getElementById("welcome-screen").style.display = 'none';
+    document.getElementById("login-screen").style.display = 'none';
     document.getElementById("main-app").style.display = 'block';
     
-    // Atualiza a visibilidade do botão de ações rápidas
-    updateQuickActionsButton();
+    // Lógica de visibilidade do botão de ações rápidas removida, pois agora está fixo na nav bar
     
     if (isExistingUser && currentUser.trilhas.length > 0) {
          // Usuário recorrente vai para o Gerenciamento
@@ -1016,104 +963,6 @@ function updateBottomNav(activeView) {
             btn.classList.add('active');
         }
     });
-}
-
-// Adiciona a lógica de atualização da nav bar em todas as funções de navegação
-function showUserTrilhasView() {
-    hideAllViews();
-    window.scrollTo(0, 0); 
-
-    if (currentUser.name === 'Convidado') {
-        showPreDefinedCoursesView();
-        return;
-    }
-    
-    showView("user-trilhas-view");
-    updateBottomNav('user-trilhas-view');
-    // ... restante da função
-}
-
-function showPreDefinedCoursesView() {
-    // Garante que a aplicação principal está visível antes de exibir a sub-tela
-    document.getElementById("main-app").style.display = 'block'; 
-    
-    hideAllViews();
-    window.scrollTo(0, 0); 
-    showView("predefined-courses-view");
-    updateBottomNav('predefined-courses-view');
-    // ... restante da função
-}
-
-function showFormView() {
-    hideAllViews();
-    window.scrollTo(0, 0); 
-    showView("form-view");
-    updateBottomNav('form-view');
-    // ... restante da função
-}
-
-function showRoadmapView() {
-    hideAllViews();
-    window.scrollTo(0, 0); 
-    patolindoState.lastView = "roadmap-view";
-    showView("roadmap-view");
-    updateBottomNav('roadmap-view');
-    // ... restante da função
-}
-
-function showEtapaView(etapa) {
-    modalState.currentEtapa = etapa;
-    
-    hideAllViews();
-    window.scrollTo(0, 0); 
-    patolindoState.lastView = "etapa-view";
-    showView("etapa-view");
-    updateBottomNav('etapa-view');
-    // ... restante da função
-}
-
-function showMaterialView(topico) {
-    hideAllViews();
-    window.scrollTo(0, 0); 
-    patolindoState.lastView = "material-view";
-    showView("material-view");
-    updateBottomNav('material-view');
-    // ... restante da função
-}
-
-function showFlashcardView(topico) {
-    hideAllViews();
-    window.scrollTo(0, 0); 
-    patolindoState.lastView = "flashcard-view";
-    showView("flashcard-view");
-    updateBottomNav('flashcard-view');
-    // ... restante da função
-}
-
-function showSimuladoEtapaView(etapa) {
-    modalState.currentEtapa = etapa;
-    
-    hideAllViews();
-    window.scrollTo(0, 0); 
-    patolindoState.lastView = "simulado-etapa-view";
-    showView("simulado-etapa-view");
-    updateBottomNav('simulado-etapa-view');
-    // ... restante da função
-}
-
-function showLastView() {
-    // Volta para a view anterior salva
-    if (patolindoState.lastView === "roadmap-view") {
-        showRoadmapView();
-    } else if (patolindoState.lastView === "etapa-view") {
-        showEtapaView(modalState.currentEtapa);
-    } else if (patolindoState.lastView === "user-trilhas-view") {
-        showUserTrilhasView();
-    } else {
-        showPreDefinedCoursesView();
-    }
-    // Garante que a nav bar seja atualizada ao voltar
-    updateBottomNav(patolindoState.lastView);
 }
 
 // ===================================================
@@ -1323,7 +1172,7 @@ function showSimuladoEtapaView() {
 }
 
 function showChatView() {
-    // O Chat agora é uma tela full-screen
+    // O Chat agora é uma tela full-screen, não uma view do main-app
     
     // Esconde todas as telas iniciais e o main-app
     hideAllScreens();
