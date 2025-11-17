@@ -453,7 +453,6 @@ function loadPomodoroPosition() {
 // ===================================================
 
 function showPomodoroModal() {
-    hideQuickActionsMenu(); // Esconde o menu de ações rápidas ao abrir o modal
     const modal = document.getElementById('pomodoro-modal');
     modal.style.display = 'block';
     updatePomodoroDisplay();
@@ -706,9 +705,10 @@ function showPomodoroNotification(message) {
 // FUNÇÕES DO MENU DE AÇÕES RÁPIDAS (ORIGINAIS)
 // ===================================================
 
-function toggleQuickActionsMenu() {
+function showQuickActionsMenu() {
     const menu = document.getElementById('quick-actions-menu');
-    menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+    menu.style.display = 'block';
+    updateQuickActionsMenu();
 }
 
 function hideQuickActionsMenu() {
@@ -716,12 +716,64 @@ function hideQuickActionsMenu() {
     menu.style.display = 'none';
 }
 
+function updateQuickActionsMenu() {
+    const chatBtn = document.getElementById('chat-action-btn');
+    const currentView = getCurrentView();
+    
+    // Desabilita o chat durante flashcards e simulado
+    if (currentView === 'flashcard-view' || currentView === 'simulado-etapa-view') {
+        chatBtn.disabled = true;
+        chatBtn.title = "Chat não disponível durante flashcards ou simulado";
+        // Adiciona feedback visual
+        if (!chatBtn.querySelector('.disabled-badge')) {
+            const badge = document.createElement('span');
+            badge.className = 'disabled-badge';
+            badge.textContent = ' 🔒';
+            badge.style.marginLeft = '5px';
+            chatBtn.appendChild(badge);
+        }
+    } else {
+        chatBtn.disabled = false;
+        chatBtn.title = "Abrir Chat com Patolindo";
+        // Remove feedback visual
+        const badge = chatBtn.querySelector('.disabled-badge');
+        if (badge) {
+            badge.remove();
+        }
+    }
+}
+
+// CORREÇÃO: Função para obter a view atual
+function getCurrentView() {
+    for (const key in viewMap) {
+        if (viewMap[key] && viewMap[key].style.display !== 'none') {
+            return key;
+        }
+    }
+    return null;
+}
+
+function updateQuickActionsButton() {
+    const quickActionsBtn = document.getElementById('quick-actions-button');
+    const currentView = getCurrentView();
+    
+    // Mostra o botão apenas quando estiver em uma trilha ativa, exceto flashcards e simulado
+    const shouldShow = (currentView === 'roadmap-view' || 
+                      currentView === 'etapa-view' || 
+                      currentView === 'material-view') &&
+                      currentView !== 'flashcard-view' &&
+                      currentView !== 'simulado-etapa-view' &&
+                      (currentUser.currentTrilhaIndex !== -1 && currentUser.trilhas.length > 0);
+    
+    quickActionsBtn.style.display = shouldShow ? 'block' : 'none';
+}
+
 // Fecha o menu quando clicar fora
 document.addEventListener('click', function(event) {
-    const quickActionsBtn = document.getElementById('btnQuickActionsMenu');
+    const quickActionsBtn = document.getElementById('quick-actions-button');
     const quickActionsMenu = document.getElementById('quick-actions-menu');
     
-    if (quickActionsBtn && quickActionsMenu && !quickActionsBtn.contains(event.target) && !quickActionsMenu.contains(event.target)) {
+    if (!quickActionsBtn.contains(event.target) && !quickActionsMenu.contains(event.target)) {
         hideQuickActionsMenu();
     }
 });
@@ -874,8 +926,8 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     document.getElementById("chat-input").addEventListener("input", updateSendButtonState);
     
-    // --- Listener do Botão de Ações Rápidas (Novo) ---
-    document.getElementById("btnQuickActionsMenu").addEventListener("click", toggleQuickActionsMenu);
+    // --- Listener do Botão de Ações Rápidas ---
+    document.getElementById("quick-actions-button").addEventListener("click", showQuickActionsMenu);
     
     // Inicializa a posição do pomodoro
     loadPomodoroPosition();
@@ -910,7 +962,8 @@ function showMainApp(isExistingUser = false) {
     document.getElementById("login-screen").style.display = 'none';
     document.getElementById("main-app").style.display = 'block';
     
-    // Lógica de visibilidade do botão de ações rápidas removida, pois agora está fixo na nav bar
+    // Atualiza a visibilidade do botão de ações rápidas
+    updateQuickActionsButton();
     
     if (isExistingUser && currentUser.trilhas.length > 0) {
          // Usuário recorrente vai para o Gerenciamento
@@ -1172,21 +1225,38 @@ function showSimuladoEtapaView() {
 }
 
 function showChatView() {
-    // O Chat agora é uma tela full-screen, não uma view do main-app
+    // Verifica se pode abrir o chat (não durante flashcards ou simulado)
+    const currentView = getCurrentView();
+    if (currentView === 'flashcard-view' || currentView === 'simulado-etapa-view') {
+        // Feedback visual para o usuário
+        const notification = document.createElement('div');
+        notification.className = 'chat-disabled-message';
+        notification.innerHTML = '💬 O chat não está disponível durante flashcards ou simulado.<br>Finalize a atividade atual primeiro.';
+        notification.style.position = 'fixed';
+        notification.style.top = '50%';
+        notification.style.left = '50%';
+        notification.style.transform = 'translate(-50%, -50%)';
+        notification.style.zIndex = '1004';
+        notification.style.padding = '20px';
+        notification.style.borderRadius = '10px';
+        notification.style.boxShadow = '0 4px 15px rgba(0,0,0,0.3)';
+        notification.style.textAlign = 'center';
+        notification.style.maxWidth = '300px';
+        notification.style.background = 'white';
+        notification.style.border = '2px solid var(--color-danger)';
+        
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.remove();
+        }, 3000);
+        return;
+    }
     
-    // Esconde todas as telas iniciais e o main-app
-    hideAllScreens();
-    document.getElementById("main-app").style.display = 'none';
-    
-    // Mostra a tela de chat em tela cheia
-    const chatView = document.getElementById("chat-view");
-    if (chatView) chatView.style.display = 'flex';
-    
+    hideAllViews();
     window.scrollTo(0, 0); 
+    showView("chat-view");
     resetPatolindoSession();
-    
-    // Esconde o menu de ações rápidas, caso esteja aberto
-    hideQuickActionsMenu();
 }
 
 function showLastView() {
