@@ -384,7 +384,7 @@ function initializePomodoroDrag() {
         }
 
         // Só inicia o arraste se clicar no header
-        if (e.target.classList.contains('pomodoro-header') || 
+        if (e.target.classList.contains('.pomodoro-header') || 
             e.target.closest('.pomodoro-header')) {
             isDragging = true;
             timer.classList.add('dragging');
