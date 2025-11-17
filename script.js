@@ -847,21 +847,11 @@ function updateTrilhasCountDisplay() {
 }
 
 // ===================================================
-// CONTROLE DE FLUXO DE AUTENTICAÇÃO 
-// ==============================================// Função showWelcomeScreen removida pois foi redefinida acima para usar hideAllScreens()
-// function showWelcomeScreen() {
-//     document.getElementById("login-screen").style.display = 'none';
-//     document.getElementById("welcome-screen").style.display = 'flex';
-//     initializeModeSelector();
-// }"explanation-screen").style.display = 'none';
-    document.getElementById("main-app").style.display = 'none';
-    document.getElementById("predefined-courses-view").style.display = 'none';
-    
-    // Garante que os campos de login estejam limpos
-    document.getElementById('username').value = '';
-    document.getElementById('password').value = '';
-    document.getElementById('auth-message').innerTfunction handleAuthSubmit(event) {
-    event.preventDefault();
+// CONTR// ===================================================
+// CONTROLE DE FLUXO DE AUTENTICAÇÃO
+// ===================================================
+
+function handleAuthSubmit(event) {Default();
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
     const authMessage = document.getElementById('auth-message');
@@ -899,11 +889,8 @@ function updateTrilhasCountDisplay() {
 
 function skipLogin() {
     loadUserData('Convidado');
-    showWelcomeScre// Função handleSkipLogin removida pois foi redefinida como skipLogin()
-// function handleSkipLogin() {
-//     loadUserData('Convidado');
-//     showWelcomeScreen();
-// }
+    showWelcomeScreen();
+}
 
 // ===================================================
 // Listeners de Transição Inicial
@@ -948,11 +935,8 @@ document.addEventListener("DOMContentLoaded", () => {
     
     // Listener para gerar conteúdo do professor
     const profBtn = document.getElementById("btnGerarConteudoProfessor");
-    if (profBtn) profBtn.addEventListener("click", gerarConteudoProfessor);
-});
-
-// Funções de transição de telas iniciais
-functfunction showLoginView() {
+    if (profBtn) profBtn.addEventListener("click", ger// Funções de transição de telas iniciais
+function showLoginView() {
     hideAllScreens();
     document.getElementById("login-screen").style.display = 'flex';
 }
@@ -960,11 +944,8 @@ functfunction showLoginView() {
 function showWelcomeScreen() {
     hideAllScreens();
     document.getElementById("welcome-screen").style.display = 'flex';
-    initializeModeSelector(); // Garante que o seletor de modo seja inicializado
-}}
-
-function showExplanationScreen() {
-    document.getElementById("welcome-screen").style.display = 'none';
+    initializeModeSelector(); // Garante que o seletor de modo seja inifunction showExplanationScreen() {
+    hideAllScreens(); // Garante que todas as telas sejam escondidas
     
     if (userMode === 'professor') {
         showProfessorModeView();
