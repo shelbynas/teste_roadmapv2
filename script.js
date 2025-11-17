@@ -939,6 +939,8 @@ document.addEventListener("DOMContentLoaded", () => {
 function showLoginView() {
     hideAllScreens();
     document.getElementById("login-screen").style.display = 'flex';
+    // Garante que o botão de pular login esteja visível
+    document.getElementById("btnSkipLogin").style.display = 'inline-flex';
 }
 
 function showWelcomeScreen() {
@@ -955,9 +957,7 @@ function showWelcomeScreen() {
 }
 
 function showMainApp(isExistingUser = false) {
-    document.getElementById("explanation-screen").style.display = 'none';
-    document.getElementById("welcome-screen").style.display = 'none';
-    document.getElementById("login-screen").style.display = 'none';
+    hideAllScreens(); // Garante que todas as telas sejam escondidas
     document.getElementById("main-app").style.display = 'block';
     
     // Atualiza a visibilidade do botão de ações rápidas
