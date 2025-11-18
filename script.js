@@ -166,6 +166,15 @@ function hideAllScreens() {
     });
 }
 
+// ===================================================
+// CORREÇÃO: BOTÃO VOLTAR DO PROFESSOR PARA MENU INICIAL
+// ===================================================
+
+function backToInitialMenu() {
+    hideAllScreens();
+    showWelcomeScreen();
+}
+
 async function gerarConteudoProfessor() {
     const tema = document.getElementById("professor-tema")?.value;
     const nivel = document.getElementById("professor-nivel")?.value;
@@ -919,7 +928,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("btnSimuladoEtapaVoltar").addEventListener("click", () => showEtapaView(modalState.currentEtapa));
     
     // --- Listeners do Chatbot ---
-    document.getElementById("chat-exit-button").addEventListener("click", () => showLastView());
+    document.getElementById("chat-exit-button").addEventListener("click", () => exitChatView());
     document.getElementById("chat-send-button").addEventListener("click", handleChatSend);
     document.getElementById("chat-input").addEventListener("keypress", (e) => {
         if (e.key === 'Enter') handleChatSend();
@@ -1224,6 +1233,10 @@ function showSimuladoEtapaView() {
     fetchAndRenderSimuladoEtapa();
 }
 
+// ===================================================
+// CORREÇÃO: CHAT EM TELA CHEIA NO MOBILE
+// ===================================================
+
 function showChatView() {
     // Verifica se pode abrir o chat (não durante flashcards ou simulado)
     const currentView = getCurrentView();
@@ -1253,10 +1266,80 @@ function showChatView() {
         return;
     }
     
+    // CORREÇÃO: Esconde todas as views e mostra o chat em tela cheia no mobile
     hideAllViews();
-    window.scrollTo(0, 0); 
-    showView("chat-view");
+    
+    // Para mobile, usa abordagem diferente para ocupar tela toda
+    if (window.innerWidth <= 768) {
+        const chatView = document.getElementById("chat-view");
+        const chatContainer = document.getElementById("chat-container");
+        
+        // Aplica estilos para tela cheia
+        chatView.style.position = 'fixed';
+        chatView.style.top = '0';
+        chatView.style.left = '0';
+        chatView.style.width = '100%';
+        chatView.style.height = '100%';
+        chatView.style.zIndex = '1005';
+        chatView.style.background = 'var(--color-background)';
+        chatView.style.display = 'block';
+        
+        chatContainer.style.height = '100vh';
+        chatContainer.style.minHeight = '100vh';
+        chatContainer.style.borderRadius = '0';
+        chatContainer.style.boxShadow = 'none';
+        
+        // Atualiza o header para mobile
+        const chatHeader = document.getElementById("chat-header-view");
+        if (chatHeader) {
+            chatHeader.innerHTML = `
+                <div class="chat-fullscreen-header">
+                    <span>💬 Patolindo - Seu Assistente</span>
+                    <span id="chat-counter">(${patolindoState.questionsLeft} Perguntas)</span>
+                </div>
+            `;
+        }
+    } else {
+        // Para desktop, comportamento normal
+        showView("chat-view");
+    }
+    
+    window.scrollTo(0, 0);
     resetPatolindoSession();
+}
+
+// CORREÇÃO: Função para sair do chat (mobile)
+function exitChatView() {
+    const chatView = document.getElementById("chat-view");
+    const chatContainer = document.getElementById("chat-container");
+    
+    // Remove estilos de tela cheia
+    chatView.style.position = '';
+    chatView.style.top = '';
+    chatView.style.left = '';
+    chatView.style.width = '';
+    chatView.style.height = '';
+    chatView.style.zIndex = '';
+    chatView.style.background = '';
+    
+    chatContainer.style.height = '';
+    chatContainer.style.minHeight = '';
+    chatContainer.style.borderRadius = '';
+    chatContainer.style.boxShadow = '';
+    
+    // Restaura o header original
+    const chatHeader = document.getElementById("chat-header-view");
+    if (chatHeader) {
+        chatHeader.innerHTML = `
+            <div class="chat-header-content">
+                <span class="chat-title">💬 Patolindo - Seu Assistente</span>
+                <span id="chat-counter" class="chat-counter">(${patolindoState.questionsLeft} Perguntas)</span>
+            </div>
+        `;
+    }
+    
+    // Volta para a view anterior
+    showLastView();
 }
 
 function showLastView() {
@@ -1664,7 +1747,7 @@ async function fetchAndRenderSimuladoEtapa() {
 
     try {
         // ATUALIZAÇÃO NO PROMPT: Requer diversidade de perguntas, distribuição aleatória das respostas, e estilo de prova/vestibular.
-        const systemPromptSimulado = `Você é um gerador de questões de múltipla escolha no estilo de provas e vestibulares. Crie um simulado de no mínimo 20 (vinte) questões sobre todos os tópicos fornecidos. **Todas as questões devem ser únicas e cobrir diferentes áreas dos tópicos.** Sua única resposta deve ser APENAS JSON válido, sem texto introdutório. O JSON deve ser um objeto contendo um array de "simulados" seguindo o formato: {"simulados": [{"pergunta": "...", "alternativas": ["A) ...", "B) ...", "C) ...", "D) ...", "E) ..."], "resposta_correta": "Letra da alternativa correta (ex: C)"}, ...]}. **IMPORTANTE: Distribua a resposta correta de forma aleatória (A, B, C, D ou E) para evitar ciclos viciosos de repetição de letra.**`;
+        const systemPromptSimulado = `Você é um gerador de questões de múltipla escolha no estilo de provas e vestibulares. Crie um simulado de no mínimo 20 (vinte) questões sobre todos os tópicos fornecidos. **Todas as questões devem ser únicas e cobrir diferentes áreas dos tópicos.** Sua única resposta deve ser APENAS JSON válido, sans texto introdutório. O JSON deve ser um objeto contendo um array de "simulados" seguindo o formato: {"simulados": [{"pergunta": "...", "alternativas": ["A) ...", "B) ...", "C) ...", "D) ...", "E) ..."], "resposta_correta": "Letra da alternativa correta (ex: C)"}, ...]}. **IMPORTANTE: Distribua a resposta correta de forma aleatória (A, B, C, D ou E) para evitar ciclos viciosos de repetição de letra.**`;
         const topicosEtapa = etapa.topicos.map(t => t.tópico).join(", ");
         const nivel = document.getElementById("nivel").value;
         const userPromptSimulado = `Crie no mínimo 20 questões de múltipla escolha sobre os seguintes tópicos da etapa: ${topicosEtapa} no nível ${nivel}. As questões devem ter 5 alternativas e o estilo deve ser complexo e abrangente, como em um vestibular/curso técnico.`;
