@@ -125,9 +125,9 @@
             </div>
             
             <div class="modal-actions">
-                <button onclick="showWelcomeScreen()" class="btn-secondary back-button">
+                <button onclick="backToInitialMenu()" class="btn-secondary professor-back-button">
                     <span class="btn-icon">⬅</span>
-                    Voltar
+                    Voltar ao Menu
                 </button>
             </div>
         </div>
@@ -153,9 +153,9 @@
             </div>
             
             <div class="modal-actions professor-actions">
-                <button onclick="showProfessorModeView()" class="btn-secondary back-button">
+                <button onclick="backToInitialMenu()" class="btn-secondary professor-back-button">
                     <span class="btn-icon">⬅</span>
-                    Voltar
+                    Voltar ao Menu
                 </button>
                 <button onclick="showMainApp(false)" class="btn-primary">
                     <span class="btn-icon">🚀</span>
@@ -387,10 +387,7 @@
                 <div id="chat-view" class="content-view">
                     <div id="chat-container">
                         <div id="chat-header-view">
-                            <div class="chat-header-content">
-                                <span class="chat-title">💬 Patolindo - Seu Assistente</span>
-                                <span id="chat-counter" class="chat-counter">(5 Perguntas)</span>
-                            </div>
+                            <!-- Header será atualizado dinamicamente para mobile -->
                         </div>
                         <div id="chat-messages">
                             <!-- Mensagens do chat serão carregadas aqui -->
@@ -402,7 +399,7 @@
                             </button>
                         </div>
                         <div class="modal-actions">
-                            <button id="chat-exit-button" class="btn-secondary back-button">
+                            <button onclick="exitChatView()" class="btn-secondary back-button">
                                 <span class="btn-icon">⬅</span>
                                 Sair do Chat
                             </button>
