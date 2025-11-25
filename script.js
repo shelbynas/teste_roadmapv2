@@ -175,6 +175,7 @@ function backToInitialMenu() {
     showWelcomeScreen();
 }
 
+// CORREÇÃO: Função gerarConteudoProfessor - Melhoria na extração do JSON
 async function gerarConteudoProfessor() {
     const tema = document.getElementById("professor-tema")?.value;
     const nivel = document.getElementById("professor-nivel")?.value;
@@ -270,14 +271,31 @@ Inclua resumos educativos e exercícios práticos com respostas.`;
         const data = await response.json();
         let texto = data?.choices?.[0]?.message?.content || "";
 
+        // CORREÇÃO MELHORADA: Limpeza e parsing do JSON
         let textoLimpo = texto.trim();
+        
+        // Remover possíveis blocos de código markdown
+        textoLimpo = textoLimpo.replace(/```json\s*/g, '').replace(/```\s*/g, '');
+        
         let parsed;
         try {
             parsed = JSON.parse(textoLimpo);
         } catch (e) {
-            let jsonMatch = textoLimpo.match(/\{[\s\S]*\}/);
-            if (!jsonMatch) throw new Error("Não foi possível extrair JSON da resposta.");
-            parsed = JSON.parse(jsonMatch[0]);
+            // Tentar extrair JSON de forma mais robusta
+            const jsonMatch = textoLimpo.match(/\{[\s\S]*\}/);
+            if (!jsonMatch) {
+                throw new Error("Não foi possível extrair JSON da resposta da API.");
+            }
+            try {
+                parsed = JSON.parse(jsonMatch[0]);
+            } catch (parseError) {
+                throw new Error("JSON inválido retornado pela API: " + parseError.message);
+            }
+        }
+        
+        // CORREÇÃO: Verificar se a estrutura está correta
+        if (!parsed.etapas || !Array.isArray(parsed.etapas)) {
+            throw new Error("Estrutura de dados inválida: campo 'etapas' não encontrado ou não é um array");
         }
         
         const conteudoGerado = parsed.etapas;
@@ -291,7 +309,8 @@ Inclua resumos educativos e exercícios práticos com respostas.`;
                 <div class="error-content">
                     <h3>⚠️ Erro ao gerar conteúdo</h3>
                     <p>${err.message}</p>
-                    <button onclick="showProfessorModeView()" class="btn-secondary">Tentar Novamente</button>
+                    <p style="font-size: 0.9em; margin-top: 10px;">Dica: Tente reformular o tema ou reduzir o número de etapas.</p>
+                    <button onclick="showProfessorModeView()" class="btn-secondary" style="margin-top: 15px;">Tentar Novamente</button>
                 </div>
             `;
         }
@@ -928,7 +947,6 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("btnSimuladoEtapaVoltar").addEventListener("click", () => showEtapaView(modalState.currentEtapa));
     
     // --- Listeners do Chatbot ---
-    document.getElementById("chat-exit-button").addEventListener("click", () => exitChatView());
     document.getElementById("chat-send-button").addEventListener("click", handleChatSend);
     document.getElementById("chat-input").addEventListener("keypress", (e) => {
         if (e.key === 'Enter') handleChatSend();
@@ -944,9 +962,14 @@ document.addEventListener("DOMContentLoaded", () => {
     // Inicializa o seletor de modo
     initializeModeSelector();
     
-    // Listener para gerar conteúdo do professor
+    // CORREÇÃO: Inicializar o chat corretamente
+    resetPatolindoSession();
+    
+    // CORREÇÃO: Garantir que o listener do professor está configurado
     const profBtn = document.getElementById("btnGerarConteudoProfessor");
-    if (profBtn) profBtn.addEventListener("click", gerarConteudoProfessor);
+    if (profBtn) {
+        profBtn.addEventListener("click", gerarConteudoProfessor);
+    }
 });
 
 // Funções de transição de telas iniciais
@@ -1897,7 +1920,7 @@ function corrigirSimuladoEtapa() {
 }
 
 // ===================================================
-// LÓGICA DO CHATBOT PATOLINDO (COM RESTRIÇÃO DE TEMA E TUTORIA) - ORIGINAL
+// CORREÇÃO: LÓGICA DO CHATBOT PATOLINDO (COM RESTRIÇÃO DE TEMA E TUTORIA)
 // ===================================================
 
 function updateSendButtonState() {
@@ -1908,7 +1931,9 @@ function updateSendButtonState() {
     sendButton.disabled = input.value.trim() === '' || patolindoState.questionsLeft <= 0;
     input.disabled = patolindoState.questionsLeft <= 0;
     
-    headerSpan.innerText = `(${patolindoState.questionsLeft} Perguntas)`;
+    if (headerSpan) {
+        headerSpan.innerText = `(${patolindoState.questionsLeft} Perguntas)`;
+    }
 
     if (patolindoState.questionsLeft <= 0) {
         input.placeholder = "Sessão encerrada. Reabra para começar de novo.";
@@ -1917,30 +1942,32 @@ function updateSendButtonState() {
     }
 }
 
+// CORREÇÃO: Função resetPatolindoSession atualizada
 function resetPatolindoSession() {
     patolindoState.questionsLeft = 5;
     
     const currentTrilha = currentUser.trilhas[currentUser.currentTrilhaIndex];
-    const theme = currentTrilha ? currentTrilha.tema : null;
+    const theme = currentTrilha ? currentTrilha.tema : "Nenhum tema definido";
 
     const themeRestriction = theme ? `O ÚNICO TEMA permitida para conversação é: "${theme}". Você deve RECUSAR educadamente perguntas fora deste assunto.` : "Nenhuma trilha de estudos foi gerada. Você deve recusar perguntas até que uma trilha seja gerada.";
 
-    // ⚠️ ATENÇÃO: INSTRUÇÃO DE TUTORIA E EXCEÇÃO INCLUÍDAS AQUI
     patolindoState.history = [{
         role: "system",
         content: `Você é o Patolindo, um assistente de estudos prestativo e didático. Sua função é responder a no máximo 5 perguntas do usuário. Sua **principal diretriz é guiar o usuário à resposta**, nunca a entregando de forma completa e direta. Transforme a resposta em uma dica ou uma pergunta instigante para fomentar o aprendizado ativo. **Você só deve fornecer a resposta completa e direta se o usuário solicitar explicitamente.** Seja conciso e focado. ${themeRestriction}`
     }]; 
 
     const chatMessages = document.getElementById("chat-messages");
-    // APLICANDO A FORMATAÇÃO PARA A MENSAGEM INICIAL DE BOAS-VINDAS
-    const welcomeText = `Olá! Sou o Patolindo. Você tem **${patolindoState.questionsLeft} perguntas** para tirar dúvidas sobre a sua trilha atual (**${theme || 'NENHUM TEMA'}**).`;
-    const welcomeHtml = welcomeText.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\n/g, "<br>");
+    if (chatMessages) {
+        const welcomeText = `Olá! Sou o Patolindo. Você tem **${patolindoState.questionsLeft} perguntas** para tirar dúvidas sobre a sua trilha atual (**${theme}**).`;
+        const welcomeHtml = welcomeText.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\n/g, "<br>");
 
-    chatMessages.innerHTML = `<p class="bot-message"><span class="bot-bubble">${welcomeHtml}</span></p>`;
-    chatMessages.scrollTop = chatMessages.scrollHeight; 
+        chatMessages.innerHTML = `<div class="bot-message"><span class="bot-bubble">${welcomeHtml}</span></div>`;
+        chatMessages.scrollTop = chatMessages.scrollHeight; 
+    }
     updateSendButtonState();
 }
 
+// CORREÇÃO: Função handleChatSend atualizada
 async function handleChatSend() {
     const input = document.getElementById("chat-input");
     const question = input.value.trim();
@@ -1959,22 +1986,31 @@ async function handleChatSend() {
         const currentTrilha = currentUser.trilhas[currentUser.currentTrilhaIndex];
         const roadmapContext = currentTrilha ? JSON.stringify(currentTrilha.etapas) : "Nenhuma trilha de estudos foi gerada ainda.";
         
-        // Construa a lista de mensagens, garantindo que o System Prompt esteja no início.
-        const systemContext = {
-            role: "system",
-            content: patolindoState.history[0].content + 
-                     ` O contexto da trilha de estudos atual do usuário é: ${roadmapContext}. Você deve ser rigoroso em se manter APENAS no tema da trilha.`
-        };
-        
-        const messagesToSend = [systemContext].concat(patolindoState.history.slice(1)); 
+        // Construir mensagens para a API
+        const messagesToSend = [
+            {
+                role: "system",
+                content: patolindoState.history[0].content + ` O contexto da trilha de estudos atual do usuário é: ${roadmapContext}. Você deve ser rigoroso em se manter APENAS no tema da trilha.`
+            },
+            ...patolindoState.history.slice(1)
+        ];
 
         const response = await fetch(GROQ_ENDPOINT, {
             method: "POST",
-            headers: { "Content-Type": "application/json", "Authorization": `Bearer ${API_KEY}` },
-            body: JSON.stringify({ model: MODEL_NAME, messages: messagesToSend, temperature: 0.8 })
+            headers: { 
+                "Content-Type": "application/json", 
+                "Authorization": `Bearer ${API_KEY}` 
+            },
+            body: JSON.stringify({ 
+                model: MODEL_NAME, 
+                messages: messagesToSend, 
+                temperature: 0.8 
+            })
         });
 
-        if (!response.ok) { throw new Error(`Erro API: ${response.status}`); }
+        if (!response.ok) { 
+            throw new Error(`Erro API: ${response.status}`); 
+        }
 
         const data = await response.json();
         const answer = data?.choices?.[0]?.message?.content || "Desculpe, ocorreu um erro de comunicação e não consegui gerar a resposta.";
@@ -1982,7 +2018,9 @@ async function handleChatSend() {
         appendMessage(answer, 'bot');
         
         // Verifica se a resposta foi uma recusa (para não descontar a pergunta)
-        const isRefusal = answer.toLowerCase().includes("não consigo responder") || answer.toLowerCase().includes("fora do tema");
+        const isRefusal = answer.toLowerCase().includes("não consigo responder") || 
+                         answer.toLowerCase().includes("fora do tema") ||
+                         answer.toLowerCase().includes("não posso responder");
 
         if (!isRefusal) {
             patolindoState.history.push({ role: "assistant", content: answer });
@@ -2000,17 +2038,23 @@ async function handleChatSend() {
     }
 }
 
+// CORREÇÃO: Função appendMessage atualizada
 function appendMessage(text, sender) {
     const chatMessages = document.getElementById("chat-messages");
-    const messageElement = document.createElement("p");
+    if (!chatMessages) return;
+    
+    const messageElement = document.createElement("div");
     
     if (sender === 'user') {
         messageElement.className = 'user-message';
         messageElement.innerHTML = `<span class="user-bubble">${text}</span>`;
     } else {
         messageElement.className = 'bot-message';
-        // CORREÇÃO: Garante que o negrito **Markdown** é convertido para <b>HTML</b>
-        const htmlText = text.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>').replace(/\n/g, "<br>");
+        // Converter markdown para HTML
+        const htmlText = text
+            .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>')
+            .replace(/\n/g, "<br>")
+            .replace(/\*(.*?)\*/g, '<em>$1</em>');
         messageElement.innerHTML = `<span class="bot-bubble">${htmlText}</span>`;
     }
     
